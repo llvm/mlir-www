@@ -4,7 +4,7 @@ date: 2019-11-29T15:26:15Z
 draft: false
 ---
 
-[TOC]
+{{ .TableOfContents }}
 
 This tutorial runs through the implementation of a basic toy language on top of
 MLIR. The goal of this tutorial is to introduce the concepts of MLIR; in
