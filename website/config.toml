@@ -17,6 +17,9 @@ enableMissingTranslationPlaceholders = false
 
     # Souce Code repository section
     description = "<insert something insighful here>"
+    # Update menubar link too.
+    # TODO(jpienaar): Find a way that doesn't duplicate it or
+    # require redirect.
     github_repository = "https://github.com/llvm/llvm-project/mlir"
     version = ""
 
@@ -54,6 +57,10 @@ enableMissingTranslationPlaceholders = false
 
 # Global menu section
 [[menu.main]]
+    name = "Community"
+    weight = 3
+
+[[menu.main]]
     name = "Forums"
     parent = "Community"
     url = "https://llvm.discourse.group/c/llvm-project/mlir"
@@ -64,3 +71,8 @@ enableMissingTranslationPlaceholders = false
     parent = "Community"
     url = "https://discord.gg/JUQUPAZ"
     weight = 3
+
+[[menu.main]]
+    name = "Source"
+    weight = 10
+    url = "https://github.com/llvm/llvm-project/mlir"
