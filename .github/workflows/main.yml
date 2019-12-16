@@ -11,13 +11,35 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Clone LLVM repo
+      uses: actions/checkout@v2
+      with:
+        repository: llvm/llvm-project
+        ref: 'master'
+        path: 'llvm_src'
+
+    - name: Clone MLIR repo
+      uses: actions/checkout@v2
+      with:
+        repository: tensorflow/mlir
+        ref: 'master'
+        path: 'llvm_src/llvm/projects/mlir'
+
+    - name: Build MLIR Dialect docs
+      run: (mkdir llvm_src/build &&
+            cd llvm_src/build &&
+            cmake ../llvm -DLLVM_TARGETS_TO_BUILD="host" &&
+            make -j$(nproc) mlir-doc &&
+            ../../copy_docs.sh projects/mlir/docs/Dialects/ ../../website/content/docs/Dialects/
+           )
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: '0.59.1'
         # extended: true
 
-    - name: Build
+    - name: Build Website
       run: (cd website && hugo --minify -d ../public)
 
     - name: Deploy
@@ -26,4 +48,3 @@ jobs:
         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         PUBLISH_BRANCH: gh-pages
         PUBLISH_DIR: ./public
-
