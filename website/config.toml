@@ -20,7 +20,7 @@ enableMissingTranslationPlaceholders = false
     # Update menubar link too.
     # TODO(jpienaar): Find a way that doesn't duplicate it or
     # require redirect.
-    github_repository = "https://github.com/llvm/llvm-project/mlir"
+    github_repository = "https://github.com/llvm/llvm-project/tree/master/mlir"
     version = ""
 
     # Documentation repository section
@@ -75,4 +75,4 @@ enableMissingTranslationPlaceholders = false
 [[menu.main]]
     name = "Source"
     weight = 10
-    url = "https://github.com/llvm/llvm-project/mlir"
+    url = "https://github.com/llvm/llvm-project/tree/master/mlir"
