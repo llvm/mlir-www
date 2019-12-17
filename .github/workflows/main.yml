@@ -40,7 +40,8 @@ jobs:
         # extended: true
 
     - name: Build Website
-      run: (cd website && hugo --minify -d ../public)
+      run: (cd website && hugo --minify -d ../public &&
+            echo -n mlir.llvm.org > ../public/CNAME )
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
