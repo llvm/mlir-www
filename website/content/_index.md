@@ -12,16 +12,6 @@ compilation for heterogeneous hardware, significantly reduce the cost of
 building domain specific compilers, and aid in connecting existing compilers
 together.
 
-# How to Contribute
-
-Thank you for your interest in contributing to MLIR! If you want to contribute
-to MLIR, be sure to review the [contribution guidelines](https://github.com/llvm/llvm-project/tree/master/mlir/CONTRIBUTING.md).
-
-We don't accept pull-request on GitHub, instead we use [Phabricator](https://llvm.org/docs/Phabricator.html).
-
-Please be mindful of the [LLVM Code of Conduct](https://llvm.org/docs/CodeOfConduct.html),
-which pledges to foster an open and welcoming environment.
-
 ## More resources
 
 For more information on MLIR, please see:
