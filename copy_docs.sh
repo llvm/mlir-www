@@ -11,7 +11,7 @@ find $input_path -type d | while read dir ; do
  title: "$dir"
  date: 2019-11-29T15:26:15Z
  draft: false
- ---
+---
 EOF
 done
 
