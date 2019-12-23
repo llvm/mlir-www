@@ -34,6 +34,7 @@ jobs:
             cmake ../llvm -DLLVM_TARGETS_TO_BUILD="host" &&
             make -j$(nproc) mlir-doc &&
             ../../copy_docs.sh projects/mlir/docs/Dialects/ ../../website/content/docs/Dialects/
+            ../../copy_docs.sh ../llvm/projects/mlir/g3doc/ ../../website/content/docs/
            )
 
     - name: Setup Hugo

@@ -3,7 +3,12 @@
 input_path=$1
 output_path=$2
 
-ls $input_path | while read file ; do
+find $input_path -type d | while read dir ; do
+    mkdir -p ${output_path}/`realpath --relative-to=$input_path $dir`
+done
+
+find $input_path -name "*.md" | while read file ; do
+    file=$(realpath --relative-to=$input_path $file)
     title=$(grep -m 1  "^# "  $input_path/$file | sed 's/^# //') &&
     (echo "---" &&
      echo "title: \"$title\"" &&
