@@ -4,16 +4,25 @@ input_path=$1
 output_path=$2
 
 find $input_path -type d | while read dir ; do
-    dir=`realpath --relative-to=$input_path "$dir"`
-    mkdir -p "${output_path}/$dir"
-    cat > "${output_path}/$dir/_index.md"  <<EOF
+    destdir=`realpath --relative-to=$input_path "$dir"`
+    mkdir -p "${output_path}/$destdir"
+    ls $dir/*.md &&
+    cat > "${output_path}/$destdir/_index.md"  <<EOF
 ---
- title: "$dir"
+ title: "${destdir##*/}"
  date: 2019-11-29T15:26:15Z
  draft: false
 ---
 EOF
 done
+
+cat > "${output_path}/_index.md" <<EOF
+---
+ title: "Code Documentation"
+ date: 2019-11-29T15:26:15Z
+ draft: false
+---
+EOF
 
 find $input_path -name "*.md" | while read file ; do
     file=$(realpath --relative-to=$input_path $file)
