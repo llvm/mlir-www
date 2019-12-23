@@ -6,14 +6,15 @@ output_path=$2
 find $input_path -type d | grep -v includes/img | while read dir ; do
     destdir=`realpath --relative-to=$input_path "$dir"`
     mkdir -p "${output_path}/$destdir"
-    ls $dir/*.md &&
-    cat > "${output_path}/$destdir/_index.md"  <<EOF
+    if  ls $dir/*.md 1> /dev/null 2>&1; then
+      cat > "${output_path}/$destdir/_index.md"  <<EOF
 ---
  title: "${destdir##*/}"
  date: 2019-11-29T15:26:15Z
  draft: false
 ---
 EOF
+   fi
 done
 
 cat > "${output_path}/_index.md" <<EOF
