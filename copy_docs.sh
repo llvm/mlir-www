@@ -3,7 +3,7 @@
 input_path=$1
 output_path=$2
 
-find $input_path -type d | while read dir ; do
+find $input_path -type d | grep -v includes/img | while read dir ; do
     destdir=`realpath --relative-to=$input_path "$dir"`
     mkdir -p "${output_path}/$destdir"
     ls $dir/*.md &&
