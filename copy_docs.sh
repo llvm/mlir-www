@@ -4,7 +4,15 @@ input_path=$1
 output_path=$2
 
 find $input_path -type d | while read dir ; do
-    mkdir -p ${output_path}/`realpath --relative-to=$input_path $dir`
+    dir=`realpath --relative-to=$input_path "$dir"`
+    mkdir -p "${output_path}/$dir"
+    cat > "${output_path}/$dir/_index.md"  <<EOF
+---
+ title: "$dir"
+ date: 2019-11-29T15:26:15Z
+ draft: false
+ ---
+EOF
 done
 
 find $input_path -name "*.md" | while read file ; do
