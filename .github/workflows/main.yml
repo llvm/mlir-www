@@ -28,7 +28,7 @@ jobs:
             make -j$(nproc) mlir-doc)
 
     - name: Install MLIR Dialect docs
-      run:  ./copy_docs.sh llvm_src/build/mlir/docs/ website/content/docs/
+      run:  ./copy_docs.sh llvm_src/build/tools/mlir/docs/ website/content/docs/
 
     - name: Install MLIR Source docs
       run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/
