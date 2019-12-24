@@ -10,7 +10,7 @@ in general to build LLVM. Below are quick instructions to build MLIR with LLVM.
 
 The following instructions for compiling and testing MLIR assume that you have
 `git`, [`ninja`](https://ninja-build.org/), and a working C++ toolchain (see
-[LLVM requirements](https://llvm.org/docs/GettingStarted.html#requirements).
+[LLVM requirements](https://llvm.org/docs/GettingStarted.html#requirements)).
 
 ```sh
 git clone https://github.com/llvm/llvm-project.git
