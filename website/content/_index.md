@@ -18,7 +18,7 @@ For more information on MLIR, please see:
 
 *   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/llvm-project/mlir) for any questions.
 *   Real-time discussion on the MLIR channel of the [LLVM discord](https://discordapp.com/invite/JUQUPAZ) server.
-*   Previous [talks](#mlir-talks).
+*   Previous [talks](talks/).
 
 See also the [TensorFlow MLIR SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md)
 which is organizing weekly public 'Open Design Meetings' about MLIR. If you’d like
@@ -76,17 +76,3 @@ multithreaded compiler from working on multiple functions in an LLVM module at
 the same time. MLIR solves these problems by having limited SSA scope to reduce
 the use-def chains and by replacing cross-function references with explicit
 [`symbol reference`](doc/LangRef/#symbol-reference-attribute).
-
-# MLIR talks
-
-* "[MLIR Primer: A Compiler Infrastructure for the End of Moore’s Law](https://ai.google/research/pubs/pub48035.pdf)"
-  * Chris Lattner & Jacques Pienaar, Google at
-    [Compilers for Machine Learning](https://www.c4ml.org/) workshop at
-    [CGO 2019](http://cgo.org/cgo2019/)
-* "[MLIR: Multi-Level Intermediate Representation for Compiler
-    Infrastructure](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1)"
-  * Tatiana Shpeisman & Chris Lattner, Google at
-    [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
-* "[Tutorial: Building a Compiler with MLIR](https://llvm.org/devmtg/2019-04/talks.html#Tutorial_1)"
-  * Mehdi Amini, Jacques Pienaar, Nicolas Vasilache, Google at
-    [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
