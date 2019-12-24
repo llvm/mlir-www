@@ -18,6 +18,8 @@ which pledges to foster an open and welcoming environment.
 
 We don't accept pull-request on GitHub, instead we use
 [Phabricator](https://llvm.org/docs/Phabricator.html).
+At the moment you need to also join this [group](https://reviews.llvm.org/project/members/78/)
+to enable build and test of your Phabricator revisions.
 
 Once a patch is approved on Phabricator and pass continuous integration checks,
 it can be pushed directly to the master branch of the repository.
