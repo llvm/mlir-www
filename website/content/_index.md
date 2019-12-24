@@ -75,4 +75,4 @@ ways. For example, LLVM has non-obvious design mistakes that prevent a
 multithreaded compiler from working on multiple functions in an LLVM module at
 the same time. MLIR solves these problems by having limited SSA scope to reduce
 the use-def chains and by replacing cross-function references with explicit
-[`symbol reference`](doc/LangRef/#symbol-reference-attribute).
+[`symbol reference`](docs/LangRef/#symbol-reference-attribute).
