@@ -37,7 +37,7 @@ comment thread to coordinate.
 
 ### Contribution guidelines and standards
 
-*   Read the [developer guide](getting_started/developerguide/).
+*   Read the [developer guide](../developerguide/).
 *   Ensure that you use the correct license. Examples are provided below.
 *   Include tests when you contribute new features, as they help to a)
     prove that your code works correctly, and b) guard against future breaking
