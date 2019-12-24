@@ -16,7 +16,7 @@ The following instructions for compiling and testing MLIR assume that you have
 git clone https://github.com/llvm/llvm-project.git
 mkdir llvm-project/build
 cd llvm-project/build
-cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECT=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host"
+cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host"
 cmake --build . --target check-mlir
 ```
 
