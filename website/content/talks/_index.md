@@ -19,7 +19,7 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * 2019-12-12: GPUs in MLIR ;
-[slides(https://docs.google.com/presentation/d/1rWgRhBrSmSSeoafrmLWeQDwm2cZp5u009zKYLWNIxP4/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1rWgRhBrSmSSeoafrmLWeQDwm2cZp5u009zKYLWNIxP4/edit?usp=sharing)
 [recording](https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing)
 * 2019-12-05: Structured Ops ;
 [slides](https://docs.google.com/presentation/d/1P-j1GrH6Q5gLBjao0afQ-GfvcAeF-QU4GXXeSy0eJ9I/edit?usp=sharing)
