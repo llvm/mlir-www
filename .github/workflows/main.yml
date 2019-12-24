@@ -21,24 +21,17 @@ jobs:
         ref: 'master'
         path: 'llvm_src'
 
-    - name: Clone MLIR repo
-      uses: actions/checkout@v2
-      with:
-        repository: tensorflow/mlir
-        ref: 'master'
-        path: 'llvm_src/llvm/projects/mlir'
-
     - name: Build MLIR Dialect docs
       run: (mkdir llvm_src/build &&
             cd llvm_src/build &&
-            cmake ../llvm -DLLVM_TARGETS_TO_BUILD="host" &&
+            cmake ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_TARGETS_TO_BUILD="host" &&
             make -j$(nproc) mlir-doc)
 
     - name: Install MLIR Dialect docs
-      run:  ./copy_docs.sh llvm_src/build/projects/mlir/docs/ website/content/docs/
+      run:  ./copy_docs.sh llvm_src/build/mlir/docs/ website/content/docs/
 
     - name: Install MLIR Source docs
-      run:  ./copy_docs.sh llvm_src/llvm/projects/mlir/g3doc/ website/content/docs/
+      run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
