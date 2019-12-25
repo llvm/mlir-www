@@ -16,9 +16,20 @@ The following instructions for compiling and testing MLIR assume that you have
 git clone https://github.com/llvm/llvm-project.git
 mkdir llvm-project/build
 cd llvm-project/build
-cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host"
+cmake -G Ninja ../llvm \
+   -DLLVM_ENABLE_PROJECTS=mlir \
+   -DLLVM_BUILD_EXAMPLES=ON \
+   -DLLVM_TARGETS_TO_BUILD="host" \
+   -DCMAKE_BUILD_TYPE=Release \
+   -DLLVM_ENABLE_ASSERTIONS=ON \
+#  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_LLD=ON
+
 cmake --build . --target check-mlir
 ```
+
+It is recommended that you install `clang` and `lld` on your machine (`sudo apt-get
+install clang lld` on Ubuntu for example) and uncomment the last part of the
+cmake invocation above.
 
 To compile and test on Windows using Visual Studio 2017:
 
@@ -29,7 +40,7 @@ REM invoked.
 git clone https://github.com/llvm/llvm-project.git
 mkdir llvm-project\build
 cd llvm-project\build
-cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECT=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host" -DCMAKE_BUILD_TYPE=Release -Thost=x64
+cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECT=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host" -DCMAKE_BUILD_TYPE=Release -Thost=x64 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON
 cmake --build . --target check-mlir
 ```
 
