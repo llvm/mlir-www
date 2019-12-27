@@ -19,10 +19,10 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * 2019-12-12: GPUs in MLIR ;
-[slides](https://docs.google.com/presentation/d/1rWgRhBrSmSSeoafrmLWeQDwm2cZp5u009zKYLWNIxP4/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1rWgRhBrSmSSeoafrmLWeQDwm2cZp5u009zKYLWNIxP4/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing)
 * 2019-12-05: Structured Ops ;
-[slides](https://docs.google.com/presentation/d/1P-j1GrH6Q5gLBjao0afQ-GfvcAeF-QU4GXXeSy0eJ9I/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1P-j1GrH6Q5gLBjao0afQ-GfvcAeF-QU4GXXeSy0eJ9I/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1SXsHWpnmMYH08g9Mx7vbGFWdF1s0yF6t/view?usp=sharing)
 * 2019-10-10: Interfaces in MLIR ;
 [slides](https://docs.google.com/presentation/d/1go2f0HERU6lskNatLmx9OLhP3LTxn8Ba03VEvGwAMAA/edit?usp=sharing) -
@@ -58,12 +58,13 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 ### Using MLIR
 
 * 2019-11-21: TensorFlow Saved Model Dialect ;
-[slides](https://docs.google.com/presentation/d/1R6H_Eax6sXT2-ffpmF5zjHwS1F22D2DF2ty7EvdAUUw/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1R6H_Eax6sXT2-ffpmF5zjHwS1F22D2DF2ty7EvdAUUw/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1L-jpiRgMfLdsDnQpQMN3ns5jsJC07z2l/view?usp=sharing)
 * 2019-11-14: A Compiler Intermediate Representation for Stencils ;
 [slides](https://drive.google.com/open?id=19pSpEsi4I9-MKLRodD-po82HFCWLDAAc)
 [recording](https://drive.google.com/open?id=1uEvEm6xrk1EE_7Xib3sV9zO0j_857joc)
 * 2019-11-07: The Stripe dialect: An alternate approach for expressing affine computations ;
+[slides](https://docs.google.com/presentation/d/10tMCVZwMHlQPJnKo2nkbroFyAsew8j8wEaxk6Fdojzs/edit#slide=id.p1) -
 [recording](https://drive.google.com/open?id=1FLdhNgTii9x5o1rMgN4ibB7Wkuq6Pyye)
 * 2019-09-19: S4TF (Swift for TensorFlow): Swift as syntactic sugar for MLIR ;
 [slides](https://drive.google.com/open?id=1efFc9BpEkXvXv6XKND8Nr9vZumqYx6E1) -
