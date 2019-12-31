@@ -19,13 +19,13 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * 2019-12-12: GPUs in MLIR ;
-[slides](https://docs.google.com/presentation/d/1rWgRhBrSmSSeoafrmLWeQDwm2cZp5u009zKYLWNIxP4/edit?usp=sharing) -
+[slides](https://docs.google.com/presentation/d/1LdFxf7c_2T6eCV4n2poMhophVlz0YV4NPL0E-7_Y5fU/view) -
 [recording](https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing)
 * 2019-12-05: Structured Ops ;
 [slides](https://docs.google.com/presentation/d/1P-j1GrH6Q5gLBjao0afQ-GfvcAeF-QU4GXXeSy0eJ9I/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1SXsHWpnmMYH08g9Mx7vbGFWdF1s0yF6t/view?usp=sharing)
 * 2019-10-10: Interfaces in MLIR ;
-[slides](https://docs.google.com/presentation/d/1go2f0HERU6lskNatLmx9OLhP3LTxn8Ba03VEvGwAMAA/edit?usp=sharing) -
+[slides](https://docs.google.com/presentation/d/1sOh0hYzK7rpXTqd1BwZVe2FmdROpw6lxxkYVJ5D2UVQ/view) -
 [recording](https://drive.google.com/a/google.com/file/d/19DLG5edB7YYkB9hI27t1oC_2kQa23qG4/view?usp=sharing)
 * 2019-10-03: Layout changes to MLIR Tensor and MemRef Types ;
 [slides](https://docs.google.com/presentation/d/1C6Ypldo7EtiR5V2rLlTO_k2cHAQk2S_IN2FXTuxuNx8/edit?usp=sharing) -
