@@ -140,7 +140,7 @@ checking specific invariants of the IR without transforming or changing
 anything. Some examples of tests in this category are: those that verify
 invariants of operations, or check the expected results of an analysis.
 Diagnostic verification tests are written utilizing the
-[source manager verifier handler](Diagnostics.md#sourcemgr-diagnostic-verifier-handler),
+[source manager verifier handler]({{< relref "Diagnostics.md#sourcemgr-diagnostic-verifier-handler" >}}),
 accessible via the `verify-diagnostics` flag in mlir-opt.
 
 An example .mlir test running under `mlir-opt` is shown below:

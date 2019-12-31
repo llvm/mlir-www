@@ -18,7 +18,7 @@ LLVM style guide):
 *   Adopts [camelBack](https://llvm.org/docs/Proposals/VariableNames.html);
 *   Except for IR units (Region, Block, and Operation), non-nullable output
     arguments are passed by non-const reference in general.
-*   IR constructs are not designed for [const correctness](../../docs/usageofconst/).
+*   IR constructs are not designed for [const correctness]({{< relref "../../docs/UsageOfConst.md" >}}).
 *   Do *not* use recursive algorithms if the recursion can't be bounded
     statically: that is avoid recursion if there is a possible IR input that can
     trigger a stack overflow (for example traversing use-def chains in a
@@ -48,14 +48,14 @@ that is registered on the command line as `-affine-tile`, and with a tile size
 option that can be set with `-affine-tile-size`.
 
 We also avoid `cl::opt` to provide pass options in favor of the
-[pass options](../../docs/writingapass/#instance-specific-pass-options)
+[pass options]({{< relref "../../docs/WritingAPass.md#instance-specific-pass-options" >}})
 mechanism. This allows for these options to be serialized in a pass pipeline
 description, as well as passing different options to multiple instances of a
 pass in the same pipeline.
 
 ## Testing guidelines
 
-See here for the [testing guide](../testingguide/).
+See here for the [testing guide]({{< relref "TestingGuide.md" >}}).
 
 ## Guidelines on contributing a new dialect (or important components)
 
