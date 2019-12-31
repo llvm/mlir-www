@@ -36,7 +36,7 @@ find $input_path -name "*.md" | while read file ; do
      grep -v "^# " $input_path/$file |
      # TODO(jpienaar): Remove this, this is temporary measure to avoid all the
      # broken links but not robust at all.
-     sed -e 's|\](\([^h][^)#]*.md#[^)]*\))|]({{< relref "\1" >}})|' -e 's|\](\([^h][^)]*.md\))|]({{< relref "\1" >}})|' |
+     sed -e 's|\](\([^h][^)#]*.md#[^)]*\))|]({{< relref "\1" >}})|g' -e 's|\](\([^h][^)]*.md\))|]({{< relref "\1" >}})|g' |
      # TODO(jpienaar): This is probably worse than the above, but currently we
      # have cross repo markdown links.
      sed -e "s|../../Glossary.md|../../../getting_started/Glossary.md|") > $output_path/$file &&
