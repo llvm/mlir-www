@@ -44,5 +44,5 @@ cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECT=mlir -DLLVM
 cmake --build . --target check-mlir
 ```
 
-As a starter, you may try [the tutorial](docs/tutorials/toy/ch-1/) on
+As a starter, you may try [the tutorial]({{< relref "docs/Tutorials/Toy/Ch-1.md" >}}) on
 building a compiler for a Toy language.
