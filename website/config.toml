@@ -78,3 +78,9 @@ disablePathToLower = true
     name = "Source"
     weight = 10
     url = "https://github.com/llvm/llvm-project/tree/master/mlir"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      hardWraps = false
+      unsafe = true

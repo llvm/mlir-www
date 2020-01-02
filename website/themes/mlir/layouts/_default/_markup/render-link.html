@@ -1,0 +1,18 @@
+{{ $link := .Destination }}
+{{ $isRemote := strings.HasPrefix $link "http" }}
+{{- if not $isRemote }}
+  {{ $url := $link | safeURL | urls.Parse }}
+  {{ if $url.Path }}
+    {{ with .Page.GetPage $url.Path }}
+      {{ if $url.Fragment }}
+        {{ $list := slice .RelPermalink | append $url.Fragment }}
+        {{ $link = delimit $list "#" }}
+      {{ else }}
+        {{ with .Page.GetPage $link }}{{ $link = .RelPermalink }}{{ end }}
+     {{ end }}
+   {{ end }}
+  {{ else }}
+    {{ with .Page.GetPage $link }}{{ $link = .RelPermalink }}{{ end }}
+  {{ end }}
+{{ end -}}
+<a href="{{ $link | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>

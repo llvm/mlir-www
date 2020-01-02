@@ -12,7 +12,7 @@ documentation.
 
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
-#### [Block]({{< relref "LangRef.md#blocks" >}})
+#### [Block](LangRef.md#blocks)
 
 A sequential list of operations without control flow.
 
@@ -29,21 +29,21 @@ Conversion refers to a transformation between (or within) dialects, but all
 still within MLIR, whereas translation refers to a transformation between MLIR
 and an external representation.
 
-#### [Declarative Rewrite Rule]({{< relref "DeclarativeRewrites.md" >}}) (DRR)
+#### [Declarative Rewrite Rule](DeclarativeRewrites.md) (DRR)
 
 A [rewrite rule](https://en.wikipedia.org/wiki/Graph_rewriting) which can be
 defined declaratively (e.g. through specification in a
 [TableGen](https://llvm.org/docs/TableGen/) record). At compiler build time,
 these rules are expanded into an equivalent `mlir::RewritePattern` subclass.
 
-#### [Dialect]({{< relref "LangRef.md#dialects" >}})
+#### [Dialect](LangRef.md#dialects)
 
 A dialect is a grouping of functionality which can be used to extend the MLIR
 system.
 
 A dialect creates a unique `namespace` within which new
-[operations](#operation-op), [attributes]({{< relref "LangRef.md#attributes" >}}), and
-[types]({{< relref "LangRef.md#type-system" >}}) are defined. This is the fundamental method by
+[operations](#operation-op), [attributes](LangRef.md#attributes), and
+[types](LangRef.md#type-system) are defined. This is the fundamental method by
 which to extend MLIR.
 
 In this way, MLIR is a meta-IR: its extensible framework allows it to be
@@ -52,7 +52,7 @@ process). Dialects provide an abstraction for the different uses of MLIR while
 recognizing that they are all a part of the meta-IR that is MLIR.
 
 The tutorial provides an example of
-[interfacing with MLIR]({{< relref "../docs/Tutorials/Toy/Ch-2.md#interfacing-with-mlir" >}}) in this
+[interfacing with MLIR](../docs/Tutorials/Toy/Ch-2.md#interfacing-with-mlir) in this
 way.
 
 (Note that we have intentionally selected the term "dialect" instead of
@@ -68,7 +68,7 @@ The tool that performs such a transformation is called an exporter.
 
 See also: [translation](#translation).
 
-#### [Function]({{< relref "LangRef.md#functions" >}})
+#### [Function](LangRef.md#functions)
 
 An [operation](#operation-op) with a name containing one [region](#region).
 
@@ -89,7 +89,7 @@ See also: [translation](#translation).
 
 The process of transforming operations into a semantically equivalent
 representation which adheres to the requirements set by the
-[conversion target]({{< relref "DialectConversion.md#conversion-target" >}}).
+[conversion target](DialectConversion.md#conversion-target).
 
 That is, legalization is accomplished if and only if the new representation
 contains only operations which are legal, as specified in the conversion target.
@@ -100,14 +100,14 @@ The process of transforming a higher-level representation of an operation into a
 lower-level, but semantically equivalent, representation.
 
 In MLIR, this is typically accomplished through
-[dialect conversion]({{< relref "DialectConversion.md" >}}). This provides a framework by which
+[dialect conversion](DialectConversion.md). This provides a framework by which
 to define the requirements of the lower-level representation, called the
-[conversion target]({{< relref "DialectConversion.md#conversion-target" >}}), by specifying which
+[conversion target](DialectConversion.md#conversion-target), by specifying which
 operations are legal versus illegal after lowering.
 
 See also: [legalization](#legalization).
 
-#### [Module]({{< relref "LangRef.md#module" >}})
+#### [Module](LangRef.md#module)
 
 An [operation](#operation-op) which contains a single region containing a single
 block that is comprised of operations.
@@ -115,7 +115,7 @@ block that is comprised of operations.
 This provides an organizational structure for MLIR operations, and is the
 expected top-level operation in the IR: the textual parser returns a Module.
 
-#### [Operation]({{< relref "LangRef.md#operations" >}}) (op)
+#### [Operation](LangRef.md#operations) (op)
 
 A unit of code in MLIR. Operations are the building blocks for all code and
 computations represented by MLIR. They are fully extensible (there is no fixed
@@ -131,7 +131,7 @@ general API into an operation instance. An `Op` is the base class of a derived
 operation, like `ConstantOp`, and acts as smart pointer wrapper around a
 `Operation*`
 
-#### [Region]({{< relref "LangRef.md#regions" >}})
+#### [Region](LangRef.md#regions)
 
 A [CFG](https://en.wikipedia.org/wiki/Control-flow_graph) of MLIR
 [blocks](#block).
@@ -150,7 +150,7 @@ be done entirely within the MLIR representation. This separation - making the
 [importer](#import) as simple as possible and performing all further
 cleanups/lowering in MLIR - has proven to be a useful design pattern.
 
-#### [Terminator operation]({{< relref "LangRef.md#terminator-operations" >}})
+#### [Terminator operation](LangRef.md#terminator-operations)
 
 An [operation](#operation-op) which *must* terminate a [block](#block).
 Terminator operations are a special category of operations.
@@ -165,7 +165,7 @@ This provides the flexibility that the [conversion](#conversion) framework may
 perform the lowering in multiple stages of applying patterns (which may utilize
 intermediate patterns not in the conversion target) in order to fully legalize
 an operation. This is accomplished through
-[partial conversion]({{< relref "DialectConversion.md#modes-of-conversion" >}}).
+[partial conversion](DialectConversion.md#modes-of-conversion).
 
 #### Translation
 
