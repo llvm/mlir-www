@@ -8,10 +8,10 @@ weight: 1
 ## Tutorials
 
 * MLIR Tutorial ; [slides](http://www.cs.utah.edu/~mhall/mlir4hpc/pienaar-MLIR-Tutorial.pdf) ;
-  Jacques Pienaar, Sana Damani ;
+  Jacques Pienaar, Sana Damani @
   [MLIR4HPC@LCPC 2019](http://www.cs.utah.edu/~mhall/mlir4hpc/)
 * Tutorial: Building a Compiler with MLIR ; ([slides and recording](https://llvm.org/devmtg/2019-04/talks.html#Tutorial_1)) ;
-  Mehdi Amini, Alex Zinenko, Nicolas Vasilache ;
+  Mehdi Amini, Alex Zinenko, Nicolas Vasilache @
   [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
 
 ## Tech talks
@@ -19,13 +19,29 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
-[slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1)
+[slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1) ; Tatiana Shpeisman, Chris Lattner
 @ [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
 
 * MLIR Primer: A Compiler Infrastructure for the End of Moore’s Law
-[slides](https://research.google/pubs/pub48035.pdf)
-@ [Compilers for Machine Learning (C4ML)](https://www.c4ml.org/) workshop at
+[slides](https://research.google/pubs/pub48035.pdf) ; Chris Lattner, Jacques Pienaar
+@ [Compilers for Machine Learning (C4ML)](https://www.c4ml.org/c4ml2019) workshop at
 [CGO 2019](http://cgo.org/cgo2019/)
+
+### Using MLIR
+
+* MLIR: Accelerating AI ; [recording](https://youtu.be/QYV0Se167hM) ; Chris Lattner, Tatiana Shpeisman
+@ [O'Reilly TensorFlow World 2019](https://conferences.oreilly.com/tensorflow/tf-ca)
+
+* An MLIR Dialect for High-Level Optimization of Fortran ; [recording](https://youtu.be/ff3ngdvUang) ; Eric Schweitz
+@ [2019 LLVM Developers' Meeting - Bay Area](http://llvm.org/devmtg/2019-10/)
+
+* Swift as syntactic sugar for MLIR ; [recording](https://youtu.be/1VOWzfULX2w) ; Eugene Burmako , Alex Suhan
+@ [Scale By the Bay 2019](https://www.scale.bythebay.io/)
+
+* Targeting Accelerators with MLIR.jl ; [recording](https://youtu.be/M6hl2si20NE) ; James Bradbury
+@ [JuliaCon 2019](https://juliacon.org/2019/) 
+
+* Inside TensorFlow: MLIR for TF developers ; [recording](https://youtu.be/R5LLIj8EMxw) ; Jacques Pienaar
 
 ## [Open design meeting](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md) presentations
 
@@ -91,3 +107,10 @@ TODO
 ### Using MLIR
 
 ≪ Feel free to add your work ≫
+
+## Upcoming talks or presentations
+
+The schedule for the open design meetings and upcomming presentations can be found on the Agenda document of the [SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md). Additional talks or conferences of interest will be added below.
+
+* Jan 20 ; [AccML 2020: HiPEAC Workshop on Accelerated Machine Learning](https://www.sigarch.org/call-contributions/accml-2020-hipeac-workshop-on-accelerated-machine-learning/).
+* Feb 22 ; [C4ML 2020: Compilers for Machine Learning](https://www.c4ml.org/) workshop co-located with CGO in San Diego.
