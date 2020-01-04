@@ -18,6 +18,19 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
+[slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1)
+@ [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
+
+* MLIR Primer: A Compiler Infrastructure for the End of Moore’s Law
+[slides](https://research.google/pubs/pub48035.pdf)
+@ [Compilers for Machine Learning (C4ML)](https://www.c4ml.org/) workshop at
+[CGO 2019](http://cgo.org/cgo2019/)
+
+## [Open design meeting](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md) presentations
+
+### About MLIR and MLIR Components
+
 * 2019-12-12: GPUs in MLIR ;
 [slides](https://docs.google.com/presentation/d/1LdFxf7c_2T6eCV4n2poMhophVlz0YV4NPL0E-7_Y5fU/view) -
 [recording](https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing)
@@ -44,16 +57,6 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 * 2019-07-18: A proposal to add layout to Tensor ;
 [slides](https://drive.google.com/open?id=10m6bzwpC70bqLoxu3lAQjDXPK2RVXiBl) -
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
-
-* MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
-[slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1)
-@ [EuroLLVM 2019](https://llvm.org/devmtg/2019-04)
-
-* MLIR Primer: A Compiler Infrastructure for the End of Moore’s Law
-[slides](https://ai.google/research/pubs/pub48035.pdf)
-@ [Compilers for Machine Learning (C4ML)](https://www.c4ml.org/) workshop at
-[CGO 2019](http://cgo.org/cgo2019/)
-
 
 ### Using MLIR
 
@@ -87,4 +90,4 @@ TODO
 
 ### Using MLIR
 
-<add yourself>
+≪ Feel free to add your work ≫
