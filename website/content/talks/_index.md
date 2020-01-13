@@ -47,6 +47,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2019-12-19: Interpreted Pattern Match Execution ;
+[slides](https://docs.google.com/presentation/d/1U3AHtvn_ONR2D4-ENbghYjqsgocu0VPw_2LLYj_A7Sc/edit) -
+[recording](https://drive.google.com/file/d/1c_GfPfLVtew-Kg25pJayJM9qrlI1hxR-/view)
 * 2019-12-12: GPUs in MLIR ;
 [slides](https://docs.google.com/presentation/d/1LdFxf7c_2T6eCV4n2poMhophVlz0YV4NPL0E-7_Y5fU/view) -
 [recording](https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing)
