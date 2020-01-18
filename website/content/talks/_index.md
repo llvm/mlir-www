@@ -39,7 +39,7 @@ weight: 1
 @ [Scale By the Bay 2019](https://www.scale.bythebay.io/)
 
 * Targeting Accelerators with MLIR.jl ; [recording](https://youtu.be/M6hl2si20NE) ; James Bradbury
-@ [JuliaCon 2019](https://juliacon.org/2019/) 
+@ [JuliaCon 2019](https://juliacon.org/2019/)
 
 * Inside TensorFlow: MLIR for TF developers ; [recording](https://youtu.be/R5LLIj8EMxw) ; Jacques Pienaar
 
@@ -79,6 +79,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-01-16: nGraph Dialect: High-Level Graph Optimizations for Deep Learning Workloads ;
+[slides](https://drive.google.com/open?id=1lr0xjilGb0foKmYGF4mdCsqEjeMSNC55) -
+[recording](https://drive.google.com/open?id=1BEzorUrC5VhYXvCPaTIawkudxiKhmruy)
 * 2019-11-21: TensorFlow Saved Model Dialect ;
 [slides](https://docs.google.com/presentation/d/1R6H_Eax6sXT2-ffpmF5zjHwS1F22D2DF2ty7EvdAUUw/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1L-jpiRgMfLdsDnQpQMN3ns5jsJC07z2l/view?usp=sharing)
