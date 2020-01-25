@@ -14,6 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Install doxygen
+      run: sudo apt-get install doxygen
+
     - name: Clone LLVM repo
       uses: actions/checkout@v2
       with:
@@ -21,7 +24,7 @@ jobs:
         ref: 'master'
         path: 'llvm_src'
 
-    - name: Build MLIR Dialect docs
+    - name: Build MLIR Dialect docs & doxygen src
       run: (mkdir llvm_src/build &&
             cd llvm_src/build &&
             cmake ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_TARGETS_TO_BUILD="host" -DMLIR_INCLUDE_DOCS="true" -DLLVM_ENABLE_DOXYGEN="true" &&
