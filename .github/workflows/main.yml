@@ -24,8 +24,7 @@ jobs:
     - name: Build MLIR Dialect docs
       run: (mkdir llvm_src/build &&
             cd llvm_src/build &&
-            cmake ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_TARGETS_TO_BUILD="host" \
-                          -DMLIR_INCLUDE_DOCS:BOOL=true -DLLVM_ENABLE_DOXYGEN:BOOL=true &&
+            cmake ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_TARGETS_TO_BUILD="host" -DMLIR_INCLUDE_DOCS="true" -DLLVM_ENABLE_DOXYGEN="true" &&
             make -j$(nproc) mlir-doc doxygen-mlir)
 
     - name: Install MLIR Dialect docs
