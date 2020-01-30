@@ -11,7 +11,7 @@ with contributing to MLIR. See also [the "beginner" issues](https://bugs.llvm.or
 on the bugtracker.
 If you're interested in one of these projects, feel free to discuss it on
 the MLIR section of the [LLVM forums](https://llvm.discourse.group/c/llvm-project/mlir)
-or on the MLIR channel of the [LLVM discord](https://discord.gg/4Qd5D4)
+or on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362)
 server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.
 
