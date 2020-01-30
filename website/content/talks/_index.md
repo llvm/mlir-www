@@ -119,7 +119,7 @@ TODO
 
 ## Upcoming talks or presentations
 
-The schedule for the open design meetings and upcomming presentations can be found on the Agenda document of the [SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md). Additional talks or conferences of interest will be added below.
+The schedule for the open design meetings and upcoming presentations can be found on the Agenda document of the [SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md). Additional talks or conferences of interest will be added below.
 
 * Jan 20 ; [AccML 2020: HiPEAC Workshop on Accelerated Machine Learning](https://www.sigarch.org/call-contributions/accml-2020-hipeac-workshop-on-accelerated-machine-learning/).
 * Feb 22 ; [C4ML 2020: Compilers for Machine Learning](https://www.c4ml.org/) workshop co-located with CGO in San Diego.
