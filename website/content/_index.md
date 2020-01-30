@@ -17,7 +17,7 @@ together.
 For more information on MLIR, please see:
 
 *   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/llvm-project/mlir) for any questions.
-*   Real-time discussion on the MLIR channel of the [LLVM discord](https://discordapp.com/invite/JUQUPAZ) server.
+*   Real-time discussion on the MLIR channel of the [LLVM discord](https://discord.gg/4Qd5D4) server.
 *   Previous [talks](talks/).
 
 See also the [TensorFlow MLIR SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md)
