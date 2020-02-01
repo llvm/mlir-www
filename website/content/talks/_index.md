@@ -82,6 +82,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-01-30: IREE: MLIR-based End-to-End ML Tooling ;
+[slides](https://drive.google.com/open?id=1RCQ4ZPQFK9cVgu3IH1e5xbrBcqy7d_cEZ578j84OvYI) -
+[recording](https://drive.google.com/open?id=1os9FaPodPI59uj7JJI3aXnTzkuttuVkR)
 * 2020-01-16: nGraph Dialect: High-Level Graph Optimizations for Deep Learning Workloads ;
 [slides](https://drive.google.com/open?id=1lr0xjilGb0foKmYGF4mdCsqEjeMSNC55) -
 [recording](https://drive.google.com/open?id=1BEzorUrC5VhYXvCPaTIawkudxiKhmruy)
