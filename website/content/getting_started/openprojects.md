@@ -16,12 +16,10 @@ server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.
 
 * [bugpoint/llvm-reduce](https://llvm.org/docs/BugpointRedesign.html) and
-  llvm-canon kind of tools for MLIR (mentor: Mehdi Amini)
+  llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
 * Rework the MLIR python bindings, add a C APIs for core concepts (mentor:
 Nicolas Vasilache, Alex Zinenko)
 * Automatic formatter for TableGen (similar to clang-format for C/C++)
-* Custom printer/parser syntax in TableGen (mentor: Nicolas Vasilache, River
-Riddle, Alex Zinenko)
 * LLVM IR declaratively defined. (mentor: Alex Zinenko)
 * MLIR Binary serialization / bitcode format (Mehdi Amini)
 * SPIR-V module combiner
@@ -33,4 +31,6 @@ Riddle, Alex Zinenko)
   * Purpose: give MLIR more frontends :) improve graphics tooling
   * Potential real-world usage: providing a migration solution from WebGL
   (shaders represented as GLSL) to WebGPU (shaders represented as SPIR-V)
+* TableGen "front-end dialect" (mentor: Jacques Pienaar)
 * Making MLIR interact with existing polyhedral tools: isl, pluto (mentor: Alex Zinenko)
+* MLIR visualization (mentor: Jacques Pienaar)
