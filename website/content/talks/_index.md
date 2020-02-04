@@ -16,9 +16,9 @@ weight: 1
 
 ## Tech talks
 
-* IMPACT 2020 [Keynote: High-Performance Compilation Opportunities in MLIR](http://impact.gforge.inria.fr/impact2020/slides/IMPACT_2020_keynote.pdf) ; Uday Bondhugula
-
 ### About MLIR and MLIR Components
+
+* IMPACT 2020 [Keynote: High-Performance Compilation Opportunities in MLIR](http://impact.gforge.inria.fr/impact2020/slides/IMPACT_2020_keynote.pdf) ; Uday Bondhugula
 
 * MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
 [slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1) ; Tatiana Shpeisman, Chris Lattner
