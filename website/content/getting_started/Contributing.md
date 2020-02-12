@@ -24,6 +24,54 @@ to enable build and test of your Phabricator revisions.
 Once a patch is approved on Phabricator and pass continuous integration checks,
 it can be pushed directly to the master branch of the repository.
 
+#### Using Arcanist
+
+Use [Arcanist](https://llvm.org/docs/Phabricator.html#requesting-a-review-via-the-command-line)
+to send your patches for review. This triggers the continuous build system and
+preserves the authorship information in case somebody else commits the patch on
+your behalf.
+
+**Do not use `arc land`**, push commits to master directly with `git`. Arcanist
+adds noisy tags to the commit message that we prefer to remove. See the
+[llvm-dev thread](http://lists.llvm.org/pipermail/llvm-dev/2019-December/137848.html)
+on the subject for more information. *Note:* Arcanist also adds tags when you
+send a patch for review, by quietly amending your commit message. Make sure to
+**remove Phabricator tags** other than "Differential Revision" before pushing
+commits out to the repository.
+
+The following script can be added to your `.bashrc` to create the `arcfilter`
+command. When called as `arcfilter` from the command line, it removes the
+Arcanist-injected tags from the last commit by amending its message.
+
+```sh
+function arcfilter() {  git log -1 --pretty=%B | sed  's/^Summary://'  | awk '/Reviewers: /{p=1; sub(/Reviewers: .*Differential Revision: /, "")}; /Differential Revision: /{p=0;}; !p' | git commit --amend -F - ; }
+```
+
+#### First-time contributors
+
+LLVM follows a [policy](https://llvm.org/docs/DeveloperPolicy.html#obtaining-commit-access)
+of granting established contributors direct commit access to the repository.
+If you make your first contributions to the LLVM infrastructure, you are unlikely
+to have commit access. In this case, ask the reviewers to commit the change
+for you after it has been accepted. Once you have demonstrated the ability to
+write high-quality patches, follow the
+[policy](https://llvm.org/docs/DeveloperPolicy.html#obtaining-commit-access) to
+obtain commit access for yourself.
+
+*Note:* if you haven't used Arcanist to send your patch for review, committers
+don't have access to your preferred identity for commit messages. Make sure
+to communicate it to them through available channels or use the git sign-off
+functionality to make your identity visible in the commit message.
+
+#### Commit messages
+
+Follow the git conventions for writing a commit message, in particular the
+first line is the short title of the commit. The title should be followed by an
+empty line and a longer description. Prefer describing *why* the change is
+implemented rather than what it does. The latter can be inferred from the code.
+This [post](https://chris.beams.io/posts/git-commit/) give examples and more
+details.
+
 ### Issue tracking
 
 To report a bug, use the [MLIR product on the LLVM bug
