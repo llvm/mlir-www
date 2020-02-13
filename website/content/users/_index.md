@@ -23,3 +23,7 @@ and hardware-specific optimisation choices".
 ## [IREE](https://github.com/google/iree)
 
 IREE (pronounced "eerie") is a compiler and minimal runtime system for compiling ML models for execution against a HAL (Hardware Abstraction Layer) that is aligned with Vulkan. It aims to be a viable way to compile and run ML devices on a variety of small and medium sized systems, leveraging either the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to interoperate seamlessly with existing users of Vulkan APIs, specifically focused on games and rendering pipelines.
+
+## [PlaidML](https://github.com/plaidml/plaidml)
+
+PlaidML is a tensor compiler that facilitates reusable and performance portable ML models across various hardware targets including CPUs, GPUs, and accelerators.
