@@ -33,6 +33,6 @@ find $input_path -name "*.md" | while read file ; do
      echo "date: 1970-01-01T00:00:00Z" &&
      echo "draft: false" &&
      echo "---" &&
-     grep -v "^# " $input_path/$file  | sed 's|\[TOC\]|<p/>{{< toc >}}|' ) > $output_path/$file &&
+     grep -v "^# $title" $input_path/$file  | sed 's|\[TOC\]|<p/>{{< toc >}}|' ) > $output_path/$file &&
     echo "Processed $file"
 done
