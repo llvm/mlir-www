@@ -5,20 +5,11 @@ draft: false
 weight: 1
 ---
 
+In alphabetical order below.
+
 ## Flang: the LLVM Fortran compiler
 
 The high level IR of the Fortran compiler is modeled using MLIR.
-
-## [TensorFlow](https://www.tensorflow.org/mlir)
-  MLIR is used as a Graph Transformation framework and the foundation for
-  building many tools (TFLite converter, quantization, ...).
-
-## [RISE](https://rise-lang.org/)
-
-RISE is a spiritual successor to the
-[Lift project](http://www.lift-project.org/): "a high-level functional data
-parallel language with a system of rewrite rules which encode algorithmic
-and hardware-specific optimisation choices".
 
 ## [IREE](https://github.com/google/iree)
 
@@ -27,3 +18,15 @@ IREE (pronounced "eerie") is a compiler and minimal runtime system for compiling
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
 PlaidML is a tensor compiler that facilitates reusable and performance portable ML models across various hardware targets including CPUs, GPUs, and accelerators.
+
+## [RISE](https://rise-lang.org/)
+
+RISE is a spiritual successor to the
+[Lift project](http://www.lift-project.org/): "a high-level functional data
+parallel language with a system of rewrite rules which encode algorithmic
+and hardware-specific optimisation choices".
+
+## [TensorFlow](https://www.tensorflow.org/mlir)
+  MLIR is used as a Graph Transformation framework and the foundation for
+  building many tools (TFLite converter, quantization, ...).
+
