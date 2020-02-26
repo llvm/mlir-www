@@ -116,7 +116,10 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### About MLIR and MLIR Components
 
-TODO
+* [MLIR: A Compiler Infrastructure for the End of Moore's Law](https://arxiv.org/abs/2002.11054) -
+   Chris Lattner, Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar,
+   River Riddle, Tatiana Shpeisman, Nicolas Vasilache, Oleksandr Zinenko
+
 
 ### Using MLIR
 

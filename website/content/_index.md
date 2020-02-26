@@ -12,6 +12,9 @@ compilation for heterogeneous hardware, significantly reduce the cost of
 building domain specific compilers, and aid in connecting existing compilers
 together.
 
+To cite MLIR, please use [this Arxiv
+publication](https://arxiv.org/abs/2002.11054).
+
 ## More resources
 
 For more information on MLIR, please see:
