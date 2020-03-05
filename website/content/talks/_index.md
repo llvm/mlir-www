@@ -84,6 +84,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-02-27: End-to-end Dynamic Shape Support in MLIR
+[slides](https://drive.google.com/open?id=1ZDzXluB2uVc35r1fBNK5jW6rY8s82pc_) -
+[recording](https://drive.google.com/a/google.com/file/d/1_uEISlV5MUWdG9faKAdKlCWnPtGjRC-D/view?usp=sharing)
 * 2020-01-30: IREE: MLIR-based End-to-End ML Tooling ;
 [slides](https://drive.google.com/open?id=1RCQ4ZPQFK9cVgu3IH1e5xbrBcqy7d_cEZ578j84OvYI) -
 [recording](https://drive.google.com/open?id=1os9FaPodPI59uj7JJI3aXnTzkuttuVkR)
