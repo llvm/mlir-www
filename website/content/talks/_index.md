@@ -49,6 +49,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-03-05: Shape Dialect
+[slides](https://drive.google.com/open?id=1w_aDOOT5HRnvlkEYE24bGP1XFjMBhIUK) -
+[recording](https://drive.google.com/open?id=1DERBP5oqqc98xfAp_73HCPkraUqM9qgS)
 * 2020-01-24: Thoughts on Tensor Code Generation in MLIR ;
 [slides](https://docs.google.com/presentation/d/1M44If0Lw2lnrlyE_xNU1WOmXWxLo9FibMwdUbrAhOhU/edit#slide=id.g5fd22bdf8c_0_0) -
 [recording](https://drive.google.com/open?id=1PKY5yVEL0Dl5UHaok4NgpxnbwXbi5pxS)
