@@ -22,15 +22,15 @@ Nicolas Vasilache, Alex Zinenko)
 * Automatic formatter for TableGen (similar to clang-format for C/C++)
 * LLVM IR declaratively defined. (mentor: Alex Zinenko)
 * MLIR Binary serialization / bitcode format (Mehdi Amini)
-* SPIR-V module combiner
+* SPIR-V module combiner (mentor: Lei Zhang)
   * Basic: merging modules and remove identical functions
   * Advanced: comparing logic and use features like spec constant to reduce
   similar but not identical functions
-* GLSL to SPIR-V dialect frontend
+* GLSL to SPIR-V dialect frontend (mentor: Lei Zhang)
   * Requires: building up graphics side of the SPIR-V dialect
   * Purpose: give MLIR more frontends :) improve graphics tooling
   * Potential real-world usage: providing a migration solution from WebGL
-  (shaders represented as GLSL) to WebGPU (shaders represented as SPIR-V)
+  (shaders represented as GLSL) to WebGPU (shaders represented as SPIR-V-like language, [WGSL](https://gpuweb.github.io/gpuweb/wgsl.html))
 * TableGen "front-end dialect" (mentor: Jacques Pienaar)
 * Making MLIR interact with existing polyhedral tools: isl, pluto (mentor: Alex Zinenko)
 * MLIR visualization (mentor: Jacques Pienaar)
