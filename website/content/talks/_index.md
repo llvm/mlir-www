@@ -18,6 +18,8 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* CGO 2020 [Keynote: MLIR Compiler Infrastructure](https://docs.google.com/presentation/d/11-VjSNNNJoRhPlLxFgvtb909it1WNdxTnQFipryfAPU/edit#slide=id.g7d334b12e5_0_4) ; Chris Lattner, Tatiana Shpeisman
+
 * IMPACT 2020 [Keynote: High-Performance Compilation Opportunities in MLIR](http://impact.gforge.inria.fr/impact2020/slides/IMPACT_2020_keynote.pdf) ; Uday Bondhugula
 
 * MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
@@ -30,6 +32,10 @@ weight: 1
 [CGO 2019](http://cgo.org/cgo2019/)
 
 ### Using MLIR
+
+* MLIR: Accelerating TF with compilers ; [recording](https://www.youtube.com/watch?v=Hx3A0A2lM84&list=PLQY2H8rRoyvzuJw20FG82Lgm2SZjTdIXU&index=12) ; Jacques Pienaar (filling in for Tatiana Shpeisman) @ [TF Dev Summit 2020](https://www.tensorflow.org/dev-summit)
+
+* MLIR in the TensorFlow ecosystem ; [slides](https://research.google/pubs/pub48996.pdf) ; Jacques Pienaar @ [Compilers for Machine Learning 2020](https://www.c4ml.org/c4ml2020)
 
 * MLIR: Accelerating AI ; [recording](https://youtu.be/QYV0Se167hM) ; Chris Lattner, Tatiana Shpeisman
 @ [O'Reilly TensorFlow World 2019](https://conferences.oreilly.com/tensorflow/tf-ca)
