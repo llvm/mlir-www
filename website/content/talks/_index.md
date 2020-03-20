@@ -93,6 +93,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-03-19: TFRT Deep Dive
+[slides](https://drive.google.com/open?id=1Vx_H3faqbf0cCml9KO62fDtp0RGK2gxd) -
+[recording](https://drive.google.com/open?id=1KEXLb2pke1MVapPvj8ndGz7nsYWQtvmo)
 * 2020-02-27: End-to-end Dynamic Shape Support in MLIR
 [slides](https://drive.google.com/open?id=1ZDzXluB2uVc35r1fBNK5jW6rY8s82pc_) -
 [recording](https://drive.google.com/a/google.com/file/d/1_uEISlV5MUWdG9faKAdKlCWnPtGjRC-D/view?usp=sharing)
