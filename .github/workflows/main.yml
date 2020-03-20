@@ -34,7 +34,8 @@ jobs:
       run:  ./copy_docs.sh llvm_src/build/tools/mlir/docs/ website/content/docs/
 
     - name: Install MLIR Source docs
-      run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/
+      run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/ &&
+            cp -r llvm_src/mlir/docs/includes/img website/content/docs/includes
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
