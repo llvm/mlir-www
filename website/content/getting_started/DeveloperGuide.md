@@ -38,6 +38,30 @@ installed system-wide, running `git clang-format origin/master` will update the
 files in the working directory with the relevant formatting changes; don't
 forget to include those to the commit.
 
+## IR should be valid before and after each pass
+
+Passes should assume that their input IR passes the verifier. Passes should not
+check invariants that are guaranteed by the verifier. If many passes are checking
+the same invariant consider adding that invariant to the verifier or factoring
+the IR design / dialects to better model the invariant at each phase of compilation.
+
+Similarly, the IR after a pass runs should be verifier-valid. If a pass produces IR
+that fails the verifier then the pass has a bug.
+
+It is somewhat common for invalid IR to exist transiently while a pass is executing.
+This is moderately discouraged but often practically necessary.
+
+## Assertions and crashes in passes
+
+It should not be possible to trigger a crash or assertion by running an MLIR
+pass on verifier-valid IR. If it is possible, then the pass has a bug.
+
+If a pass requires additional invariants not guaranteed by the verifier, then
+it should check them itself and if those invariants are not present,
+either safely perform no transformation (for pure optimization passes)
+or emit a diagnostic explaining why a transformation cannot be performed
+(for lowering passes where the transformation is needed for correctness).
+
 ## Pass name and other command line options
 
 To avoid collision between options provided by different dialects, the naming
