@@ -10,7 +10,7 @@ Below is a list of projects that can be suitable for [Google Summer of Code
 with contributing to MLIR. See also [the "beginner" issues](https://bugs.llvm.org/buglist.cgi?keywords=beginner%2C%20&keywords_type=allwords&list_id=176893&product=MLIR&query_format=advanced&resolution=---)
 on the bugtracker.
 If you're interested in one of these projects, feel free to discuss it on
-the MLIR section of the [LLVM forums](https://llvm.discourse.group/c/llvm-project/mlir)
+the MLIR section of the [LLVM forums](https://llvm.discourse.group/c/mlir/31)
 or on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362)
 server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.

@@ -19,7 +19,7 @@ publication](https://arxiv.org/abs/2002.11054).
 
 For more information on MLIR, please see:
 
-*   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/llvm-project/mlir) for any questions.
+*   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/mlir/31) for any questions.
 *   Real-time discussion on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362) server.
 *   Previous [talks](talks/).
 
