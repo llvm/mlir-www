@@ -93,6 +93,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-03-26: Tile Dialect
+[slides](https://drive.google.com/open?id=1uud3MGsC5Pc2VvqtsV57AjSrIoW5ZpVm) -
+[recording](https://drive.google.com/open?id=1Ely0XjuQ3HJo6Is9RY08Ef3QvVFryiPE)
 * 2020-03-19: TFRT Deep Dive
 [slides](https://drive.google.com/open?id=1Vx_H3faqbf0cCml9KO62fDtp0RGK2gxd) -
 [recording](https://drive.google.com/open?id=1KEXLb2pke1MVapPvj8ndGz7nsYWQtvmo)
