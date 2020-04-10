@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-04-09: Technical discussion on TCP
+[slides](https://drive.google.com/open?id=1iljcpTQ5NPaMfGpoPDFml1XkYxjK_6A4)
+[recording](https://drive.google.com/open?id=1jSPa8TwPKUt0WuLquGc8OgSUVYJHMvWZ)
 * 2020-03-05: Shape Dialect
 [slides](https://drive.google.com/open?id=1w_aDOOT5HRnvlkEYE24bGP1XFjMBhIUK) -
 [recording](https://drive.google.com/open?id=1DERBP5oqqc98xfAp_73HCPkraUqM9qgS)
