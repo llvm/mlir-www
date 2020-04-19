@@ -86,6 +86,12 @@ disablePathToLower = true
     url = "https://github.com/llvm/llvm-project/tree/master/mlir"
 
 [[menu.main]]
+    name = "Doxygen"
+    parent = "Source"
+    weight = 1
+    url = "doxygen/"
+
+[[menu.main]]
     name = "Bugs"
     weight = 20
     url = "https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific"
