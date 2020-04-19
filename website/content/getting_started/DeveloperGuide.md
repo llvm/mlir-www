@@ -20,7 +20,7 @@ LLVM style guide):
     definitions, regardless of them being visible as public APIs.
 *   Except for IR units (Region, Block, and Operation), non-nullable output
     arguments are passed by non-const reference in general.
-*   IR constructs are not designed for [const correctness](../../docs/UsageOfConst.md).
+*   IR constructs are not designed for [const correctness](../../docs/Rationale/UsageOfConst.md).
 *   Do *not* use recursive algorithms if the recursion can't be bounded
     statically: that is avoid recursion if there is a possible IR input that can
     trigger a stack overflow (for example traversing use-def chains in a
