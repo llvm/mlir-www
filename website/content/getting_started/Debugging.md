@@ -28,7 +28,7 @@ Isolating your problem to the inspection of manageable set of passes (ideally a 
 
 ### Extracting a `.mlir` file and a pass pipeline.
 
-MLIR's core infrastructure has the ability to [create a "crash reproducer"](WritingAPass.md#crash-and-failure-reproduction) and this functionality should be added to your compilation flows. Additionally, you should ensure that `.mlir` files are dumped during your compilation flow at key points such that even if compilation succeeds (possibly spuriously, such as with a miscompile), then there is still a starting point for dropping into `mlir-opt`.
+MLIR's core infrastructure has the ability to [create a "crash reproducer"](../docs/PassManagement.md#crash-and-failure-reproduction) and this functionality should be added to your compilation flows. Additionally, you should ensure that `.mlir` files are dumped during your compilation flow at key points such that even if compilation succeeds (possibly spuriously, such as with a miscompile), then there is still a starting point for dropping into `mlir-opt`.
 
 ### Isolating a buggy pass
 

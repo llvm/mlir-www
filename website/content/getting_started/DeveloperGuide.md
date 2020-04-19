@@ -72,7 +72,7 @@ that is registered on the command line as `-affine-tile`, and with a tile size
 option that can be set with `-affine-tile-size`.
 
 We also avoid `cl::opt` to provide pass options in favor of the
-[pass options](../../docs/WritingAPass.md#instance-specific-pass-options)
+[pass options](../docs/PassManagement.md#instance-specific-pass-options)
 mechanism. This allows for these options to be serialized in a pass pipeline
 description, as well as passing different options to multiple instances of a
 pass in the same pipeline.
