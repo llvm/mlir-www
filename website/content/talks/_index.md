@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-04-16: MLIR on GPUs
+[slides](https://drive.google.com/open?id=1up9eU1oXONZV3qq22KABkGSJqqadPVY_)
+[recording](https://drive.google.com/open?id=1Qn064zG_U7Sa0FC9KLTWb68_gcMGpwU3)
 * 2020-04-09: Technical discussion on TCP
 [slides](https://drive.google.com/open?id=1iljcpTQ5NPaMfGpoPDFml1XkYxjK_6A4)
 [recording](https://drive.google.com/open?id=1jSPa8TwPKUt0WuLquGc8OgSUVYJHMvWZ)
