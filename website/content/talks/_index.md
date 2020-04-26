@@ -99,6 +99,10 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-04-23: LLHD: A Multi-level Intermediate Representation for Hardware Description
+[slides](https://drive.google.com/open?id=1t4wh2lcEdH_6z61a9rEn5EyvBAzGF7FB) -
+[additional slides](https://drive.google.com/open?id=16X6UMZLRtcCqvYQ1FyTk-xaxei0Fxo50) -
+[recording](https://drive.google.com/open?id=1x7B0IRdcJ5JBQvfHbPUBcShbTFCMlrbe)
 * 2020-03-26: Tile Dialect
 [slides](https://drive.google.com/open?id=1uud3MGsC5Pc2VvqtsV57AjSrIoW5ZpVm) -
 [recording](https://drive.google.com/open?id=1Ely0XjuQ3HJo6Is9RY08Ef3QvVFryiPE)
