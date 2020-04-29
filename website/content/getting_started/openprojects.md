@@ -42,3 +42,4 @@ Nicolas Vasilache, Alex Zinenko)
 	We will be working with interested students to refine the exact project based on interests given the wide scope of potential approaches. And open to proposals within this general area.
 
 * Rewrite patterns expressed in MLIR (mentor: Jacques Pienaar)
+* Generic value range analysis for MLIR (mentor: River Riddle)
