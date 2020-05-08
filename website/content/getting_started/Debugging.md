@@ -9,7 +9,7 @@ weight: 10
 
 ## Inspecting compilation
 
-There's no silver bullet for debugging the compilation process. Standard debugging techniques (printf debugging, gdb/lldb, IDE graphical debuggers, etc.) are of course applicable, but here are MLIR-specific facilities that are quite useful before diving into a generic debug flow. These facilities assume that you have reduced your problem to a form that can be reproduced with `mlir-opt` or another program that hooks into MLIR's option parsing, if this is not the case, see section "Isolating test case" below.
+There's no silver bullet for debugging the compilation process. Standard debugging techniques (printf debugging, gdb/lldb, IDE graphical debuggers, etc.) are of course applicable, but below are MLIR-specific facilities that are quite useful before diving into a generic debug flow. These facilities assume that you have reduced your problem to a form that can be reproduced with `mlir-opt` or another program that hooks into MLIR's option parsing, if this is not the case, see section "Isolating test case" below.
 
 - `-mlir-print-stacktrace-on-diagnostic` causes a stacktrace to be  printed when a diagnostic is emitted. This can be useful to quickly get an idea where in a pass an error is happening.
 
@@ -24,7 +24,7 @@ There's no silver bullet for debugging the compilation process. Standard debuggi
 
 ## Isolating test cases
 
-Isolating your problem to the inspection of manageable set of passes (ideally a single pass), but sometimes this can be difficult in larger compilation flow.
+Isolating your problem to the inspection of manageable set of passes (ideally a single pass) is one of the most important parts of debugging a compiler, but sometimes this can be difficult in larger compilation flow.
 
 ### Extracting a `.mlir` file and a pass pipeline.
 
