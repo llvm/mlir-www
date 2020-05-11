@@ -15,10 +15,9 @@ or on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362)
 server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.
 
-* [bugpoint/llvm-reduce](https://llvm.org/docs/BugpointRedesign.html) and
-  llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
-* Rework the MLIR python bindings, add a C APIs for core concepts (mentor:
-Nicolas Vasilache, Alex Zinenko)
+* llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
+* IR query tool to make exploring the IR easier (e.g., all operations dominated
+  by X, find possible path between two ops, etc.) (mentor: Jacques Pienaar)
 * Automatic formatter for TableGen (similar to clang-format for C/C++)
 * LLVM IR declaratively defined. (mentor: Alex Zinenko)
 * MLIR Binary serialization / bitcode format (Mehdi Amini)
@@ -43,3 +42,18 @@ Nicolas Vasilache, Alex Zinenko)
 
 * Rewrite patterns expressed in MLIR (mentor: Jacques Pienaar)
 * Generic value range analysis for MLIR (mentor: River Riddle)
+
+### Projects started/starting soon:
+
+This is section for projects that have not yet started but there are
+individuals/groups intending to start work on in near future.
+
+* Rework the MLIR python bindings, add a C APIs for core concepts (mentor: 
+  Nicolas Vasilache, Alex Zinenko)
+* [bugpoint/llvm-reduce](https://llvm.org/docs/BugpointRedesign.html) kind
+  of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
+* MLIR visualization, there are some projects in flight but we unfortunately
+  don't know the project plans of those teams. But if you intend to work on
+	something in this area it would be good to discuss on the forum early
+	in case there are collaboration opportunity.
+  
