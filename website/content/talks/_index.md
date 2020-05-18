@@ -99,6 +99,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-05-14: RISE: A Functional Pattern-based Dialect in MLIR
+[slides](https://drive.google.com/open?id=1curA4skh2DsJ2kVHynoJqQyUaJr74xkI) -
+[recording](https://drive.google.com/open?id=18DNvegfHcEQfkKktkBhmhUecyNunfy2s)
 * 2020-04-23: LLHD: A Multi-level Intermediate Representation for Hardware Description
 [slides](https://drive.google.com/open?id=1t4wh2lcEdH_6z61a9rEn5EyvBAzGF7FB) -
 [additional slides](https://drive.google.com/open?id=16X6UMZLRtcCqvYQ1FyTk-xaxei0Fxo50) -
