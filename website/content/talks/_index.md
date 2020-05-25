@@ -99,6 +99,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-05-21: MLIR case study: AVX512 codegen for Vector dialect
+[slides](https://drive.google.com/open?id=19nTpBi3Wzye75Sp6nAH-PyqxFyhDn78J) -
+[recording](https://drive.google.com/open?id=1t6vnv9btkpjBlqJf0zH5ujiLTBUYKSzQ)
 * 2020-05-14: RISE: A Functional Pattern-based Dialect in MLIR
 [slides](https://drive.google.com/open?id=1curA4skh2DsJ2kVHynoJqQyUaJr74xkI) -
 [recording](https://drive.google.com/open?id=18DNvegfHcEQfkKktkBhmhUecyNunfy2s)
