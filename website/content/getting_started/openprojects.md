@@ -15,6 +15,7 @@ or on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362)
 server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.
 
+* Implement C bindings for the core IR: this will allow to manipulate IR from other languages.
 * llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
 * IR query tool to make exploring the IR easier (e.g., all operations dominated
   by X, find possible path between two ops, etc.) (mentor: Jacques Pienaar)
