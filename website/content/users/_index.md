@@ -7,9 +7,12 @@ weight: 1
 
 In alphabetical order below.
 
-## Flang: the LLVM Fortran compiler
+## [Flang](https://github.com/llvm/llvm-project/tree/master/flang)
 
-The high level IR of the Fortran compiler is modeled using MLIR.
+Flang is a ground-up implementation of a Fortran front end written in modern C++.
+[F18](https://github.com/flang-compiler/f18) was subsequently accepted into the
+LLVM project and rechristened as Flang. The high level IR of the Fortran compiler
+is modeled using MLIR.
 
 ## [IREE](https://github.com/google/iree)
 
