@@ -39,13 +39,10 @@ send a patch for review, by quietly amending your commit message. Make sure to
 **remove Phabricator tags** other than "Differential Revision" before pushing
 commits out to the repository.
 
-The following script can be added to your `.bashrc` to create the `arcfilter`
-command. When called as `arcfilter` from the command line, it removes the
-Arcanist-injected tags from the last commit by amending its message.
-
-```sh
-function arcfilter() {  git log -1 --pretty=%B | sed  's/^Summary://'  | awk '/Reviewers: /{p=1; sub(/Reviewers: .*Differential Revision: /, "")}; /Differential Revision: /{p=0;}; !p' | git commit --amend -F - ; }
-```
+To automatically cleanup the most recent commit (HEAD) of your current local branch, you
+can just run: `llvm/utils/git/arcfilter.sh`. You can also setup a check as a git hook to
+prevent accidentally pushing unclean commits with:
+`ln -sf ../../llvm/utils/git/pre-push.py .git/hooks/pre-push`
 
 #### First-time contributors
 
