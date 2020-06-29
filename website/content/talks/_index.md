@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-06-25: Basic GPU Compute Algorithm
+[slides](https://drive.google.com/file/d/1DPLiZwRVRBIVmAZynEcoQzXzOciqDe-x/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1OxvFe55TVpHDckFEOt4k-uLqaV9K-xz0/view?usp=sharing)
 * 2020-04-16: MLIR on GPUs
 [slides](https://drive.google.com/open?id=1up9eU1oXONZV3qq22KABkGSJqqadPVY_)
 [recording](https://drive.google.com/open?id=1Qn064zG_U7Sa0FC9KLTWb68_gcMGpwU3)
