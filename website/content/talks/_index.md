@@ -56,10 +56,9 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * 2020-07-09: 
-[MLIR Test Case Reducer Tool](https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4) 
-[RFC Starting in-tree development of python bindings](https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3)
-[RFC Rebooting C APIs for core IR](https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380)
-[recording](https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing)
+[MLIR Test Case Reducer Tool](https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4) ;
+[RFC Starting in-tree development of python bindings](https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3) ; and
+[RFC Rebooting C APIs for core IR](https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380) - [recording](https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing)
 * 2020-06-25: Basic GPU Compute Algorithm
 [slides](https://drive.google.com/file/d/1DPLiZwRVRBIVmAZynEcoQzXzOciqDe-x/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1OxvFe55TVpHDckFEOt4k-uLqaV9K-xz0/view?usp=sharing)
