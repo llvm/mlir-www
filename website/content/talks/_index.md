@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-07-23: Asynchronous execution
+[slides](https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1jajZf5-3q0SE8CFwT07LU4Xt0QU05eoF/view?usp=sharing)
 * 2020-07-09: 
 [MLIR Test Case Reducer Tool](https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4) ;
 [RFC Starting in-tree development of python bindings](https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3) ; and
