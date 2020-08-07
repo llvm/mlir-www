@@ -55,6 +55,10 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+
+* 2020-07-30: SPIR-V dialect and lowerings 
+[slides](https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1I71ze0dkvWiS6QADe2uRGO5MUYIGL7wn/view?usp=sharing)
 * 2020-07-23: Asynchronous execution
 [slides](https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1jajZf5-3q0SE8CFwT07LU4Xt0QU05eoF/view?usp=sharing)
@@ -109,6 +113,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-08-06: MultiLevel Tactics: Lifting loops in MLIR
+[slides](https://drive.google.com/file/d/1pyBANtcAFgSC0c0Jz85a9ZT794lE9XJY)
+[recording](https://drive.google.com/file/d/1mfvAiJck4WDDcSPaWbc3D_Dvh86pp3MD)
 * 2020-05-21: MLIR case study: AVX512 codegen for Vector dialect
 [slides](https://drive.google.com/open?id=19nTpBi3Wzye75Sp6nAH-PyqxFyhDn78J) -
 [recording](https://drive.google.com/open?id=1t6vnv9btkpjBlqJf0zH5ujiLTBUYKSzQ)
