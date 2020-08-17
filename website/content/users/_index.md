@@ -31,6 +31,12 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [NPComp](https://github.com/llvm/mlir-npcomp): MLIR based compiler toolkit for numerical python programs
+
+The NPComp project aims to provide tooling for compiling numerical python programs of various forms to take advantage of MLIR+LLVM code generation and backend runtime systems.
+
+In addition to providing a bridge to a variety of Python based numerical programming frameworks, NPComp also directly develops components for tracing and compilation of generic Python program fragments.
+
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
 PlaidML is a tensor compiler that facilitates reusable and performance portable
