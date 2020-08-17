@@ -7,6 +7,11 @@ weight: 1
 
 In alphabetical order below.
 
+## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
+
+The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM 
+development methodology to the domain of hardware design tools.
+
 ## [Flang](https://github.com/llvm/llvm-project/tree/master/flang)
 
 Flang is a ground-up implementation of a Fortran front end written in modern C++. 
@@ -51,6 +56,8 @@ building many tools (XLA, TFLite converter, quantization, ...).
 
 ## [Verona](https://github.com/microsoft/verona)
 
-Project Verona is a research programming language to explore the concept of concurrent ownership. They are providing a new concurrency model that seamlessly integrates ownership.
+Project Verona is a research programming language to explore the concept of
+concurrent ownership. They are providing a new concurrency model that seamlessly
+integrates ownership.
 
 
