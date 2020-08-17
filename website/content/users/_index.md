@@ -47,6 +47,10 @@ asynchronous runtime system.
 ## [TensorFlow](https://www.tensorflow.org/mlir)
 
 MLIR is used as a Graph Transformation framework and the foundation for
-building many tools (TFLite converter, quantization, ...).
+building many tools (XLA, TFLite converter, quantization, ...).
+
+## [Verona](https://github.com/microsoft/verona)
+
+Project Verona is a research programming language to explore the concept of concurrent ownership. They are providing a new concurrency model that seamlessly integrates ownership.
 
 
