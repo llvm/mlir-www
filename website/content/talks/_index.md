@@ -55,7 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-
+* 2020-08-13: Structured and Retargetable Compilation With Vectors 
+[slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing)
+[recording](https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing)
 * 2020-07-30: SPIR-V dialect and lowerings 
 [slides](https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1I71ze0dkvWiS6QADe2uRGO5MUYIGL7wn/view?usp=sharing)
