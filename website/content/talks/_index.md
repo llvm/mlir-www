@@ -55,10 +55,6 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2020-08-20: IREE CodeGen 
-[slides](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
-[recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing)
-[transcript](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
 * 2020-08-13: Structured and Retargetable Compilation With Vectors 
 [slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing)
 [recording](https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing)
@@ -119,6 +115,10 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-08-20: IREE CodeGen 
+[slides](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
+[recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing)
+[transcript](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
 * 2020-08-06: MultiLevel Tactics: Lifting loops in MLIR
 [slides](https://drive.google.com/file/d/1pyBANtcAFgSC0c0Jz85a9ZT794lE9XJY)
 [recording](https://drive.google.com/file/d/1mfvAiJck4WDDcSPaWbc3D_Dvh86pp3MD)
