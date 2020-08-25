@@ -116,7 +116,7 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 ### Using MLIR
 
 * 2020-08-20: IREE CodeGen 
-[slides](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit)
 [recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing)
 [transcript](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
 * 2020-08-06: MultiLevel Tactics: Lifting loops in MLIR
