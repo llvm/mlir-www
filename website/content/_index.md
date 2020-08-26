@@ -34,14 +34,14 @@ Details on how to join the meeting are in the agenda doc.
 MLIR is intended to be a hybrid IR which can support multiple different
 requirements in a unified infrastructure. For example, this includes:
 
-*   The ability to represent dataflow graph (such as TensorFlow), including
+*   The ability to represent dataflow graphs (such as in TensorFlow), including
     dynamic shapes, the user-extensible op ecosystem, TensorFlow variables, etc.
-*   Optimizations and transformations typically done on a such graph (e.g. in
+*   Optimizations and transformations typically done on such graphs (e.g. in
     Grappler).
 *   Representation of kernels for ML operations in a form suitable for
     optimization.
 *   Ability to host high-performance-computing-style loop optimizations across
-    kernels (fusion, loop interchange, tiling, etc) and to transform memory
+    kernels (fusion, loop interchange, tiling, etc.), and to transform memory
     layouts of data.
 *   Code generation "lowering" transformations such as DMA insertion, explicit
     cache management, memory tiling, and vectorization for 1D and 2D register
