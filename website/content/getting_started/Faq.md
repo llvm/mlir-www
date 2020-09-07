@@ -21,7 +21,7 @@ explicitly loads the Toy Dialect before emitting the Toy IR from the AST.
 The process of loading a Dialect in the context is not thread-safe, which forces
 all involved Dialects to be loaded before the multi-threaded pass manager starts
 the execution. To keep the system modular and layered, invoking a pass pipeline
-should never require to pre-load some dialects explicitly. This is achieved by
+should never require pre-loading dialects explicitly. This is achieved by
 requiring every pass to declare a list of *dependent* Dialects: these are
 Dialects for which an entity (Operation, Type, or Attribute) can be created by
 the pass, other than for Dialects that would already be in the input.
