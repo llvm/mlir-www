@@ -40,8 +40,8 @@ In addition to providing a bridge to a variety of Python based numerical program
 ## [ONNX-MLIR](https://github.com/onnx/onnx-mlir)
 
 To represent neural network models, users often use [Open Neural Network
-Exchange (ONNX)]((http://onnx.ai/onnx-mlir/)) which is an open standard format
-for machine learning interoperability.
+Exchange (ONNX)](http://onnx.ai/onnx-mlir/) which is an open standard format for
+machine learning interoperability.
 ONNX-MLIR is a MLIR-based compiler for rewriting a model in ONNX into a standalone
 binary that is executable on different target hardwares such as x86 machines,
 IBM Power Systems, and IBM System Z.
