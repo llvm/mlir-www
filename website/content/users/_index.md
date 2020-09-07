@@ -9,16 +9,16 @@ In alphabetical order below.
 
 ## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
 
-The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM 
+The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
 ## [Flang](https://github.com/llvm/llvm-project/tree/master/flang)
 
-Flang is a ground-up implementation of a Fortran front end written in modern C++. 
-It started off as the [f18 project](https://github.com/flang-compiler/f18) with an 
-aim to replace the previous [flang project](https://github.com/flang-compiler/flang) 
-and address its various deficiencies. F18 was subsequently accepted into the LLVM 
-project and rechristened as Flang. The high level IR of the Fortran compiler is modeled 
+Flang is a ground-up implementation of a Fortran front end written in modern C++.
+It started off as the [f18 project](https://github.com/flang-compiler/f18) with an
+aim to replace the previous [flang project](https://github.com/flang-compiler/flang)
+and address its various deficiencies. F18 was subsequently accepted into the LLVM
+project and rechristened as Flang. The high level IR of the Fortran compiler is modeled
 using MLIR.
 
 ## [IREE](https://github.com/google/iree)
@@ -36,6 +36,18 @@ focused on games and rendering pipelines.
 The NPComp project aims to provide tooling for compiling numerical python programs of various forms to take advantage of MLIR+LLVM code generation and backend runtime systems.
 
 In addition to providing a bridge to a variety of Python based numerical programming frameworks, NPComp also directly develops components for tracing and compilation of generic Python program fragments.
+
+## [ONNX-MLIR](https://github.com/onnx/onnx-mlir)
+
+To represent neural network models, users often use [Open Neural Network
+Exchange (ONNX)]((http://onnx.ai/onnx-mlir/)) which is an open standard format
+for machine learning interoperability.
+ONNX-MLIR is a MLIR-based compiler for rewriting a model in ONNX into a standalone
+binary that is executable on different target hardwares such as x86 machines,
+IBM Power Systems, and IBM System Z.
+
+See also this paper: [Compiling ONNX Neural Network Models Using
+MLIR](https://arxiv.org/abs/2008.08272).
 
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
@@ -65,5 +77,3 @@ building many tools (XLA, TFLite converter, quantization, ...).
 Project Verona is a research programming language to explore the concept of
 concurrent ownership. They are providing a new concurrency model that seamlessly
 integrates ownership.
-
-
