@@ -12,6 +12,9 @@ jobs:
   build-deploy:
     runs-on: ubuntu-18.04
     steps:
+    - name: Timestamp Begin
+      run: date
+
     - uses: actions/checkout@v1
 
     - name: Install doxygen
@@ -58,3 +61,6 @@ jobs:
         publish_branch: gh-pages
         publish_dir: ./public
         force_orphan: true
+
+    - name: Timestamp End
+      run: date
