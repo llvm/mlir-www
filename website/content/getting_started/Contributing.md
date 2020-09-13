@@ -31,17 +31,8 @@ to send your patches for review. This triggers the continuous build system and
 preserves the authorship information in case somebody else commits the patch on
 your behalf.
 
-**Do not use `arc land`**, push commits to master directly with `git`. Arcanist
-adds noisy tags to the commit message that we prefer to remove. See the
-[llvm-dev thread](http://lists.llvm.org/pipermail/llvm-dev/2019-December/137848.html)
-on the subject for more information. *Note:* Arcanist also adds tags when you
-send a patch for review, by quietly amending your commit message. Make sure to
-**remove Phabricator tags** other than "Differential Revision" before pushing
-commits out to the repository.
-
-To automatically cleanup the most recent commit (HEAD) of your current local branch, you
-can just run: `llvm/utils/git/arcfilter.sh`. You can also setup a check as a git hook to
-prevent accidentally pushing unclean commits with:
+You can also setup a check as a git hook to prevent accidentally pushing
+unformatted commits with:
 `ln -sf ../../llvm/utils/git/pre-push.py .git/hooks/pre-push`
 
 #### First-time contributors
