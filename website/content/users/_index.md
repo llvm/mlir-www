@@ -31,11 +31,22 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [Nod Distributed Runtime](https://nod.ai/project/distributedruntime/): Asynchronous fine-grained op-level parallel runtime
+
+Nod's MLIR based Parallel Compiler and Distributed Runtime  provide a way to
+easily scale out training and inference of very large models across multiple
+heterogeneous devices (CPUs/GPUs/Accelerators/FPGAs)  in a cluster while
+exploiting fine-grained op-level parallelism.
+
 ## [NPComp](https://github.com/llvm/mlir-npcomp): MLIR based compiler toolkit for numerical python programs
 
-The NPComp project aims to provide tooling for compiling numerical python programs of various forms to take advantage of MLIR+LLVM code generation and backend runtime systems.
+The NPComp project aims to provide tooling for compiling numerical python programs
+of various forms to take advantage of MLIR+LLVM code generation and backend runtime
+systems.
 
-In addition to providing a bridge to a variety of Python based numerical programming frameworks, NPComp also directly develops components for tracing and compilation of generic Python program fragments.
+In addition to providing a bridge to a variety of Python based numerical programming
+frameworks, NPComp also directly develops components for tracing and compilation of
+generic Python program fragments.
 
 ## [ONNX-MLIR](https://github.com/onnx/onnx-mlir)
 
