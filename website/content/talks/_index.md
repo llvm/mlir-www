@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-09-10: TF Kernel Generator  
+[slides](https://drive.google.com/file/d/1TZCF_Y5D8u6Hz8_WP5le4Zuh-0O4_7HO/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1WphQap3GXLTNtV0wp24U7Df8Qew9b4Ku/view?usp=sharing)
 * 2020-08-13: Structured and Retargetable Compilation With Vectors 
 [slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing)
 [recording](https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing)
