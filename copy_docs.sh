@@ -50,7 +50,7 @@ for val in $included_files; do
     if [[ $(head -1 $output_path$include) == '---' ]]; then
         tail -n +6 $output_path$include > "include.tmp" && mv "include.tmp" $output_path$include
     fi
-    sed -i -e "$line {r $output_path$include" -e 'd' -e '}' $file
+    sed -i '' -e "$line {r $output_path$include" -e 'd' -e '}' $file
 done
 
 # Make sure the included files are removed after processing.
