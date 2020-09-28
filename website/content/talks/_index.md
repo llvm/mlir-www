@@ -55,19 +55,22 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2020-09-10: TF Kernel Generator  
+* 2020-09-24: Buffer Allocation in MLIR
+[slides](https://drive.google.com/file/d/1SMp7fc3qiliwxcOViyUZDoG8KtajJd_d/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1HCJ5WMmQYmx1w9Ervg2n6eKIo0Y9qQi2/view?usp=sharing)
+* 2020-09-10: TF Kernel Generator
 [slides](https://drive.google.com/file/d/1TZCF_Y5D8u6Hz8_WP5le4Zuh-0O4_7HO/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1WphQap3GXLTNtV0wp24U7Df8Qew9b4Ku/view?usp=sharing)
-* 2020-08-13: Structured and Retargetable Compilation With Vectors 
+* 2020-08-13: Structured and Retargetable Compilation With Vectors
 [slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing)
 [recording](https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing)
-* 2020-07-30: SPIR-V dialect and lowerings 
+* 2020-07-30: SPIR-V dialect and lowerings
 [slides](https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1I71ze0dkvWiS6QADe2uRGO5MUYIGL7wn/view?usp=sharing)
 * 2020-07-23: Asynchronous execution
 [slides](https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing)
 [recording](https://drive.google.com/file/d/1jajZf5-3q0SE8CFwT07LU4Xt0QU05eoF/view?usp=sharing)
-* 2020-07-09: 
+* 2020-07-09:
 [MLIR Test Case Reducer Tool](https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4) ;
 [RFC Starting in-tree development of python bindings](https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3) ; and
 [RFC Rebooting C APIs for core IR](https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380) - [recording](https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing)
@@ -118,7 +121,7 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
-* 2020-08-20: IREE CodeGen 
+* 2020-08-20: IREE CodeGen
 [slides](https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit)
 [recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing)
 [transcript](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
