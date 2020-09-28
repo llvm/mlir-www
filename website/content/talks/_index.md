@@ -55,35 +55,36 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2020-09-24: Buffer Allocation in MLIR
-[slides](https://drive.google.com/file/d/1SMp7fc3qiliwxcOViyUZDoG8KtajJd_d/view?usp=sharing)
+* 2020-09-24: Buffer Allocation in MLIR ;
+[slides](https://drive.google.com/file/d/1SMp7fc3qiliwxcOViyUZDoG8KtajJd_d/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1HCJ5WMmQYmx1w9Ervg2n6eKIo0Y9qQi2/view?usp=sharing)
-* 2020-09-10: TF Kernel Generator
-[slides](https://drive.google.com/file/d/1TZCF_Y5D8u6Hz8_WP5le4Zuh-0O4_7HO/view?usp=sharing)
+* 2020-09-10: TF Kernel Generator ;
+[slides](https://drive.google.com/file/d/1TZCF_Y5D8u6Hz8_WP5le4Zuh-0O4_7HO/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1WphQap3GXLTNtV0wp24U7Df8Qew9b4Ku/view?usp=sharing)
-* 2020-08-13: Structured and Retargetable Compilation With Vectors
-[slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing)
+* 2020-08-13: Structured and Retargetable Compilation With Vectors ;
+[slides](https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing)
-* 2020-07-30: SPIR-V dialect and lowerings
-[slides](https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing)
+* 2020-07-30: SPIR-V dialect and lowerings ;
+[slides](https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1I71ze0dkvWiS6QADe2uRGO5MUYIGL7wn/view?usp=sharing)
-* 2020-07-23: Asynchronous execution
-[slides](https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing)
+* 2020-07-23: Asynchronous execution ;
+[slides](https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1jajZf5-3q0SE8CFwT07LU4Xt0QU05eoF/view?usp=sharing)
 * 2020-07-09:
 [MLIR Test Case Reducer Tool](https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4) ;
 [RFC Starting in-tree development of python bindings](https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3) ; and
-[RFC Rebooting C APIs for core IR](https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380) - [recording](https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing)
-* 2020-06-25: Basic GPU Compute Algorithm
-[slides](https://drive.google.com/file/d/1DPLiZwRVRBIVmAZynEcoQzXzOciqDe-x/view?usp=sharing)
+[RFC Rebooting C APIs for core IR](https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380) -
+[recording](https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing)
+* 2020-06-25: Basic GPU Compute Algorithm ;
+[slides](https://drive.google.com/file/d/1DPLiZwRVRBIVmAZynEcoQzXzOciqDe-x/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1OxvFe55TVpHDckFEOt4k-uLqaV9K-xz0/view?usp=sharing)
-* 2020-04-16: MLIR on GPUs
-[slides](https://drive.google.com/open?id=1up9eU1oXONZV3qq22KABkGSJqqadPVY_)
+* 2020-04-16: MLIR on GPUs ;
+[slides](https://drive.google.com/open?id=1up9eU1oXONZV3qq22KABkGSJqqadPVY_) -
 [recording](https://drive.google.com/open?id=1Qn064zG_U7Sa0FC9KLTWb68_gcMGpwU3)
-* 2020-04-09: Technical discussion on TCP
-[slides](https://drive.google.com/open?id=1iljcpTQ5NPaMfGpoPDFml1XkYxjK_6A4)
+* 2020-04-09: Technical discussion on TCP ;
+[slides](https://drive.google.com/open?id=1iljcpTQ5NPaMfGpoPDFml1XkYxjK_6A4) -
 [recording](https://drive.google.com/open?id=1jSPa8TwPKUt0WuLquGc8OgSUVYJHMvWZ)
-* 2020-03-05: Shape Dialect
+* 2020-03-05: Shape Dialect ;
 [slides](https://drive.google.com/open?id=1w_aDOOT5HRnvlkEYE24bGP1XFjMBhIUK) -
 [recording](https://drive.google.com/open?id=1DERBP5oqqc98xfAp_73HCPkraUqM9qgS)
 * 2020-01-24: Thoughts on Tensor Code Generation in MLIR ;
@@ -121,30 +122,30 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
-* 2020-08-20: IREE CodeGen
-[slides](https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit)
-[recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing)
+* 2020-08-20: IREE CodeGen ;
+[slides](https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit) -
+[recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing) -
 [transcript](https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing)
-* 2020-08-06: MultiLevel Tactics: Lifting loops in MLIR
-[slides](https://drive.google.com/file/d/1pyBANtcAFgSC0c0Jz85a9ZT794lE9XJY)
+* 2020-08-06: MultiLevel Tactics: Lifting loops in MLIR ;
+[slides](https://drive.google.com/file/d/1pyBANtcAFgSC0c0Jz85a9ZT794lE9XJY) -
 [recording](https://drive.google.com/file/d/1mfvAiJck4WDDcSPaWbc3D_Dvh86pp3MD)
-* 2020-05-21: MLIR case study: AVX512 codegen for Vector dialect
+* 2020-05-21: MLIR case study: AVX512 codegen for Vector dialect ;
 [slides](https://drive.google.com/open?id=19nTpBi3Wzye75Sp6nAH-PyqxFyhDn78J) -
 [recording](https://drive.google.com/open?id=1t6vnv9btkpjBlqJf0zH5ujiLTBUYKSzQ)
-* 2020-05-14: RISE: A Functional Pattern-based Dialect in MLIR
+* 2020-05-14: RISE: A Functional Pattern-based Dialect in MLIR ;
 [slides](https://drive.google.com/open?id=1curA4skh2DsJ2kVHynoJqQyUaJr74xkI) -
 [recording](https://drive.google.com/open?id=18DNvegfHcEQfkKktkBhmhUecyNunfy2s)
-* 2020-04-23: LLHD: A Multi-level Intermediate Representation for Hardware Description
+* 2020-04-23: LLHD: A Multi-level Intermediate Representation for Hardware Description ;
 [slides](https://drive.google.com/open?id=1t4wh2lcEdH_6z61a9rEn5EyvBAzGF7FB) -
 [additional slides](https://drive.google.com/open?id=16X6UMZLRtcCqvYQ1FyTk-xaxei0Fxo50) -
-[recording](https://drive.google.com/open?id=1x7B0IRdcJ5JBQvfHbPUBcShbTFCMlrbe)
-* 2020-03-26: Tile Dialect
+[recording](https://drive.google.com/open?id=1x7B0IRdcJ5JBQvfHbPUBcShbTFCMlrbe) ;
+* 2020-03-26: Tile Dialect ;
 [slides](https://drive.google.com/open?id=1uud3MGsC5Pc2VvqtsV57AjSrIoW5ZpVm) -
 [recording](https://drive.google.com/open?id=1Ely0XjuQ3HJo6Is9RY08Ef3QvVFryiPE)
-* 2020-03-19: TFRT Deep Dive
+* 2020-03-19: TFRT Deep Dive ;
 [slides](https://drive.google.com/open?id=1Vx_H3faqbf0cCml9KO62fDtp0RGK2gxd) -
 [recording](https://drive.google.com/open?id=1KEXLb2pke1MVapPvj8ndGz7nsYWQtvmo)
-* 2020-02-27: End-to-end Dynamic Shape Support in MLIR
+* 2020-02-27: End-to-end Dynamic Shape Support in MLIR ;
 [slides](https://drive.google.com/open?id=1ZDzXluB2uVc35r1fBNK5jW6rY8s82pc_) -
 [recording](https://drive.google.com/a/google.com/file/d/1_uEISlV5MUWdG9faKAdKlCWnPtGjRC-D/view?usp=sharing)
 * 2020-01-30: IREE: MLIR-based End-to-End ML Tooling ;
@@ -157,7 +158,7 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [slides](https://docs.google.com/presentation/d/1R6H_Eax6sXT2-ffpmF5zjHwS1F22D2DF2ty7EvdAUUw/edit?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1L-jpiRgMfLdsDnQpQMN3ns5jsJC07z2l/view?usp=sharing)
 * 2019-11-14: A Compiler Intermediate Representation for Stencils ;
-[slides](https://drive.google.com/open?id=19pSpEsi4I9-MKLRodD-po82HFCWLDAAc)
+[slides](https://drive.google.com/open?id=19pSpEsi4I9-MKLRodD-po82HFCWLDAAc) -
 [recording](https://drive.google.com/open?id=1uEvEm6xrk1EE_7Xib3sV9zO0j_857joc)
 * 2019-11-07: The Stripe dialect: An alternate approach for expressing affine computations ;
 [slides](https://docs.google.com/presentation/d/10tMCVZwMHlQPJnKo2nkbroFyAsew8j8wEaxk6Fdojzs/edit#slide=id.p1) -
