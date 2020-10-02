@@ -73,7 +73,7 @@ RISE is a spiritual successor to the
 parallel language with a system of rewrite rules which encode algorithmic
 and hardware-specific optimisation choices".
 
-## [TRFT: TensorFlow Runtime](https://github.com/tensorflow/runtime)
+## [TFRT: TensorFlow Runtime](https://github.com/tensorflow/runtime)
 
 TFRT aims to provide a unified, extensible infrastructure layer for an
 asynchronous runtime system.
