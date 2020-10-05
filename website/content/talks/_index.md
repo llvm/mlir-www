@@ -122,6 +122,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2020-10-01: NPComp update ;
+[slides](https://drive.google.com/file/d/1YIO7CfZOobPZTxowr8gs1BOQMgUKXH_G/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1EsOc-4ZtBEK9h6VENaO0qeGsm5FZhrSr/view?usp=sharing) -
 * 2020-08-20: IREE CodeGen ;
 [slides](https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit) -
 [recording](https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing) -
