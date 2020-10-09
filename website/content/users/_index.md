@@ -31,6 +31,20 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [Lumen](https://github.com/lumen/lumen): A new compiler and runtime for BEAM languages
+
+Lumen is not only a compiler, but a runtime as well. It consists of two parts:
+
+- A compiler for Erlang to native code for a given target (x86, ARM, WebAssembly)
+- An Erlang runtime, implemented in Rust, which provides the core functionality
+  needed to implement OTP
+
+The primary motivator for Lumen's development was the ability to compile Elixir
+applications that could target WebAssembly, enabling use of Elixir as a language
+for frontend development. It is also possible to use Lumen to target other
+platforms as well, by producing self-contained executables on platforms such as
+x86.
+
 ## [Nod Distributed Runtime](https://nod.ai/project/distributedruntime/): Asynchronous fine-grained op-level parallel runtime
 
 Nod's MLIR based Parallel Compiler and Distributed Runtime  provide a way to
