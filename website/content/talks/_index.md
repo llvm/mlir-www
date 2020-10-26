@@ -121,7 +121,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
 
 ### Using MLIR
-
+* 2020-10-22: Fusion of Elementwise operations with Linalg on tensors ;
+[slides](https://drive.google.com/file/d/1n6mDw3XlNB8qmltbVgdCzrgpED25KHEF/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1hNulnBUAaXmLJG30UgUAJgkQWupXd7T7/view?usp=sharing)
 * 2020-10-01: NPComp update ;
 [slides](https://drive.google.com/file/d/1YIO7CfZOobPZTxowr8gs1BOQMgUKXH_G/view?usp=sharing) -
 [recording](htps://drive.google.com/file/d/1EsOc-4ZtBEK9h6VENaO0qeGsm5FZhrSr/view?usp=sharing)
