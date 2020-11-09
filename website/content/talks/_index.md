@@ -121,6 +121,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
 
 ### Using MLIR
+* 2020-11-05: COMET: Domain Specific Compilation for Computational Chemistry ;
+[slides](https://drive.google.com/file/d/12X3E9AyCqHf5TqxrRQZhbqCORoFVuAzq/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1Zag7071CtbOyTQ7LhNhlyE0TpSLn9ahJ/view?usp=sharing)
 * 2020-10-29: Using MLIR for Multi-Dimensional Homomorphism ;
 [slides](https://drive.google.com/file/d/1vgAGVhv8oIl0yOvbRUAfje7Gg00-GU6U/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1bS4vapyzf7705wWj7t3WzwWkcbxXZyF6/view?usp=sharing)
