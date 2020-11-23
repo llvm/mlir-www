@@ -55,6 +55,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2020-11-19: Type Conversions the Not-So-Hard Way ;
+[slides](https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing)
 * 2020-09-24: Buffer Allocation in MLIR ;
 [slides](https://drive.google.com/file/d/1SMp7fc3qiliwxcOViyUZDoG8KtajJd_d/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1HCJ5WMmQYmx1w9Ervg2n6eKIo0Y9qQi2/view?usp=sharing)
