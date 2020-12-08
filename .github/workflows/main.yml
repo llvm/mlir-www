@@ -3,7 +3,7 @@ name: github pages
 on:
   push:
     branches:
-    - master
+    - main
   schedule:
     # Always regenerate once every 4 hour
     - cron:  '15 */4 * * *'
@@ -24,7 +24,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: llvm/llvm-project
-        ref: 'master'
+        ref: 'main'
         path: 'llvm_src'
 
     - name: Build MLIR Dialect docs & doxygen src
