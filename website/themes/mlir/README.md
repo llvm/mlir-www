@@ -92,7 +92,6 @@ layouts
   |    |    |- google-site-verification.html
   |    |    |- metatag-manager.html
   |    |- notification.html
-  |    |- pagination.html
   |    |- powered.html
   |    |- prepend-body.html
   |    |- sidebar-footer.html
