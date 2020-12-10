@@ -14,7 +14,7 @@ There's no silver bullet for debugging the compilation process. Standard debuggi
 - `-mlir-print-stacktrace-on-diagnostic` causes a stacktrace to be  printed when a diagnostic is emitted. This can be useful to quickly get an idea where in a pass an error is happening.
 
 - When dealing with verifier errors, `--verify-each=0` turns off the verifier, allowing one to see the full invalid IR
-  - `-mlir-print-op-generic` is often useful in combination, since many verifier errors also result in ops that cannot be printed in their "pretty form" (or worse, their "pretty form" is deceptive!). This option also influences the behavior of `op.dump()`.
+  - `-mlir-print-op-generic` is often useful in combination, since many verifier errors also result in ops that cannot be printed in their "pretty form" (or worse, their "pretty form" is misleading!). This option also influences the behavior of `op.dump()`.
 
 - When using the dialect conversion / pattern rewriting infrastructure `-debug-only=dialect-conversion` prints an exceedingly useful trace of the decisions that were made and why.
 
