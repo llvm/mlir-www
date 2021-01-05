@@ -22,7 +22,7 @@ At the moment you need to also join this [group](https://reviews.llvm.org/projec
 to enable build and test of your Phabricator revisions.
 
 Once a patch is approved on Phabricator and pass continuous integration checks,
-it can be pushed directly to the master branch of the repository.
+it can be pushed directly to the main branch of the repository.
 
 #### Using Arcanist
 
@@ -87,4 +87,4 @@ comment thread to coordinate.
 
 Include a license at the top of new files.
 
-* [C/C++ license example](https://github.com/llvm/llvm-project/blob/master/mlir/examples/toy/Ch1/toyc.cpp)
+* [C/C++ license example](https://github.com/llvm/llvm-project/blob/main/mlir/examples/toy/Ch1/toyc.cpp)

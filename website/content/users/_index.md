@@ -12,7 +12,7 @@ In alphabetical order below.
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
-## [Flang](https://github.com/llvm/llvm-project/tree/master/flang)
+## [Flang](https://github.com/llvm/llvm-project/tree/main/flang)
 
 Flang is a ground-up implementation of a Fortran front end written in modern C++.
 It started off as the [f18 project](https://github.com/flang-compiler/f18) with an

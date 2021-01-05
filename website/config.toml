@@ -22,7 +22,7 @@ disablePathToLower = true
     # Update menubar link too.
     # TODO(jpienaar): Find a way that doesn't duplicate it or
     # require redirect.
-    github_repository = "https://github.com/llvm/llvm-project/tree/master/mlir"
+    github_repository = "https://github.com/llvm/llvm-project/tree/main/mlir"
     version = ""
 
     # Documentation repository section
@@ -77,13 +77,13 @@ disablePathToLower = true
 [[menu.main]]
     name = "Source"
     weight = 10
-    url = "https://github.com/llvm/llvm-project/tree/master/mlir"
+    url = "https://github.com/llvm/llvm-project/tree/main/mlir"
 
 [[menu.main]]
     name = "GitHub"
     parent = "Source"
     weight = 2
-    url = "https://github.com/llvm/llvm-project/tree/master/mlir"
+    url = "https://github.com/llvm/llvm-project/tree/main/mlir"
 
 [[menu.main]]
     name = "Doxygen"

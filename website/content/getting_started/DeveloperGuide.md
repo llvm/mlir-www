@@ -34,7 +34,7 @@ Please run clang-format on the files you modified with the `.clang-format`
 configuration file available in the root directory. Check the clang-format
 [documentation](https://clang.llvm.org/docs/ClangFormat.html) for more details
 on integrating it with your development environment. In particular, if clang is
-installed system-wide, running `git clang-format origin/master` will update the
+installed system-wide, running `git clang-format origin/main` will update the
 files in the working directory with the relevant formatting changes; don't
 forget to include those to the commit.
 
