@@ -131,3 +131,19 @@ We have seen the following broad categories of dialects:
 While it can be useful to frame the goals of a proposal, this categorization is
 not exhaustive or absolute, and the community is open to discussing any new
 dialect beyond this taxonomy.
+
+## Breaking Changes
+
+MLIR (like LLVM) does not provide any C++ compatibility guarantee, and favor
+refactoring API liberally to enable upstream development. Downstream users are
+expected to manage API updates when they pull a new version of MLIR.
+
+When performing breaking changes, we expect to proceed with the most convenient
+way for the change to be reviewed and implemented, while minimizing churn. It
+is frequent to break changes in multiple commits to ease the review process.
+A breaking can be implemented incrementally withing these guidelines. A good
+practice is to communicate on
+[Discourse](https://llvm.discourse.group/c/mlir/31) about the timeline and plan
+for conducting such changes.
+
+See also the [general LLVM guideline for any large change in general](https://llvm.org/docs/DeveloperPolicy.html#making-a-major-change).
