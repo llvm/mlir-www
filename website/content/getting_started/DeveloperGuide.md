@@ -142,8 +142,8 @@ When performing breaking changes, we expect to proceed with the most convenient
 way for the change to be reviewed and implemented, while minimizing churn. It
 is frequent to break changes in multiple commits to ease the review process.
 A breaking can be implemented incrementally within these guidelines, but we
-don't go out of our way only to accomodate some downstream users. As such we
-don't have predefined deprecation period for APIs.
+don't go out of our way only to accomodate downstream users. As such we don't
+have predefined deprecation period for APIs.
 A good practice is to communicate on
 [Discourse](https://llvm.discourse.group/c/mlir/31) about the timeline and plan
 for conducting such changes.
