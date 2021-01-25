@@ -55,6 +55,10 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-01-21 Data Layout RFC ;
+[recording](https://drive.google.com/file/d/1TTIfb5naiO-YOrxaBiOqxokPTOmA8qK2/view?usp=sharing)
+* 2021-01-14 Dialect Conversion & Type Conversion ;
+[recording](https://drive.google.com/file/d/15_QOcEQ-6bD25aI14Yg-DX4ux_YumEDA/view?usp=sharing)
 * 2020-11-19: Type Conversions the Not-So-Hard Way ;
 [slides](https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing)
