@@ -7,6 +7,13 @@ weight: 1
 
 ## Tutorials
 
+* MLIR Tutorial ; [slides](https://llvm.org/devmtg/2020-09/slides/MLIR_Tutorial.pdf) -
+  [recording](https://www.youtube.com/watch?v=Y4SvqTtOIDk) ;
+  Mehdi Amini and River Riddle @
+  [2020 Virtual LLVM Developers](https://llvm.org/devmtg/2020-09/)
+
+### Past editions:
+
 * MLIR Tutorial ; [slides](http://www.cs.utah.edu/~mhall/mlir4hpc/pienaar-MLIR-Tutorial.pdf) ;
   Jacques Pienaar, Sana Damani @
   [MLIR4HPC@LCPC 2019](http://www.cs.utah.edu/~mhall/mlir4hpc/)
