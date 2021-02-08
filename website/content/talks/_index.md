@@ -62,6 +62,8 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-02-04 Implicit Attribute Propagation ;
+[recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-21 Data Layout RFC ;
 [recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-14 Dialect Conversion & Type Conversion ;
