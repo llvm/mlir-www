@@ -70,7 +70,7 @@ weight: 1
 [recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-14 Dialect Conversion & Type Conversion ;
 [recording](https://drive.google.com/file/d/1mSuoFqbEKy7hnNQ7_f3oxgZLiB0clCEg/view?usp=sharing)
-* 2020-11-19: Type Conversions the Not-So-Hard Way ;
+* 2020-11-19: Type Conversions the Not-So-Hard Way: MLIR's new composable bufferize passes ;
 [slides](https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing)
 * 2020-09-24: Buffer Allocation in MLIR ;
