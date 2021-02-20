@@ -64,6 +64,8 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-02-18 Compiler Support for Sparse Tensor Computations: A Status Update ;
+[recording](https://drive.google.com/file/d/1X5qhGapHb0mIgW_Gzvmh14Yw-Z_2NUU7/view?usp=sharing)
 * 2021-02-04 Implicit Attribute Propagation ;
 [recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-21 Data Layout RFC ;
