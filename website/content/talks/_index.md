@@ -64,6 +64,12 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-02-08 Compiler Support for Sparse Tensor Computations in MLIR ;
+[slides](https://drive.google.com/file/d/1efPam1zD4vEbSwNJA8L1Vm56bIpy9mwW/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1X5qhGapHb0mIgW_Gzvmh14Yw-Z_2NUU7/view?usp=sharing)
+* 2021-02-11 Affine C frontend for MLIR ;
+[slides](https://drive.google.com/file/d/1YJhPBpW77WX53Rxxt2TLbEhdbrOFwDy4/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1P14UrXMlR6WbHR_YrSJVsb7h3cLdr5-h/view?usp=sharing)
 * 2021-02-04 Implicit Attribute Propagation ;
 [recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-21 Data Layout RFC ;
