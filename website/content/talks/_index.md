@@ -68,7 +68,7 @@ weight: 1
 [slides](https://drive.google.com/file/d/1efPam1zD4vEbSwNJA8L1Vm56bIpy9mwW/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1X5qhGapHb0mIgW_Gzvmh14Yw-Z_2NUU7/view?usp=sharing)
 * 2021-02-04 Implicit Attribute Propagation ;
-[recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1vYZLvTP2tXcUsn1_1hhl8VjyA_MA6njI/view?usp=sharing)
 * 2021-01-21 Data Layout RFC ;
 [recording](https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing)
 * 2021-01-14 Dialect Conversion & Type Conversion ;
