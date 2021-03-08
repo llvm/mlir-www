@@ -142,6 +142,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
 
 ### Using MLIR
+* 2021-03-04: MLIR based Numba backend  ;
+[slides](https://drive.google.com/file/d/114r8KHlPf1eyZiIX5ce8-ckm40xXzUzP/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1C6ecGtSK9-c_LuIT7CdHp-BQl3IBqpmV/view?usp=sharing)
 * 2021-02-11: Polygeist: An affine C frontend for MLIR ;
 [slides](https://drive.google.com/file/d/1YJhPBpW77WX53Rxxt2TLbEhdbrOFwDy4/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1P14UrXMlR6WbHR_YrSJVsb7h3cLdr5-h/view?usp=sharing)
