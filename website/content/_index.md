@@ -34,12 +34,13 @@ For more information on MLIR, please see:
 *   Real-time discussion on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362) server.
 *   Previous [talks](talks/).
 
-We host a weekly public meeting about MLIR and the ecosystem. If you’d like
+We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
 to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
 Details on how to join the meeting are in the agenda doc, you can get a Google
 calendar invite by joining
-[this googlegroup](https://groups.google.com/a/tensorflow.org/g/mlir).
+[this googlegroup](https://groups.google.com/a/tensorflow.org/g/mlir). The meetings
+are recorded and published in the [talks](talks/) section.
 
 ## What is MLIR for?
 
