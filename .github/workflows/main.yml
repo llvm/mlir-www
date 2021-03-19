@@ -38,6 +38,7 @@ jobs:
 
     - name: Install MLIR Source docs
       run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/ &&
+            echo "Hack around file/directory name conflict" && rm -Rf website/content/docs/Interfaces &&
             mkdir -p website/content/includes/ &&
             cp -rv llvm_src/mlir/docs/includes/img website/content/includes/
 
