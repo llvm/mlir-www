@@ -174,3 +174,27 @@ C++ APIs are not stable, and evolve over time. As such, directly testing the C++
 IR interfaces makes the tests more fragile as those C++ APIs evolve over time.
 This makes future API refactorings, which may happen frequently, much more
 cumbersome as the number of tests scale.
+
+## Integration tests
+
+Integration tests are check tests that verify the output of MLIR code running
+"end-to-end", usually by means of JIT compilation using the `mlir-cpu-runner`
+utility and small runtime support library that facilates I/O. The integration
+tests in MLIR don't run by default, but need to be explicitly enabled during
+the initial set up described in [Getting Started](_init.md) with an
+additional configuration flag.
+```sh
+cmake -G Ninja ../llvm \
+   ... \
+   -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
+   ...
+```
+After this one-time set up, the tests run as part of regular testing as follows.
+```sh
+cmake --build . --target check-mlir
+```
+Alternatively, to just run the integration tests, the following command can be
+used.
+```sh
+cmake --build . --target check-mlir-integration
+```
