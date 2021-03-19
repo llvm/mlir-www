@@ -12,8 +12,19 @@ compilation for heterogeneous hardware, significantly reduce the cost of
 building domain specific compilers, and aid in connecting existing compilers
 together.
 
-To cite MLIR, please use [this Arxiv
-publication](https://arxiv.org/abs/2002.11054).
+To cite MLIR, please use [this publication](https://doi.org/10.1109/CGO51591.2021.9370308).
+
+```
+@INPROCEEDINGS{9370308,
+  author={C. {Lattner} and M. {Amini} and U. {Bondhugula} and A. {Cohen} and A. {Davis} and J. {Pienaar} and R. {Riddle} and T. {Shpeisman} and N. {Vasilache} and O. {Zinenko}},
+  booktitle={2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)},
+  title={MLIR: Scaling Compiler Infrastructure for Domain Specific Computation},
+  year={2021},
+  volume={},
+  number={},
+  pages={2-14},
+  doi={10.1109/CGO51591.2021.9370308}}
+```
 
 ## More resources
 
