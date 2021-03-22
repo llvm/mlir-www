@@ -64,6 +64,11 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-03-18: MLIR AMX Vector Dialect ;
+[slides](https://drive.google.com/file/d/1uXZjudK9IN3ogE2U7uuSWFLibbuJotvW/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1s7YLDgJA8bQyUkcAvYGVDAh8Wg9UkaUH/view?usp=sharing)
+* 2021-03-11: Sparse Tensor Type Discussion  ;
+[recording](https://drive.google.com/file/d/1D9D5x-1O4oDrNxVg_Vg7CyJQDjSw28z5/view?usp=sharing)
 * 2021-02-18 Compiler Support for Sparse Tensor Computations: A Status Update ;
 [slides](https://drive.google.com/file/d/1efPam1zD4vEbSwNJA8L1Vm56bIpy9mwW/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1X5qhGapHb0mIgW_Gzvmh14Yw-Z_2NUU7/view?usp=sharing)
@@ -142,11 +147,7 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
 
 ### Using MLIR
-* 2021-03-18: MLIR AMX Vector Dialect ;
-[slides](https://drive.google.com/file/d/1uXZjudK9IN3ogE2U7uuSWFLibbuJotvW/view?usp=sharing)
-[recording](https://drive.google.com/file/d/1s7YLDgJA8bQyUkcAvYGVDAh8Wg9UkaUH/view?usp=sharing)
-* 2021-03-11: Sparse Tensor Type Discussion  ;
-[recording](https://drive.google.com/file/d/1D9D5x-1O4oDrNxVg_Vg7CyJQDjSw28z5/view?usp=sharing)
+
 * 2021-03-04: MLIR based Numba backend  ;
 [slides](https://drive.google.com/file/d/114r8KHlPf1eyZiIX5ce8-ckm40xXzUzP/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1C6ecGtSK9-c_LuIT7CdHp-BQl3IBqpmV/view?usp=sharing)
