@@ -142,6 +142,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 [recording](https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T)
 
 ### Using MLIR
+* 2021-03-18: MLIR AMX Vector Dialect ;
+[slides](https://drive.google.com/file/d/1uXZjudK9IN3ogE2U7uuSWFLibbuJotvW/view?usp=sharing)
+[recording](https://drive.google.com/file/d/1s7YLDgJA8bQyUkcAvYGVDAh8Wg9UkaUH/view?usp=sharing)
 * 2021-03-11: Sparse Tensor Type Discussion  ;
 [recording](https://drive.google.com/file/d/1D9D5x-1O4oDrNxVg_Vg7CyJQDjSw28z5/view?usp=sharing)
 * 2021-03-04: MLIR based Numba backend  ;
