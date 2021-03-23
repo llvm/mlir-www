@@ -33,3 +33,17 @@ registration is to make these dialects available for the textual parser used by
 tools like `mlir-opt` or `mlir-translate`. A compiler frontend emitting the IR
 programmatically and invoking a pass pipeline would never need to register any
 dialects.
+
+
+## In dialect conversion, I want an operation to be removed after its users get converted, how do I do that?
+
+This operation can be marked "illegal" and you can just do speculatively
+`rewriter.erase(op);`. The operation won't be actually removed right now,
+instead when mark something as erased you are basically saying to the driver
+"I expect all uses of this to go away by the time everything is over". The
+conversion will fail if the operation you marked as erased doesn't actually get
+erased at the end.
+
+
+
+
