@@ -198,3 +198,33 @@ used.
 ```sh
 cmake --build . --target check-mlir-integration
 ```
+
+The source files of the integration tests are organized within the `mlir` source
+tree by dialect (for example, `test/Integration/Dialect/Vector`) or by feature
+(for example, `test/Integration/Sparse`). Within these directories, a `CPU`
+directory is used for tests that run with the `mlir-cpu-runner` tool (this
+latter leaf structure may eventually disappear, since so far all tests are
+cpu tests).
+
+### Emulator
+
+The integration tests include some tests for targets that are not widely
+available yet, such as specific AVX512 features (like `vp2intersect`)
+and the Intel AMX instructions. These tests require an emulator to
+run correctly (lacking real hardware, of course). To enable these specific
+tests, first download and install the
+[Intel Emulator](https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html).
+Then, include the following additional configuration flags in the initial
+set up (AVX512 and AMX can be individually enabled or disabled), where
+`<path to emulator>` denotes the path to the installed emulator binary.
+```sh
+cmake -G Ninja ../llvm \
+   ... \
+   -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
+   -DMLIR_RUN_AMX_TESTS=ON \
+   -DMLIR_RUN_AVX512_TESTS=ON \
+   -DINTEL_SDE_EXECUTABLE=<path to emulator> \
+   ...
+```
+After this one-time set up, the tests run as shown earlier, but will
+now include the indicated emulated tests as well.
