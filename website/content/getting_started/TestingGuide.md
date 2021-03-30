@@ -11,8 +11,8 @@ Commits that include no functional changes, such as API changes like symbol
 renaming, should be tagged with NFC(no functional changes). This signals to the
 reviewer why the change doesn't/shouldn't include a test.
 
-MLIR generally separates testing into two main categories, [Check](#check-tests)
-tests and [Unit](#unit-tests) tests.
+MLIR generally separates testing into three main categories, [Check](#check-tests)
+tests, [Unit](#unit-tests) tests, and [Integration](#integration-tests) tests.
 
 ## Check tests
 
