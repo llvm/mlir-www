@@ -64,7 +64,7 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2021-04-01: MLIR Bindings status ;
+* 2021-04-01: Discussion about MLIR Bindings (C API, Python Bindings, other languages) status ;
 [slides](https://drive.google.com/file/d/12xQjdaYuFoGQCzt2DhJUPPZMwdwzjU5o/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1OJodjsSkvGlDjzsnGr4FSba1BdU-WOR1/view?usp=sharing)
 * 2021-03-18: MLIR AMX Vector Dialect ;
