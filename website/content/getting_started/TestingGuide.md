@@ -181,7 +181,7 @@ Integration tests are check tests that verify the output of MLIR code running
 "end-to-end", usually by means of JIT compilation using the `mlir-cpu-runner`
 utility and small runtime support library that facilates I/O. The integration
 tests in MLIR don't run by default, but need to be explicitly enabled during
-the initial set up described in [Getting Started](_init.md) with an
+the initial set up described in [Getting Started](_index.md) with an
 additional configuration flag.
 ```sh
 cmake -G Ninja ../llvm \
