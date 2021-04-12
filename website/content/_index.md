@@ -79,8 +79,8 @@ integrating it in the ecosystem.
 ## Compiler infrastructure
 
 We benefited from experience gained from building other IRs (LLVM IR, XLA HLO,
-and Swift SIL) when building MLIR. The MLIR framework encourage the existing
-best practices, e.g. writing and maintaining an IR spec, building IR verifier,
+and Swift SIL) when building MLIR. The MLIR framework encourages existing
+best practices, e.g. writing and maintaining an IR spec, building an IR verifier,
 providing the ability to dump and parse MLIR files to text, writing extensive
 unit tests with the [FileCheck](https://llvm.org/docs/CommandGuide/FileCheck.html)
 tool, and building the infrastructure as a set of modular libraries that can be
