@@ -12,20 +12,6 @@ compilation for heterogeneous hardware, significantly reduce the cost of
 building domain specific compilers, and aid in connecting existing compilers
 together.
 
-To cite MLIR, please use [this publication](https://doi.org/10.1109/CGO51591.2021.9370308).
-
-```
-@INPROCEEDINGS{9370308,
-  author={C. {Lattner} and M. {Amini} and U. {Bondhugula} and A. {Cohen} and A. {Davis} and J. {Pienaar} and R. {Riddle} and T. {Shpeisman} and N. {Vasilache} and O. {Zinenko}},
-  booktitle={2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)},
-  title={MLIR: Scaling Compiler Infrastructure for Domain Specific Computation},
-  year={2021},
-  volume={},
-  number={},
-  pages={2-14},
-  doi={10.1109/CGO51591.2021.9370308}}
-```
-
 ## More resources
 
 For more information on MLIR, please see:
@@ -51,8 +37,6 @@ requirements in a unified infrastructure. For example, this includes:
     dynamic shapes, the user-extensible op ecosystem, TensorFlow variables, etc.
 *   Optimizations and transformations typically done on such graphs (e.g. in
     Grappler).
-*   Representation of kernels for ML operations in a form suitable for
-    optimization.
 *   Ability to host high-performance-computing-style loop optimizations across
     kernels (fusion, loop interchange, tiling, etc.), and to transform memory
     layouts of data.
@@ -62,6 +46,8 @@ requirements in a unified infrastructure. For example, this includes:
 *   Ability to represent target-specific operations, e.g. accelerator-specific
     high-level operations.
 *   Quantization and other graph transformations done on a Deep-Learning graph.
+*   [Polyhedral primitives](/docs/Dialects/Affine/).
+*   [Hardware Synthesis Tools / HLS](https://circt.llvm.org).
 
 MLIR is a common IR that also supports hardware specific operations. Thus,
 any investment into the infrastructure surrounding MLIR (e.g. the compiler
@@ -92,3 +78,19 @@ multithreaded compiler from working on multiple functions in an LLVM module at
 the same time. MLIR solves these problems by having limited SSA scope to reduce
 the use-def chains and by replacing cross-function references with explicit
 [`symbol reference`](docs/LangRef/#symbol-reference-attribute).
+
+To cite MLIR, please use [this publication](https://doi.org/10.1109/CGO51591.2021.9370308).
+
+```
+@INPROCEEDINGS{9370308,
+  author={C. {Lattner} and M. {Amini} and U. {Bondhugula} and A. {Cohen} and A. {Davis} and J. {Pienaar} and R. {Riddle} and T. {Shpeisman} and N. {Vasilache} and O. {Zinenko}},
+  booktitle={2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)},
+  title={MLIR: Scaling Compiler Infrastructure for Domain Specific Computation},
+  year={2021},
+  volume={},
+  number={},
+  pages={2-14},
+  doi={10.1109/CGO51591.2021.9370308}}
+```
+
+
