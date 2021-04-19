@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-04-15: Pattern Descriptor Language ;
+[slides](https://drive.google.com/file/d/17WYUvlmCzNTiqLaxWf_uz4GiLm3QVoEV/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1b8F1GHRPgCXGASZ7fhccU-xZZstLQ2Fi/view?usp=sharing)
 * 2021-04-01: Discussion about MLIR Bindings (C API, Python Bindings, other languages) status ;
 [slides](https://drive.google.com/file/d/12xQjdaYuFoGQCzt2DhJUPPZMwdwzjU5o/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1OJodjsSkvGlDjzsnGr4FSba1BdU-WOR1/view?usp=sharing)
