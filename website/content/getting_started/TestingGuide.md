@@ -215,14 +215,14 @@ run correctly (lacking real hardware, of course). To enable these specific
 tests, first download and install the
 [Intel Emulator](https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html).
 Then, include the following additional configuration flags in the initial
-set up (AVX512 and AMX can be individually enabled or disabled), where
+set up (X86Vector and AMX can be individually enabled or disabled), where
 `<path to emulator>` denotes the path to the installed emulator binary.
 ```sh
 cmake -G Ninja ../llvm \
    ... \
    -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
+   -DMLIR_RUN_X86VECTOR_TESTS=ON \
    -DMLIR_RUN_AMX_TESTS=ON \
-   -DMLIR_RUN_AVX512_TESTS=ON \
    -DINTEL_SDE_EXECUTABLE=<path to emulator> \
    ...
 ```
