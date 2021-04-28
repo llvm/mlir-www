@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-04-22: EmitC: Generating C/C++ from MLIR ;
+[slides](https://drive.google.com/file/d/1p2AM7B1beb5oVf_tlTyinnVQoWuodoxl/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1qHw_gZFytXRtO2EGSnnT3s0iyJ9HdWWs/view?usp=sharing)
 * 2021-04-15: Pattern Descriptor Language ;
 [slides](https://drive.google.com/file/d/17WYUvlmCzNTiqLaxWf_uz4GiLm3QVoEV/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1b8F1GHRPgCXGASZ7fhccU-xZZstLQ2Fi/view?usp=sharing)
