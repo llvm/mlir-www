@@ -23,3 +23,11 @@ hugo server.
 A large part of the documentation is auto-generated from the MLIR source
 code. See the workflow `.github/workflows/main.yml` for the instructions
 to reproduce the entirety of https://mlir.llvm.org/ locally.
+
+When making changes it is often not useful to check out the doxygen branch
+so consider checking out only the main branch. For example, if using
+[gh](https://cli.github.com/), only the following is needed
+
+```sh
+gh repo clone llvm/mlir-www -- --single-branch --branch main
+```
