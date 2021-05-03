@@ -157,6 +157,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2021-04-29: Tensor Processing Primitives  ;
+[slides](https://drive.google.com/file/d/1b8gXD0cdAwl1mxtzb4V1joIOP-exquhv/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/173lk_RqJvKhS6W57vu_zXVpKD7ESjegP/view?usp=sharing)
 * 2021-03-04: MLIR based Numba backend  ;
 [slides](https://drive.google.com/file/d/114r8KHlPf1eyZiIX5ce8-ckm40xXzUzP/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1C6ecGtSK9-c_LuIT7CdHp-BQl3IBqpmV/view?usp=sharing)
