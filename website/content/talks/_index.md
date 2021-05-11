@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-05-06: Alibaba Group: Disc revisit & future discussion;
+[slides](https://drive.google.com/file/d/1RA3VPdTGrYCE-qt2mURrrzbxD9Xl6y5L/view?usp=sharing) -
+[recording](https://drive.google.com/file/d/1t6Q_VhZVWBhi--fYTxTOLGklIemlKQmV/view?usp=sharing)
 * 2021-04-22: EmitC: Generating C/C++ from MLIR ;
 [slides](https://drive.google.com/file/d/1p2AM7B1beb5oVf_tlTyinnVQoWuodoxl/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1qHw_gZFytXRtO2EGSnnT3s0iyJ9HdWWs/view?usp=sharing)
