@@ -160,6 +160,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2021-05-27: Quantum-Classical Compilation with MLIR ;
+[slides](/static/OpenMeetings/2021-05-27-Quantum-Classical-Compilation-with-MLIR.pdf) -
+[recording](https://www.youtube.com/watch?v=_qXCzP5YAZY)
 * 2021-04-29: Tensor Processing Primitives  ;
 [slides](https://drive.google.com/file/d/1b8gXD0cdAwl1mxtzb4V1joIOP-exquhv/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/173lk_RqJvKhS6W57vu_zXVpKD7ESjegP/view?usp=sharing)
