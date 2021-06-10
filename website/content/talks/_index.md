@@ -64,7 +64,10 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2021-05-06: Alibaba Group: Disc revisit & future discussion;
+* 2021-06-10: MLIR Language Server (Modern IDE features for `.mlir` files) ;
+[slides](https://mlir.llvm.org/OpenMeetings/2021-06-10-Language-Server.pdf) -
+[recording](https://youtu.be/HZx1Wal3loA)
+* 2021-05-06: Alibaba Group: Disc revisit & future discussion ;
 [slides](https://drive.google.com/file/d/1RA3VPdTGrYCE-qt2mURrrzbxD9Xl6y5L/view?usp=sharing) -
 [recording](https://drive.google.com/file/d/1t6Q_VhZVWBhi--fYTxTOLGklIemlKQmV/view?usp=sharing)
 * 2021-04-22: EmitC: Generating C/C++ from MLIR ;
