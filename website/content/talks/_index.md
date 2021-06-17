@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-06-17: Defining operations, types, attributes, and dialects at runtime ;
+[slides](https://mlir.llvm.org/OpenMeetings/) -
+[recording](https://youtu.be/bxFpvjUO288)
 * 2021-06-10: MLIR Language Server (Modern IDE features for `.mlir` files) ;
 [slides](https://mlir.llvm.org/OpenMeetings/2021-06-10-Language-Server.pdf) -
 [recording](https://youtu.be/HZx1Wal3loA)
