@@ -44,6 +44,14 @@ instead when mark something as erased you are basically saying to the driver
 conversion will fail if the operation you marked as erased doesn't actually get
 erased at the end.
 
+## Why is dialect X missing feature Y?
 
+Most likely, nobody has had a need for it yet. Many MLIR components, dialects
+even more than others, grew out of specific needs and are extended by volunteers
+sending patches to add the missing bits. Everybody is welcome to contribute!
 
+In some specfic cases, the dialect design might have explicitly decided against
+implementing a feature or chose an alternative modeling that provides a similar
+functionality. Such design decisions are usually noted in the dialect or
+rationale documents.
 
