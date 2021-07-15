@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-07-15: From MHLO To Linalg in IREE ;
+[slides](https://mlir.llvm.org/OpenMeetings/2021-07-25-From-MHLO-To-Linalg-in-IREE.pdf) -
+[recording](https://youtu.be/GkorNMHPFPI)
 * 2021-06-24: Typedefs in MLIR ;
 [slides](https://mlir.llvm.org/OpenMeetings/2021-06-24-Typedefs-in-MLIR.pdf) -
 [recording](https://www.youtube.com/watch?v=hqcM6fJWntM)
