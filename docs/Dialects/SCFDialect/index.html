@@ -1,0 +1,279 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>'scf' Dialect - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/SCFDialect/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>'scf' Dialect</h1><p><nav id=TableOfContents><ul><li><a href=#operation-definition>Operation definition</a><ul><li><a href=#scfcondition-mlirscfconditionop><code>scf.condition</code> (::mlir::scf::ConditionOp)</a></li><li><a href=#scfexecute_region-mlirscfexecuteregionop><code>scf.execute_region</code> (::mlir::scf::ExecuteRegionOp)</a></li><li><a href=#scffor-mlirscfforop><code>scf.for</code> (::mlir::scf::ForOp)</a></li><li><a href=#scfif-mlirscfifop><code>scf.if</code> (::mlir::scf::IfOp)</a></li><li><a href=#scfparallel-mlirscfparallelop><code>scf.parallel</code> (::mlir::scf::ParallelOp)</a></li><li><a href=#scfreduce-mlirscfreduceop><code>scf.reduce</code> (::mlir::scf::ReduceOp)</a></li><li><a href=#scfreducereturn-mlirscfreducereturnop><code>scf.reduce.return</code> (::mlir::scf::ReduceReturnOp)</a></li><li><a href=#scfwhile-mlirscfwhileop><code>scf.while</code> (::mlir::scf::WhileOp)</a></li><li><a href=#scfyield-mlirscfyieldop><code>scf.yield</code> (::mlir::scf::YieldOp)</a></li></ul></li></ul></nav><h2 id=operation-definition>Operation definition&nbsp;<a class=headline-hash href=#operation-definition>¶</a></h2><h3 id=scfcondition-mlirscfconditionop><code>scf.condition</code> (::mlir::scf::ConditionOp)&nbsp;<a class=headline-hash href=#scfcondition-mlirscfconditionop>¶</a></h3><p>loop continuation condition</p><p>Syntax:</p><pre><code>operation ::= `scf.condition` `(` $condition `)` attr-dict ($args^ `:` type($args))?
+</code></pre><p>This operation accepts the continuation (i.e., inverse of exit) condition
+of the <code>scf.while</code> construct. If its first argument is true, the &ldquo;after&rdquo;
+region of <code>scf.while</code> is executed, with the remaining arguments forwarded
+to the entry block of the region. Otherwise, the loop terminates.</p><h4 id=operands>Operands:&nbsp;<a class=headline-hash href=#operands>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>condition</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>args</code></td><td>any type</td></tr></tbody></table><h3 id=scfexecute_region-mlirscfexecuteregionop><code>scf.execute_region</code> (::mlir::scf::ExecuteRegionOp)&nbsp;<a class=headline-hash href=#scfexecute_region-mlirscfexecuteregionop>¶</a></h3><p>operation that executes its region exactly once</p><p>The <code>execute_region</code> operation is used to allow multiple blocks within SCF
+and other operations which can hold only one block. The <code>execute_region</code>
+operation executes the region held exactly once and cannot have any operands.
+As such, its region has no arguments. All SSA values that dominate the op can
+be accessed inside the op. The op&rsquo;s region can have multiple blocks and the
+blocks can have multiple distinct terminators. Values returned from this op&rsquo;s
+region define the op&rsquo;s results.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>scf<span class=p>.</span>for <span class=nv>%i</span> <span class=p>=</span> <span class=m>0</span> to <span class=m>128</span> step <span class=nv>%c1</span> <span class=p>{</span>
+  <span class=nv>%y</span> <span class=p>=</span> scf<span class=p>.</span>execute_region <span class=p>-&gt;</span> <span class=k>i32</span> <span class=p>{</span>
+    <span class=nv>%x</span> <span class=p>=</span> load <span class=nv>%A</span><span class=p>[</span><span class=nv>%i</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>128x</span><span class=k>i32</span><span class=p>&gt;</span>
+    scf<span class=p>.</span>yield <span class=nv>%x</span> <span class=p>:</span> <span class=k>i32</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+
+affine<span class=p>.</span>for <span class=nv>%i</span> <span class=p>=</span> <span class=m>0</span> to <span class=m>100</span> <span class=p>{</span>
+  <span class=s>&#34;foo&#34;</span><span class=p>()</span> <span class=p>:</span> <span class=p>()</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=nv>%v</span> <span class=p>=</span> scf<span class=p>.</span>execute_region <span class=p>-&gt;</span> <span class=k>i64</span> <span class=p>{</span>
+    cond_br <span class=nv>%cond</span><span class=p>,</span> <span class=nl>^bb1</span><span class=p>,</span> <span class=nl>^bb2
+</span><span class=nl>
+</span><span class=nl>  ^bb1</span><span class=p>:</span>
+    <span class=nv>%c1</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i64</span>
+    br <span class=nl>^bb3</span><span class=p>(</span><span class=nv>%c1</span> <span class=p>:</span> <span class=k>i64</span><span class=p>)</span>
+
+  <span class=nl>^bb2</span><span class=p>:</span>
+    <span class=nv>%c2</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>2</span> <span class=p>:</span> <span class=k>i64</span>
+    br <span class=nl>^bb3</span><span class=p>(</span><span class=nv>%c2</span> <span class=p>:</span> <span class=k>i64</span><span class=p>)</span>
+
+  <span class=nl>^bb3</span><span class=p>(</span><span class=nv>%x</span> <span class=p>:</span> <span class=k>i64</span><span class=p>):</span>
+    scf<span class=p>.</span>yield <span class=nv>%x</span> <span class=p>:</span> <span class=k>i64</span>
+  <span class=p>}</span>
+  <span class=s>&#34;bar&#34;</span><span class=p>(</span><span class=nv>%v</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=results>Results:&nbsp;<a class=headline-hash href=#results>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>«unnamed»</td><td>any type</td></tr></tbody></table><h3 id=scffor-mlirscfforop><code>scf.for</code> (::mlir::scf::ForOp)&nbsp;<a class=headline-hash href=#scffor-mlirscfforop>¶</a></h3><p>for operation</p><p>The &ldquo;scf.for&rdquo; operation represents a loop taking 3 SSA value as operands
+that represent the lower bound, upper bound and step respectively. The
+operation defines an SSA value for its induction variable. It has one
+region capturing the loop body. The induction variable is represented as an
+argument of this region. This SSA value always has type index, which is the
+size of the machine word. The step is a value of type index, required to be
+positive.
+The lower and upper bounds specify a half-open range: the range includes
+the lower bound but does not include the upper bound.</p><p>The body region must contain exactly one block that terminates with
+&ldquo;scf.yield&rdquo;. Calling ForOp::build will create such a region and insert
+the terminator implicitly if none is defined, so will the parsing even in
+cases when it is absent from the custom format. For example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>scf<span class=p>.</span>for <span class=nv>%iv</span> <span class=p>=</span> <span class=nv>%lb</span> to <span class=nv>%ub</span> step <span class=nv>%step</span> <span class=p>{</span>
+  <span class=p>...</span> <span class=c>// body
+</span><span class=c></span><span class=p>}</span>
+</code></pre></div><p><code>scf.for</code> can also operate on loop-carried variables and returns the final
+values after loop termination. The initial values of the variables are
+passed as additional SSA operands to the &ldquo;scf.for&rdquo; following the 3 loop
+control SSA values mentioned above (lower bound, upper bound and step). The
+operation region has equivalent arguments for each variable representing
+the value of the variable at the current iteration.</p><p>The region must terminate with a &ldquo;scf.yield&rdquo; that passes all the current
+iteration variables to the next iteration, or to the &ldquo;scf.for&rdquo; result, if
+at the last iteration. Note, that when the loop-carried variables are
+present, calling ForOp::build will not insert the terminator implicitly.
+The caller must insert &ldquo;scf.yield&rdquo; in that case.</p><p>&ldquo;scf.for&rdquo; results hold the final values after the last iteration.
+For example, to sum-reduce a memref:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@reduce</span><span class=p>(</span><span class=nv>%buffer</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1024x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%lb</span><span class=p>:</span> <span class=k>index</span><span class=p>,</span>
+             <span class=nv>%ub</span><span class=p>:</span> <span class=k>index</span><span class=p>,</span> <span class=nv>%step</span><span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c>// Initial sum set to 0.
+</span><span class=c></span>  <span class=nv>%sum_0</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=c>// iter_args binds initial values to the loop&#39;s region arguments.
+</span><span class=c></span>  <span class=nv>%sum</span> <span class=p>=</span> scf<span class=p>.</span>for <span class=nv>%iv</span> <span class=p>=</span> <span class=nv>%lb</span> to <span class=nv>%ub</span> step <span class=nv>%step</span>
+      iter_args<span class=p>(</span><span class=nv>%sum_iter</span> <span class=p>=</span> <span class=nv>%sum_0</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nv>%t</span> <span class=p>=</span> load <span class=nv>%buffer</span><span class=p>[</span><span class=nv>%iv</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1024x</span><span class=k>f32</span><span class=p>&gt;</span>
+    <span class=nv>%sum_next</span> <span class=p>=</span> addf <span class=nv>%sum_iter</span><span class=p>,</span> <span class=nv>%t</span> <span class=p>:</span> <span class=k>f32</span>
+    <span class=c>// Yield current iteration sum to next iteration %sum_iter or to %sum
+</span><span class=c></span>    <span class=c>// if final iteration.
+</span><span class=c></span>    scf<span class=p>.</span>yield <span class=nv>%sum_next</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=p>}</span>
+  <span class=kt>return</span> <span class=nv>%sum</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><p>If the &ldquo;scf.for&rdquo; defines any values, a yield must be explicitly present.
+The number and types of the &ldquo;scf.for&rdquo; results must match the initial
+values in the &ldquo;iter_args&rdquo; binding and the yield operands.</p><p>Another example with a nested &ldquo;scf.if&rdquo; (see &ldquo;scf.if&rdquo; for details) to
+perform conditional reduction:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@conditional_reduce</span><span class=p>(</span><span class=nv>%buffer</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1024x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%lb</span><span class=p>:</span> <span class=k>index</span><span class=p>,</span>
+                         <span class=nv>%ub</span><span class=p>:</span> <span class=k>index</span><span class=p>,</span> <span class=nv>%step</span><span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+  <span class=nv>%sum_0</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=nv>%c0</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=nv>%sum</span> <span class=p>=</span> scf<span class=p>.</span>for <span class=nv>%iv</span> <span class=p>=</span> <span class=nv>%lb</span> to <span class=nv>%ub</span> step <span class=nv>%step</span>
+      iter_args<span class=p>(</span><span class=nv>%sum_iter</span> <span class=p>=</span> <span class=nv>%sum_0</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nv>%t</span> <span class=p>=</span> load <span class=nv>%buffer</span><span class=p>[</span><span class=nv>%iv</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1024x</span><span class=k>f32</span><span class=p>&gt;</span>
+    <span class=nv>%cond</span> <span class=p>=</span> cmpf <span class=s>&#34;ugt&#34;</span><span class=p>,</span> <span class=nv>%t</span><span class=p>,</span> <span class=nv>%c0</span> <span class=p>:</span> <span class=k>f32</span>
+    <span class=nv>%sum_next</span> <span class=p>=</span> scf<span class=p>.</span>if <span class=nv>%cond</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+      <span class=nv>%new_sum</span> <span class=p>=</span> addf <span class=nv>%sum_iter</span><span class=p>,</span> <span class=nv>%t</span> <span class=p>:</span> <span class=k>f32</span>
+      scf<span class=p>.</span>yield <span class=nv>%new_sum</span> <span class=p>:</span> <span class=k>f32</span>
+    <span class=p>}</span> else <span class=p>{</span>
+      scf<span class=p>.</span>yield <span class=nv>%sum_iter</span> <span class=p>:</span> <span class=k>f32</span>
+    <span class=p>}</span>
+    scf<span class=p>.</span>yield <span class=nv>%sum_next</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=p>}</span>
+  <span class=kt>return</span> <span class=nv>%sum</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=operands-1>Operands:&nbsp;<a class=headline-hash href=#operands-1>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>lowerBound</code></td><td>index</td></tr><tr><td style=text-align:center><code>upperBound</code></td><td>index</td></tr><tr><td style=text-align:center><code>step</code></td><td>index</td></tr><tr><td style=text-align:center><code>initArgs</code></td><td>any type</td></tr></tbody></table><h4 id=results-1>Results:&nbsp;<a class=headline-hash href=#results-1>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>any type</td></tr></tbody></table><h3 id=scfif-mlirscfifop><code>scf.if</code> (::mlir::scf::IfOp)&nbsp;<a class=headline-hash href=#scfif-mlirscfifop>¶</a></h3><p>if-then-else operation</p><p>The <code>scf.if</code> operation represents an if-then-else construct for
+conditionally executing two regions of code. The operand to an if operation
+is a boolean value. For example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>scf<span class=p>.</span>if <span class=nv>%b</span>  <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span> else <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><p><code>scf.if</code> may also return results that are defined in its regions. The
+values defined are determined by which execution path is taken.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%x</span><span class=p>,</span> <span class=nv>%y</span> <span class=p>=</span> scf<span class=p>.</span>if <span class=nv>%b</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f32</span><span class=p>,</span> <span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+  <span class=nv>%x_true</span> <span class=p>=</span> <span class=p>...</span>
+  <span class=nv>%y_true</span> <span class=p>=</span> <span class=p>...</span>
+  scf<span class=p>.</span>yield <span class=nv>%x_true</span><span class=p>,</span> <span class=nv>%y_true</span> <span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=k>f32</span>
+<span class=p>}</span> else <span class=p>{</span>
+  <span class=nv>%x_false</span> <span class=p>=</span> <span class=p>...</span>
+  <span class=nv>%y_false</span> <span class=p>=</span> <span class=p>...</span>
+  scf<span class=p>.</span>yield <span class=nv>%x_false</span><span class=p>,</span> <span class=nv>%y_false</span> <span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><p><code>scf.if</code> regions are always terminated with &ldquo;scf.yield&rdquo;. If &ldquo;scf.if&rdquo;
+defines no values, the &ldquo;scf.yield&rdquo; can be left out, and will be inserted
+implicitly. Otherwise, it must be explicit.
+Also, if &ldquo;scf.if&rdquo; defines one or more values, the &lsquo;else&rsquo; block cannot be
+omitted.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>scf<span class=p>.</span>if <span class=nv>%b</span>  <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=operands-2>Operands:&nbsp;<a class=headline-hash href=#operands-2>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>condition</code></td><td>1-bit signless integer</td></tr></tbody></table><h4 id=results-2>Results:&nbsp;<a class=headline-hash href=#results-2>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>any type</td></tr></tbody></table><h3 id=scfparallel-mlirscfparallelop><code>scf.parallel</code> (::mlir::scf::ParallelOp)&nbsp;<a class=headline-hash href=#scfparallel-mlirscfparallelop>¶</a></h3><p>parallel for operation</p><p>The &ldquo;scf.parallel&rdquo; operation represents a loop nest taking 4 groups of SSA
+values as operands that represent the lower bounds, upper bounds, steps and
+initial values, respectively. The operation defines a variadic number of
+SSA values for its induction variables. It has one region capturing the
+loop body. The induction variables are represented as an argument of this
+region. These SSA values always have type index, which is the size of the
+machine word. The steps are values of type index, required to be positive.
+The lower and upper bounds specify a half-open range: the range includes
+the lower bound but does not include the upper bound. The initial values
+have the same types as results of &ldquo;scf.parallel&rdquo;. If there are no results,
+the keyword <code>init</code> can be omitted.</p><p>Semantically we require that the iteration space can be iterated in any
+order, and the loop body can be executed in parallel. If there are data
+races, the behavior is undefined.</p><p>The parallel loop operation supports reduction of values produced by
+individual iterations into a single result. This is modeled using the
+scf.reduce operation (see scf.reduce for details). Each result of a
+scf.parallel operation is associated with an initial value operand and
+reduce operation that is an immediate child. Reductions are matched to
+result and initial values in order of their appearance in the body.
+Consequently, we require that the body region has the same number of
+results and initial values as it has reduce operations.</p><p>The body region must contain exactly one block that terminates with
+&ldquo;scf.yield&rdquo; without operands. Parsing ParallelOp will create such a region
+and insert the terminator when it is absent from the custom format.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%init</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+scf<span class=p>.</span>parallel <span class=p>(</span><span class=nv>%iv</span><span class=p>)</span> <span class=p>=</span> <span class=p>(</span><span class=nv>%lb</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%ub</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%step</span><span class=p>)</span> init <span class=p>(</span><span class=nv>%init</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span> <span class=p>{</span>
+  <span class=nv>%elem_to_reduce</span> <span class=p>=</span> load <span class=nv>%buffer</span><span class=p>[</span><span class=nv>%iv</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>100x</span><span class=k>f32</span><span class=p>&gt;</span>
+  scf<span class=p>.</span>reduce<span class=p>(</span><span class=nv>%elem_to_reduce</span><span class=p>)</span> <span class=p>:</span> <span class=k>f32</span> <span class=p>{</span>
+    <span class=nl>^bb0</span><span class=p>(</span><span class=nv>%lhs</span> <span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%rhs</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+      <span class=nv>%res</span> <span class=p>=</span> addf <span class=nv>%lhs</span><span class=p>,</span> <span class=nv>%rhs</span> <span class=p>:</span> <span class=k>f32</span>
+      scf<span class=p>.</span>reduce<span class=p>.</span><span class=kt>return</span> <span class=nv>%res</span> <span class=p>:</span> <span class=k>f32</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=operands-3>Operands:&nbsp;<a class=headline-hash href=#operands-3>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>lowerBound</code></td><td>index</td></tr><tr><td style=text-align:center><code>upperBound</code></td><td>index</td></tr><tr><td style=text-align:center><code>step</code></td><td>index</td></tr><tr><td style=text-align:center><code>initVals</code></td><td>any type</td></tr></tbody></table><h4 id=results-3>Results:&nbsp;<a class=headline-hash href=#results-3>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>any type</td></tr></tbody></table><h3 id=scfreduce-mlirscfreduceop><code>scf.reduce</code> (::mlir::scf::ReduceOp)&nbsp;<a class=headline-hash href=#scfreduce-mlirscfreduceop>¶</a></h3><p>reduce operation for parallel for</p><p>&ldquo;scf.reduce&rdquo; is an operation occurring inside &ldquo;scf.parallel&rdquo; operations.
+It consists of one block with two arguments which have the same type as the
+operand of &ldquo;scf.reduce&rdquo;.</p><p>&ldquo;scf.reduce&rdquo; is used to model the value for reduction computations of a
+&ldquo;scf.parallel&rdquo; operation. It has to appear as an immediate child of a
+&ldquo;scf.parallel&rdquo; and is associated with a result value of its parent
+operation.</p><p>Association is in the order of appearance in the body where the first
+result of a parallel loop operation corresponds to the first &ldquo;scf.reduce&rdquo;
+in the operation&rsquo;s body region. The reduce operation takes a single
+operand, which is the value to be used in the reduction.</p><p>The reduce operation contains a region whose entry block expects two
+arguments of the same type as the operand. As the iteration order of the
+parallel loop and hence reduction order is unspecified, the result of
+reduction may be non-deterministic unless the operation is associative and
+commutative.</p><p>The result of the reduce operation&rsquo;s body must have the same type as the
+operands and associated result value of the parallel loop operation.
+Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%operand</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>1.0</span> <span class=p>:</span> <span class=k>f32</span>
+scf<span class=p>.</span>reduce<span class=p>(</span><span class=nv>%operand</span><span class=p>)</span> <span class=p>:</span> <span class=k>f32</span> <span class=p>{</span>
+  <span class=nl>^bb0</span><span class=p>(</span><span class=nv>%lhs</span> <span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%rhs</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+    <span class=nv>%res</span> <span class=p>=</span> addf <span class=nv>%lhs</span><span class=p>,</span> <span class=nv>%rhs</span> <span class=p>:</span> <span class=k>f32</span>
+    scf<span class=p>.</span>reduce<span class=p>.</span><span class=kt>return</span> <span class=nv>%res</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=operands-4>Operands:&nbsp;<a class=headline-hash href=#operands-4>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>operand</code></td><td>any type</td></tr></tbody></table><h3 id=scfreducereturn-mlirscfreducereturnop><code>scf.reduce.return</code> (::mlir::scf::ReduceReturnOp)&nbsp;<a class=headline-hash href=#scfreducereturn-mlirscfreducereturnop>¶</a></h3><p>terminator for reduce operation</p><p>Syntax:</p><pre><code>operation ::= `scf.reduce.return` $result attr-dict `:` type($result)
+</code></pre><p>&ldquo;scf.reduce.return&rdquo; is a special terminator operation for the block inside
+&ldquo;scf.reduce&rdquo;. It terminates the region. It should have the same type as
+the operand of &ldquo;scf.reduce&rdquo;. Example for the custom format:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>scf<span class=p>.</span>reduce<span class=p>.</span><span class=kt>return</span> <span class=nv>%res</span> <span class=p>:</span> <span class=k>f32</span>
+</code></pre></div><h4 id=operands-5>Operands:&nbsp;<a class=headline-hash href=#operands-5>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>any type</td></tr></tbody></table><h3 id=scfwhile-mlirscfwhileop><code>scf.while</code> (::mlir::scf::WhileOp)&nbsp;<a class=headline-hash href=#scfwhile-mlirscfwhileop>¶</a></h3><p>a generic &lsquo;while&rsquo; loop</p><p>This operation represents a generic &ldquo;while&rdquo;/&ldquo;do-while&rdquo; loop that keeps
+iterating as long as a condition is satisfied. There is no restriction on
+the complexity of the condition. It consists of two regions (with single
+block each): &ldquo;before&rdquo; region and &ldquo;after&rdquo; region. The names of regions
+indicates whether they execute before or after the condition check.
+Therefore, if the main loop payload is located in the &ldquo;before&rdquo; region, the
+operation is a &ldquo;do-while&rdquo; loop. Otherwise, it is a &ldquo;while&rdquo; loop.</p><p>The &ldquo;before&rdquo; region terminates with a special operation, <code>scf.condition</code>,
+that accepts as its first operand an <code>i1</code> value indicating whether to
+proceed to the &ldquo;after&rdquo; region (value is <code>true</code>) or not. The two regions
+communicate by means of region arguments. Initially, the &ldquo;before&rdquo; region
+accepts as arguments the operands of the <code>scf.while</code> operation and uses them
+to evaluate the condition. It forwards the trailing, non-condition operands
+of the <code>scf.condition</code> terminator either to the &ldquo;after&rdquo; region if the
+control flow is transferred there or to results of the <code>scf.while</code> operation
+otherwise. The &ldquo;after&rdquo; region takes as arguments the values produced by the
+&ldquo;before&rdquo; region and uses <code>scf.yield</code> to supply new arguments for the &ldquo;after&rdquo;
+region, into which it transfers the control flow unconditionally.</p><p>A simple &ldquo;while&rdquo; loop can be represented as follows.</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%res</span> <span class=p>=</span> scf<span class=p>.</span>while <span class=p>(</span><span class=nv>%arg1</span> <span class=p>=</span> <span class=nv>%init1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span> <span class=p>{</span>
+  <span class=err>/</span><span class=p>*</span> <span class=s>&#34;Before&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> In a <span class=s>&#34;while&#34;</span> loop<span class=p>,</span> this region computes the condition<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%condition</span> <span class=p>=</span> call <span class=nf>@evaluate_condition</span><span class=p>(</span><span class=nv>%arg1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i1</span>
+
+  <span class=err>/</span><span class=p>*</span> Forward the argument <span class=p>(</span>as result or <span class=s>&#34;after&#34;</span> region argument<span class=p>).</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>condition<span class=p>(</span><span class=nv>%condition</span><span class=p>)</span> <span class=nv>%arg1</span> <span class=p>:</span> <span class=k>f32</span>
+
+<span class=p>}</span> do <span class=p>{</span>
+<span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg2</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+  <span class=err>/</span><span class=p>*</span> <span class=s>&#34;After region.
+</span><span class=s>   * In a &#34;</span>while<span class=s>&#34; loop, this region is the loop body. */
+</span><span class=s>  %next = call @payload(%arg2) : (f32) -&gt; f32
+</span><span class=s>
+</span><span class=s>  /* Forward the new value to the &#34;</span>before<span class=err>&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> The operand types must match the types of the <span class=err>`</span>scf<span class=p>.</span>while<span class=err>`</span> operands<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>yield <span class=nv>%next</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><p>A simple &ldquo;do-while&rdquo; loop can be represented by reducing the &ldquo;after&rdquo; block
+to a simple forwarder.</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%res</span> <span class=p>=</span> scf<span class=p>.</span>while <span class=p>(</span><span class=nv>%arg1</span> <span class=p>=</span> <span class=nv>%init1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span> <span class=p>{</span>
+  <span class=err>/</span><span class=p>*</span> <span class=s>&#34;Before&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> In a <span class=s>&#34;do-while&#34;</span> loop<span class=p>,</span> this region contains the loop body<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%next</span> <span class=p>=</span> call <span class=nf>@payload</span><span class=p>(</span><span class=nv>%arg1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span>
+
+  <span class=err>/</span><span class=p>*</span> And also evaluates the condition<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%condition</span> <span class=p>=</span> call <span class=nf>@evaluate_condition</span><span class=p>(</span><span class=nv>%arg1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i1</span>
+
+  <span class=err>/</span><span class=p>*</span> Loop through the <span class=s>&#34;after&#34;</span> region<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>condition<span class=p>(</span><span class=nv>%condition</span><span class=p>)</span> <span class=nv>%next</span> <span class=p>:</span> <span class=k>f32</span>
+
+<span class=p>}</span> do <span class=p>{</span>
+<span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg2</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+  <span class=err>/</span><span class=p>*</span> <span class=s>&#34;After&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> Forwards the values back to <span class=s>&#34;before&#34;</span> region unmodified<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>yield <span class=nv>%arg2</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><p>Note that the types of region arguments need not to match with each other.
+The op expects the operand types to match with argument types of the
+&ldquo;before&rdquo; region"; the result types to match with the trailing operand types
+of the terminator of the &ldquo;before&rdquo; region, and with the argument types of the
+&ldquo;after&rdquo; region. The following scheme can be used to share the results of
+some operations executed in the &ldquo;before&rdquo; region with the &ldquo;after&rdquo; region,
+avoiding the need to recompute them.</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%res</span> <span class=p>=</span> scf<span class=p>.</span>while <span class=p>(</span><span class=nv>%arg1</span> <span class=p>=</span> <span class=nv>%init1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i64</span> <span class=p>{</span>
+  <span class=err>/</span><span class=p>*</span> One can perform some computations<span class=p>,</span> e<span class=p>.</span>g<span class=p>.,</span> necessary to evaluate the
+   <span class=p>*</span> condition<span class=p>,</span> in the <span class=s>&#34;before&#34;</span> region and forward their results to the
+   <span class=p>*</span> <span class=s>&#34;after&#34;</span> region<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%shared</span> <span class=p>=</span> call <span class=nf>@shared_compute</span><span class=p>(</span><span class=nv>%arg1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i64</span>
+
+  <span class=err>/</span><span class=p>*</span> Evaluate the condition<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%condition</span> <span class=p>=</span> call <span class=nf>@evaluate_condition</span><span class=p>(</span><span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%shared</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i1</span>
+
+  <span class=err>/</span><span class=p>*</span> Forward the result of the shared computation to the <span class=s>&#34;after&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> The types must match the arguments of the <span class=s>&#34;after&#34;</span> region as well as
+   <span class=p>*</span> those of the <span class=err>`</span>scf<span class=p>.</span>while<span class=err>`</span> results<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>condition<span class=p>(</span><span class=nv>%condition</span><span class=p>)</span> <span class=nv>%shared</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=p>}</span> do <span class=p>{</span>
+<span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg2</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>{</span>
+  <span class=err>/</span><span class=p>*</span> Use the partial result to compute the rest of the payload in the
+   <span class=p>*</span> <span class=s>&#34;after&#34;</span> region<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  <span class=nv>%res</span> <span class=p>=</span> call <span class=nf>@payload</span><span class=p>(</span><span class=nv>%arg2</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span>
+
+  <span class=err>/</span><span class=p>*</span> Forward the new value to the <span class=s>&#34;before&#34;</span> region<span class=p>.</span>
+   <span class=p>*</span> The operand types must match the types of the <span class=err>`</span>scf<span class=p>.</span>while<span class=err>`</span> operands<span class=p>.</span> <span class=p>*</span><span class=err>/</span>
+  scf<span class=p>.</span>yield <span class=nv>%res</span> <span class=p>:</span> <span class=k>f32</span>
+<span class=p>}</span>
+</code></pre></div><p>The custom syntax for this operation is as follows.</p><pre><code>op ::= `scf.while` assignments `:` function-type region `do` region
+       `attributes` attribute-dict
+initializer ::= /* empty */ | `(` assignment-list `)`
+assignment-list ::= assignment | assignment `,` assignment-list
+assignment ::= ssa-value `=` ssa-value
+</code></pre><h4 id=operands-6>Operands:&nbsp;<a class=headline-hash href=#operands-6>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>inits</code></td><td>any type</td></tr></tbody></table><h4 id=results-4>Results:&nbsp;<a class=headline-hash href=#results-4>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>any type</td></tr></tbody></table><h3 id=scfyield-mlirscfyieldop><code>scf.yield</code> (::mlir::scf::YieldOp)&nbsp;<a class=headline-hash href=#scfyield-mlirscfyieldop>¶</a></h3><p>loop yield and termination operation</p><p>Syntax:</p><pre><code>operation ::= `scf.yield` attr-dict ($results^ `:` type($results))?
+</code></pre><p>&ldquo;scf.yield&rdquo; yields an SSA value from the SCF dialect op region and
+terminates the regions. The semantics of how the values are yielded is
+defined by the parent operation.
+If &ldquo;scf.yield&rdquo; has any operands, the operands must match the parent
+operation&rsquo;s results.
+If the parent operation defines no values, then the &ldquo;scf.yield&rdquo; may be
+left out in the custom syntax and the builders will insert one implicitly.
+Otherwise, it has to be present in the syntax to indicate which values are
+yielded.</p><h4 id=operands-7>Operands:&nbsp;<a class=headline-hash href=#operands-7>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>any type</td></tr></tbody></table><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/Dialects/ROCDLDialect/ title="'rocdl' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - 'rocdl' Dialect</a>
+<a class="nav nav-next" href=/docs/Dialects/ShapeDialect/ title="'shape' Dialect">Next - 'shape' Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li class=active><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

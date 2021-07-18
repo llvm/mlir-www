@@ -1,0 +1,214 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Bufferization - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Bufferization/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Bufferization</h1><p><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#bufferizations-place-in-a-compilation-pipeline>Bufferization&rsquo;s place in a compilation pipeline</a></li><li><a href=#general-structure-of-the-bufferization-process>General structure of the bufferization process</a><ul><li><a href=#example>Example</a></li></ul></li><li><a href=#how-to-write-a-partial-bufferization-pass>How to write a partial bufferization pass</a><ul><li><a href=#other-partial-bufferization-examples>Other partial bufferization examples</a></li></ul></li><li><a href=#how-to-write-a-finalizing-bufferization-pass>How to write a finalizing bufferization pass</a></li><li><a href=#changes-since-the-talkthe-talk>Changes since <a href=#the-talk>the talk</a></a></li></ul></nav><h2 id=overview>Overview&nbsp;<a class=headline-hash href=#overview>¶</a></h2><p>Bufferization in MLIR is the process of converting the <code>tensor</code> type to the
+<code>memref</code> type. MLIR provides a composable system that allows dialects to
+systematically bufferize a program. This system is a simple application
+of MLIR&rsquo;s
+<a href=/docs/DialectConversion/>dialect conversion</a>
+infrastructure. The bulk of
+the code related to bufferization is a set of ordinary <code>ConversionPattern</code>&rsquo;s
+that dialect authors write for converting ops that operate on <code>tensor</code>&rsquo;s to ops
+that operate on <code>memref</code>&rsquo;s. A set of conventions and best practices are followed
+that allow these patterns to be run across multiple independent passes (rather
+than requiring a single huge atomic conversion pass), which makes the
+compilation pipelines scalable, robust, and easy to debug.</p><p>This document is targeted at people looking to utilize MLIR&rsquo;s bufferization
+functionality, along with people who want to extend it to cover their own ops.</p><p><a name=the-talk><strong>NOTE:</strong></a> Before reading this document, please watch the
+talk &ldquo;Type Conversions the Not-So-Hard-Way: MLIR&rsquo;s New Bufferization
+Infrastructure&rdquo;
+(
+<a href="https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing">slides</a>
+,
+<a href="https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing">recording</a>
+).
+That talk gives a high-level overview of the bufferization infrastructure and
+important conceptual details related to using the MLIR dialect conversion
+infrastructure.</p><h2 id=bufferizations-place-in-a-compilation-pipeline>Bufferization&rsquo;s place in a compilation pipeline&nbsp;<a class=headline-hash href=#bufferizations-place-in-a-compilation-pipeline>¶</a></h2><p>Bufferization itself does not free any of the buffers that have been allocated,
+nor does it do anything particularly intelligent with the placement of buffers
+w.r.t. control flow. Thus, a realistic compilation pipeline will usually consist
+of:</p><ol><li>Bufferization</li><li>Buffer optimizations such as <code>buffer-hoisting</code>, <code>buffer-loop-hoisting</code>, and
+<code>promote-buffers-to-stack</code>, which do optimizations that are only exposed
+after bufferization.</li><li>Finally, running the
+<a href=/docs/BufferDeallocationInternals/>buffer deallocation</a>
+pass.</li></ol><p>After buffer deallocation has been completed, the program will be quite
+difficult to transform due to the presence of the deallocation ops. Thus, other
+optimizations such as linalg fusion on memrefs should be done before that stage.</p><h2 id=general-structure-of-the-bufferization-process>General structure of the bufferization process&nbsp;<a class=headline-hash href=#general-structure-of-the-bufferization-process>¶</a></h2><p>Bufferization consists of running multiple <em>partial</em> bufferization passes,
+followed by one <em>finalizing</em> bufferization pass.</p><p>There is typically one partial bufferization pass per dialect (though other
+subdivisions are possible). For example, for a dialect <code>X</code> there will typically
+be a pass <code>X-bufferize</code> that knows how to bufferize all the ops in that dialect.
+By running pass <code>X-bufferize</code> for each dialect <code>X</code> in the program, all the ops
+in the program are incrementally bufferized.</p><p>Partial bufferization passes create programs where only some ops have been
+bufferized. These passes will create <em>materializations</em> (also sometimes called
+&ldquo;casts&rdquo;) that convert between the <code>tensor</code> and <code>memref</code> type, which allows
+bridging between ops that have been bufferized and ops that have not yet been
+bufferized.</p><p>Finalizing bufferizations complete the bufferization process, and guarantee that
+there are no tensors remaining in the program. This involves eliminating the
+materializations. The pass <code>finalizing-bufferize</code> provides a minimal pass that
+only eliminates materializations and issues an error if any unbufferized ops
+exist in the program.</p><p>However, it is possible for a finalizing bufferization to do more than just
+eliminate materializations. By adding patterns (just as a partial bufferization
+would), it is possible for a finalizing bufferization pass to simultaneously
+bufferize ops and eliminate materializations. This has a number of disadvantages
+discussed in the talk and should generally be avoided.</p><h3 id=example>Example&nbsp;<a class=headline-hash href=#example>¶</a></h3><p>As a concrete example, we will look at the bufferization pipeline from the
+<code>mlir-npcomp</code> reference backend
+(
+<a href=https://github.com/llvm/mlir-npcomp/blob/97d6d04d41216e73d40b89ffd79620973fc14ce3/lib/RefBackend/RefBackend.cpp#L232>code</a>
+).
+The code, slightly simplified and annotated, is reproduced here:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++>  <span class=c1>// Partial bufferization passes.
+</span><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createTensorConstantBufferizePass</span><span class=p>());</span>
+  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createTCPBufferizePass</span><span class=p>());</span> <span class=c1>// Bufferizes the downstream `tcp` dialect.
+</span><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createSCFBufferizePass</span><span class=p>());</span>
+  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createLinalgBufferizePass</span><span class=p>());</span>
+  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createStdBufferizePass</span><span class=p>());</span>
+  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createTensorBufferizePass</span><span class=p>());</span>
+  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createFuncBufferizePass</span><span class=p>());</span>
+
+  <span class=c1>// Finalizing bufferization pass.
+</span><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createFinalizingBufferizePass</span><span class=p>());</span>
+</code></pre></div><p>Looking first at the partial bufferization passes, we see that there are a
+sequence of <code>FuncOp</code> passes (which run in parallel on functions). These function
+passes are bracketed by <code>tensor-constant-bufferize</code> and <code>func-bufferize</code>, which
+are module passes (and thus serialize the parallel compilation process). These
+two passes must be module passes because they make changes to the top-level
+module.</p><p>The bulk of the bufferization work is done by the function passes. Most of these
+passes are provided as part of the upstream MLIR distribution and bufferize
+their respective dialects (e.g. <code>scf-bufferize</code> bufferizes the <code>scf</code> dialect).
+The <code>tcp-bufferize</code> pass is an exception &ndash; it is a partial bufferization pass
+used to bufferize the downstream <code>tcp</code> dialect, and fits in perfectly with all
+the other passes provided upstream.</p><p>The last pass is the finalizing bufferization pass. The <code>mlir-npcomp</code> reference
+backend has arranged that all ops are bufferized by partial bufferizations, so
+that the upstream <code>finalizing-bufferize</code> pass can be used as the finalizing
+bufferization pass. This gives excellent diagnostics when something goes wrong
+with the bufferization process, such as due to an op that wasn&rsquo;t handled by any
+pattern.</p><h2 id=how-to-write-a-partial-bufferization-pass>How to write a partial bufferization pass&nbsp;<a class=headline-hash href=#how-to-write-a-partial-bufferization-pass>¶</a></h2><p>The contract of a partial bufferization pass is that a subset of ops (or kinds
+of ops, customizable by a ConversionTarget) get bufferized.</p><p>A partial bufferization pass is just a pass that uses the
+<a href=/docs/DialectConversion/>dialect conversion</a>
+framework to apply
+<code>ConversionPattern</code>s with a <code>tensor</code> to <code>memref</code> type conversion.</p><p>To describe how to write such a pass, we will walk through an example, the
+<code>tensor-bufferize</code> pass
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L23>code</a>
+,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/Tensor/bufferize.mlir#L1>test</a>
+)
+that bufferizes the <code>tensor</code> dialect.</p><p>The bulk of the code in the pass will be a set of conversion patterns, with a
+simple example being
+<a href=https://github.com/llvm/llvm-project/blob/2bf6e443e54604c7818c4d1a1837f3d091023270/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L23>BufferizeCastOp</a>
+).</p><pre><code>class BufferizeCastOp : public OpConversionPattern&lt;tensor::CastOp&gt; {
+public:
+  using OpConversionPattern::OpConversionPattern;
+  LogicalResult
+  matchAndRewrite(tensor::CastOp op, ArrayRef&lt;Value&gt; operands,
+                  ConversionPatternRewriter &amp;rewriter) const override {
+    auto resultType = getTypeConverter()-&gt;convertType(op.getType());
+    rewriter.replaceOpWithNewOp&lt;MemRefCastOp&gt;(op, resultType, operands[0]);
+    return success();
+  }
+};
+</code></pre><p>See
+<a href=#the-talk>the talk</a>
+for more details on how to write these patterns.</p><p>The
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L57>pass itself</a>
+is very small, and follows the basic pattern of any dialect conversion pass.</p><pre><code>void mlir::populateTensorBufferizePatterns(
+    BufferizeTypeConverter &amp;typeConverter, RewritePatternSet &amp;patterns) {
+  patterns.add&lt;BufferizeCastOp, BufferizeExtractOp&gt;(typeConverter,
+                                                    patterns.getContext());
+}
+
+struct TensorBufferizePass : public TensorBufferizeBase&lt;TensorBufferizePass&gt; {
+  void runOnFunction() override {
+    auto *context = &amp;getContext();
+    BufferizeTypeConverter typeConverter;
+    RewritePatternSet patterns(context);
+    ConversionTarget target(*context);
+
+    populateTensorBufferizePatterns(typeConverter, patterns);
+    target.addIllegalOp&lt;tensor::CastOp, tensor::ExtractOp&gt;();
+    target.addLegalDialect&lt;StandardOpsDialect&gt;();
+
+    if (failed(
+            applyPartialConversion(getFunction(), target, std::move(patterns))))
+      signalPassFailure();
+  }
+};
+</code></pre><p>The pass has all the hallmarks of a dialect conversion pass that does type
+conversions: a <code>TypeConverter</code>, a <code>RewritePatternSet</code>, and a
+<code>ConversionTarget</code>, and a call to <code>applyPartialConversion</code>. Note that a function
+<code>populateTensorBufferizePatterns</code> is separated, so that power users can use the
+patterns independently, if necessary (such as to combine multiple sets of
+conversion patterns into a single conversion call, for performance).</p><p>One convenient utility provided by the MLIR bufferization infrastructure is the
+<code>BufferizeTypeConverter</code>, which comes pre-loaded with the necessary conversions
+and materializations between <code>tensor</code> and <code>memref</code>.</p><p>In this case, the <code>MemRefOpsDialect</code> is marked as legal, so the <code>tensor_load</code>
+and <code>buffer_cast</code> ops, which are inserted automatically by the dialect
+conversion framework as materializations, are legal. There is a helper
+<code>populateBufferizeMaterializationLegality</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/a0b65a7bcd6065688189b3d678c42ed6af9603db/mlir/include/mlir/Transforms/Bufferize.h#L53>code</a>
+)
+which helps with this in general.</p><h3 id=other-partial-bufferization-examples>Other partial bufferization examples&nbsp;<a class=headline-hash href=#other-partial-bufferization-examples>¶</a></h3><ul><li><p><code>linalg-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/Linalg/Transforms/Bufferize.cpp#L1>code</a>
+,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/Linalg/bufferize.mlir#L1>test</a>
+)</p><ul><li>Bufferizes the <code>linalg</code> dialect.</li><li>This is an example of how to simultaneously bufferize all the ops that
+satisfy a certain OpInterface with a single pattern. Specifically,
+<code>BufferizeAnyLinalgOp</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/daaaed6bb89044ac58a23f1bb1ccdd12342a5a58/mlir/lib/Dialect/Linalg/Transforms/Bufferize.cpp#L170>code</a>
+)
+bufferizes any ops that implements the <code>LinalgOp</code> interface.</li></ul></li><li><p><code>scf-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/SCF/Transforms/Bufferize.cpp#L1>code</a>
+,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/SCF/bufferize.mlir#L1>test</a>
+)</p><ul><li>Bufferizes ops from the <code>scf</code> dialect.</li><li>This is an example of how to bufferize ops that implement
+<code>RegionBranchOpInterface</code> (that is, they use regions to represent control
+flow).</li><li>The bulk of the work is done by
+<code>lib/Dialect/SCF/Transforms/StructuralTypeConversions.cpp</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/daaaed6bb89044ac58a23f1bb1ccdd12342a5a58/mlir/lib/Dialect/SCF/Transforms/StructuralTypeConversions.cpp#L1>code</a>
+),
+which is well-commented and covers how to correctly convert ops that contain
+regions.</li></ul></li><li><p><code>func-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/StandardOps/Transforms/FuncBufferize.cpp#L1>code</a>
+,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/Standard/func-bufferize.mlir#L1>test</a>
+)</p><ul><li>Bufferizes <code>func</code>, <code>call</code>, and <code>BranchOpInterface</code> ops.</li><li>This is an example of how to bufferize ops that have multi-block regions.</li><li>This is an example of a pass that is not split along dialect subdivisions.</li></ul></li><li><p><code>tensor-constant-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/StandardOps/Transforms/TensorConstantBufferize.cpp#L1>code</a>
+,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/Standard/tensor-constant-bufferize.mlir#L1>test</a>
+)</p><ul><li>Bufferizes only <code>std.constant</code> ops of <code>tensor</code> type.</li><li>This is an example of setting up the legality so that only a subset of
+<code>std.constant</code> ops get bufferized.</li><li>This is an example of a pass that is not split along dialect subdivisions.</li></ul></li></ul><h2 id=how-to-write-a-finalizing-bufferization-pass>How to write a finalizing bufferization pass&nbsp;<a class=headline-hash href=#how-to-write-a-finalizing-bufferization-pass>¶</a></h2><p>The contract of a finalizing bufferization pass is that all tensors are gone
+from the program.</p><p>The easiest way to write a finalizing bufferize pass is to not write one at all!
+MLIR provides a pass <code>finalizing-bufferize</code> which eliminates the <code>tensor_load</code> /
+<code>buffer_cast</code> materialization ops inserted by partial bufferization passes
+and emits an error if that is not sufficient to remove all tensors from the
+program.</p><p>This pass is sufficient when partial bufferization passes have bufferized all
+the ops in the program, leaving behind only the materializations. When possible,
+it is recommended to structure your pass pipeline this way, as this has the
+significant advantage that if an op does not get bufferized (due to a missing
+pattern, bug in the code, etc.), <code>finalizing-bufferize</code> will emit a nice clean
+error, and the IR seen by <code>finalizing-bufferize</code> will only contain only one
+unbufferized op.</p><p>However, before the current bufferization infrastructure was put in place,
+bufferization could only be done as a single finalizing bufferization
+mega-pass that used the <code>populate*BufferizePatterns</code> functions from multiple
+dialects to simultaneously bufferize everything at once. Thus, one might see
+code in downstream projects structured this way. This structure is not
+recommended in new code. A helper,
+<code>populateEliminateBufferizeMaterializationsPatterns</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/a0b65a7bcd6065688189b3d678c42ed6af9603db/mlir/include/mlir/Transforms/Bufferize.h#L58>code</a>
+)
+is available for such passes to provide patterns that eliminate <code>tensor_load</code>
+and <code>buffer_cast</code>.</p><h2 id=changes-since-the-talkthe-talk>Changes since
+<a href=#the-talk>the talk</a></h2><ul><li><code>func-bufferize</code> was changed to be a partial conversion pass, and there is a
+new <code>finalizing-bufferize</code> which serves as a general finalizing bufferization
+pass.</li></ul><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/BufferDeallocationInternals/ title="Buffer Deallocation - Internals"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - Buffer Deallocation - Internals</a>
+<a class="nav nav-next" href=/docs/LLVMDialectMemRefConvention/ title="Built-in Function and MemRef Calling Convention">Next - Built-in Function and MemRef Calling Convention <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li class=active><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

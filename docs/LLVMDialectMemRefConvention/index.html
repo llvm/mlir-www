@@ -1,0 +1,391 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Built-in Function and MemRef Calling Convention - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/LLVMDialectMemRefConvention/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Built-in Function and MemRef Calling Convention</h1><p>This documents describes the calling convention implemented in the conversion of
+built-in
+<a href=/docs/Dialects/Builtin/#func-mlirfuncop>function operation</a>
+, standard
+<a href=/docs/Dialects/Standard/#stdcall-callop><code>call</code></a>
+operations and the handling of
+<a href=/docs/Dialects/Builtin/><code>memref</code></a>
+type equivalents in the
+<a href=/docs/Dialects/LLVM/>LLVM dialect</a>
+. The conversion assumes the <em>default</em>
+convention was used when converting
+<a href=/docs/ConversionToLLVMDialect/>built-in to the LLVM dialect types</a>
+.</p><h2 id=function-result-packing>Function Result Packing&nbsp;<a class=headline-hash href=#function-result-packing>¶</a></h2><p>In case of multi-result functions, the returned values are inserted into a
+structure-typed value before being returned and extracted from it at the call
+site. This transformation is a part of the conversion and is transparent to the
+defines and uses of the values being returned.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span> <span class=p>{</span>
+  <span class=kt>return</span> <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%arg1</span> <span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=k>i64</span>
+<span class=p>}</span>
+<span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>42</span> <span class=p>:</span> <span class=k>i32</span>
+  <span class=nv>%1</span> <span class=p>=</span> <span class=kt>constant</span> <span class=m>17</span> <span class=p>:</span> <span class=k>i64</span>
+  <span class=nv>%2</span><span class=p>:</span><span class=nl>2 =</span> call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span>
+  <span class=s>&#34;use_i32&#34;</span><span class=p>(</span><span class=nv>%2#0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=s>&#34;use_i64&#34;</span><span class=p>(</span><span class=nv>%2#1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+<span class=p>}</span>
+
+<span class=c>// is transformed into
+</span><span class=c></span>
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span> <span class=p>{</span>
+  <span class=c>// insert the vales into a structure
+</span><span class=c></span>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span>undef <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%1</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+
+  <span class=c>// return the structure value
+</span><span class=c></span>  llvm<span class=p>.</span><span class=kt>return</span> <span class=nv>%2</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+<span class=p>}</span>
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span><span class=kt>constant</span><span class=p>(</span><span class=m>42</span> <span class=p>:</span> <span class=k>i32</span><span class=p>)</span> <span class=p>:</span> <span class=k>i32</span>
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span><span class=kt>constant</span><span class=p>(</span><span class=m>17</span><span class=p>)</span> <span class=p>:</span> <span class=k>i64</span>
+
+  <span class=c>// call and extract the values from the structure
+</span><span class=c></span>  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>call <span class=nf>@bar</span><span class=p>(</span><span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span><span class=p>)</span>
+     <span class=p>:</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%2</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%2</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>)&gt;</span>
+
+  <span class=c>// use as before
+</span><span class=c></span>  <span class=s>&#34;use_i32&#34;</span><span class=p>(</span><span class=nv>%3</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=s>&#34;use_i64&#34;</span><span class=p>(</span><span class=nv>%4</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+<span class=p>}</span>
+</code></pre></div><h2 id=calling-convention-for-ranked-memref>Calling Convention for Ranked <code>memref</code>&nbsp;<a class=headline-hash href=#calling-convention-for-ranked-memref>¶</a></h2><p>Function <em>arguments</em> of <code>memref</code> type, ranked or unranked, are <em>expanded</em> into a
+list of arguments of non-aggregate types that the memref descriptor defined
+above comprises. That is, the outer struct type and the inner array types are
+replaced with individual arguments.</p><p>This convention is implemented in the conversion of <code>std.func</code> and <code>std.call</code> to
+the LLVM dialect, with the former unpacking the descriptor into a set of
+individual values and the latter packing those values back into a descriptor so
+as to make it transparently usable by other operations. Conversions from other
+dialects should take this convention into account.</p><p>This specific convention is motivated by the necessity to specify alignment and
+aliasing attributes on the raw pointers underpinning the memref.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span> <span class=p>{</span>
+  <span class=s>&#34;use&#34;</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted to the following
+</span><span class=c>// (using type alias for brevity):
+</span><span class=c></span><span class=p>!</span><span class=nl>llvm.memref_1d =</span> type <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                     array<span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span>  <span class=c>// Allocated pointer.
+</span><span class=c></span>               <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span>  <span class=c>// Aligned pointer.
+</span><span class=c></span>               <span class=nv>%arg2</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span>         <span class=c>// Offset.
+</span><span class=c></span>               <span class=nv>%arg3</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span>         <span class=c>// Size in dim 0.
+</span><span class=c></span>               <span class=nv>%arg4</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>{</span>       <span class=c>// Stride in dim 0.
+</span><span class=c></span>  <span class=c>// Populate memref descriptor structure.
+</span><span class=c></span>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span>undef <span class=p>:</span>
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%1</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg2</span><span class=p>,</span> <span class=nv>%2</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg3</span><span class=p>,</span> <span class=nv>%3</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg4</span><span class=p>,</span> <span class=nv>%4</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+
+  <span class=c>// Descriptor is now usable as a single value.
+</span><span class=c></span>  <span class=s>&#34;use&#34;</span><span class=p>(</span><span class=nv>%5</span><span class=p>)</span> <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+</code></pre></div><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;get&#34;</span><span class=p>()</span> <span class=p>:</span> <span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+  call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted to the following
+</span><span class=c>// (using type alias for brevity):
+</span><span class=c></span><span class=p>!</span><span class=nl>llvm.memref_1d =</span> type <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                     array<span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;get&#34;</span><span class=p>()</span> <span class=p>:</span> <span class=p>()</span> <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+
+  <span class=c>// Unpack the memref descriptor.
+</span><span class=c></span>  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d
+
+  <span class=c>// Pass individual values to the callee.
+</span><span class=c></span>  llvm<span class=p>.</span>call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%1</span><span class=p>,</span> <span class=nv>%2</span><span class=p>,</span> <span class=nv>%3</span><span class=p>,</span> <span class=nv>%4</span><span class=p>,</span> <span class=nv>%5</span><span class=p>)</span> <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span><span class=kt>memref</span>_1d<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+
+</code></pre></div><h2 id=calling-convention-for-unranked-memref>Calling Convention for Unranked <code>memref</code>&nbsp;<a class=headline-hash href=#calling-convention-for-unranked-memref>¶</a></h2><p>For unranked memrefs, the list of function arguments always contains two
+elements, same as the unranked memref descriptor: an integer rank, and a
+type-erased (<code>!llvm&lt;"i8*"></code>) pointer to the ranked memref descriptor. Note that
+while the <em>calling convention</em> does not require stack allocation, <em>casting</em> to
+unranked memref does since one cannot take an address of an SSA value containing
+the ranked memref. The caller is in charge of ensuring the thread safety and
+eventually removing unnecessary stack allocations in cast operations.</p><p>Example</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span> <span class=p>{</span>
+  <span class=s>&#34;use&#34;</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted to the following.
+</span><span class=c></span>
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=k>i64</span>        <span class=c>// Rank.
+</span><span class=c></span>               <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)</span> <span class=p>{</span> <span class=c>// Type-erased pointer to descriptor.
+</span><span class=c></span>  <span class=c>// Pack the unranked memref descriptor.
+</span><span class=c></span>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span>undef <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;</span>
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;</span>
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%1</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;</span>
+
+  <span class=s>&#34;use&#34;</span><span class=p>(</span><span class=nv>%2</span><span class=p>)</span> <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+</code></pre></div><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;get&#34;</span><span class=p>()</span> <span class=p>:</span> <span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)</span>
+  call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%0</span><span class=p>):</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  <span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted to the following.
+</span><span class=c></span>
+llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@bar</span><span class=p>()</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;get&#34;</span><span class=p>()</span> <span class=p>:</span> <span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;)</span>
+
+  <span class=c>// Unpack the memref descriptor.
+</span><span class=c></span>  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;</span>
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span><span class=k>i64</span><span class=p>,</span> ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)&gt;</span>
+
+  <span class=c>// Pass individual values to the callee.
+</span><span class=c></span>  llvm<span class=p>.</span>call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%1</span><span class=p>,</span> <span class=nv>%2</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+</code></pre></div><p><strong>Lifetime.</strong> The second element of the unranked memref descriptor points to
+some memory in which the ranked memref descriptor is stored. By convention, this
+memory is allocated on stack and has the lifetime of the function. (<em>Note:</em> due
+to function-length lifetime, creation of multiple unranked memref descriptors,
+e.g., in a loop, may lead to stack overflows.) If an unranked descriptor has to
+be returned from a function, the ranked descriptor it points to is copied into
+dynamically allocated memory, and the pointer in the unranked descriptor is
+updated accordingly. The allocation happens immediately before returning. It is
+the responsibility of the caller to free the dynamically allocated memory. The
+default conversion of <code>std.call</code> and <code>std.call_indirect</code> copies the ranked
+descriptor to newly allocated memory on the caller&rsquo;s stack. Thus, the convention
+of the ranked memref descriptor pointed to by an unranked memref descriptor
+being stored on stack is respected.</p><p><em>This convention may or may not apply if the conversion of MemRef types is
+overridden by the user.</em></p><h2 id=c-compatible-wrapper-emission>C-compatible wrapper emission&nbsp;<a class=headline-hash href=#c-compatible-wrapper-emission>¶</a></h2><p>In practical cases, it may be desirable to have externally-facing functions with
+a single attribute corresponding to a MemRef argument. When interfacing with
+LLVM IR produced from C, the code needs to respect the corresponding calling
+convention. The conversion to the LLVM dialect provides an option to generate
+wrapper functions that take memref descriptors as pointers-to-struct compatible
+with data types produced by Clang when compiling C sources. The generation of
+such wrapper functions can additionally be controlled at a function granularity
+by setting the <code>llvm.emit_c_interface</code> unit attribute.</p><p>More specifically, a memref argument is converted into a pointer-to-struct
+argument of type <code>{T*, T*, i64, i64[N], i64[N]}*</code> in the wrapper function, where
+<code>T</code> is the converted element type and <code>N</code> is the memref rank. This type is
+compatible with that produced by Clang for the following C++ structure template
+instantiations or their equivalents in C.</p><div class=highlight><pre class=chroma><code class=language-cpp data-lang=cpp><span class=k>template</span><span class=o>&lt;</span><span class=k>typename</span> <span class=n>T</span><span class=p>,</span> <span class=n>size_t</span> <span class=n>N</span><span class=o>&gt;</span>
+<span class=k>struct</span> <span class=nc>MemRefDescriptor</span> <span class=p>{</span>
+  <span class=n>T</span> <span class=o>*</span><span class=n>allocated</span><span class=p>;</span>
+  <span class=n>T</span> <span class=o>*</span><span class=n>aligned</span><span class=p>;</span>
+  <span class=n>intptr_t</span> <span class=n>offset</span><span class=p>;</span>
+  <span class=n>intptr_t</span> <span class=n>sizes</span><span class=p>[</span><span class=n>N</span><span class=p>];</span>
+  <span class=n>intptr_t</span> <span class=n>strides</span><span class=p>[</span><span class=n>N</span><span class=p>];</span>
+<span class=p>};</span>
+</code></pre></div><p>Furthermore, we also rewrite function results to pointer parameters if the
+rewritten function result has a struct type. The special result parameter is
+added as the first parameter and is of pointer-to-struct type.</p><p>If enabled, the option will do the following. For <em>external</em> functions declared
+in the MLIR module.</p><ol><li>Declare a new function <code>_mlir_ciface_&lt;original name></code> where memref arguments
+are converted to pointer-to-struct and the remaining arguments are converted
+as usual. Results are converted to a special argument if they are of struct
+type.</li><li>Add a body to the original function (making it non-external) that<ol><li>allocates memref descriptors,</li><li>populates them,</li><li>potentially allocates space for the result struct, and</li><li>passes the pointers to these into the newly declared interface function,
+then</li><li>collects the result of the call (potentially from the result struct),
+and</li><li>returns it to the caller.</li></ol></li></ol><p>For (non-external) functions defined in the MLIR module.</p><ol><li>Define a new function <code>_mlir_ciface_&lt;original name></code> where memref arguments
+are converted to pointer-to-struct and the remaining arguments are converted
+as usual. Results are converted to a special argument if they are of struct
+type.</li><li>Populate the body of the newly defined function with IR that<ol><li>loads descriptors from pointers;</li><li>unpacks descriptor into individual non-aggregate values;</li><li>passes these values into the original function;</li><li>collects the results of the call and</li><li>either copies the results into the result struct or returns them to the
+caller.</li></ol></li></ol><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>
+<span class=kt>func</span> <span class=nf>@qux</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+
+<span class=c>// Gets converted into the following
+</span><span class=c>// (using type alias for brevity):
+</span><span class=c></span><span class=p>!</span><span class=nl>llvm.memref_2d =</span> type <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                     array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+
+<span class=c>// Function with unpacked arguments.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@qux</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span>
+               <span class=nv>%arg2</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg3</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg4</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span>
+               <span class=nv>%arg5</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg6</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c>// Populate memref descriptor (as per calling convention).
+</span><span class=c></span>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span>undef <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%1</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg2</span><span class=p>,</span> <span class=nv>%2</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg3</span><span class=p>,</span> <span class=nv>%3</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg5</span><span class=p>,</span> <span class=nv>%4</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%6</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg4</span><span class=p>,</span> <span class=nv>%5</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%7</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg6</span><span class=p>,</span> <span class=nv>%6</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+
+  <span class=c>// Store the descriptor in a stack-allocated space.
+</span><span class=c></span>  <span class=nv>%8</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span><span class=kt>constant</span><span class=p>(</span><span class=m>1</span> <span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>:</span> <span class=k>i64</span>
+  <span class=nv>%9</span> <span class=p>=</span> llvm<span class=p>.</span>alloca <span class=nv>%8</span> <span class=p>x</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+     <span class=p>:</span> <span class=p>(</span><span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                        array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;</span>
+  llvm<span class=p>.</span>store <span class=nv>%7</span><span class=p>,</span> <span class=nv>%9</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                        array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;</span>
+
+  <span class=c>// Call the interface function.
+</span><span class=c></span>  llvm<span class=p>.</span>call <span class=nf>@_mlir_ciface_qux</span><span class=p>(</span><span class=nv>%9</span><span class=p>)</span>
+     <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                          array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+
+  <span class=c>// The stored descriptor will be freed on return.
+</span><span class=c></span>  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Interface function.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@_mlir_ciface_qux</span><span class=p>(!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                              array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;)</span>
+</code></pre></div><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>{</span>
+  <span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted into the following
+</span><span class=c>// (using type alias for brevity):
+</span><span class=c></span><span class=p>!</span><span class=nl>llvm.memref_2d =</span> type <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                     array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+<span class=p>!</span><span class=nl>llvm.memref_2d_ptr =</span> type <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                             array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;</span>
+
+<span class=c>// Function with unpacked arguments.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span>
+               <span class=nv>%arg2</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg3</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg4</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span>
+               <span class=nv>%arg5</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg6</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>{</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+
+<span class=c>// Interface function callable from C.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@_mlir_ciface_foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr<span class=p>)</span> <span class=p>{</span>
+  <span class=c>// Load the descriptor.
+</span><span class=c></span>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>load <span class=nv>%arg0</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr
+
+  <span class=c>// Unpack the descriptor as per calling convention.
+</span><span class=c></span>  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%6</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%7</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  llvm<span class=p>.</span>call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%1</span><span class=p>,</span> <span class=nv>%2</span><span class=p>,</span> <span class=nv>%3</span><span class=p>,</span> <span class=nv>%4</span><span class=p>,</span> <span class=nv>%5</span><span class=p>,</span> <span class=nv>%6</span><span class=p>,</span> <span class=nv>%7</span><span class=p>)</span>
+    <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span>
+       <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+</code></pre></div><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+  <span class=kt>return</span> <span class=nv>%arg0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+<span class=p>}</span>
+
+<span class=c>// Gets converted into the following
+</span><span class=c>// (using type alias for brevity):
+</span><span class=c></span><span class=p>!</span><span class=nl>llvm.memref_2d =</span> type <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                     array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+<span class=p>!</span><span class=nl>llvm.memref_2d_ptr =</span> type <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                             array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>2x</span><span class=k>i64</span><span class=p>&gt;)&gt;&gt;</span>
+
+<span class=c>// Function with unpacked arguments.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=nv>%arg2</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span>
+               <span class=nv>%arg3</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg4</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg5</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=nv>%arg6</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span>
+    <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span>undef <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg1</span><span class=p>,</span> <span class=nv>%1</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg2</span><span class=p>,</span> <span class=nv>%2</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg3</span><span class=p>,</span> <span class=nv>%3</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg5</span><span class=p>,</span> <span class=nv>%4</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%6</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg4</span><span class=p>,</span> <span class=nv>%5</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%7</span> <span class=p>=</span> llvm<span class=p>.</span>insertvalue <span class=nv>%arg6</span><span class=p>,</span> <span class=nv>%6</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  llvm<span class=p>.</span><span class=kt>return</span> <span class=nv>%7</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+<span class=p>}</span>
+
+<span class=c>// Interface function callable from C.
+</span><span class=c></span>llvm<span class=p>.</span><span class=kt>func</span> <span class=nf>@_mlir_ciface_foo</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr<span class=p>,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr<span class=p>)</span> <span class=p>{</span>
+  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>load <span class=nv>%arg1</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr
+  <span class=nv>%1</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%2</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%3</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%4</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%5</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>3</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%6</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%7</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue <span class=nv>%0</span><span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  <span class=nv>%8</span> <span class=p>=</span> llvm<span class=p>.</span>call <span class=nf>@foo</span><span class=p>(</span><span class=nv>%1</span><span class=p>,</span> <span class=nv>%2</span><span class=p>,</span> <span class=nv>%3</span><span class=p>,</span> <span class=nv>%4</span><span class=p>,</span> <span class=nv>%5</span><span class=p>,</span> <span class=nv>%6</span><span class=p>,</span> <span class=nv>%7</span><span class=p>)</span>
+    <span class=p>:</span> <span class=p>(!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d
+  llvm<span class=p>.</span>store <span class=nv>%8</span><span class=p>,</span> <span class=nv>%arg0</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span><span class=kt>memref</span>_2d_ptr
+  llvm<span class=p>.</span><span class=kt>return</span>
+<span class=p>}</span>
+</code></pre></div><p>Rationale: Introducing auxiliary functions for C-compatible interfaces is
+preferred to modifying the calling convention since it will minimize the effect
+of C compatibility on intra-module calls or calls between MLIR-generated
+functions. In particular, when calling external functions from an MLIR module in
+a (parallel) loop, the fact of storing a memref descriptor on stack can lead to
+stack exhaustion and/or concurrent access to the same address. Auxiliary
+interface function serves as an allocation scope in this case. Furthermore, when
+targeting accelerators with separate memory spaces such as GPUs, stack-allocated
+descriptors passed by pointer would have to be transferred to the device memory,
+which introduces significant overhead. In such situations, auxiliary interface
+functions are executed on host and only pass the values through device function
+invocation mechanism.</p><h2 id=default-memref-model>Default Memref Model&nbsp;<a class=headline-hash href=#default-memref-model>¶</a></h2><h3 id=memref-descriptor>Memref Descriptor&nbsp;<a class=headline-hash href=#memref-descriptor>¶</a></h3><p>Within a converted function, a <code>memref</code>-typed value is represented by a memref
+<em>descriptor</em>, the type of which is the structure type obtained by converting
+from the memref type. This descriptor holds all the necessary information to
+produce an address of a specific element. In particular, it holds dynamic values
+for static sizes, and they are expected to match at all times.</p><p>It is created by the allocation operation and is updated by the conversion
+operations that may change static dimensions into dynamic dimensions and vice
+versa.</p><p><strong>Note</strong>: LLVM IR conversion does not support <code>memref</code>s with layouts that are
+not amenable to the strided form.</p><h3 id=index-linearization>Index Linearization&nbsp;<a class=headline-hash href=#index-linearization>¶</a></h3><p>Accesses to a memref element are transformed into an access to an element of the
+buffer pointed to by the descriptor. The position of the element in the buffer
+is calculated by linearizing memref indices in row-major order (lexically first
+index is the slowest varying, similar to C, but accounting for strides). The
+computation of the linear address is emitted as arithmetic operation in the LLVM
+IR dialect. Strides are extracted from the memref descriptor.</p><p>Examples:</p><p>An access to a memref with indices:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>%0</span> <span class=p>=</span> load <span class=nv>%m</span><span class=p>[</span><span class=nv>%1</span><span class=p>,</span><span class=nv>%2</span><span class=p>,</span><span class=nv>%3</span><span class=p>,</span><span class=nv>%4</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x4x8x</span><span class=k>f32</span><span class=p>,</span> offset<span class=p>:</span> <span class=err>?</span><span class=p>&gt;</span>
+</code></pre></div><p>is transformed into the equivalent of the following code:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// Compute the linearized index from strides.
+</span><span class=c>// When strides or, in absence of explicit strides, the corresponding sizes are
+</span><span class=c>// dynamic, extract the stride value from the descriptor.
+</span><span class=c></span><span class=nv>%stride1</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue<span class=p>[</span><span class=m>4</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                                   array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+<span class=nv>%addr1</span> <span class=p>=</span> muli <span class=nv>%stride1</span><span class=p>,</span> <span class=nv>%1</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=c>// When the stride or, in absence of explicit strides, the trailing sizes are
+</span><span class=c>// known statically, this value is used as a constant. The natural value of
+</span><span class=c>// strides is the product of all sizes following the current dimension.
+</span><span class=c></span><span class=nv>%stride2</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span><span class=kt>constant</span><span class=p>(</span><span class=m>32</span> <span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>:</span> <span class=k>i64</span>
+<span class=nv>%addr2</span> <span class=p>=</span> muli <span class=nv>%stride2</span><span class=p>,</span> <span class=nv>%2</span> <span class=p>:</span> <span class=k>i64</span>
+<span class=nv>%addr3</span> <span class=p>=</span> addi <span class=nv>%addr1</span><span class=p>,</span> <span class=nv>%addr2</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=nv>%stride3</span> <span class=p>=</span> llvm<span class=p>.</span>mlir<span class=p>.</span><span class=kt>constant</span><span class=p>(</span><span class=m>8</span> <span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>:</span> <span class=k>i64</span>
+<span class=nv>%addr4</span> <span class=p>=</span> muli <span class=nv>%stride3</span><span class=p>,</span> <span class=nv>%3</span> <span class=p>:</span> <span class=k>i64</span>
+<span class=nv>%addr5</span> <span class=p>=</span> addi <span class=nv>%addr3</span><span class=p>,</span> <span class=nv>%addr4</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=c>// Multiplication with the known unit stride can be omitted.
+</span><span class=c></span><span class=nv>%addr6</span> <span class=p>=</span> addi <span class=nv>%addr5</span><span class=p>,</span> <span class=nv>%4</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=c>// If the linear offset is known to be zero, it can also be omitted. If it is
+</span><span class=c>// dynamic, it is extracted from the descriptor.
+</span><span class=c></span><span class=nv>%offset</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue<span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                               array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+<span class=nv>%addr7</span> <span class=p>=</span> addi <span class=nv>%addr6</span><span class=p>,</span> <span class=nv>%offset</span> <span class=p>:</span> <span class=k>i64</span>
+
+<span class=c>// All accesses are based on the aligned pointer.
+</span><span class=c></span><span class=nv>%aligned</span> <span class=p>=</span> llvm<span class=p>.</span>extractvalue<span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span>
+                                                array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+
+<span class=c>// Get the address of the data pointer.
+</span><span class=c></span><span class=nv>%ptr</span> <span class=p>=</span> llvm<span class=p>.</span>getelementptr <span class=nv>%aligned</span><span class=p>[</span><span class=nv>%addr8</span><span class=p>]</span>
+     <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>struct<span class=p>&lt;(</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=k>i64</span><span class=p>,</span> array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;,</span> array<span class=p>&lt;</span><span class=m>4x</span><span class=k>i64</span><span class=p>&gt;)&gt;</span>
+     <span class=p>-&gt;</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Perform the actual load.
+</span><span class=c></span><span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>load <span class=nv>%ptr</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;</span>
+</code></pre></div><p>For stores, the address computation code is identical and only the actual store
+operation is different.</p><p>Note: the conversion does not perform any sort of common subexpression
+elimination when emitting memref accesses.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/Bufferization/ title=Bufferization><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - Bufferization</a>
+<a class="nav nav-next" href=/docs/ConversionToLLVMDialect/ title="Conversion to the LLVM Dialect">Next - Conversion to the LLVM Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li class=active><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

@@ -1,0 +1,164 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Debug Actions - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/DebugActions/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Debug Actions</h1><p><nav id=TableOfContents><ul><li><a href=#debug-action>Debug Action</a></li><li><a href=#debug-action-manager>Debug Action Manager</a></li><li><a href=#debug-action-handler>Debug Action Handler</a><ul><li><a href=#action-specific-handlers>Action Specific Handlers</a></li><li><a href=#generic-handlers>Generic Handlers</a></li><li><a href=#common-action-handlers>Common Action Handlers</a></li></ul></li></ul></nav><p>This file documents the infrastructure for <code>Debug Actions</code>. This is a DEBUG only
+API that allows for external entities to control various aspects of compiler
+execution. This is conceptually similar to something like <code>DebugCounters</code> in
+LLVM, but at a lower level. This framework doesn&rsquo;t make any assumptions about
+how the higher level driver is controlling the execution, it merely provides a
+framework for connecting the two together. A high level overview of the workflow
+surrounding debug actions is shown below:</p><ul><li>Compiler developer defines an
+<a href=#debug-action><code>action</code></a>
+that is taken by the
+a pass, transformation, utility that they are developing.</li><li>Depending on the needs, the developer dispatches various queries, pertaining
+to this action, to an
+<a href=#debug-action-manager><code>action manager</code></a>
+that will
+provide an answer as to what behavior the action should take.</li><li>An external entity registers an
+<a href=#debug-action-handler><code>action handler</code></a>
+with the action manager, and provides the logic to resolve queries on
+actions.</li></ul><p>The exact definition of an <code>external entity</code> is left opaque, to allow for more
+interesting handlers. The set of possible action queries is detailed in the
+<a href=#debug-action-manager><code>action manager</code></a>
+section below.</p><h2 id=debug-action>Debug Action&nbsp;<a class=headline-hash href=#debug-action>¶</a></h2><p>A <code>debug action</code> is essentially a marker for a type of action that may be
+performed within the compiler. There are no constraints on the granularity of an
+“action”, it can be as simple as “perform this fold” and as complex as “run this
+pass pipeline”. An action is comprised of the following:</p><ul><li><p>Tag:</p><ul><li>A unique string identifier, similar to a command line flag or
+DEBUG_TYPE.</li></ul></li><li><p>Description:</p><ul><li>A short description of what the action represents.</li></ul></li><li><p>Parameter Types:</p><ul><li>The types of values that are passed to queries related to this action,
+to help guide decisions.</li></ul></li></ul><p>Below is an example action that may be provided by the
+<a href=/docs/PatternRewriter/>pattern rewriter</a>
+framework to control the application of
+rewrite patterns.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// A debug action that allows for controlling the application of patterns.
+</span><span class=c1>/// A new action type can be defined by inheriting from `DebugAction`.
+</span><span class=c1>/// * The Tag is specified via a static `StringRef getTag()` method.
+</span><span class=c1>/// * The Description is specified via a static `StringRef getDescription()`
+</span><span class=c1>///   method.
+</span><span class=c1>/// * The parameters for the action are provided via template parameters when
+</span><span class=c1>///   inheriting from `DebugAction`.
+</span><span class=c1></span><span class=k>struct</span> <span class=nc>ApplyPatternAction</span>
+    <span class=o>:</span> <span class=k>public</span> <span class=n>DebugAction</span><span class=o>&lt;</span><span class=n>Operation</span> <span class=o>*</span><span class=p>,</span> <span class=k>const</span> <span class=n>Pattern</span> <span class=o>&amp;&gt;</span> <span class=p>{</span>
+  <span class=k>static</span> <span class=n>StringRef</span> <span class=nf>getTag</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=s>&#34;apply-pattern&#34;</span><span class=p>;</span> <span class=p>}</span>
+  <span class=k>static</span> <span class=n>StringRef</span> <span class=nf>getDescription</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=s>&#34;Control the application of rewrite patterns&#34;</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>};</span>
+</code></pre></div><h2 id=debug-action-manager>Debug Action Manager&nbsp;<a class=headline-hash href=#debug-action-manager>¶</a></h2><p>The <code>DebugActionManager</code> orchestrates the various different queries relating to
+debug actions, and is accessible via the <code>MLIRContext</code>. These queries allow for
+external entities to control various aspects of the compiler via
+<a href=#debug-action-handler>action handlers</a>
+. When resolving a query for an action,
+the result from the most recently registered handler is used.</p><p>TODO: It may be interesting to support merging results from multiple action
+handlers, but this is left for future work when driven by a real use case.</p><p>The set of available queries are shown below:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>class</span> <span class=nc>DebugActionManager</span> <span class=p>{</span>
+<span class=k>public</span><span class=o>:</span>
+  <span class=c1>/// Returns true if the given action type should be executed, false otherwise.
+</span><span class=c1></span>  <span class=c1>/// `Params` correspond to any action specific parameters that may be used to
+</span><span class=c1></span>  <span class=c1>/// guide the decision.
+</span><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>ActionType</span><span class=p>,</span> <span class=k>typename</span><span class=p>...</span> <span class=n>Params</span><span class=o>&gt;</span>
+  <span class=kt>bool</span> <span class=n>shouldExecute</span><span class=p>(</span><span class=n>Params</span> <span class=o>&amp;&amp;</span><span class=p>...</span> <span class=n>params</span><span class=p>);</span>
+<span class=p>};</span>
+</code></pre></div><p>Building on the example from the
+<a href=#debug-action>previous section</a>
+, an example
+usage of the <code>shouldExecute</code> query is shown below:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// A debug action that allows for controlling the application of patterns.
+</span><span class=c1></span><span class=k>struct</span> <span class=nc>ApplyPatternAction</span>
+    <span class=o>:</span> <span class=k>public</span> <span class=n>DebugAction</span><span class=o>&lt;</span><span class=n>Operation</span> <span class=o>*</span><span class=p>,</span> <span class=k>const</span> <span class=n>Pattern</span> <span class=o>&amp;&gt;</span> <span class=p>{</span>
+  <span class=k>static</span> <span class=n>StringRef</span> <span class=nf>getTag</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=s>&#34;apply-pattern&#34;</span><span class=p>;</span> <span class=p>}</span>
+  <span class=k>static</span> <span class=n>StringRef</span> <span class=nf>getDescription</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=s>&#34;Control the application of rewrite patterns&#34;</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>};</span>
+
+<span class=c1>// ...
+</span><span class=c1></span>
+<span class=kt>bool</span> <span class=nf>shouldApplyPattern</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>currentOp</span><span class=p>,</span> <span class=k>const</span> <span class=n>Pattern</span> <span class=o>&amp;</span><span class=n>currentPattern</span><span class=p>)</span> <span class=p>{</span>
+  <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span> <span class=o>=</span> <span class=n>currentOp</span><span class=o>-&gt;</span><span class=n>getContext</span><span class=p>();</span>
+  <span class=n>DebugActionManager</span> <span class=o>&amp;</span><span class=n>manager</span> <span class=o>=</span> <span class=n>context</span><span class=o>-&gt;</span><span class=n>getDebugActionManager</span><span class=p>();</span>
+
+  <span class=c1>// Query the action manager to see if `currentPattern` should be applied to
+</span><span class=c1></span>  <span class=c1>// `currentOp`.
+</span><span class=c1></span>  <span class=k>return</span> <span class=n>manager</span><span class=p>.</span><span class=n>shouldExecute</span><span class=o>&lt;</span><span class=n>ApplyPatternAction</span><span class=o>&gt;</span><span class=p>(</span><span class=n>currentOp</span><span class=p>,</span> <span class=n>currentPattern</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></div><h2 id=debug-action-handler>Debug Action Handler&nbsp;<a class=headline-hash href=#debug-action-handler>¶</a></h2><p>A debug action handler provides the internal implementation for the various
+action related queries within the
+<a href=#debug-action-manager><code>DebugActionManager</code></a>
+.
+Action handlers allow for external entities to control and inject external
+information into the compiler. Handlers can be registered with the
+<code>DebugActionManager</code> using <code>registerActionHandler</code>. There are two types of
+handlers; action-specific handlers and generic handlers.</p><h3 id=action-specific-handlers>Action Specific Handlers&nbsp;<a class=headline-hash href=#action-specific-handlers>¶</a></h3><p>Action specific handlers handle a specific debug action type, with the
+parameters to its query methods mapping 1-1 to the parameter types of the action
+type. An action specific handler can be defined by inheriting from the handler
+base class defined at <code>ActionType::Handler</code> where <code>ActionType</code> is the specific
+action that should be handled. An example using our running pattern example is
+shown below:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>struct</span> <span class=nc>MyPatternHandler</span> <span class=o>:</span> <span class=k>public</span> <span class=n>ApplyPatternAction</span><span class=o>::</span><span class=n>Handler</span> <span class=p>{</span>
+  <span class=c1>/// A variant of `shouldExecute` shown in the `DebugActionManager` class
+</span><span class=c1></span>  <span class=c1>/// above.
+</span><span class=c1></span>  <span class=c1>/// This method returns a FailureOr&lt;bool&gt;, where failure signifies that the
+</span><span class=c1></span>  <span class=c1>/// action was not handled (allowing for other handlers to process it), or the
+</span><span class=c1></span>  <span class=c1>/// boolean true/false signifying if the action should execute or not.
+</span><span class=c1></span>  <span class=n>FailureOr</span><span class=o>&lt;</span><span class=kt>bool</span><span class=o>&gt;</span> <span class=n>shouldExecute</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span>
+                                <span class=k>const</span> <span class=n>RewritePattern</span> <span class=o>&amp;</span><span class=n>pattern</span><span class=p>)</span> <span class=k>final</span><span class=p>;</span>
+<span class=p>};</span>
+</code></pre></div><h3 id=generic-handlers>Generic Handlers&nbsp;<a class=headline-hash href=#generic-handlers>¶</a></h3><p>A generic handler allows for handling queries on any action type. These types of
+handlers are useful for implementing general functionality that doesn’t
+necessarily need to interpret the exact action parameters, or can rely on an
+external interpreter (such as the user). As these handlers are generic, they
+take a set of opaque parameters that try to map the context of the action type
+in a generic way. A generic handler can be defined by inheriting from
+<code>DebugActionManager::GenericHandler</code>. An example is shown below:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>struct</span> <span class=nc>MyPatternHandler</span> <span class=o>:</span> <span class=k>public</span> <span class=n>DebugActionManager</span><span class=o>::</span><span class=n>GenericHandler</span> <span class=p>{</span>
+  <span class=c1>/// The return type of this method is the same as the action-specific handler.
+</span><span class=c1></span>  <span class=c1>/// The arguments to this method map the concepts of an action type in an
+</span><span class=c1></span>  <span class=c1>/// opaque way. The arguments are provided in such a way so that the context
+</span><span class=c1></span>  <span class=c1>/// of the action is still somewhat user readable, or at least loggable as
+</span><span class=c1></span>  <span class=c1>/// such.
+</span><span class=c1></span>  <span class=c1>/// - actionTag: The tag specified by the action type.
+</span><span class=c1></span>  <span class=c1>/// - actionDesc: The description specified by the action type.
+</span><span class=c1></span>  <span class=k>virtual</span> <span class=n>FailureOr</span><span class=o>&lt;</span><span class=kt>bool</span><span class=o>&gt;</span> <span class=n>shouldExecute</span><span class=p>(</span><span class=n>StringRef</span> <span class=n>actionTag</span><span class=p>,</span>
+                                        <span class=n>StringRef</span> <span class=n>actionDesc</span><span class=p>);</span>
+<span class=p>};</span>
+</code></pre></div><h3 id=common-action-handlers>Common Action Handlers&nbsp;<a class=headline-hash href=#common-action-handlers>¶</a></h3><p>MLIR provides several common debug action handlers for immediate use that have
+proven useful in general.</p><h4 id=debugcounter>DebugCounter&nbsp;<a class=headline-hash href=#debugcounter>¶</a></h4><p>When debugging a compiler issue,
+<a href=https://en.wikipedia.org/wiki/Bisection_%5c%28software_engineering%5c%29>&ldquo;bisection&rdquo;</a>
+is a useful technique for locating the root cause of the issue. <code>Debug Counters</code>
+enable using this technique for debug actions by attaching a counter value to a
+specific debug action and enabling/disabling execution of this action based on
+the value of the counter. The counter controls the execution of the action with
+a &ldquo;skip&rdquo; and &ldquo;count&rdquo; value. The &ldquo;skip&rdquo; value is used to skip a certain number of
+initial executions of a debug action. The &ldquo;count&rdquo; value is used to prevent a
+debug action from executing after it has executed for a set number of times (not
+including any executions that have been skipped). If the &ldquo;skip&rdquo; value is
+negative, the action will always execute. If the &ldquo;count&rdquo; value is negative, the
+action will always execute after the &ldquo;skip&rdquo; value has been reached. For example,
+a counter for a debug action with <code>skip=47</code> and <code>count=2</code>, would skip the first
+47 executions, then execute twice, and finally prevent any further executions.
+With a bit of tooling, the values to use for the counter can be automatically
+selected; allowing for finding the exact execution of a debug action that
+potentially causes the bug being investigated.</p><p>Note: The DebugCounter action handler does not support multi-threaded execution,
+and should only be used in MLIRContexts where multi-threading is disabled (e.g.
+via <code>-mlir-disable-threading</code>).</p><h5 id=commandline-configuration>CommandLine Configuration&nbsp;<a class=headline-hash href=#commandline-configuration>¶</a></h5><p>The <code>DebugCounter</code> handler provides several that allow for configuring counters.
+The main option is <code>mlir-debug-counter</code>, which accepts a comma separated list of
+<code>&lt;count-name>=&lt;counter-value></code>. A <code>&lt;counter-name></code> is the debug action tag to
+attach the counter, suffixed with either <code>-skip</code> or <code>-count</code>. A <code>-skip</code> suffix
+will set the &ldquo;skip&rdquo; value of the counter. A <code>-count</code> suffix will set the &ldquo;count&rdquo;
+value of the counter. The <code>&lt;counter-value></code> component is a numeric value to use
+for the counter. An example is shown below using <code>ApplyPatternAction</code> defined
+above:</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>$ mlir-opt foo.mlir -mlir-debug-counter<span class=o>=</span>apply-pattern-skip<span class=o>=</span>47,apply-pattern-count<span class=o>=</span><span class=m>2</span>
+</code></pre></div><p>The above configuration would skip the first 47 executions of
+<code>ApplyPatternAction</code>, then execute twice, and finally prevent any further
+executions.</p><p>Note: Each counter currently only has one <code>skip</code> and one <code>count</code> value, meaning
+that sequences of <code>skip</code>/<code>count</code> will not be chained.</p><p>The <code>mlir-print-debug-counter</code> option may be used to print out debug counter
+information after all counters have been accumulated. The information is printed
+in the following format:</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>DebugCounter counters:
+&lt;action-tag&gt;                   : <span class=o>{</span>&lt;current-count&gt;,&lt;skip&gt;,&lt;count&gt;<span class=o>}</span>
+</code></pre></div><p>For example, using the options above we can see how many times an action is
+executed:</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell>$ mlir-opt foo.mlir -mlir-debug-counter<span class=o>=</span>apply-pattern-skip<span class=o>=</span>-1 -mlir-print-debug-counter
+
+DebugCounter counters:
+apply-pattern                   : <span class=o>{</span>370,-1,-1<span class=o>}</span>
+</code></pre></div><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/DataLayout/ title="Data Layout Modeling"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - Data Layout Modeling</a>
+<a class="nav nav-next" href=/docs/Diagnostics/ title="Diagnostic Infrastructure">Next - Diagnostic Infrastructure <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li class=active><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

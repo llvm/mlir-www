@@ -1,0 +1,153 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Operation Canonicalization - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Canonicalization/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Operation Canonicalization</h1><p>Canonicalization is an important part of compiler IR design: it makes it easier
+to implement reliable compiler transformations and to reason about what is
+better or worse in the code, and it forces interesting discussions about the
+goals of a particular level of IR. Dan Gohman wrote
+<a href=https://sunfishcode.github.io/blog/2018/10/22/Canonicalization.html>an article</a>
+exploring these issues; it is worth reading if you&rsquo;re not familiar with these
+concepts.</p><p>Most compilers have canonicalization passes, and sometimes they have many
+different ones (e.g. instcombine, dag combine, etc in LLVM). Because MLIR is a
+multi-level IR, we can provide a single canonicalization infrastructure and
+reuse it across many different IRs that it represents. This document describes
+the general approach, global canonicalizations performed, and provides sections
+to capture IR-specific rules for reference.</p><h2 id=general-design>General Design&nbsp;<a class=headline-hash href=#general-design>¶</a></h2><p>MLIR has a single canonicalization pass, which iteratively applies
+canonicalization transformations in a greedy way until the IR converges. These
+transformations are defined by the operations themselves, which allows each
+dialect to define its own set of operations and canonicalizations together.</p><p>Some important things to think about w.r.t. canonicalization patterns:</p><ul><li><p>Repeated applications of patterns should converge. Unstable or cyclic
+rewrites will cause infinite loops in the canonicalizer.</p></li><li><p>It is generally better to canonicalize towards operations that have fewer
+uses of a value when the operands are duplicated, because some patterns only
+match when a value has a single user. For example, it is generally good to
+canonicalize &ldquo;x + x&rdquo; into &ldquo;x * 2&rdquo;, because this reduces the number of uses
+of x by one.</p></li><li><p>It is always good to eliminate operations entirely when possible, e.g. by
+folding known identities (like &ldquo;x + 0 = x&rdquo;).</p></li></ul><h2 id=globally-applied-rules>Globally Applied Rules&nbsp;<a class=headline-hash href=#globally-applied-rules>¶</a></h2><p>These transformations are applied to all levels of IR:</p><ul><li><p>Elimination of operations that have no side effects and have no uses.</p></li><li><p>Constant folding - e.g. &ldquo;(addi 1, 2)&rdquo; to &ldquo;3&rdquo;. Constant folding hooks are
+specified by operations.</p></li><li><p>Move constant operands to commutative operators to the right side - e.g.
+&ldquo;(addi 4, x)&rdquo; to &ldquo;(addi x, 4)&rdquo;.</p></li><li><p><code>constant-like</code> operations are uniqued and hoisted into the entry block of
+the first parent barrier region. This is a region that is either isolated
+from above, e.g. the entry block of a function, or one marked as a barrier
+via the <code>shouldMaterializeInto</code> method on the <code>DialectFoldInterface</code>.</p></li></ul><h2 id=defining-canonicalizations>Defining Canonicalizations&nbsp;<a class=headline-hash href=#defining-canonicalizations>¶</a></h2><p>Two mechanisms are available with which to define canonicalizations;
+general <code>RewritePattern</code>s and the <code>fold</code> method.</p><h3 id=canonicalizing-with-rewritepatterns>Canonicalizing with <code>RewritePattern</code>s&nbsp;<a class=headline-hash href=#canonicalizing-with-rewritepatterns>¶</a></h3><p>This mechanism allows for providing canonicalizations as a set of
+<code>RewritePattern</code>s, either imperatively defined in C++ or declaratively as
+<a href=/docs/DeclarativeRewrites/>Declarative Rewrite Rules</a>
+. The pattern rewrite
+infrastructure allows for expressing many different types of canonicalizations.
+These transformations may be as simple as replacing a multiplication with a
+shift, or even replacing a conditional branch with an unconditional one.</p><p>In
+<a href=/docs/OpDefinitions/>ODS</a>
+, an operation can set the <code>hasCanonicalizer</code> bit or
+the <code>hasCanonicalizeMethod</code> bit to generate a declaration for the
+<code>getCanonicalizationPatterns</code> method:</p><div class=highlight><pre class=chroma><code class=language-tablegen data-lang=tablegen><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+  <span class=c>// I want to define a fully general set of patterns for this op.
+</span><span class=c></span>  <span class=k>let</span> <span class=nv>hasCanonicalizer</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=k>def</span> <span class=nv>OtherOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+  <span class=c>// A single &#34;matchAndRewrite&#34; style RewritePattern implemented as a method
+</span><span class=c></span>  <span class=c>// is good enough for me.
+</span><span class=c></span>  <span class=k>let</span> <span class=nv>hasCanonicalizeMethod</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>Canonicalization patterns can then be provided in the source file:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=kt>void</span> <span class=n>MyOp</span><span class=o>::</span><span class=n>getCanonicalizationPatterns</span><span class=p>(</span><span class=n>RewritePatternSet</span> <span class=o>&amp;</span><span class=n>patterns</span><span class=p>,</span>
+                                       <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span> <span class=p>{</span>
+  <span class=n>patterns</span><span class=p>.</span><span class=n>add</span><span class=o>&lt;</span><span class=p>...</span><span class=o>&gt;</span><span class=p>(...);</span>
+<span class=p>}</span>
+
+<span class=n>LogicalResult</span> <span class=n>OtherOp</span><span class=o>::</span><span class=n>canonicalize</span><span class=p>(</span><span class=n>OtherOp</span> <span class=n>op</span><span class=p>,</span> <span class=n>PatternRewriter</span> <span class=o>&amp;</span><span class=n>rewriter</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c1>// patterns and rewrites go here.
+</span><span class=c1></span>  <span class=k>return</span> <span class=nf>failure</span><span class=p>();</span>
+<span class=p>}</span>
+</code></pre></div><p>See the
+<a href=/docs/Tutorials/QuickstartRewrites/>quickstart guide</a>
+for information on
+defining operation rewrites.</p><h3 id=canonicalizing-with-the-fold-method>Canonicalizing with the <code>fold</code> method&nbsp;<a class=headline-hash href=#canonicalizing-with-the-fold-method>¶</a></h3><p>The <code>fold</code> mechanism is an intentionally limited, but powerful mechanism that
+allows for applying canonicalizations in many places throughout the compiler.
+For example, outside of the canonicalizer pass, <code>fold</code> is used within the
+<a href=/docs/DialectConversion/>dialect conversion infrastructure</a>
+as a legalization
+mechanism, and can be invoked directly anywhere with an <code>OpBuilder</code> via
+<code>OpBuilder::createOrFold</code>.</p><p><code>fold</code> has the restriction that no new operations may be created, and only the
+root operation may be replaced. It allows for updating an operation in-place, or
+returning a set of pre-existing values (or attributes) to replace the operation
+with. This ensures that the <code>fold</code> method is a truly &ldquo;local&rdquo; transformation, and
+can be invoked without the need for a pattern rewriter.</p><p>In
+<a href=/docs/OpDefinitions/>ODS</a>
+, an operation can set the <code>hasFolder</code> bit to generate
+a declaration for the <code>fold</code> method. This method takes on a different form,
+depending on the structure of the operation.</p><div class=highlight><pre class=chroma><code class=language-tablegen data-lang=tablegen><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+  <span class=k>let</span> <span class=nv>hasFolder</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>If the operation has a single result the following will be generated:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// Implementations of this hook can only perform the following changes to the
+</span><span class=c1>/// operation:
+</span><span class=c1>///
+</span><span class=c1>///  1. They can leave the operation alone and without changing the IR, and
+</span><span class=c1>///     return nullptr.
+</span><span class=c1>///  2. They can mutate the operation in place, without changing anything else
+</span><span class=c1>///     in the IR. In this case, return the operation itself.
+</span><span class=c1>///  3. They can return an existing value or attribute that can be used instead
+</span><span class=c1>///     of the operation. The caller will remove the operation and use that
+</span><span class=c1>///     result instead.
+</span><span class=c1>///
+</span><span class=c1></span><span class=n>OpFoldResult</span> <span class=n>MyOp</span><span class=o>::</span><span class=n>fold</span><span class=p>(</span><span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Attribute</span><span class=o>&gt;</span> <span class=n>operands</span><span class=p>)</span> <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><p>Otherwise, the following is generated:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// Implementations of this hook can only perform the following changes to the
+</span><span class=c1>/// operation:
+</span><span class=c1>///
+</span><span class=c1>///  1. They can leave the operation alone and without changing the IR, and
+</span><span class=c1>///     return failure.
+</span><span class=c1>///  2. They can mutate the operation in place, without changing anything else
+</span><span class=c1>///     in the IR. In this case, return success.
+</span><span class=c1>///  3. They can return a list of existing values or attribute that can be used
+</span><span class=c1>///     instead of the operation. In this case, fill in the results list and
+</span><span class=c1>///     return success. The results list must correspond 1-1 with the results of
+</span><span class=c1>///     the operation, partial folding is not supported. The caller will remove
+</span><span class=c1>///     the operation and use those results instead.
+</span><span class=c1>///
+</span><span class=c1></span><span class=n>LogicalResult</span> <span class=n>MyOp</span><span class=o>::</span><span class=n>fold</span><span class=p>(</span><span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Attribute</span><span class=o>&gt;</span> <span class=n>operands</span><span class=p>,</span>
+                         <span class=n>SmallVectorImpl</span><span class=o>&lt;</span><span class=n>OpFoldResult</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>results</span><span class=p>)</span> <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><p>In the above, for each method an <code>ArrayRef&lt;Attribute></code> is provided that
+corresponds to the constant attribute value of each of the operands. These
+operands are those that implement the <code>ConstantLike</code> trait. If any of the
+operands are non-constant, a null <code>Attribute</code> value is provided instead. For
+example, if MyOp provides three operands [<code>a</code>, <code>b</code>, <code>c</code>], but only <code>b</code> is
+constant then <code>operands</code> will be of the form [Attribute(), b-value,
+Attribute()].</p><p>Also above, is the use of <code>OpFoldResult</code>. This class represents the possible
+result of folding an operation result: either an SSA <code>Value</code>, or an
+<code>Attribute</code>(for a constant result). If an SSA <code>Value</code> is provided, it <em>must</em>
+correspond to an existing value. The <code>fold</code> methods are not permitted to
+generate new <code>Value</code>s. There are no specific restrictions on the form of the
+<code>Attribute</code> value returned, but it is important to ensure that the <code>Attribute</code>
+representation of a specific <code>Type</code> is consistent.</p><p>When the <code>fold</code> hook on an operation is not successful, the dialect can
+provide a fallback by implementing the <code>DialectFoldInterface</code> and overriding
+the fold hook.</p><h4 id=generating-constants-from-attributes>Generating Constants from Attributes&nbsp;<a class=headline-hash href=#generating-constants-from-attributes>¶</a></h4><p>When a <code>fold</code> method returns an <code>Attribute</code> as the result, it signifies that
+this result is &ldquo;constant&rdquo;. The <code>Attribute</code> is the constant representation of the
+value. Users of the <code>fold</code> method, such as the canonicalizer pass, will take
+these <code>Attribute</code>s and materialize constant operations in the IR to represent
+them. To enable this materialization, the dialect of the operation must
+implement the <code>materializeConstant</code> hook. This hook takes in an <code>Attribute</code>
+value, generally returned by <code>fold</code>, and produces a &ldquo;constant-like&rdquo; operation
+that materializes that value.</p><p>In
+<a href=/docs/OpDefinitions/>ODS</a>
+, a dialect can set the <code>hasConstantMaterializer</code> bit
+to generate a declaration for the <code>materializeConstant</code> method.</p><div class=highlight><pre class=chroma><code class=language-tablegen data-lang=tablegen><span class=k>def</span> <span class=nv>MyDialect_Dialect</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+  <span class=k>let</span> <span class=nv>hasConstantMaterializer</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>Constants can then be materialized in the source file:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// Hook to materialize a single constant operation from a given attribute value
+</span><span class=c1>/// with the desired resultant type. This method should use the provided builder
+</span><span class=c1>/// to create the operation without changing the insertion position. The
+</span><span class=c1>/// generated operation is expected to be constant-like. On success, this hook
+</span><span class=c1>/// should return the value generated to represent the constant value.
+</span><span class=c1>/// Otherwise, it should return nullptr on failure.
+</span><span class=c1></span><span class=n>Operation</span> <span class=o>*</span><span class=n>MyDialect</span><span class=o>::</span><span class=n>materializeConstant</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>builder</span><span class=p>,</span> <span class=n>Attribute</span> <span class=n>value</span><span class=p>,</span>
+                                          <span class=n>Type</span> <span class=n>type</span><span class=p>,</span> <span class=n>Location</span> <span class=n>loc</span><span class=p>)</span> <span class=p>{</span>
+  <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/LangRef/ title="MLIR Language Reference"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - MLIR Language Reference</a>
+<a class="nav nav-next" href=/docs/OpDefinitions/ title="Operation Definition Specification (ODS)">Next - Operation Definition Specification (ODS) <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li class=active><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

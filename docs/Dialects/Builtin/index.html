@@ -1,0 +1,557 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Builtin Dialect - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/Builtin/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Builtin Dialect</h1><p>The builtin dialect contains a core set of Attributes, Operations, and Types
+that have wide applicability across a very large number of domains and
+abstractions. Many of the components of this dialect are also instrumental in
+the implementation of the core IR. As such, this dialect is implicitly loaded in
+every <code>MLIRContext</code>, and available directly to all users of MLIR.</p><p>Given the far-reaching nature of this dialect and the fact that MLIR is
+extensible by design, any potential additions are heavily scrutinized.</p><p><nav id=TableOfContents><ul><li><a href=#attributes>Attributes</a><ul><li><a href=#affinemapattr>AffineMapAttr</a></li><li><a href=#arrayattr>ArrayAttr</a></li><li><a href=#denseintorfpelementsattr>DenseIntOrFPElementsAttr</a></li><li><a href=#densestringelementsattr>DenseStringElementsAttr</a></li><li><a href=#dictionaryattr>DictionaryAttr</a></li><li><a href=#floatattr>FloatAttr</a></li><li><a href=#integerattr>IntegerAttr</a></li><li><a href=#integersetattr>IntegerSetAttr</a></li><li><a href=#opaqueattr>OpaqueAttr</a></li><li><a href=#opaqueelementsattr>OpaqueElementsAttr</a></li><li><a href=#sparseelementsattr>SparseElementsAttr</a></li><li><a href=#stringattr>StringAttr</a></li><li><a href=#symbolrefattr>SymbolRefAttr</a></li><li><a href=#typeattr>TypeAttr</a></li><li><a href=#unitattr>UnitAttr</a></li></ul></li><li><a href=#location-attributes>Location Attributes</a><ul><li><a href=#callsiteloc>CallSiteLoc</a></li><li><a href=#filelinecolloc>FileLineColLoc</a></li><li><a href=#fusedloc>FusedLoc</a></li><li><a href=#nameloc>NameLoc</a></li><li><a href=#opaqueloc>OpaqueLoc</a></li><li><a href=#unknownloc>UnknownLoc</a></li></ul></li><li><a href=#operations>Operations</a><ul><li><a href=#func-mlirfuncop><code>func</code> (::mlir::FuncOp)</a></li><li><a href=#module-mlirmoduleop><code>module</code> (::mlir::ModuleOp)</a></li><li><a href=#unrealized_conversion_cast-mlirunrealizedconversioncastop><code>unrealized_conversion_cast</code> (::mlir::UnrealizedConversionCastOp)</a></li></ul></li><li><a href=#types>Types</a><ul><li><a href=#bfloat16type>BFloat16Type</a></li><li><a href=#complextype>ComplexType</a></li><li><a href=#float128type>Float128Type</a></li><li><a href=#float16type>Float16Type</a></li><li><a href=#float32type>Float32Type</a></li><li><a href=#float64type>Float64Type</a></li><li><a href=#float80type>Float80Type</a></li><li><a href=#functiontype>FunctionType</a></li><li><a href=#indextype>IndexType</a></li><li><a href=#integertype>IntegerType</a></li><li><a href=#memreftype>MemRefType</a></li><li><a href=#nonetype>NoneType</a></li><li><a href=#opaquetype>OpaqueType</a></li><li><a href=#rankedtensortype>RankedTensorType</a></li><li><a href=#tupletype>TupleType</a></li><li><a href=#unrankedmemreftype>UnrankedMemRefType</a></li><li><a href=#unrankedtensortype>UnrankedTensorType</a></li><li><a href=#vectortype>VectorType</a></li></ul></li><li><a href=#type-interfaces>Type Interfaces</a></li><li><a href=#memrefelementtypeinterface-memrefelementtypeinterface>MemRefElementTypeInterface (<code>MemRefElementTypeInterface</code>)</a><ul><li><a href=#methods>Methods:</a></li></ul></li><li><a href=#subelementtypeinterface-subelementtypeinterface>SubElementTypeInterface (<code>SubElementTypeInterface</code>)</a><ul><li><a href=#methods-1>Methods:</a></li></ul></li><li><a href=#subelementtypeinterface-anonymous_260>SubElementTypeInterface (<code>anonymous_260</code>)</a><ul><li><a href=#methods-2>Methods:</a></li></ul></li></ul></nav><h2 id=attributes>Attributes&nbsp;<a class=headline-hash href=#attributes>¶</a></h2><h3 id=affinemapattr>AffineMapAttr&nbsp;<a class=headline-hash href=#affinemapattr>¶</a></h3><p>An Attribute containing an AffineMap object</p><p>Syntax:</p><pre><code>affine-map-attribute ::= `affine_map` `&lt;` affine-map `&gt;`
+</code></pre><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>affine_map<span class=p>&lt;(</span>d0<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>)&gt;</span>
+affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> d1<span class=p>)&gt;</span>
+</code></pre></div><h4 id=parameters>Parameters:&nbsp;<a class=headline-hash href=#parameters>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>AffineMap</code></td><td></td></tr></tbody></table><h3 id=arrayattr>ArrayAttr&nbsp;<a class=headline-hash href=#arrayattr>¶</a></h3><p>A collection of other Attribute values</p><p>Syntax:</p><pre><code>array-attribute ::= `[` (attribute-value (`,` attribute-value)*)? `]`
+</code></pre><p>An array attribute is an attribute that represents a collection of attribute
+values.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=p>[]</span>
+<span class=p>[</span><span class=m>10</span><span class=p>,</span> <span class=k>i32</span><span class=p>]</span>
+<span class=p>[</span>affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> d1<span class=p>)&gt;,</span> <span class=k>i32</span><span class=p>,</span> <span class=s>&#34;string attribute&#34;</span><span class=p>]</span>
+</code></pre></div><h4 id=parameters-1>Parameters:&nbsp;<a class=headline-hash href=#parameters-1>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::llvm::ArrayRef&lt;Attribute></code></td><td></td></tr></tbody></table><h3 id=denseintorfpelementsattr>DenseIntOrFPElementsAttr&nbsp;<a class=headline-hash href=#denseintorfpelementsattr>¶</a></h3><p>An Attribute containing a dense multi-dimensional array of integer or floating-point values</p><p>Syntax:</p><pre><code>dense-intorfloat-elements-attribute ::= `dense` `&lt;` attribute-value `&gt;` `:`
+                                        ( tensor-type | vector-type )
+</code></pre><p>A dense int-or-float elements attribute is an elements attribute containing
+a densely packed vector or tensor of integer or floating-point values. The
+element type of this attribute is required to be either an <code>IntegerType</code> or
+a <code>FloatType</code>.</p><p>Examples:</p><pre><code>// A splat tensor of integer values.
+dense&lt;10&gt; : tensor&lt;2xi32&gt;
+// A tensor of 2 float32 elements.
+dense&lt;[10.0, 11.0]&gt; : tensor&lt;2xf32&gt;
+</code></pre><h4 id=parameters-2>Parameters:&nbsp;<a class=headline-hash href=#parameters-2>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>type</td><td style=text-align:center><code>ShapedType</code></td><td></td></tr><tr><td style=text-align:center>rawData</td><td style=text-align:center><code>ArrayRef&lt;char></code></td><td></td></tr></tbody></table><h3 id=densestringelementsattr>DenseStringElementsAttr&nbsp;<a class=headline-hash href=#densestringelementsattr>¶</a></h3><p>An Attribute containing a dense multi-dimensional array of strings</p><p>Syntax:</p><pre><code>dense-string-elements-attribute ::= `dense` `&lt;` attribute-value `&gt;` `:`
+                                    ( tensor-type | vector-type )
+</code></pre><p>A dense string elements attribute is an elements attribute containing a
+densely packed vector or tensor of string values. There are no restrictions
+placed on the element type of this attribute, enabling the use of dialect
+specific string types.</p><p>Examples:</p><pre><code>// A splat tensor of strings.
+dense&lt;&quot;example&quot;&gt; : tensor&lt;2x!foo.string&gt;
+// A tensor of 2 string elements.
+dense&lt;[&quot;example1&quot;, &quot;example2&quot;]&gt; : tensor&lt;2x!foo.string&gt;
+</code></pre><h4 id=parameters-3>Parameters:&nbsp;<a class=headline-hash href=#parameters-3>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>type</td><td style=text-align:center><code>ShapedType</code></td><td></td></tr><tr><td style=text-align:center>value</td><td style=text-align:center><code>ArrayRef&lt;StringRef></code></td><td></td></tr></tbody></table><h3 id=dictionaryattr>DictionaryAttr&nbsp;<a class=headline-hash href=#dictionaryattr>¶</a></h3><p>An dictionary of named Attribute values</p><p>Syntax:</p><pre><code>dictionary-attribute ::= `{` (attribute-entry (`,` attribute-entry)*)? `}`
+</code></pre><p>A dictionary attribute is an attribute that represents a sorted collection of
+named attribute values. The elements are sorted by name, and each name must be
+unique within the collection.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=p>{}</span>
+<span class=p>{</span><span class=nl>attr_name =</span> <span class=s>&#34;string attribute&#34;</span><span class=p>}</span>
+<span class=p>{</span><span class=nl>int_attr =</span> <span class=m>10</span><span class=p>,</span> <span class=s>&#34;string attr name&#34;</span> <span class=p>=</span> <span class=s>&#34;string attribute&#34;</span><span class=p>}</span>
+</code></pre></div><h4 id=parameters-4>Parameters:&nbsp;<a class=headline-hash href=#parameters-4>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::llvm::ArrayRef&lt;NamedAttribute></code></td><td></td></tr></tbody></table><h3 id=floatattr>FloatAttr&nbsp;<a class=headline-hash href=#floatattr>¶</a></h3><p>An Attribute containing a floating-point value</p><p>Syntax:</p><pre><code>float-attribute ::= (float-literal (`:` float-type)?)
+                  | (hexadecimal-literal `:` float-type)
+</code></pre><p>A float attribute is a literal attribute that represents a floating point
+value of the specified
+<a href=#floating-point-types>float type</a>
+. It can be
+represented in the hexadecimal form where the hexadecimal value is
+interpreted as bits of the underlying binary representation. This form is
+useful for representing infinity and NaN floating point values. To avoid
+confusion with integer attributes, hexadecimal literals <em>must</em> be followed
+by a float type to define a float attribute.</p><p>Examples:</p><pre><code>42.0         // float attribute defaults to f64 type
+42.0 : f32   // float attribute of f32 type
+0x7C00 : f16 // positive infinity
+0x7CFF : f16 // NaN (one of possible values)
+42 : f32     // Error: expected integer type
+</code></pre><h4 id=parameters-5>Parameters:&nbsp;<a class=headline-hash href=#parameters-5>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>type</td><td style=text-align:center><code>::mlir::Type</code></td><td></td></tr><tr><td style=text-align:center>value</td><td style=text-align:center><code>::llvm::APFloat</code></td><td></td></tr></tbody></table><h3 id=integerattr>IntegerAttr&nbsp;<a class=headline-hash href=#integerattr>¶</a></h3><p>An Attribute containing a integer value</p><p>Syntax:</p><pre><code>integer-attribute ::= (integer-literal ( `:` (index-type | integer-type) )?)
+                      | `true` | `false`
+</code></pre><p>An integer attribute is a literal attribute that represents an integral
+value of the specified integer or index type. <code>i1</code> integer attributes are
+treated as <code>boolean</code> attributes, and use a unique assembly format of either
+<code>true</code> or <code>false</code> depending on the value. The default type for non-boolean
+integer attributes, if a type is not specified, is signless 64-bit integer.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=m>10</span> <span class=p>:</span> <span class=k>i32</span>
+<span class=m>10</span>    <span class=c>// : i64 is implied here.
+</span><span class=c></span>true  <span class=c>// A bool, i.e. i1, value.
+</span><span class=c></span>false <span class=c>// A bool, i.e. i1, value.
+</span></code></pre></div><h4 id=parameters-6>Parameters:&nbsp;<a class=headline-hash href=#parameters-6>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>type</td><td style=text-align:center><code>::mlir::Type</code></td><td></td></tr><tr><td style=text-align:center>value</td><td style=text-align:center><code>APInt</code></td><td></td></tr></tbody></table><h3 id=integersetattr>IntegerSetAttr&nbsp;<a class=headline-hash href=#integersetattr>¶</a></h3><p>An Attribute containing an IntegerSet object</p><p>Syntax:</p><pre><code>integer-set-attribute ::= `affine_set` `&lt;` integer-set `&gt;`
+</code></pre><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>affine_set<span class=p>&lt;(</span>d0<span class=p>)</span> <span class=p>:</span> <span class=p>(</span>d0 <span class=err>-</span> <span class=m>2</span> <span class=p>&gt;=</span> <span class=m>0</span><span class=p>)&gt;</span>
+</code></pre></div><h4 id=parameters-7>Parameters:&nbsp;<a class=headline-hash href=#parameters-7>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>IntegerSet</code></td><td></td></tr></tbody></table><h3 id=opaqueattr>OpaqueAttr&nbsp;<a class=headline-hash href=#opaqueattr>¶</a></h3><p>An opaque representation of another Attribute</p><p>Syntax:</p><pre><code>opaque-attribute ::= dialect-namespace `&lt;` attr-data `&gt;`
+</code></pre><p>Opaque attributes represent attributes of non-registered dialects. These are
+attribute represented in their raw string form, and can only usefully be
+tested for attribute equality.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nv>#dialect</span><span class=p>&lt;</span><span class=s>&#34;opaque attribute data&#34;</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-8>Parameters:&nbsp;<a class=headline-hash href=#parameters-8>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>dialectNamespace</td><td style=text-align:center><code>Identifier</code></td><td></td></tr><tr><td style=text-align:center>attrData</td><td style=text-align:center><code>::llvm::StringRef</code></td><td></td></tr><tr><td style=text-align:center>type</td><td style=text-align:center><code>::mlir::Type</code></td><td></td></tr></tbody></table><h3 id=opaqueelementsattr>OpaqueElementsAttr&nbsp;<a class=headline-hash href=#opaqueelementsattr>¶</a></h3><p>An opaque representation of a multi-dimensional array</p><p>Syntax:</p><pre><code>opaque-elements-attribute ::= `opaque` `&lt;` dialect-namespace  `,`
+                              hex-string-literal `&gt;` `:`
+                              ( tensor-type | vector-type )
+</code></pre><p>An opaque elements attribute is an elements attribute where the content of
+the value is opaque. The representation of the constant stored by this
+elements attribute is only understood, and thus decodable, by the dialect
+that created it.</p><p>Note: The parsed string literal must be in hexadecimal form.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>opaque<span class=p>&lt;</span><span class=s>&#34;foo_dialect&#34;</span><span class=p>,</span> <span class=s>&#34;0xDEADBEEF&#34;</span><span class=p>&gt;</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>10x</span><span class=k>i32</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-9>Parameters:&nbsp;<a class=headline-hash href=#parameters-9>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>dialect</td><td style=text-align:center><code>Identifier</code></td><td></td></tr><tr><td style=text-align:center>value</td><td style=text-align:center><code>::llvm::StringRef</code></td><td></td></tr><tr><td style=text-align:center>type</td><td style=text-align:center><code>ShapedType</code></td><td></td></tr></tbody></table><h3 id=sparseelementsattr>SparseElementsAttr&nbsp;<a class=headline-hash href=#sparseelementsattr>¶</a></h3><p>An opaque representation of a multi-dimensional array</p><p>Syntax:</p><pre><code>sparse-elements-attribute ::= `sparse` `&lt;` attribute-value `,`
+                              attribute-value `&gt;` `:`
+                              ( tensor-type | vector-type )
+</code></pre><p>A sparse elements attribute is an elements attribute that represents a
+sparse vector or tensor object. This is where very few of the elements are
+non-zero.</p><p>The attribute uses COO (coordinate list) encoding to represent the sparse
+elements of the elements attribute. The indices are stored via a 2-D tensor
+of 64-bit integer elements with shape [N, ndims], which specifies the
+indices of the elements in the sparse tensor that contains non-zero values.
+The element values are stored via a 1-D tensor with shape [N], that supplies
+the corresponding values for the indices.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>sparse<span class=p>&lt;[[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>],</span> <span class=p>[</span><span class=m>1</span><span class=p>,</span> <span class=m>2</span><span class=p>]],</span> <span class=p>[</span><span class=m>1</span><span class=p>,</span> <span class=m>5</span><span class=p>]&gt;</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>3x4x</span><span class=k>i32</span><span class=p>&gt;</span>
+
+<span class=c>// This represents the following tensor:
+</span><span class=c>///  [[1, 0, 0, 0],
+</span><span class=c>///   [0, 0, 5, 0],
+</span><span class=c>///   [0, 0, 0, 0]]
+</span></code></pre></div><h4 id=parameters-10>Parameters:&nbsp;<a class=headline-hash href=#parameters-10>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>type</td><td style=text-align:center><code>ShapedType</code></td><td></td></tr><tr><td style=text-align:center>indices</td><td style=text-align:center><code>DenseIntElementsAttr</code></td><td></td></tr><tr><td style=text-align:center>values</td><td style=text-align:center><code>DenseElementsAttr</code></td><td></td></tr></tbody></table><h3 id=stringattr>StringAttr&nbsp;<a class=headline-hash href=#stringattr>¶</a></h3><p>An Attribute containing a string</p><p>Syntax:</p><pre><code>string-attribute ::= string-literal (`:` type)?
+</code></pre><p>A string attribute is an attribute that represents a string literal value.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=s>&#34;An important string&#34;</span>
+<span class=s>&#34;string with a type&#34;</span> <span class=p>:</span> <span class=p>!</span>dialect<span class=p>.</span>string
+</code></pre></div><h4 id=parameters-11>Parameters:&nbsp;<a class=headline-hash href=#parameters-11>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::llvm::StringRef</code></td><td></td></tr><tr><td style=text-align:center>type</td><td style=text-align:center><code>::mlir::Type</code></td><td></td></tr></tbody></table><h3 id=symbolrefattr>SymbolRefAttr&nbsp;<a class=headline-hash href=#symbolrefattr>¶</a></h3><p>An Attribute containing a symbolic reference to an Operation</p><p>Syntax:</p><pre><code>symbol-ref-attribute ::= symbol-ref-id (`::` symbol-ref-id)*
+</code></pre><p>A symbol reference attribute is a literal attribute that represents a named
+reference to an operation that is nested within an operation with the
+<code>OpTrait::SymbolTable</code> trait. As such, this reference is given meaning by
+the nearest parent operation containing the <code>OpTrait::SymbolTable</code> trait. It
+may optionally contain a set of nested references that further resolve to a
+symbol nested within a different symbol table.</p><p>This attribute can only be held internally by
+<a href=#array-attribute>array attributes</a>
+and
+<a href=#dictionary-attribute>dictionary attributes</a>
+(including the top-level
+operation attribute dictionary), i.e. no other attribute kinds such as
+Locations or extended attribute kinds.</p><p><strong>Rationale:</strong> Identifying accesses to global data is critical to
+enabling efficient multi-threaded compilation. Restricting global
+data access to occur through symbols and limiting the places that can
+legally hold a symbol reference simplifies reasoning about these data
+accesses.</p><p>See
+<a href=/docs/SymbolsAndSymbolTables/><code>Symbols And SymbolTables</code></a>
+for more
+information.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=nf>@flat_reference</span>
+<span class=nf>@parent_reference</span><span class=p>::</span><span class=nf>@nested_reference</span>
+</code></pre></div><h4 id=parameters-12>Parameters:&nbsp;<a class=headline-hash href=#parameters-12>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>rootReference</td><td style=text-align:center><code>::llvm::StringRef</code></td><td></td></tr><tr><td style=text-align:center>nestedReferences</td><td style=text-align:center><code>::llvm::ArrayRef&lt;FlatSymbolRefAttr></code></td><td></td></tr></tbody></table><h3 id=typeattr>TypeAttr&nbsp;<a class=headline-hash href=#typeattr>¶</a></h3><p>An Attribute containing a Type</p><p>Syntax:</p><pre><code>type-attribute ::= type
+</code></pre><p>A type attribute is an attribute that represents a
+<a href=#type-system>type object</a>
+.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=k>i32</span>
+<span class=p>!</span>dialect<span class=p>.</span>type
+</code></pre></div><h4 id=parameters-13>Parameters:&nbsp;<a class=headline-hash href=#parameters-13>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>Type</code></td><td></td></tr></tbody></table><h3 id=unitattr>UnitAttr&nbsp;<a class=headline-hash href=#unitattr>¶</a></h3><p>An Attribute value of <code>unit</code> type</p><p>Syntax:</p><pre><code>unit-attribute ::= `unit`
+</code></pre><p>A unit attribute is an attribute that represents a value of <code>unit</code> type. The
+<code>unit</code> type allows only one value forming a singleton set. This attribute
+value is used to represent attributes that only have meaning from their
+existence.</p><p>One example of such an attribute could be the <code>swift.self</code> attribute. This
+attribute indicates that a function parameter is the self/context parameter.
+It could be represented as a
+<a href=#boolean-attribute>boolean attribute</a>
+(true or
+false), but a value of false doesn&rsquo;t really bring any value. The parameter
+either is the self/context or it isn&rsquo;t.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// A unit attribute defined with the `unit` value specifier.
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@verbose_form</span><span class=p>()</span> attributes <span class=p>{</span><span class=nl>dialectName.unitAttr =</span> unit<span class=p>}</span>
+
+<span class=c>// A unit attribute in an attribute dictionary can also be defined without
+</span><span class=c>// the value specifier.
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@simple_form</span><span class=p>()</span> attributes <span class=p>{</span>dialectName<span class=p>.</span>unitAttr<span class=p>}</span>
+</code></pre></div><h2 id=location-attributes>Location Attributes&nbsp;<a class=headline-hash href=#location-attributes>¶</a></h2><p>A subset of the builtin attribute values correspond to
+<a href=/docs/Diagnostics/#source-locations>source locations</a>
+, that may be attached to
+Operations.</p><h3 id=callsiteloc>CallSiteLoc&nbsp;<a class=headline-hash href=#callsiteloc>¶</a></h3><p>A callsite source location</p><p>Syntax:</p><pre><code>callsite-location ::= `callsite` `(` location `at` location `)`
+</code></pre><p>An instance of this location allows for representing a directed stack of
+location usages. This connects a location of a <code>callee</code> with the location
+of a <code>caller</code>.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>loc</span><span class=p>(</span>callsite<span class=p>(</span><span class=s>&#34;foo&#34;</span> at <span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>10</span><span class=p>:</span><span class=m>8</span><span class=p>))</span>
+</code></pre></div><h4 id=parameters-14>Parameters:&nbsp;<a class=headline-hash href=#parameters-14>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>callee</td><td style=text-align:center><code>Location</code></td><td></td></tr><tr><td style=text-align:center>caller</td><td style=text-align:center><code>Location</code></td><td></td></tr></tbody></table><h3 id=filelinecolloc>FileLineColLoc&nbsp;<a class=headline-hash href=#filelinecolloc>¶</a></h3><p>A file:line:column source location</p><p>Syntax:</p><pre><code>filelinecol-location ::= string-literal `:` integer-literal `:`
+                         integer-literal
+</code></pre><p>An instance of this location represents a tuple of file, line number, and
+column number. This is similar to the type of location that you get from
+most source languages.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>loc</span><span class=p>(</span><span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>10</span><span class=p>:</span><span class=m>8</span><span class=p>)</span>
+</code></pre></div><h4 id=parameters-15>Parameters:&nbsp;<a class=headline-hash href=#parameters-15>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>filename</td><td style=text-align:center><code>Identifier</code></td><td></td></tr><tr><td style=text-align:center>line</td><td style=text-align:center><code>unsigned</code></td><td></td></tr><tr><td style=text-align:center>column</td><td style=text-align:center><code>unsigned</code></td><td></td></tr></tbody></table><h3 id=fusedloc>FusedLoc&nbsp;<a class=headline-hash href=#fusedloc>¶</a></h3><p>A tuple of other source locations</p><p>Syntax:</p><pre><code>fused-location ::= `fused` fusion-metadata? `[` location (location `,`)* `]`
+fusion-metadata ::= `&lt;` attribute-value `&gt;`
+</code></pre><p>An instance of a <code>fused</code> location represents a grouping of several other
+source locations, with optional metadata that describes the context of the
+fusion. There are many places within a compiler in which several constructs
+may be fused together, e.g. pattern rewriting, that normally result partial
+or even total loss of location information. With <code>fused</code> locations, this is
+a non-issue.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>loc</span><span class=p>(</span>fused<span class=p>[</span><span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>10</span><span class=p>:</span><span class=m>8</span><span class=p>,</span> <span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>22</span><span class=p>:</span><span class=m>8</span><span class=p>)</span>
+<span class=kt>loc</span><span class=p>(</span>fused<span class=p>&lt;</span><span class=s>&#34;CSE&#34;</span><span class=p>&gt;[</span><span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>10</span><span class=p>:</span><span class=m>8</span><span class=p>,</span> <span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>22</span><span class=p>:</span><span class=m>8</span><span class=p>])</span>
+</code></pre></div><h4 id=parameters-16>Parameters:&nbsp;<a class=headline-hash href=#parameters-16>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>locations</td><td style=text-align:center><code>::llvm::ArrayRef&lt;Location></code></td><td></td></tr><tr><td style=text-align:center>metadata</td><td style=text-align:center><code>Attribute</code></td><td></td></tr></tbody></table><h3 id=nameloc>NameLoc&nbsp;<a class=headline-hash href=#nameloc>¶</a></h3><p>A named source location</p><p>Syntax:</p><pre><code>name-location ::= string-literal (`(` location `)`)?
+</code></pre><p>An instance of this location allows for attaching a name to a child location.
+This can be useful for representing the locations of variable, or node,
+definitions.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>loc</span><span class=p>(</span><span class=s>&#34;CSE&#34;</span><span class=p>(</span><span class=s>&#34;mysource.cc&#34;</span><span class=p>:</span><span class=m>10</span><span class=p>:</span><span class=m>8</span><span class=p>))</span>
+</code></pre></div><h4 id=parameters-17>Parameters:&nbsp;<a class=headline-hash href=#parameters-17>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>name</td><td style=text-align:center><code>Identifier</code></td><td></td></tr><tr><td style=text-align:center>childLoc</td><td style=text-align:center><code>Location</code></td><td></td></tr></tbody></table><h3 id=opaqueloc>OpaqueLoc&nbsp;<a class=headline-hash href=#opaqueloc>¶</a></h3><p>An opaque source location</p><p>An instance of this location essentially contains a pointer to some data
+structure that is external to MLIR and an optional location that can be used
+if the first one is not suitable. Since it contains an external structure,
+only the optional location is used during serialization.</p><h4 id=parameters-18>Parameters:&nbsp;<a class=headline-hash href=#parameters-18>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>underlyingLocation</td><td style=text-align:center><code>uintptr_t</code></td><td></td></tr><tr><td style=text-align:center>underlyingTypeID</td><td style=text-align:center><code>TypeID</code></td><td></td></tr><tr><td style=text-align:center>fallbackLocation</td><td style=text-align:center><code>Location</code></td><td></td></tr></tbody></table><h3 id=unknownloc>UnknownLoc&nbsp;<a class=headline-hash href=#unknownloc>¶</a></h3><p>An unspecified source location</p><p>Syntax:</p><pre><code>unknown-location ::= `?`
+</code></pre><p>Source location information is an extremely integral part of the MLIR
+infrastructure. As such, location information is always present in the IR,
+and must explicitly be set to unknown. Thus, an instance of the <code>unknown</code>
+location represents an unspecified source location.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>loc</span><span class=p>(</span><span class=err>?</span><span class=p>)</span>
+</code></pre></div><h2 id=operations>Operations&nbsp;<a class=headline-hash href=#operations>¶</a></h2><h3 id=func-mlirfuncop><code>func</code> (::mlir::FuncOp)&nbsp;<a class=headline-hash href=#func-mlirfuncop>¶</a></h3><p>An operation with a name containing a single <code>SSACFG</code> region</p><p>Operations within the function cannot implicitly capture values defined
+outside of the function, i.e. Functions are <code>IsolatedFromAbove</code>. All
+external references must use function arguments or attributes that establish
+a symbolic connection (e.g. symbols referenced by name via a string
+attribute like SymbolRefAttr). An external function declaration (used when
+referring to a function declared in some other module) has no body. While
+the MLIR textual form provides a nice inline syntax for function arguments,
+they are internally represented as “block arguments” to the first block in
+the region.</p><p>Only dialect attribute names may be specified in the attribute dictionaries
+for function arguments, results, or the function itself.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// External function definitions.
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@abort</span><span class=p>()</span>
+<span class=kt>func</span> <span class=nf>@scribble</span><span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i64</span><span class=p>,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>? x</span> <span class=m>128 x</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>#layout_map0</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=k>f64</span>
+
+<span class=c>// A function that returns its argument twice:
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@count</span><span class=p>(</span><span class=nv>%x</span><span class=p>:</span> <span class=k>i64</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i64</span><span class=p>,</span> <span class=k>i64</span><span class=p>)</span>
+  attributes <span class=p>{</span>fruit<span class=p>:</span> <span class=s>&#34;banana&#34;</span><span class=p>}</span> <span class=p>{</span>
+  <span class=kt>return</span> <span class=nv>%x</span><span class=p>,</span> <span class=nv>%x</span><span class=p>:</span> <span class=k>i64</span><span class=p>,</span> <span class=k>i64</span>
+<span class=p>}</span>
+
+<span class=c>// A function with an argument attribute
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@example_fn_arg</span><span class=p>(</span><span class=nv>%x</span><span class=p>:</span> <span class=k>i32</span> <span class=p>{</span><span class=nl>swift.self =</span> unit<span class=p>})</span>
+
+<span class=c>// A function with a result attribute
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@example_fn_result</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>f64</span> <span class=p>{</span><span class=nl>dialectName.attrName =</span> <span class=m>0</span> <span class=p>:</span> <span class=k>i64</span><span class=p>})</span>
+
+<span class=c>// A function with an attribute
+</span><span class=c></span><span class=kt>func</span> <span class=nf>@example_fn_attr</span><span class=p>()</span> attributes <span class=p>{</span><span class=nl>dialectName.attrName =</span> false<span class=p>}</span>
+</code></pre></div><h4 id=attributes-1>Attributes:&nbsp;<a class=headline-hash href=#attributes-1>¶</a></h4><table><thead><tr><th style=text-align:center>Attribute</th><th style=text-align:center>MLIR Type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>sym_name</code></td><td style=text-align:center>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td style=text-align:center><code>type</code></td><td style=text-align:center>::mlir::TypeAttr</td><td>any type attribute</td></tr><tr><td style=text-align:center><code>sym_visibility</code></td><td style=text-align:center>::mlir::StringAttr</td><td>string attribute</td></tr></tbody></table><h3 id=module-mlirmoduleop><code>module</code> (::mlir::ModuleOp)&nbsp;<a class=headline-hash href=#module-mlirmoduleop>¶</a></h3><p>A top level container operation</p><p>Syntax:</p><pre><code>operation ::= `module` ($sym_name^)? attr-dict-with-keyword $body
+</code></pre><p>A <code>module</code> represents a top-level container operation. It contains a single
+<a href=/docs/LangRef/>graph region</a>
+containing a single block
+which can contain any operations and does not have a terminator. Operations
+within this region cannot implicitly capture values defined outside the module,
+i.e. Modules are
+<a href=/docs/Traits/>IsolatedFromAbove</a>
+. Modules have
+an optional
+<a href=/docs/SymbolsAndSymbolTables/>symbol name</a>
+which can be used to refer
+to them in operations.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>module <span class=p>{</span>
+  <span class=kt>func</span> <span class=nf>@foo</span><span class=p>()</span>
+<span class=p>}</span>
+</code></pre></div><h4 id=attributes-2>Attributes:&nbsp;<a class=headline-hash href=#attributes-2>¶</a></h4><table><thead><tr><th style=text-align:center>Attribute</th><th style=text-align:center>MLIR Type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>sym_name</code></td><td style=text-align:center>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td style=text-align:center><code>sym_visibility</code></td><td style=text-align:center>::mlir::StringAttr</td><td>string attribute</td></tr></tbody></table><h3 id=unrealized_conversion_cast-mlirunrealizedconversioncastop><code>unrealized_conversion_cast</code> (::mlir::UnrealizedConversionCastOp)&nbsp;<a class=headline-hash href=#unrealized_conversion_cast-mlirunrealizedconversioncastop>¶</a></h3><p>An unrealized conversion from one set of types to another</p><p>Syntax:</p><pre><code>operation ::= `unrealized_conversion_cast` ($inputs^ `:` type($inputs))? `to` type($outputs) attr-dict
+</code></pre><p>An <code>unrealized_conversion_cast</code> operation represents an unrealized
+conversion from one set of types to another, that is used to enable the
+inter-mixing of different type systems. This operation should not be
+attributed any special representational or execution semantics, and is
+generally only intended to be used to satisfy the temporary intermixing of
+type systems during the conversion of one type system to another.</p><p>This operation may produce results of arity 1-N, and accept as input
+operands of arity 0-N.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// An unrealized 0-1 conversion. These types of conversions are useful in
+</span><span class=c>// cases where a type is removed from the type system, but not all uses have
+</span><span class=c>// been converted. For example, imagine we have a tuple type that is
+</span><span class=c>// expanded to its element types. If only some uses of an empty tuple type
+</span><span class=c>// instance are converted we still need an instance of the tuple type, but
+</span><span class=c>// have no inputs to the unrealized conversion.
+</span><span class=c></span><span class=nv>%result</span> <span class=p>=</span> unrealized_conversion_cast to <span class=p>!</span>bar<span class=p>.</span>tuple_type<span class=p>&lt;&gt;</span>
+
+<span class=c>// An unrealized 1-1 conversion.
+</span><span class=c></span><span class=nv>%result1</span> <span class=p>=</span> unrealized_conversion_cast <span class=nv>%operand</span> <span class=p>:</span> <span class=p>!</span>foo<span class=p>.</span>type to <span class=p>!</span>bar<span class=p>.</span>lowered_type
+
+<span class=c>// An unrealized 1-N conversion.
+</span><span class=c></span><span class=nv>%results2</span><span class=p>:</span><span class=nl>2 =</span> unrealized_conversion_cast <span class=nv>%tuple_operand</span> <span class=p>:</span> <span class=p>!</span>foo<span class=p>.</span>tuple_type<span class=p>&lt;!</span>foo<span class=p>.</span>type<span class=p>,</span> <span class=p>!</span>foo<span class=p>.</span>type<span class=p>&gt;</span> to <span class=p>!</span>foo<span class=p>.</span>type<span class=p>,</span> <span class=p>!</span>foo<span class=p>.</span>type
+
+<span class=c>// An unrealized N-1 conversion.
+</span><span class=c></span><span class=nv>%result3</span> <span class=p>=</span> unrealized_conversion_cast <span class=nv>%operand</span><span class=p>,</span> <span class=nv>%operand</span> <span class=p>:</span> <span class=p>!</span>foo<span class=p>.</span>type<span class=p>,</span> <span class=p>!</span>foo<span class=p>.</span>type to <span class=p>!</span>bar<span class=p>.</span>tuple_type<span class=p>&lt;!</span>foo<span class=p>.</span>type<span class=p>,</span> <span class=p>!</span>foo<span class=p>.</span>type<span class=p>&gt;</span>
+</code></pre></div><h4 id=operands>Operands:&nbsp;<a class=headline-hash href=#operands>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>inputs</code></td><td>any type</td></tr></tbody></table><h4 id=results>Results:&nbsp;<a class=headline-hash href=#results>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>outputs</code></td><td>any type</td></tr></tbody></table><h2 id=types>Types&nbsp;<a class=headline-hash href=#types>¶</a></h2><h3 id=bfloat16type>BFloat16Type&nbsp;<a class=headline-hash href=#bfloat16type>¶</a></h3><p>bfloat16 floating-point type</p><h3 id=complextype>ComplexType&nbsp;<a class=headline-hash href=#complextype>¶</a></h3><p>Complex number with a parameterized element type</p><p>Syntax:</p><pre><code>complex-type ::= `complex` `&lt;` type `&gt;`
+</code></pre><p>The value of <code>complex</code> type represents a complex number with a parameterized
+element type, which is composed of a real and imaginary value of that
+element type. The element must be a floating point or integer scalar type.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>complex<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;</span>
+complex<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-19>Parameters:&nbsp;<a class=headline-hash href=#parameters-19>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr></tbody></table><h3 id=float128type>Float128Type&nbsp;<a class=headline-hash href=#float128type>¶</a></h3><p>128-bit floating-point type</p><h3 id=float16type>Float16Type&nbsp;<a class=headline-hash href=#float16type>¶</a></h3><p>16-bit floating-point type</p><h3 id=float32type>Float32Type&nbsp;<a class=headline-hash href=#float32type>¶</a></h3><p>32-bit floating-point type</p><h3 id=float64type>Float64Type&nbsp;<a class=headline-hash href=#float64type>¶</a></h3><p>64-bit floating-point type</p><h3 id=float80type>Float80Type&nbsp;<a class=headline-hash href=#float80type>¶</a></h3><p>80-bit floating-point type</p><h3 id=functiontype>FunctionType&nbsp;<a class=headline-hash href=#functiontype>¶</a></h3><p>Map from a list of inputs to a list of results</p><p>Syntax:</p><pre><code>// Function types may have multiple results.
+function-result-type ::= type-list-parens | non-function-type
+function-type ::= type-list-parens `-&gt;` function-result-type
+</code></pre><p>The function type can be thought of as a function signature. It consists of
+a list of formal parameter types and a list of formal result types.</p><h4 id=parameters-20>Parameters:&nbsp;<a class=headline-hash href=#parameters-20>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>inputs</td><td style=text-align:center><code>ArrayRef&lt;Type></code></td><td></td></tr><tr><td style=text-align:center>results</td><td style=text-align:center><code>ArrayRef&lt;Type></code></td><td></td></tr></tbody></table><h3 id=indextype>IndexType&nbsp;<a class=headline-hash href=#indextype>¶</a></h3><p>Integer-like type with unknown platform-dependent bit width</p><p>Syntax:</p><pre><code>// Target word-sized integer.
+index-type ::= `index`
+</code></pre><p>The index type is a signless integer whose size is equal to the natural
+machine word of the target (
+<a href=https://mlir.llvm.org/docs/Rationale/Rationale/#integer-signedness-semantics>rationale</a>
+)
+and is used by the affine constructs in MLIR.</p><p><strong>Rationale:</strong> integers of platform-specific bit widths are practical to
+express sizes, dimensionalities and subscripts.</p><h3 id=integertype>IntegerType&nbsp;<a class=headline-hash href=#integertype>¶</a></h3><p>Integer type with arbitrary precision up to a fixed limit</p><p>Syntax:</p><pre><code>// Sized integers like i1, i4, i8, i16, i32.
+signed-integer-type ::= `si` [1-9][0-9]*
+unsigned-integer-type ::= `ui` [1-9][0-9]*
+signless-integer-type ::= `i` [1-9][0-9]*
+integer-type ::= signed-integer-type |
+                 unsigned-integer-type |
+                 signless-integer-type
+</code></pre><p>Integer types have a designated bit width and may optionally have signedness
+semantics.</p><p><strong>Rationale:</strong> low precision integers (like <code>i2</code>, <code>i4</code> etc) are useful for
+low-precision inference chips, and arbitrary precision integers are useful
+for hardware synthesis (where a 13 bit multiplier is a lot cheaper/smaller
+than a 16 bit one).</p><h4 id=parameters-21>Parameters:&nbsp;<a class=headline-hash href=#parameters-21>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>width</td><td style=text-align:center><code>unsigned</code></td><td></td></tr><tr><td style=text-align:center>signedness</td><td style=text-align:center><code>SignednessSemantics</code></td><td></td></tr></tbody></table><h3 id=memreftype>MemRefType&nbsp;<a class=headline-hash href=#memreftype>¶</a></h3><p>Shaped reference to a region of memory</p><p>Syntax:</p><pre><code>memref-type ::= `memref` `&lt;` dimension-list-ranked type
+                (`,` layout-specification)? (`,` memory-space)? `&gt;`
+
+stride-list ::= `[` (dimension (`,` dimension)*)? `]`
+strided-layout ::= `offset:` dimension `,` `strides: ` stride-list
+semi-affine-map-composition ::= (semi-affine-map `,` )* semi-affine-map
+layout-specification ::= semi-affine-map-composition | strided-layout
+memory-space ::= attribute-value
+</code></pre><p>A <code>memref</code> type is a reference to a region of memory (similar to a buffer
+pointer, but more powerful). The buffer pointed to by a memref can be
+allocated, aliased and deallocated. A memref can be used to read and write
+data from/to the memory region which it references. Memref types use the
+same shape specifier as tensor types. Note that <code>memref&lt;f32></code>,
+<code>memref&lt;0 x f32></code>, <code>memref&lt;1 x 0 x f32></code>, and <code>memref&lt;0 x 1 x f32></code> are all
+different types.</p><p>A <code>memref</code> is allowed to have an unknown rank (e.g. <code>memref&lt;*xf32></code>). The
+purpose of unranked memrefs is to allow external library functions to
+receive memref arguments of any rank without versioning the functions based
+on the rank. Other uses of this type are disallowed or will have undefined
+behavior.</p><p>Are accepted as elements:</p><ul><li>built-in integer types;</li><li>built-in index type;</li><li>built-in floating point types;</li><li>built-in vector types with elements of the above types;</li><li>another memref type;</li><li>any other type implementing <code>MemRefElementTypeInterface</code>.</li></ul><h5 id=codegen-of-unranked-memref>Codegen of Unranked Memref&nbsp;<a class=headline-hash href=#codegen-of-unranked-memref>¶</a></h5><p>Using unranked memref in codegen besides the case mentioned above is highly
+discouraged. Codegen is concerned with generating loop nests and specialized
+instructions for high-performance, unranked memref is concerned with hiding
+the rank and thus, the number of enclosing loops required to iterate over
+the data. However, if there is a need to code-gen unranked memref, one
+possible path is to cast into a static ranked type based on the dynamic
+rank. Another possible path is to emit a single while loop conditioned on a
+linear index and perform delinearization of the linear index to a dynamic
+array containing the (unranked) indices. While this is possible, it is
+expected to not be a good idea to perform this during codegen as the cost
+of the translations is expected to be prohibitive and optimizations at this
+level are not expected to be worthwhile. If expressiveness is the main
+concern, irrespective of performance, passing unranked memrefs to an
+external C++ library and implementing rank-agnostic logic there is expected
+to be significantly simpler.</p><p>Unranked memrefs may provide expressiveness gains in the future and help
+bridge the gap with unranked tensors. Unranked memrefs will not be expected
+to be exposed to codegen but one may query the rank of an unranked memref
+(a special op will be needed for this purpose) and perform a switch and cast
+to a ranked memref as a prerequisite to codegen.</p><p>Example:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// With static ranks, we need a function for each possible argument type
+</span><span class=c></span><span class=nv>%A</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>&gt;</span>
+<span class=nv>%B</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x64x</span><span class=k>f32</span><span class=p>&gt;</span>
+call <span class=nf>@helper_2D</span><span class=p>(</span><span class=nv>%A</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>&gt;)-&gt;()</span>
+call <span class=nf>@helper_3D</span><span class=p>(</span><span class=nv>%B</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x64x</span><span class=k>f32</span><span class=p>&gt;)-&gt;()</span>
+
+<span class=c>// With unknown rank, the functions can be unified under one unranked type
+</span><span class=c></span><span class=nv>%A</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>&gt;</span>
+<span class=nv>%B</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x64x</span><span class=k>f32</span><span class=p>&gt;</span>
+<span class=c>// Remove rank info
+</span><span class=c></span><span class=nv>%A_u</span> <span class=p>=</span> <span class=kt>memref</span>_cast <span class=nv>%A</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;</span>
+<span class=nv>%B_u</span> <span class=p>=</span> <span class=kt>memref</span>_cast <span class=nv>%B</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x64x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;</span>
+<span class=c>// call same function with dynamic ranks
+</span><span class=c></span>call <span class=nf>@helper</span><span class=p>(</span><span class=nv>%A_u</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)-&gt;()</span>
+call <span class=nf>@helper</span><span class=p>(</span><span class=nv>%B_u</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;*</span>xf32<span class=p>&gt;)-&gt;()</span>
+</code></pre></div><p>The core syntax and representation of a layout specification is a
+<a href=/docs/Dialects/Affine/#semi-affine-maps>semi-affine map</a>
+. Additionally,
+syntactic sugar is supported to make certain layout specifications more
+intuitive to read. For the moment, a <code>memref</code> supports parsing a strided
+form which is converted to a semi-affine map automatically.</p><p>The memory space of a memref is specified by a target-specific attribute.
+It might be an integer value, string, dictionary or custom dialect attribute.
+The empty memory space (attribute is None) is target specific.</p><p>The notionally dynamic value of a memref value includes the address of the
+buffer allocated, as well as the symbols referred to by the shape, layout
+map, and index maps.</p><p>Examples of memref static type</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// Identity index/layout map
+</span><span class=c></span><span class=nv>#identity</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> d1<span class=p>)&gt;</span>
+
+<span class=c>// Column major layout.
+</span><span class=c></span><span class=nv>#col_major</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d2<span class=p>,</span> d1<span class=p>,</span> d0<span class=p>)&gt;</span>
+
+<span class=c>// A 2-d tiled layout with tiles of size 128 x 256.
+</span><span class=c></span><span class=nv>#tiled_2d_128x256</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0 div <span class=m>128</span><span class=p>,</span> d1 div <span class=m>256</span><span class=p>,</span> d0 mod <span class=m>128</span><span class=p>,</span> d1 mod <span class=m>256</span><span class=p>)&gt;</span>
+
+<span class=c>// A tiled data layout with non-constant tile sizes.
+</span><span class=c></span><span class=nv>#tiled_dynamic</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>)[</span>s0<span class=p>,</span> s1<span class=p>]</span> <span class=p>-&gt;</span> <span class=p>(</span>d0 floordiv s0<span class=p>,</span> d1 floordiv s1<span class=p>,</span>
+                             d0 mod s0<span class=p>,</span> d1 mod s1<span class=p>)&gt;</span>
+
+<span class=c>// A layout that yields a padding on two at either end of the minor dimension.
+</span><span class=c></span><span class=nv>#padded</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> <span class=p>(</span>d1 <span class=err>+</span> <span class=m>2</span><span class=p>)</span> floordiv <span class=m>2</span><span class=p>,</span> <span class=p>(</span>d1 <span class=err>+</span> <span class=m>2</span><span class=p>)</span> mod <span class=m>2</span><span class=p>)&gt;</span>
+
+
+<span class=c>// The dimension list &#34;16x32&#34; defines the following 2D index space:
+</span><span class=c>//
+</span><span class=c>//   { (i, j) : 0 &lt;= i &lt; 16, 0 &lt;= j &lt; 32 }
+</span><span class=c>//
+</span><span class=c></span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#identity</span><span class=p>&gt;</span>
+
+<span class=c>// The dimension list &#34;16x4x?&#34; defines the following 3D index space:
+</span><span class=c>//
+</span><span class=c>//   { (i, j, k) : 0 &lt;= i &lt; 16, 0 &lt;= j &lt; 4, 0 &lt;= k &lt; N }
+</span><span class=c>//
+</span><span class=c>// where N is a symbol which represents the runtime value of the size of
+</span><span class=c>// the third dimension.
+</span><span class=c>//
+</span><span class=c>// %N here binds to the size of the third dimension.
+</span><span class=c></span><span class=nv>%A</span> <span class=p>=</span> alloc<span class=p>(</span><span class=nv>%N</span><span class=p>)</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x4x?x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#col_major</span><span class=p>&gt;</span>
+
+<span class=c>// A 2-d dynamic shaped memref that also has a dynamically sized tiled
+</span><span class=c>// layout. The memref index space is of size %M x %N, while %B1 and %B2
+</span><span class=c>// bind to the symbols s0, s1 respectively of the layout map #tiled_dynamic.
+</span><span class=c>// Data tiles of size %B1 x %B2 in the logical space will be stored
+</span><span class=c>// contiguously in memory. The allocation size will be
+</span><span class=c>// (%M ceildiv %B1) * %B1 * (%N ceildiv %B2) * %B2 f32 elements.
+</span><span class=c></span><span class=nv>%T</span> <span class=p>=</span> alloc<span class=p>(</span><span class=nv>%M</span><span class=p>,</span> <span class=nv>%N</span><span class=p>)</span> <span class=p>[</span><span class=nv>%B1</span><span class=p>,</span> <span class=nv>%B2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#tiled_dynamic</span><span class=p>&gt;</span>
+
+<span class=c>// A memref that has a two-element padding at either end. The allocation
+</span><span class=c>// size will fit 16 * 64 float elements of data.
+</span><span class=c></span><span class=nv>%P</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x64x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#padded</span><span class=p>&gt;</span>
+
+<span class=c>// Affine map with symbol &#39;s0&#39; used as offset for the first dimension.
+</span><span class=c></span><span class=nv>#imapS</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>)</span> <span class=p>[</span>s0<span class=p>]</span> <span class=p>-&gt;</span> <span class=p>(</span>d0 <span class=err>+</span> s0<span class=p>,</span> d1<span class=p>)&gt;</span>
+<span class=c>// Allocate memref and bind the following symbols:
+</span><span class=c>// &#39;%n&#39; is bound to the dynamic second dimension of the memref type.
+</span><span class=c>// &#39;%o&#39; is bound to the symbol &#39;s0&#39; in the affine map of the memref type.
+</span><span class=c></span><span class=nv>%n</span> <span class=p>=</span> <span class=p>...</span>
+<span class=nv>%o</span> <span class=p>=</span> <span class=p>...</span>
+<span class=nv>%A</span> <span class=p>=</span> alloc <span class=p>(</span><span class=nv>%n</span><span class=p>)[</span><span class=nv>%o</span><span class=p>]</span> <span class=p>:</span> <span class=p>&lt;</span><span class=m>16x?x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#imapS</span><span class=p>&gt;</span>
+</code></pre></div><h5 id=index-space>Index Space&nbsp;<a class=headline-hash href=#index-space>¶</a></h5><p>A memref dimension list defines an index space within which the memref can
+be indexed to access data.</p><h5 id=index>Index&nbsp;<a class=headline-hash href=#index>¶</a></h5><p>Data is accessed through a memref type using a multidimensional index into
+the multidimensional index space defined by the memref&rsquo;s dimension list.</p><p>Examples</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// Allocates a memref with 2D index space:
+</span><span class=c>//   { (i, j) : 0 &lt;= i &lt; 16, 0 &lt;= j &lt; 32 }
+</span><span class=c></span><span class=nv>%A</span> <span class=p>=</span> alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#imapA</span><span class=p>&gt;</span>
+
+<span class=c>// Loads data from memref &#39;%A&#39; using a 2D index: (%i, %j)
+</span><span class=c></span><span class=nv>%v</span> <span class=p>=</span> load <span class=nv>%A</span><span class=p>[</span><span class=nv>%i</span><span class=p>,</span> <span class=nv>%j</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x32x</span><span class=k>f32</span><span class=p>,</span> <span class=nv>#imapA</span><span class=p>&gt;</span>
+</code></pre></div><h5 id=index-map>Index Map&nbsp;<a class=headline-hash href=#index-map>¶</a></h5><p>An index map is a one-to-one
+<a href=/docs/Dialects/Affine/#semi-affine-maps>semi-affine map</a>
+that transforms a
+multidimensional index from one index space to another. For example, the
+following figure shows an index map which maps a 2-dimensional index from a
+2x2 index space to a 3x3 index space, using symbols <code>S0</code> and <code>S1</code> as
+offsets.</p><p><img src=/includes/img/index-map.svg alt="Index Map Example"></p><p>The number of domain dimensions and range dimensions of an index map can be
+different, but must match the number of dimensions of the input and output
+index spaces on which the map operates. The index space is always
+non-negative and integral. In addition, an index map must specify the size
+of each of its range dimensions onto which it maps. Index map symbols must
+be listed in order with symbols for dynamic dimension sizes first, followed
+by other required symbols.</p><h5 id=layout-map>Layout Map&nbsp;<a class=headline-hash href=#layout-map>¶</a></h5><p>A layout map is a
+<a href=/docs/Dialects/Affine/#semi-affine-maps>semi-affine map</a>
+which encodes logical to physical index space mapping, by mapping input
+dimensions to their ordering from most-major (slowest varying) to most-minor
+(fastest varying). Therefore, an identity layout map corresponds to a
+row-major layout. Identity layout maps do not contribute to the MemRef type
+identification and are discarded on construction. That is, a type with an
+explicit identity map is <code>memref&lt;?x?xf32, (i,j)->(i,j)></code> is strictly the
+same as the one without layout maps, <code>memref&lt;?x?xf32></code>.</p><p>Layout map examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// MxN matrix stored in row major layout in memory:
+</span><span class=c></span><span class=nv>#layout_map_row_major</span> <span class=p>=</span> <span class=p>(</span>i<span class=p>,</span> j<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>i<span class=p>,</span> j<span class=p>)</span>
+
+<span class=c>// MxN matrix stored in column major layout in memory:
+</span><span class=c></span><span class=nv>#layout_map_col_major</span> <span class=p>=</span> <span class=p>(</span>i<span class=p>,</span> j<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>j<span class=p>,</span> i<span class=p>)</span>
+
+<span class=c>// MxN matrix stored in a 2-d blocked/tiled layout with 64x64 tiles.
+</span><span class=c></span><span class=nv>#layout_tiled</span> <span class=p>=</span> <span class=p>(</span>i<span class=p>,</span> j<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>i floordiv <span class=m>64</span><span class=p>,</span> j floordiv <span class=m>64</span><span class=p>,</span> i mod <span class=m>64</span><span class=p>,</span> j mod <span class=m>64</span><span class=p>)</span>
+</code></pre></div><h5 id=affine-map-composition>Affine Map Composition&nbsp;<a class=headline-hash href=#affine-map-composition>¶</a></h5><p>A memref specifies a semi-affine map composition as part of its type. A
+semi-affine map composition is a composition of semi-affine maps beginning
+with zero or more index maps, and ending with a layout map. The composition
+must be conformant: the number of dimensions of the range of one map, must
+match the number of dimensions of the domain of the next map in the
+composition.</p><p>The semi-affine map composition specified in the memref type, maps from
+accesses used to index the memref in load/store operations to other index
+spaces (i.e. logical to physical index mapping). Each of the
+<a href=/docs/Dialects/Affine/#semi-affine-maps>semi-affine maps</a>
+and thus its composition is required
+to be one-to-one.</p><p>The semi-affine map composition can be used in dependence analysis, memory
+access pattern analysis, and for performance optimizations like
+vectorization, copy elision and in-place updates. If an affine map
+composition is not specified for the memref, the identity affine map is
+assumed.</p><h5 id=strided-memref>Strided MemRef&nbsp;<a class=headline-hash href=#strided-memref>¶</a></h5><p>A memref may specify strides as part of its type. A stride specification is
+a list of integer values that are either static or <code>?</code> (dynamic case).
+Strides encode the distance, in number of elements, in (linear) memory
+between successive entries along a particular dimension. A stride
+specification is syntactic sugar for an equivalent strided memref
+representation using semi-affine maps. For example,
+<code>memref&lt;42x16xf32, offset: 33, strides: [1, 64]></code> specifies a non-contiguous
+memory region of <code>42</code> by <code>16</code> <code>f32</code> elements such that:</p><ol><li>the minimal size of the enclosing memory region must be
+<code>33 + 42 * 1 + 16 * 64 = 1066</code> elements;</li><li>the address calculation for accessing element <code>(i, j)</code> computes
+<code>33 + i + 64 * j</code></li><li>the distance between two consecutive elements along the inner dimension
+is <code>1</code> element and the distance between two consecutive elements along
+the outer dimension is <code>64</code> elements.</li></ol><p>This corresponds to a column major view of the memory region and is
+internally represented as the type
+<code>memref&lt;42x16xf32, (i, j) -> (33 + i + 64 * j)></code>.</p><p>The specification of strides must not alias: given an n-D strided memref,
+indices <code>(i1, ..., in)</code> and <code>(j1, ..., jn)</code> may not refer to the same memory
+address unless <code>i1 == j1, ..., in == jn</code>.</p><p>Strided memrefs represent a view abstraction over preallocated data. They
+are constructed with special ops, yet to be introduced. Strided memrefs are
+a special subclass of memrefs with generic semi-affine map and correspond to
+a normalized memref descriptor when lowering to LLVM.</p><h4 id=parameters-22>Parameters:&nbsp;<a class=headline-hash href=#parameters-22>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>shape</td><td style=text-align:center><code>::llvm::ArrayRef&lt;int64_t></code></td><td></td></tr><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr><tr><td style=text-align:center>affineMaps</td><td style=text-align:center><code>::llvm::ArrayRef&lt;AffineMap></code></td><td></td></tr><tr><td style=text-align:center>memorySpace</td><td style=text-align:center><code>Attribute</code></td><td></td></tr></tbody></table><h3 id=nonetype>NoneType&nbsp;<a class=headline-hash href=#nonetype>¶</a></h3><p>A unit type</p><p>NoneType is a unit type, i.e. a type with exactly one possible value, where
+its value does not have a defined dynamic representation.</p><h3 id=opaquetype>OpaqueType&nbsp;<a class=headline-hash href=#opaquetype>¶</a></h3><p>Type of a non-registered dialect</p><p>Syntax:</p><pre><code>opaque-type ::= `opaque` `&lt;` type `&gt;`
+</code></pre><p>Opaque types represent types of non-registered dialects. These are types
+represented in their raw string form, and can only usefully be tested for
+type equality.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir>opaque<span class=p>&lt;</span><span class=s>&#34;llvm&#34;</span><span class=p>,</span> <span class=s>&#34;struct&lt;(i32, float)&gt;&#34;</span><span class=p>&gt;</span>
+opaque<span class=p>&lt;</span><span class=s>&#34;pdl&#34;</span><span class=p>,</span> <span class=s>&#34;value&#34;</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-23>Parameters:&nbsp;<a class=headline-hash href=#parameters-23>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>dialectNamespace</td><td style=text-align:center><code>Identifier</code></td><td></td></tr><tr><td style=text-align:center>typeData</td><td style=text-align:center><code>::llvm::StringRef</code></td><td></td></tr></tbody></table><h3 id=rankedtensortype>RankedTensorType&nbsp;<a class=headline-hash href=#rankedtensortype>¶</a></h3><p>Multi-dimensional array with a fixed number of dimensions</p><p>Syntax:</p><pre><code>tensor-type ::= `tensor` `&lt;` dimension-list type (`,` encoding)? `&gt;`
+dimension-list ::= (dimension `x`)*
+dimension ::= `?` | decimal-literal
+encoding ::= attribute-value
+</code></pre><p>Values with tensor type represents aggregate N-dimensional data values, and
+have a known element type and a fixed rank with a list of dimensions. Each
+dimension may be a static non-negative decimal constant or be dynamically
+determined (indicated by <code>?</code>).</p><p>The runtime representation of the MLIR tensor type is intentionally
+abstracted - you cannot control layout or get a pointer to the data. For
+low level buffer access, MLIR has a
+<a href=#memref-type><code>memref</code> type</a>
+. This
+abstracted runtime representation holds both the tensor data values as well
+as information about the (potentially dynamic) shape of the tensor. The
+<a href=/docs/Dialects/MemRef/#memrefdim-mlirmemrefdimop><code>dim</code> operation</a>
+returns the size of a
+dimension from a value of tensor type.</p><p>The <code>encoding</code> attribute provides additional information on the tensor.
+An empty attribute denotes a straightforward tensor without any specific
+structure. But particular properties, like sparsity or other specific
+characteristics of the data of the tensor can be encoded through this
+attribute. The semantics are defined by a type and attribute interface
+and must be respected by all passes that operate on tensor types.
+TODO: provide this interface, and document it further.</p><p>Note: hexadecimal integer literals are not allowed in tensor type
+declarations to avoid confusion between <code>0xf32</code> and <code>0 x f32</code>. Zero sizes
+are allowed in tensors and treated as other sizes, e.g.,
+<code>tensor&lt;0 x 1 x i32></code> and <code>tensor&lt;1 x 0 x i32></code> are different types. Since
+zero sizes are not allowed in some other types, such tensors should be
+optimized away before lowering tensors to vectors.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// Known rank but unknown dimensions.
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>? x</span> <span class=m>? x</span> <span class=m>? x</span> <span class=m>? x</span> <span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Partially known dimensions.
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>? x</span> <span class=m>? x</span> <span class=m>13 x</span> <span class=m>? x</span> <span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Full static shape.
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>17 x</span> <span class=m>4 x</span> <span class=m>13 x</span> <span class=m>4 x</span> <span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Tensor with rank zero. Represents a scalar.
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Zero-element dimensions are allowed.
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>0</span> <span class=p>x</span> <span class=m>42 x</span> <span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Zero-element tensor of f32 type (hexadecimal literals not allowed here).
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>0xf32</span><span class=p>&gt;</span>
+
+<span class=c>// Tensor with an encoding attribute (where #ENCODING is a named alias).
+</span><span class=c></span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f64</span><span class=p>,</span> <span class=nv>#ENCODING</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-24>Parameters:&nbsp;<a class=headline-hash href=#parameters-24>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>shape</td><td style=text-align:center><code>::llvm::ArrayRef&lt;int64_t></code></td><td></td></tr><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr><tr><td style=text-align:center>encoding</td><td style=text-align:center><code>Attribute</code></td><td></td></tr></tbody></table><h3 id=tupletype>TupleType&nbsp;<a class=headline-hash href=#tupletype>¶</a></h3><p>Fixed-sized collection of other types</p><p>Syntax:</p><pre><code>tuple-type ::= `tuple` `&lt;` (type ( `,` type)*)? `&gt;`
+</code></pre><p>The value of <code>tuple</code> type represents a fixed-size collection of elements,
+where each element may be of a different type.</p><p><strong>Rationale:</strong> Though this type is first class in the type system, MLIR
+provides no standard operations for operating on <code>tuple</code> types
+(
+<a href=Rationale/Rationale.md/#tuple-types>rationale</a>
+).</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=c>// Empty tuple.
+</span><span class=c></span>tuple<span class=p>&lt;&gt;</span>
+
+<span class=c>// Single element
+</span><span class=c></span>tuple<span class=p>&lt;</span><span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// Many elements.
+</span><span class=c></span>tuple<span class=p>&lt;</span><span class=k>i32</span><span class=p>,</span> <span class=k>f32</span><span class=p>,</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=k>i1</span><span class=p>&gt;,</span> <span class=k>i5</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-25>Parameters:&nbsp;<a class=headline-hash href=#parameters-25>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>types</td><td style=text-align:center><code>ArrayRef&lt;Type></code></td><td></td></tr></tbody></table><h3 id=unrankedmemreftype>UnrankedMemRefType&nbsp;<a class=headline-hash href=#unrankedmemreftype>¶</a></h3><p>Shaped reference, with unknown rank, to a region of memory</p><p>Syntax:</p><pre><code>unranked-memref-type ::= `memref` `&lt;*x` type (`,` memory-space)? `&gt;`
+memory-space ::= attribute-value
+</code></pre><p>A <code>memref</code> type with an unknown rank (e.g. <code>memref&lt;*xf32></code>). The purpose of
+unranked memrefs is to allow external library functions to receive memref
+arguments of any rank without versioning the functions based on the rank.
+Other uses of this type are disallowed or will have undefined behavior.</p><p>See
+<a href=#builtin_memref-memreftype>MemRefType</a>
+for more information on
+memref types.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>memref</span><span class=p>&lt;*</span><span class=k>f32</span><span class=p>&gt;</span>
+
+<span class=c>// An unranked memref with a memory space of 10.
+</span><span class=c></span><span class=kt>memref</span><span class=p>&lt;*</span><span class=k>f32</span><span class=p>,</span> <span class=m>10</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-26>Parameters:&nbsp;<a class=headline-hash href=#parameters-26>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr><tr><td style=text-align:center>memorySpace</td><td style=text-align:center><code>Attribute</code></td><td></td></tr></tbody></table><h3 id=unrankedtensortype>UnrankedTensorType&nbsp;<a class=headline-hash href=#unrankedtensortype>¶</a></h3><p>Multi-dimensional array with unknown dimensions</p><p>Syntax:</p><pre><code>tensor-type ::= `tensor` `&lt;` `*` `x` type `&gt;`
+</code></pre><p>An unranked tensor is a type of tensor in which the set of dimensions have
+unknown rank. See
+<a href=#builtin_rankedtensor-rankedtensortype>RankedTensorType</a>
+for more information on tensor types.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>tensor</span><span class=p>&lt;*</span><span class=k>f32</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-27>Parameters:&nbsp;<a class=headline-hash href=#parameters-27>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr></tbody></table><h3 id=vectortype>VectorType&nbsp;<a class=headline-hash href=#vectortype>¶</a></h3><p>Multi-dimensional SIMD vector type</p><p>Syntax:</p><pre><code>vector-type ::= `vector` `&lt;` static-dimension-list vector-element-type `&gt;`
+vector-element-type ::= float-type | integer-type | index-type
+
+static-dimension-list ::= (decimal-literal `x`)+
+</code></pre><p>The vector type represents a SIMD style vector, used by target-specific
+operation sets like AVX. While the most common use is for 1D vectors (e.g.
+vector&lt;16 x f32>) we also support multidimensional registers on targets that
+support them (like TPUs).</p><p>Vector shapes must be positive decimal integers.</p><p>Note: hexadecimal integer literals are not allowed in vector type
+declarations, <code>vector&lt;0x42xi32></code> is invalid because it is interpreted as a
+2D vector with shape <code>(0, 42)</code> and zero shapes are not allowed.</p><p>Examples:</p><div class=highlight><pre class=chroma><code class=language-mlir data-lang=mlir><span class=kt>vector</span><span class=p>&lt;</span><span class=m>3x42x</span><span class=k>i32</span><span class=p>&gt;</span>
+</code></pre></div><h4 id=parameters-28>Parameters:&nbsp;<a class=headline-hash href=#parameters-28>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>shape</td><td style=text-align:center><code>::llvm::ArrayRef&lt;int64_t></code></td><td></td></tr><tr><td style=text-align:center>elementType</td><td style=text-align:center><code>Type</code></td><td></td></tr></tbody></table><h2 id=type-interfaces>Type Interfaces&nbsp;<a class=headline-hash href=#type-interfaces>¶</a></h2><h2 id=memrefelementtypeinterface-memrefelementtypeinterface>MemRefElementTypeInterface (<code>MemRefElementTypeInterface</code>)&nbsp;<a class=headline-hash href=#memrefelementtypeinterface-memrefelementtypeinterface>¶</a></h2><p>Indication that this type can be used as element in memref types.</p><p>Implementing this interface establishes a contract between this type and the
+memref type indicating that this type can be used as element of ranked or
+unranked memrefs. The type is expected to:</p><ul><li>model an entity stored in memory;</li><li>have non-zero size.</li></ul><p>For example, scalar values such as integers can implement this interface,
+but indicator types such as <code>void</code> or <code>unit</code> should not.</p><p>The interface currently has no methods and is used by types to opt into
+being memref elements. This may change in the future, in particular to
+require types to provide their size or alignment given a data layout.</p><h3 id=methods>Methods:&nbsp;<a class=headline-hash href=#methods>¶</a></h3><h2 id=subelementtypeinterface-subelementtypeinterface>SubElementTypeInterface (<code>SubElementTypeInterface</code>)&nbsp;<a class=headline-hash href=#subelementtypeinterface-subelementtypeinterface>¶</a></h2><p>An interface used to query and manipulate sub-elements, such as sub-types
+and sub-attributes of a composite type.</p><h3 id=methods-1>Methods:&nbsp;<a class=headline-hash href=#methods-1>¶</a></h3><h4 id=walkimmediatesubelements><code>walkImmediateSubElements</code>&nbsp;<a class=headline-hash href=#walkimmediatesubelements>¶</a></h4><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=kt>void</span> <span class=nf>walkImmediateSubElements</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=kt>void</span><span class=p>(</span><span class=n>mlir</span><span class=o>::</span><span class=n>Attribute</span><span class=p>)</span><span class=o>&gt;</span> <span class=n>walkAttrsFn</span><span class=p>,</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=kt>void</span><span class=p>(</span><span class=n>mlir</span><span class=o>::</span><span class=n>Type</span><span class=p>)</span><span class=o>&gt;</span> <span class=n>walkTypesFn</span><span class=p>);</span>
+</code></pre></div><p>Walk all of the immediately nested sub-attributes and sub-types. This
+method does not recurse into sub elements.</p><p>NOTE: This method <em>must</em> be implemented by the user.</p><h2 id=subelementtypeinterface-anonymous_260>SubElementTypeInterface (<code>anonymous_260</code>)&nbsp;<a class=headline-hash href=#subelementtypeinterface-anonymous_260>¶</a></h2><p>An interface used to query and manipulate sub-elements, such as sub-types
+and sub-attributes of a composite type.</p><h3 id=methods-2>Methods:&nbsp;<a class=headline-hash href=#methods-2>¶</a></h3><h4 id=walkimmediatesubelements-1><code>walkImmediateSubElements</code>&nbsp;<a class=headline-hash href=#walkimmediatesubelements-1>¶</a></h4><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=kt>void</span> <span class=nf>walkImmediateSubElements</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=kt>void</span><span class=p>(</span><span class=n>mlir</span><span class=o>::</span><span class=n>Attribute</span><span class=p>)</span><span class=o>&gt;</span> <span class=n>walkAttrsFn</span><span class=p>,</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=kt>void</span><span class=p>(</span><span class=n>mlir</span><span class=o>::</span><span class=n>Type</span><span class=p>)</span><span class=o>&gt;</span> <span class=n>walkTypesFn</span><span class=p>);</span>
+</code></pre></div><p>Walk all of the immediately nested sub-attributes and sub-types. This
+method does not recurse into sub elements.</p><p>NOTE: This method <em>must</em> be implemented by the user.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/Dialects/X86Vector/ title="'x86vector' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - 'x86vector' Dialect</a>
+<a class="nav nav-next" href=/docs/Dialects/TOSA/ title="Tensor Operator Set Architecture (TOSA) Dialect">Next - Tensor Operator Set Architecture (TOSA) Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li class=active><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

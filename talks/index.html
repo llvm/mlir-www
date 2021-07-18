@@ -1,0 +1,267 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Talks and Related Publications - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/talks/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Talks and Related Publications</h1><h2 id=tutorials>Tutorials</h2><ul><li>MLIR Tutorial ;
+<a href=https://llvm.org/devmtg/2020-09/slides/MLIR_Tutorial.pdf>slides</a>
+-
+<a href="https://www.youtube.com/watch?v=Y4SvqTtOIDk">recording</a>
+;
+Mehdi Amini and River Riddle @
+<a href=https://llvm.org/devmtg/2020-09/>2020 Virtual LLVM Developers</a></li></ul><h3 id=past-editions>Past editions:</h3><ul><li>MLIR Tutorial ;
+<a href=http://www.cs.utah.edu/~mhall/mlir4hpc/pienaar-MLIR-Tutorial.pdf>slides</a>
+;
+Jacques Pienaar, Sana Damani @
+<a href=http://www.cs.utah.edu/~mhall/mlir4hpc/>MLIR4HPC@LCPC 2019</a></li><li>Tutorial: Building a Compiler with MLIR ; (
+<a href=https://llvm.org/devmtg/2019-04/talks.html#Tutorial_1>slides and recording</a>
+) ;
+Mehdi Amini, Alex Zinenko, Nicolas Vasilache @
+<a href=https://llvm.org/devmtg/2019-04>EuroLLVM 2019</a></li></ul><h2 id=tech-talks>Tech talks</h2><h3 id=about-mlir-and-mlir-components>About MLIR and MLIR Components</h3><ul><li><p><a href=https://llvm-hpc-2020-workshop.github.io>LLVM Compiler Infrastructure in HPC Workshop</a>
+Keynote: MLIR: an Agile Infrastructure for Building a Compiler Ecosystem (
+<a href=https://llvm-hpc-2020-workshop.github.io/presentations/llvmhpc2020-amini.pdf>slides</a>
+-
+<a href="https://www.youtube.com/watch?v=0bxyZDGs-aA">recording</a>
+) ; Mehdi Amini</p></li><li><p>CGO 2020
+<a href="https://docs.google.com/presentation/d/11-VjSNNNJoRhPlLxFgvtb909it1WNdxTnQFipryfAPU/edit#slide=id.g7d334b12e5_0_4">Keynote: MLIR Compiler Infrastructure</a>
+; Chris Lattner, Tatiana Shpeisman</p></li><li><p>IMPACT 2020
+<a href=http://impact.gforge.inria.fr/impact2020/slides/IMPACT_2020_keynote.pdf>Keynote: High-Performance Compilation Opportunities in MLIR</a>
+; Uday Bondhugula</p></li><li><p>MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
+<a href=https://llvm.org/devmtg/2019-04/talks.html#Keynote_1>slides</a>
+; Tatiana Shpeisman, Chris Lattner
+@
+<a href=https://llvm.org/devmtg/2019-04>EuroLLVM 2019</a></p></li><li><p>MLIR Primer: A Compiler Infrastructure for the End of Moore’s Law
+<a href=https://research.google/pubs/pub48035.pdf>slides</a>
+; Chris Lattner, Jacques Pienaar
+@
+<a href=https://www.c4ml.org/c4ml2019>Compilers for Machine Learning (C4ML)</a>
+workshop at
+<a href=http://cgo.org/cgo2019/>CGO 2019</a></p></li></ul><h3 id=using-mlir>Using MLIR</h3><ul><li><p>MLIR: Accelerating TF with compilers ;
+<a href="https://www.youtube.com/watch?v=Hx3A0A2lM84&list=PLQY2H8rRoyvzuJw20FG82Lgm2SZjTdIXU&index=12">recording</a>
+; Jacques Pienaar (filling in for Tatiana Shpeisman) @
+<a href=https://www.tensorflow.org/dev-summit>TF Dev Summit 2020</a></p></li><li><p>MLIR in the TensorFlow ecosystem ;
+<a href=https://research.google/pubs/pub48996.pdf>slides</a>
+; Jacques Pienaar @
+<a href=https://www.c4ml.org/c4ml2020>Compilers for Machine Learning 2020</a></p></li><li><p>MLIR: Accelerating AI ;
+<a href=https://youtu.be/QYV0Se167hM>recording</a>
+; Chris Lattner, Tatiana Shpeisman
+@
+<a href=https://conferences.oreilly.com/tensorflow/tf-ca>O&rsquo;Reilly TensorFlow World 2019</a></p></li><li><p>An MLIR Dialect for High-Level Optimization of Fortran ;
+<a href=https://youtu.be/ff3ngdvUang>recording</a>
+; Eric Schweitz
+@
+<a href=http://llvm.org/devmtg/2019-10/>2019 LLVM Developers' Meeting - Bay Area</a></p></li><li><p>Swift as syntactic sugar for MLIR ;
+<a href=https://youtu.be/1VOWzfULX2w>recording</a>
+; Eugene Burmako , Alex Suhan
+@
+<a href=https://www.scale.bythebay.io/>Scale By the Bay 2019</a></p></li><li><p>Targeting Accelerators with MLIR.jl ;
+<a href=https://youtu.be/M6hl2si20NE>recording</a>
+; James Bradbury
+@
+<a href=https://juliacon.org/2019/>JuliaCon 2019</a></p></li><li><p>Inside TensorFlow: MLIR for TF developers ;
+<a href=https://youtu.be/R5LLIj8EMxw>recording</a>
+; Jacques Pienaar</p></li></ul><h2 id=open-design-meetinghttpsgithubcomtensorflowcommunityblobmastersigsmlirchartermd-presentations><a href=https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md>Open design meeting</a>
+presentations</h2><h3 id=about-mlir-and-mlir-components-1>About MLIR and MLIR Components</h3><ul><li>2021-07-15: From MHLO To Linalg in IREE ;
+<a href=https://mlir.llvm.org/OpenMeetings/2021-07-25-From-MHLO-To-Linalg-in-IREE.pdf>slides</a>
+-
+<a href=https://youtu.be/GkorNMHPFPI>recording</a></li><li>2021-06-24: Typedefs in MLIR ;
+<a href=https://mlir.llvm.org/OpenMeetings/2021-06-24-Typedefs-in-MLIR.pdf>slides</a>
+-
+<a href="https://www.youtube.com/watch?v=hqcM6fJWntM">recording</a></li><li>2021-06-17: Defining operations, types, attributes, and dialects at runtime ;
+<a href=https://mlir.llvm.org/OpenMeetings/2021-06-17-Dynamic-Dialects.pdf>slides</a>
+-
+<a href=https://youtu.be/bxFpvjUO288>recording</a></li><li>2021-06-10: MLIR Language Server (Modern IDE features for <code>.mlir</code> files) ;
+<a href=https://mlir.llvm.org/OpenMeetings/2021-06-10-Language-Server.pdf>slides</a>
+-
+<a href=https://youtu.be/HZx1Wal3loA>recording</a></li><li>2021-05-06: Alibaba Group: Disc revisit & future discussion ;
+<a href="https://drive.google.com/file/d/1RA3VPdTGrYCE-qt2mURrrzbxD9Xl6y5L/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1t6Q_VhZVWBhi--fYTxTOLGklIemlKQmV/view?usp=sharing">recording</a></li><li>2021-04-22: EmitC: Generating C/C++ from MLIR ;
+<a href="https://drive.google.com/file/d/1p2AM7B1beb5oVf_tlTyinnVQoWuodoxl/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1qHw_gZFytXRtO2EGSnnT3s0iyJ9HdWWs/view?usp=sharing">recording</a></li><li>2021-04-15: Pattern Descriptor Language ;
+<a href="https://drive.google.com/file/d/17WYUvlmCzNTiqLaxWf_uz4GiLm3QVoEV/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1b8F1GHRPgCXGASZ7fhccU-xZZstLQ2Fi/view?usp=sharing">recording</a></li><li>2021-04-01: Discussion about MLIR Bindings (C API, Python Bindings, other languages) status ;
+<a href="https://drive.google.com/file/d/12xQjdaYuFoGQCzt2DhJUPPZMwdwzjU5o/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1OJodjsSkvGlDjzsnGr4FSba1BdU-WOR1/view?usp=sharing">recording</a></li><li>2021-03-18: MLIR AMX Vector Dialect ;
+<a href="https://drive.google.com/file/d/1uXZjudK9IN3ogE2U7uuSWFLibbuJotvW/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1s7YLDgJA8bQyUkcAvYGVDAh8Wg9UkaUH/view?usp=sharing">recording</a></li><li>2021-03-11: Sparse Tensor Type Discussion ;
+<a href="https://drive.google.com/file/d/1D9D5x-1O4oDrNxVg_Vg7CyJQDjSw28z5/view?usp=sharing">recording</a></li><li>2021-02-18 Compiler Support for Sparse Tensor Computations: A Status Update ;
+<a href="https://drive.google.com/file/d/1efPam1zD4vEbSwNJA8L1Vm56bIpy9mwW/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1X5qhGapHb0mIgW_Gzvmh14Yw-Z_2NUU7/view?usp=sharing">recording</a></li><li>2021-02-04 Discussion about Implicit Attribute Propagation ;
+<a href="https://drive.google.com/file/d/1vYZLvTP2tXcUsn1_1hhl8VjyA_MA6njI/view?usp=sharing">recording</a></li><li>2021-01-21 Data Layout RFC ;
+<a href="https://drive.google.com/file/d/10_Gomhn5JN-9C4670DfAre4pD5edEmNw/view?usp=sharing">recording</a></li><li>2021-01-14 Dialect Conversion & Type Conversion ;
+<a href="https://drive.google.com/file/d/1mSuoFqbEKy7hnNQ7_f3oxgZLiB0clCEg/view?usp=sharing">recording</a></li><li>2020-11-19: Type Conversions the Not-So-Hard Way: MLIR&rsquo;s new composable bufferize passes ;
+<a href="https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing">recording</a></li><li>2020-09-24: Buffer Allocation in MLIR ;
+<a href="https://drive.google.com/file/d/1SMp7fc3qiliwxcOViyUZDoG8KtajJd_d/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1HCJ5WMmQYmx1w9Ervg2n6eKIo0Y9qQi2/view?usp=sharing">recording</a></li><li>2020-09-10: TF Kernel Generator ;
+<a href="https://drive.google.com/file/d/1TZCF_Y5D8u6Hz8_WP5le4Zuh-0O4_7HO/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1WphQap3GXLTNtV0wp24U7Df8Qew9b4Ku/view?usp=sharing">recording</a></li><li>2020-08-13: Structured and Retargetable Compilation With Vectors ;
+<a href="https://drive.google.com/file/d/1_zPPxOILAIHOWoSM7GALwioYOGEgD2Xe/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/13jY4GTe7ZjFxqh3TCMBUh15HWoSGcswj/view?usp=sharing">recording</a></li><li>2020-07-30: SPIR-V dialect and lowerings ;
+<a href="https://drive.google.com/file/d/1WInMmnqvFpspHY5dYdiCok4fbfZkt23k/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1I71ze0dkvWiS6QADe2uRGO5MUYIGL7wn/view?usp=sharing">recording</a></li><li>2020-07-23: Asynchronous execution ;
+<a href="https://drive.google.com/file/d/1CEFTH8QDp6Iw6_Kng6wW14lEogHjTgjR/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1jajZf5-3q0SE8CFwT07LU4Xt0QU05eoF/view?usp=sharing">recording</a></li><li>2020-07-09:
+<a href=https://llvm.discourse.group/t/rfc-mlir-test-case-reducer-tool/1298/4>MLIR Test Case Reducer Tool</a>
+;
+<a href=https://llvm.discourse.group/t/rfc-starting-in-tree-development-of-python-bindings/1378/3>RFC Starting in-tree development of python bindings</a>
+; and
+<a href=https://llvm.discourse.group/t/rfc-rebooting-c-apis-for-core-ir/1380>RFC Rebooting C APIs for core IR</a>
+-
+<a href="https://drive.google.com/file/d/1kzcKNRklmSpKvkEgHzfcQXaCl2uY095d/view?usp=sharing">recording</a></li><li>2020-06-25: Basic GPU Compute Algorithm ;
+<a href="https://drive.google.com/file/d/1DPLiZwRVRBIVmAZynEcoQzXzOciqDe-x/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1OxvFe55TVpHDckFEOt4k-uLqaV9K-xz0/view?usp=sharing">recording</a></li><li>2020-04-16: MLIR on GPUs ;
+<a href="https://drive.google.com/open?id=1up9eU1oXONZV3qq22KABkGSJqqadPVY_">slides</a>
+-
+<a href="https://drive.google.com/open?id=1Qn064zG_U7Sa0FC9KLTWb68_gcMGpwU3">recording</a></li><li>2020-04-09: Technical discussion on TCP ;
+<a href="https://drive.google.com/open?id=1iljcpTQ5NPaMfGpoPDFml1XkYxjK_6A4">slides</a>
+-
+<a href="https://drive.google.com/open?id=1jSPa8TwPKUt0WuLquGc8OgSUVYJHMvWZ">recording</a></li><li>2020-03-05: Shape Dialect ;
+<a href="https://drive.google.com/open?id=1w_aDOOT5HRnvlkEYE24bGP1XFjMBhIUK">slides</a>
+-
+<a href="https://drive.google.com/open?id=1DERBP5oqqc98xfAp_73HCPkraUqM9qgS">recording</a></li><li>2020-01-24: Thoughts on Tensor Code Generation in MLIR ;
+<a href="https://docs.google.com/presentation/d/1M44If0Lw2lnrlyE_xNU1WOmXWxLo9FibMwdUbrAhOhU/edit#slide=id.g5fd22bdf8c_0_0">slides</a>
+-
+<a href="https://drive.google.com/open?id=1PKY5yVEL0Dl5UHaok4NgpxnbwXbi5pxS">recording</a></li><li>2019-12-19: Interpreted Pattern Match Execution ;
+<a href=https://docs.google.com/presentation/d/1U3AHtvn_ONR2D4-ENbghYjqsgocu0VPw_2LLYj_A7Sc/edit>slides</a>
+-
+<a href=https://drive.google.com/file/d/1c_GfPfLVtew-Kg25pJayJM9qrlI1hxR-/view>recording</a></li><li>2019-12-12: GPUs in MLIR ;
+<a href=https://docs.google.com/presentation/d/1LdFxf7c_2T6eCV4n2poMhophVlz0YV4NPL0E-7_Y5fU/view>slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1LqxzAf4IDgEsPyBf3lUeOM7hOvc6SXpe/view?usp=sharing">recording</a></li><li>2019-12-05: Structured Ops ;
+<a href="https://docs.google.com/presentation/d/1P-j1GrH6Q5gLBjao0afQ-GfvcAeF-QU4GXXeSy0eJ9I/edit?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1SXsHWpnmMYH08g9Mx7vbGFWdF1s0yF6t/view?usp=sharing">recording</a></li><li>2019-10-10: Interfaces in MLIR ;
+<a href=https://docs.google.com/presentation/d/1sOh0hYzK7rpXTqd1BwZVe2FmdROpw6lxxkYVJ5D2UVQ/view>slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/19DLG5edB7YYkB9hI27t1oC_2kQa23qG4/view?usp=sharing">recording</a></li><li>2019-10-03: Layout changes to MLIR Tensor and MemRef Types ;
+<a href="https://docs.google.com/presentation/d/1C6Ypldo7EtiR5V2rLlTO_k2cHAQk2S_IN2FXTuxuNx8/edit?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1sPv8BqhoWq0lTFJW9yLRWEELY0j6jRDR/view?usp=sharing">recording</a></li><li>2019-08-29 & 2019-09-12: Table-driven Op Definitions and Rewrites ;
+slides
+<a href="https://drive.google.com/a/google.com/file/d/1qdd5XKcR1zMFY_2MnVRmlb3__vvuAmwY/view?usp=sharing">part 1</a>
+/
+<a href="https://drive.google.com/a/google.com/file/d/1f7Ko5GRD0gVoO6zZviSWxlY1S49w6tXI/view?usp=sharing">part 2</a>
+-
+recording
+<a href="https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0xZMxzzwWxeGzx-6WK/view?usp=sharing">part 1</a>
+/
+<a href="https://drive.google.com/a/google.com/file/d/1QqXIwjQb7oqfkS8-hnd0QK7UlNbEYE9q/view?usp=sharing">part 2</a></li><li>2019-08-08: What is an MLIR Dialect? ;
+<a href="https://drive.google.com/a/google.com/file/d/1qJaDOaLm3jsTVF6StAKcE1mv4NWUBYtH/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/109XCagPGZf4FgugkCCwHHdv_vrQmbmhT/view?usp=sharing">recording</a></li><li>2019-07-25: MLIR Operation Legalization Framework ;
+<a href="https://drive.google.com/a/google.com/file/d/1x1jpMiIjX_PAs_Cj91Fm70rt6lX4IsaO/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1gxUNtY46DVJ2Ev3dAFRAtrRKj4Uglc9i/view?usp=sharing">recording</a></li><li>2019-07-18: A proposal to add layout to Tensor ;
+<a href="https://drive.google.com/open?id=10m6bzwpC70bqLoxu3lAQjDXPK2RVXiBl">slides</a>
+-
+<a href="https://drive.google.com/open?id=17RKrAIMDS99cbfF9WVBPrDyo7xZxvh_T">recording</a></li></ul><h3 id=using-mlir-1>Using MLIR</h3><ul><li>2021-05-27: Quantum-Classical Compilation with MLIR ;
+<a href=/OpenMeetings/2021-05-27-Quantum-Classical-Compilation-with-MLIR.pdf>slides</a>
+-
+<a href="https://www.youtube.com/watch?v=_qXCzP5YAZY">recording</a></li><li>2021-04-29: Tensor Processing Primitives ;
+<a href="https://drive.google.com/file/d/1b8gXD0cdAwl1mxtzb4V1joIOP-exquhv/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/173lk_RqJvKhS6W57vu_zXVpKD7ESjegP/view?usp=sharing">recording</a></li><li>2021-03-04: MLIR based Numba backend ;
+<a href="https://drive.google.com/file/d/114r8KHlPf1eyZiIX5ce8-ckm40xXzUzP/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1C6ecGtSK9-c_LuIT7CdHp-BQl3IBqpmV/view?usp=sharing">recording</a></li><li>2021-02-11: Polygeist: An affine C frontend for MLIR ;
+<a href="https://drive.google.com/file/d/1YJhPBpW77WX53Rxxt2TLbEhdbrOFwDy4/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1P14UrXMlR6WbHR_YrSJVsb7h3cLdr5-h/view?usp=sharing">recording</a></li><li>2020-11-05: COMET: Domain Specific Compilation for Computational Chemistry ;
+<a href="https://drive.google.com/file/d/12X3E9AyCqHf5TqxrRQZhbqCORoFVuAzq/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1Zag7071CtbOyTQ7LhNhlyE0TpSLn9ahJ/view?usp=sharing">recording</a></li><li>2020-10-29: Using MLIR for Multi-Dimensional Homomorphism ;
+<a href="https://drive.google.com/file/d/1vgAGVhv8oIl0yOvbRUAfje7Gg00-GU6U/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1bS4vapyzf7705wWj7t3WzwWkcbxXZyF6/view?usp=sharing">recording</a></li><li>2020-10-22: Fusion of Elementwise operations with Linalg on tensors ;
+<a href="https://drive.google.com/file/d/1n6mDw3XlNB8qmltbVgdCzrgpED25KHEF/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1hNulnBUAaXmLJG30UgUAJgkQWupXd7T7/view?usp=sharing">recording</a></li><li>2020-10-01: NPComp update ;
+<a href="https://drive.google.com/file/d/1YIO7CfZOobPZTxowr8gs1BOQMgUKXH_G/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/file/d/1EsOc-4ZtBEK9h6VENaO0qeGsm5FZhrSr/view?usp=sharing">recording</a></li><li>2020-08-20: IREE CodeGen ;
+<a href=https://docs.google.com/presentation/d/1NetHjKAOYg49KixY5tELqFp6Zr2v8_ujGzWZ_3xvqC8/edit>slides</a>
+-
+<a href="https://drive.google.com/file/d/1325zKXnNIXGw3cdWrDWJ1-bp952wvC6W/view?usp=sharing">recording</a>
+-
+<a href="https://docs.google.com/document/d/1w2Eg8p5BtZ6DrTa279V2qXLWfPob11NK47SDiBWHSJc/edit?usp=sharing">transcript</a></li><li>2020-08-06: MultiLevel Tactics: Lifting loops in MLIR ;
+<a href=https://drive.google.com/file/d/1pyBANtcAFgSC0c0Jz85a9ZT794lE9XJY>slides</a>
+-
+<a href=https://drive.google.com/file/d/1mfvAiJck4WDDcSPaWbc3D_Dvh86pp3MD>recording</a></li><li>2020-05-21: MLIR case study: AVX512 codegen for Vector dialect ;
+<a href="https://drive.google.com/open?id=19nTpBi3Wzye75Sp6nAH-PyqxFyhDn78J">slides</a>
+-
+<a href="https://drive.google.com/open?id=1t6vnv9btkpjBlqJf0zH5ujiLTBUYKSzQ">recording</a></li><li>2020-05-14: RISE: A Functional Pattern-based Dialect in MLIR ;
+<a href="https://drive.google.com/open?id=1curA4skh2DsJ2kVHynoJqQyUaJr74xkI">slides</a>
+-
+<a href="https://drive.google.com/open?id=18DNvegfHcEQfkKktkBhmhUecyNunfy2s">recording</a></li><li>2020-04-23: LLHD: A Multi-level Intermediate Representation for Hardware Description ;
+<a href="https://drive.google.com/open?id=1t4wh2lcEdH_6z61a9rEn5EyvBAzGF7FB">slides</a>
+-
+<a href="https://drive.google.com/open?id=16X6UMZLRtcCqvYQ1FyTk-xaxei0Fxo50">additional slides</a>
+-
+<a href="https://drive.google.com/open?id=1x7B0IRdcJ5JBQvfHbPUBcShbTFCMlrbe">recording</a>
+;</li><li>2020-03-26: Tile Dialect ;
+<a href="https://drive.google.com/open?id=1uud3MGsC5Pc2VvqtsV57AjSrIoW5ZpVm">slides</a>
+-
+<a href="https://drive.google.com/open?id=1Ely0XjuQ3HJo6Is9RY08Ef3QvVFryiPE">recording</a></li><li>2020-03-19: TFRT Deep Dive ;
+<a href="https://drive.google.com/open?id=1Vx_H3faqbf0cCml9KO62fDtp0RGK2gxd">slides</a>
+-
+<a href="https://drive.google.com/open?id=1KEXLb2pke1MVapPvj8ndGz7nsYWQtvmo">recording</a></li><li>2020-02-27: End-to-end Dynamic Shape Support in MLIR ;
+<a href="https://drive.google.com/open?id=1ZDzXluB2uVc35r1fBNK5jW6rY8s82pc_">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1_uEISlV5MUWdG9faKAdKlCWnPtGjRC-D/view?usp=sharing">recording</a></li><li>2020-01-30: IREE: MLIR-based End-to-End ML Tooling ;
+<a href="https://drive.google.com/open?id=1RCQ4ZPQFK9cVgu3IH1e5xbrBcqy7d_cEZ578j84OvYI">slides</a>
+-
+<a href="https://drive.google.com/open?id=1os9FaPodPI59uj7JJI3aXnTzkuttuVkR">recording</a></li><li>2020-01-16: nGraph Dialect: High-Level Graph Optimizations for Deep Learning Workloads ;
+<a href="https://drive.google.com/open?id=1lr0xjilGb0foKmYGF4mdCsqEjeMSNC55">slides</a>
+-
+<a href="https://drive.google.com/open?id=1BEzorUrC5VhYXvCPaTIawkudxiKhmruy">recording</a></li><li>2019-11-21: TensorFlow Saved Model Dialect ;
+<a href="https://docs.google.com/presentation/d/1R6H_Eax6sXT2-ffpmF5zjHwS1F22D2DF2ty7EvdAUUw/edit?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1L-jpiRgMfLdsDnQpQMN3ns5jsJC07z2l/view?usp=sharing">recording</a></li><li>2019-11-14: A Compiler Intermediate Representation for Stencils ;
+<a href="https://drive.google.com/open?id=19pSpEsi4I9-MKLRodD-po82HFCWLDAAc">slides</a>
+-
+<a href="https://drive.google.com/open?id=1uEvEm6xrk1EE_7Xib3sV9zO0j_857joc">recording</a></li><li>2019-11-07: The Stripe dialect: An alternate approach for expressing affine computations ;
+<a href="https://docs.google.com/presentation/d/10tMCVZwMHlQPJnKo2nkbroFyAsew8j8wEaxk6Fdojzs/edit#slide=id.p1">slides</a>
+-
+<a href="https://drive.google.com/open?id=1FLdhNgTii9x5o1rMgN4ibB7Wkuq6Pyye">recording</a></li><li>2019-09-19: S4TF (Swift for TensorFlow): Swift as syntactic sugar for MLIR ;
+<a href="https://drive.google.com/open?id=1efFc9BpEkXvXv6XKND8Nr9vZumqYx6E1">slides</a>
+-
+<a href="https://drive.google.com/open?id=1IuPdYlNPCKMSATGK2DF5IxFitwVbSv0I">recording</a></li><li>2019-08-22: Tensor Attribute Layout in MKL DNN ;
+<a href="https://drive.google.com/a/google.com/file/d/1V7cFsU-Fs57lHlAN6ywN1DRn0HB3FGqZ/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1e5HlIOShR0tWb2v77hT_3Q7zAIo5HxGM/view?usp=sharing">recording</a></li><li>2019-08-15: Building TensorFlow Converter Tools with MLIR ;
+<a href="https://drive.google.com/a/google.com/file/d/1ZCLTiEm5cVON34JrnUTvm5XdhjYz3DXV/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1Rj_7bJ6CUPDQI8O2E9cz6FULuY-y9Qx1/view?usp=sharing">recording</a></li><li>2019-08-01: TensorFlow Graph Representation in MLIR ;
+<a href="https://drive.google.com/a/google.com/file/d/1Xaa3tuxqiRBVHioIB74BiFwyWZSq0c9m/view?usp=sharing">slides</a>
+-
+<a href="https://drive.google.com/a/google.com/file/d/1sk6iTcBfoXcmgJrGwPlpcI1nZdrG2qkX/view?usp=sharing">recording</a></li></ul><h2 id=publications>Publications</h2><h3 id=about-mlir-and-mlir-components-2>About MLIR and MLIR Components</h3><ul><li><a href=https://arxiv.org/abs/2002.11054>MLIR: A Compiler Infrastructure for the End of Moore&rsquo;s Law</a>
+-
+Chris Lattner, Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar,
+River Riddle, Tatiana Shpeisman, Nicolas Vasilache, Oleksandr Zinenko</li></ul><h3 id=using-mlir-2>Using MLIR</h3><ul><li><a href=https://arxiv.org/abs/2101.11365>A MLIR Dialect for Quantum Assembly Languages</a>
+:</li><li><a href=https://systemcall.eu/2020/10/22/on-using-mlir-for-verona/>On using MLIR for Verona</a></li><li><a href=https://arxiv.org/abs/2008.08272>Compiling ONNX Neural Network Models Using MLIR</a></li><li><a href=https://math.mit.edu/research/highschool/primes/materials/2020/Govindarajan-Moses.pdf>SyFER-MLIR: Integrating Fully Homomorphic Encryption Into the MLIR Compiler Framework</a></li><li><a href=https://arxiv.org/abs/2005.13014>Domain-Specific Multi-Level IR Rewriting for GPU</a></li><li><a href=https://arxiv.org/abs/2003.00532>High Performance Code Generation in MLIR: An Early Case Study with GEMM</a>
+-
+Uday Bondhugula</li></ul><h2 id=upcoming-talks-or-presentations>Upcoming talks or presentations</h2><p>The schedule for the open design meetings and upcoming presentations can be found on the Agenda document of the
+<a href=https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md>SIG</a>
+. Additional talks or conferences of interest will be added below.</p><h2 id=past-conferences-and-workshops>Past conferences and workshops</h2><ul><li>2020/02/22:
+<a href=https://www.c4ml.org/>C4ML 2020: Compilers for Machine Learning</a>
+workshop co-located with CGO in San Diego (Multiple MLIR talks!)</li><li>2020/01/20:
+<a href=https://www.sigarch.org/call-contributions/accml-2020-hipeac-workshop-on-accelerated-machine-learning/>AccML 2020: HiPEAC Workshop on Accelerated Machine Learning</a>
+.</li></ul><div class=edit-meta><br><a href=https://github.com/llvm/mlir-www//edit/main/website/content/talks/_index.md class=edit-page><i class="fas fa-pen-square"></i>Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=/><i class="fas fa-arrow-left" aria-hidden=true></i>Prev -</a>
+<a class="nav nav-next" href=/users/ title="Users of MLIR">Next - Users of MLIR <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li class="parent active"><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class=has-sub-menu><a href=/docs/>Code Documentation<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class=has-sub-menu><a href=/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

@@ -1,0 +1,39 @@
+<map id="mlir::ConversionPattern" name="mlir::ConversionPattern">
+<area shape="rect" id="node4" href="$classmlir_1_1ConvertToLLVMPattern.html" title="Base class for operation conversions targeting the LLVM IR dialect. " alt="" coords="614,322,814,349"/>
+<area shape="rect" id="node22" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="OpOrInterfaceConversionPatternBase is a wrapper around ConversionPattern that allows for matching and..." alt="" coords="581,818,847,859"/>
+<area shape="rect" id="node34" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="mlir::detail::OpOrInterface\lConversionPatternBase\&lt; AssertOp \&gt;" alt="" coords="1025,652,1288,694"/>
+<area shape="rect" id="node35" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="mlir::detail::OpOrInterface\lConversionPatternBase\&lt; OpTy \&gt;" alt="" coords="1039,718,1274,759"/>
+<area shape="rect" id="node36" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="mlir::detail::OpOrInterface\lConversionPatternBase\&lt; ReturnOp \&gt;" alt="" coords="1025,932,1288,974"/>
+<area shape="rect" id="node37" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="mlir::detail::OpOrInterface\lConversionPatternBase\&lt; SPIRVOp \&gt;" alt="" coords="1027,998,1286,1039"/>
+<area shape="rect" id="node38" href="$structmlir_1_1detail_1_1OpOrInterfaceConversionPatternBase.html" title="mlir::detail::OpOrInterface\lConversionPatternBase\&lt; async\l::YieldOp \&gt;" alt="" coords="1043,1064,1270,1120"/>
+<area shape="rect" id="node2" href="$classmlir_1_1RewritePattern.html" title="RewritePattern is the common base class for all DAG to DAG replacements. " alt="" coords="157,825,308,852"/>
+<area shape="rect" id="node3" href="$classmlir_1_1Pattern.html" title="This class contains all of the data related to a pattern, but does not contain any methods or logic f..." alt="" coords="5,825,108,852"/>
+<area shape="rect" id="node5" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; AssertOp \&gt;" alt="" coords="1501,591,1720,632"/>
+<area shape="rect" id="node7" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; gpu::GPUFuncOp \&gt;" alt="" coords="1501,516,1720,558"/>
+<area shape="rect" id="node9" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; gpu::ReturnOp \&gt;" alt="" coords="1501,172,1720,214"/>
+<area shape="rect" id="node11" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; Op \&gt;" alt="" coords="1501,447,1720,488"/>
+<area shape="rect" id="node13" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; ScalableLoadOp \&gt;" alt="" coords="1501,32,1720,74"/>
+<area shape="rect" id="node15" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="mlir::ConvertOpToLLVMPattern\l\&lt; ScalableStoreOp \&gt;" alt="" coords="1501,100,1720,142"/>
+<area shape="rect" id="node17" href="$structmlir_1_1AllocLikeOpLLVMLowering.html" title="Lowering for AllocOp and AllocaOp. " alt="" coords="1044,137,1269,164"/>
+<area shape="rect" id="node18" href="$classmlir_1_1ConvertOpToLLVMPattern.html" title="Utility class for operation conversions targeting the LLVM dialect that match exactly one source oper..." alt="" coords="1047,315,1266,356"/>
+<area shape="rect" id="node6" href="$classAssertOpLowering.html" title="AssertOpLowering" alt="" coords="1839,636,1979,662"/>
+<area shape="rect" id="node8" href="$structmlir_1_1GPUFuncOpLowering.html" title="mlir::GPUFuncOpLowering" alt="" coords="1813,524,2004,550"/>
+<area shape="rect" id="node10" href="$structmlir_1_1GPUReturnOpLowering.html" title="mlir::GPUReturnOpLowering" alt="" coords="1807,180,2010,206"/>
+<area shape="rect" id="node12" href="$structmlir_1_1GPUIndexIntrinsicOpLowering.html" title="mlir::GPUIndexIntrinsicOp\lLowering\&lt; Op, XOp, YOp, ZOp \&gt;" alt="" coords="1793,447,2024,488"/>
+<area shape="rect" id="node14" href="$structScalableLoadOpLowering.html" title="ScalableLoadOpLowering" alt="" coords="1816,40,2001,66"/>
+<area shape="rect" id="node16" href="$structScalableStoreOpLowering.html" title="ScalableStoreOpLowering" alt="" coords="1815,108,2003,134"/>
+<area shape="rect" id="node19" href="$classmlir_1_1OneToOneConvertToLLVMPattern.html" title="Generic implementation of one&#45;to&#45;one conversion from &quot;SourceOp&quot; to &quot;TargetOp&quot; where the latter belong..." alt="" coords="1477,250,1744,291"/>
+<area shape="rect" id="node20" href="$structmlir_1_1OpToFuncCallLowering.html" title="Rewriting that replace SourceOp with a CallOp to f32Func or f64Func depending on the element type tha..." alt="" coords="1510,315,1711,356"/>
+<area shape="rect" id="node21" href="$classmlir_1_1VectorConvertToLLVMPattern.html" title="Basic lowering implementation to rewrite Ops with just one result to the LLVM Dialect. " alt="" coords="1490,380,1731,422"/>
+<area shape="rect" id="node23" href="$structmlir_1_1OpConversionPattern.html" title="OpConversionPattern is a wrapper around ConversionPattern that allows for matching and rewriting agai..." alt="" coords="1060,848,1253,890"/>
+<area shape="rect" id="node33" href="$structmlir_1_1OpInterfaceConversionPattern.html" title="OpInterfaceConversionPattern is a wrapper around ConversionPattern that allows for matching and rewri..." alt="" coords="1054,783,1259,824"/>
+<area shape="rect" id="node24" href="$structmlir_1_1OpConversionPattern.html" title="mlir::OpConversionPattern\l\&lt; AssertOp \&gt;" alt="" coords="1514,656,1707,698"/>
+<area shape="rect" id="node25" href="$structmlir_1_1OpConversionPattern.html" title="mlir::OpConversionPattern\l\&lt; OpTy \&gt;" alt="" coords="1514,784,1707,826"/>
+<area shape="rect" id="node27" href="$structmlir_1_1OpConversionPattern.html" title="mlir::OpConversionPattern\l\&lt; ReturnOp \&gt;" alt="" coords="1514,856,1707,898"/>
+<area shape="rect" id="node29" href="$structmlir_1_1OpConversionPattern.html" title="mlir::OpConversionPattern\l\&lt; SPIRVOp \&gt;" alt="" coords="1514,934,1707,975"/>
+<area shape="rect" id="node31" href="$structmlir_1_1OpConversionPattern.html" title="mlir::OpConversionPattern\l\&lt; async::YieldOp \&gt;" alt="" coords="1514,1024,1707,1066"/>
+<area shape="rect" id="node26" href="$classForwardOperands.html" title="ForwardOperands\&lt; OpTy \&gt;" alt="" coords="1809,792,2008,818"/>
+<area shape="rect" id="node28" href="$classReturnOpTypeConversion.html" title="ReturnOpTypeConversion" alt="" coords="1816,864,2001,890"/>
+<area shape="rect" id="node30" href="$classmlir_1_1SPIRVToLLVMConversion.html" title="mlir::SPIRVToLLVMConversion\l\&lt; SPIRVOp \&gt;" alt="" coords="1802,934,2015,975"/>
+<area shape="rect" id="node32" href="$classYieldOpLowering.html" title="YieldOpLowering" alt="" coords="1843,1032,1974,1058"/>
+</map>

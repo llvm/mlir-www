@@ -1,0 +1,296 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Defining Dialect Attributes and Types - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.80.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Tutorials/DefiningAttributesAndTypes/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://mlir.llvm.org/js/bundle.js></script><script type=text/javascript src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&list_id=177877&order=changeddate%20DESC%2Cpriority%2Cbug_severity&product=MLIR&query_format=specific">Bugs</a></li><li><a href=/LogoAssets/>Logo Assets</a></li></ul></nav></div><div class=content-container><main><h1>Defining Dialect Attributes and Types</h1><p>This document is a quickstart to defining dialect specific extensions to the
+<a href=/docs/LangRef/#attributes>attribute</a>
+and
+<a href=/docs/LangRef/#type-system>type</a>
+systems in
+MLIR. The main part of this tutorial focuses on defining types, but the
+instructions are nearly identical for defining attributes.</p><p>See
+<a href=/docs/LangRef/>MLIR specification</a>
+for more information about MLIR, the
+structure of the IR, operations, etc.</p><h2 id=types>Types&nbsp;<a class=headline-hash href=#types>¶</a></h2><p>Types in MLIR (like attributes, locations, and many other things) are
+value-typed. This means that instances of <code>Type</code> are passed around by-value, as
+opposed to by-pointer or by-reference. The <code>Type</code> class in itself acts as a
+wrapper around an internal storage object that is uniqued within an instance of
+an <code>MLIRContext</code>.</p><h3 id=defining-the-type-class>Defining the type class&nbsp;<a class=headline-hash href=#defining-the-type-class>¶</a></h3><p>As described above, <code>Type</code> objects in MLIR are value-typed and rely on having an
+implicit internal storage object that holds the actual data for the type. When
+defining a new <code>Type</code> it isn&rsquo;t always necessary to define a new storage class.
+So before defining the derived <code>Type</code>, it&rsquo;s important to know which of the two
+classes of <code>Type</code> we are defining:</p><p>Some types are <em>singleton</em> in nature, meaning they have no parameters and only
+ever have one instance, like the
+<a href=/docs/Dialects/Builtin/#indextype><code>index</code> type</a>
+.</p><p>Other types are <em>parametric</em>, and contain additional information that
+differentiates different instances of the same <code>Type</code>. For example the
+<a href=/docs/Dialects/Builtin/#integertype><code>integer</code> type</a>
+contains a bitwidth, with <code>i8</code> and
+<code>i16</code> representing different instances of
+<a href=/docs/Dialects/Builtin/#integertype><code>integer</code> type</a>
+. <em>Parametric</em> may also contain a
+mutable component, which can be used, for example, to construct self-referring
+recursive types. The mutable component <em>cannot</em> be used to differentiate
+instances of a type class, so usually such types contain other parametric
+components that serve to identify them.</p><h4 id=singleton-types>Singleton types&nbsp;<a class=headline-hash href=#singleton-types>¶</a></h4><p>For singleton types, we can jump straight into defining the derived type class.
+Given that only one instance of such types may exist, there is no need to
+provide our own storage class.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// This class defines a simple parameterless singleton type. All derived types
+</span><span class=c1>/// must inherit from the CRTP class &#39;Type::TypeBase&#39;. It takes as template
+</span><span class=c1>/// parameters the concrete type (SimpleType), the base class to use (Type),
+</span><span class=c1>/// the internal storage class (the default TypeStorage here), and an optional
+</span><span class=c1>/// set of type traits and interfaces(detailed below).
+</span><span class=c1></span><span class=k>class</span> <span class=nc>SimpleType</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Type</span><span class=o>::</span><span class=n>TypeBase</span><span class=o>&lt;</span><span class=n>SimpleType</span><span class=p>,</span> <span class=n>Type</span><span class=p>,</span> <span class=n>TypeStorage</span><span class=o>&gt;</span> <span class=p>{</span>
+<span class=k>public</span><span class=o>:</span>
+  <span class=c1>/// Inherit some necessary constructors from &#39;TypeBase&#39;.
+</span><span class=c1></span>  <span class=k>using</span> <span class=n>Base</span><span class=o>::</span><span class=n>Base</span><span class=p>;</span>
+
+  <span class=c1>/// The `TypeBase` class provides the following utility methods for
+</span><span class=c1></span>  <span class=c1>/// constructing instances of this type:
+</span><span class=c1></span>  <span class=c1>/// static SimpleType get(MLIRContext *ctx);
+</span><span class=c1></span><span class=p>};</span>
+</code></pre></div><h4 id=parametric-types>Parametric types&nbsp;<a class=headline-hash href=#parametric-types>¶</a></h4><p>Parametric types are those with additional construction or uniquing constraints,
+that allow for representing multiple different instances of a single class. As
+such, these types require defining a type storage class to contain the
+parametric data.</p><h5 id=defining-a-type-storage>Defining a type storage&nbsp;<a class=headline-hash href=#defining-a-type-storage>¶</a></h5><p>Type storage objects contain all of the data necessary to construct and unique a
+parametric type instance. The storage classes must obey the following:</p><ul><li>Inherit from the base type storage class <code>TypeStorage</code>.</li><li>Define a type alias, <code>KeyTy</code>, that maps to a type that uniquely identifies
+an instance of the derived type.</li><li>Provide a construction method that is used to allocate a new instance of the
+storage class.<ul><li><code>static Storage *construct(TypeStorageAllocator &, const KeyTy &key)</code></li></ul></li><li>Provide a comparison method between the storage and <code>KeyTy</code>.<ul><li><code>bool operator==(const KeyTy &) const</code></li></ul></li><li>Provide a method to generate the <code>KeyTy</code> from a list of arguments passed to
+the uniquer. (Note: This is only necessary if the <code>KeyTy</code> cannot be default
+constructed from these arguments).<ul><li><code>static KeyTy getKey(Args...&& args)</code></li></ul></li><li>Provide a method to hash an instance of the <code>KeyTy</code>. (Note: This is not
+necessary if an <code>llvm::DenseMapInfo&lt;KeyTy></code> specialization exists)<ul><li><code>static llvm::hash_code hashKey(const KeyTy &)</code></li></ul></li></ul><p>Let&rsquo;s look at an example:</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// Here we define a storage class for a ComplexType, that holds a non-zero
+</span><span class=c1>/// integer and an integer type.
+</span><span class=c1></span><span class=k>struct</span> <span class=nc>ComplexTypeStorage</span> <span class=o>:</span> <span class=k>public</span> <span class=n>TypeStorage</span> <span class=p>{</span>
+  <span class=n>ComplexTypeStorage</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>Type</span> <span class=n>integerType</span><span class=p>)</span>
+      <span class=o>:</span> <span class=n>nonZeroParam</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>),</span> <span class=n>integerType</span><span class=p>(</span><span class=n>integerType</span><span class=p>)</span> <span class=p>{}</span>
+
+  <span class=c1>/// The hash key for this storage is a pair of the integer and type params.
+</span><span class=c1></span>  <span class=k>using</span> <span class=n>KeyTy</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>pair</span><span class=o>&lt;</span><span class=kt>unsigned</span><span class=p>,</span> <span class=n>Type</span><span class=o>&gt;</span><span class=p>;</span>
+
+  <span class=c1>/// Define the comparison function for the key type.
+</span><span class=c1></span>  <span class=kt>bool</span> <span class=k>operator</span><span class=o>==</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=n>key</span> <span class=o>==</span> <span class=n>KeyTy</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>integerType</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Define a hash function for the key type.
+</span><span class=c1></span>  <span class=c1>/// Note: This isn&#39;t necessary because std::pair, unsigned, and Type all have
+</span><span class=c1></span>  <span class=c1>/// hash functions already available.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>llvm</span><span class=o>::</span><span class=n>hash_code</span> <span class=n>hashKey</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=n>llvm</span><span class=o>::</span><span class=n>hash_combine</span><span class=p>(</span><span class=n>key</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>key</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Define a construction function for the key type.
+</span><span class=c1></span>  <span class=c1>/// Note: This isn&#39;t necessary because KeyTy can be directly constructed with
+</span><span class=c1></span>  <span class=c1>/// the given parameters.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>KeyTy</span> <span class=nf>getKey</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>Type</span> <span class=n>integerType</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=n>KeyTy</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>integerType</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Define a construction method for creating a new instance of this storage.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>ComplexTypeStorage</span> <span class=o>*</span><span class=nf>construct</span><span class=p>(</span><span class=n>TypeStorageAllocator</span> <span class=o>&amp;</span><span class=n>allocator</span><span class=p>,</span>
+                                       <span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>allocate</span><span class=o>&lt;</span><span class=n>ComplexTypeStorage</span><span class=o>&gt;</span><span class=p>())</span>
+        <span class=n>ComplexTypeStorage</span><span class=p>(</span><span class=n>key</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>key</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// The parametric data held by the storage class.
+</span><span class=c1></span>  <span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>;</span>
+  <span class=n>Type</span> <span class=n>integerType</span><span class=p>;</span>
+<span class=p>};</span>
+</code></pre></div><h5 id=type-class-definition>Type class definition&nbsp;<a class=headline-hash href=#type-class-definition>¶</a></h5><p>Now that the storage class has been created, the derived type class can be
+defined. This structure is similar to
+<a href=#singleton-types>singleton types</a>
+,
+except that a bit more of the functionality provided by <code>Type::TypeBase</code> is put
+to use.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// This class defines a parametric type. All derived types must inherit from
+</span><span class=c1>/// the CRTP class &#39;Type::TypeBase&#39;. It takes as template parameters the
+</span><span class=c1>/// concrete type (ComplexType), the base class to use (Type), the storage
+</span><span class=c1>/// class (ComplexTypeStorage), and an optional set of traits and
+</span><span class=c1>/// interfaces(detailed below).
+</span><span class=c1></span><span class=k>class</span> <span class=nc>ComplexType</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Type</span><span class=o>::</span><span class=n>TypeBase</span><span class=o>&lt;</span><span class=n>ComplexType</span><span class=p>,</span> <span class=n>Type</span><span class=p>,</span>
+                                          <span class=n>ComplexTypeStorage</span><span class=o>&gt;</span> <span class=p>{</span>
+<span class=k>public</span><span class=o>:</span>
+  <span class=c1>/// Inherit some necessary constructors from &#39;TypeBase&#39;.
+</span><span class=c1></span>  <span class=k>using</span> <span class=n>Base</span><span class=o>::</span><span class=n>Base</span><span class=p>;</span>
+
+  <span class=c1>/// This method is used to get an instance of the &#39;ComplexType&#39;. This method
+</span><span class=c1></span>  <span class=c1>/// asserts that all of the construction invariants were satisfied. To
+</span><span class=c1></span>  <span class=c1>/// gracefully handle failed construction, getChecked should be used instead.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>ComplexType</span> <span class=nf>get</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>param</span><span class=p>,</span> <span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Call into a helper &#39;get&#39; method in &#39;TypeBase&#39; to get a uniqued instance
+</span><span class=c1></span>    <span class=c1>// of this type. All parameters to the storage class are passed after the
+</span><span class=c1></span>    <span class=c1>// context.
+</span><span class=c1></span>    <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>type</span><span class=p>.</span><span class=n>getContext</span><span class=p>(),</span> <span class=n>param</span><span class=p>,</span> <span class=n>type</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// This method is used to get an instance of the &#39;ComplexType&#39;. If any of the
+</span><span class=c1></span>  <span class=c1>/// construction invariants are invalid, errors are emitted with the provided
+</span><span class=c1></span>  <span class=c1>/// `emitError` function and a null type is returned.
+</span><span class=c1></span>  <span class=c1>/// Note: This method is completely optional.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>ComplexType</span> <span class=nf>getChecked</span><span class=p>(</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=n>InFlightDiagnostic</span><span class=p>()</span><span class=o>&gt;</span> <span class=n>emitError</span><span class=p>,</span>
+                                <span class=kt>unsigned</span> <span class=n>param</span><span class=p>,</span> <span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Call into a helper &#39;getChecked&#39; method in &#39;TypeBase&#39; to get a uniqued
+</span><span class=c1></span>    <span class=c1>// instance of this type. All parameters to the storage class are passed
+</span><span class=c1></span>    <span class=c1>// after the context.
+</span><span class=c1></span>    <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>getChecked</span><span class=p>(</span><span class=n>emitError</span><span class=p>,</span> <span class=n>type</span><span class=p>.</span><span class=n>getContext</span><span class=p>(),</span> <span class=n>param</span><span class=p>,</span> <span class=n>type</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// This method is used to verify the construction invariants passed into the
+</span><span class=c1></span>  <span class=c1>/// &#39;get&#39; and &#39;getChecked&#39; methods. Note: This method is completely optional.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>LogicalResult</span> <span class=nf>verify</span><span class=p>(</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=n>InFlightDiagnostic</span><span class=p>()</span><span class=o>&gt;</span> <span class=n>emitError</span><span class=p>,</span>
+                              <span class=kt>unsigned</span> <span class=n>param</span><span class=p>,</span> <span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Our type only allows non-zero parameters.
+</span><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>param</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+      <span class=k>return</span> <span class=n>emitError</span><span class=p>()</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;non-zero parameter passed to &#39;ComplexType&#39;&#34;</span><span class=p>;</span>
+    <span class=c1>// Our type also expects an integer type.
+</span><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>type</span><span class=p>.</span><span class=n>isa</span><span class=o>&lt;</span><span class=n>IntegerType</span><span class=o>&gt;</span><span class=p>())</span>
+      <span class=k>return</span> <span class=n>emitError</span><span class=p>()</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;non integer-type passed to &#39;ComplexType&#39;&#34;</span><span class=p>;</span>
+    <span class=k>return</span> <span class=n>success</span><span class=p>();</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Return the parameter value.
+</span><span class=c1></span>  <span class=kt>unsigned</span> <span class=nf>getParameter</span><span class=p>()</span> <span class=p>{</span>
+    <span class=c1>// &#39;getImpl&#39; returns a pointer to our internal storage instance.
+</span><span class=c1></span>    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>nonZeroParam</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Return the integer parameter type.
+</span><span class=c1></span>  <span class=n>IntegerType</span> <span class=nf>getParameterType</span><span class=p>()</span> <span class=p>{</span>
+    <span class=c1>// &#39;getImpl&#39; returns a pointer to our internal storage instance.
+</span><span class=c1></span>    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>integerType</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>};</span>
+</code></pre></div><h4 id=mutable-types>Mutable types&nbsp;<a class=headline-hash href=#mutable-types>¶</a></h4><p>Types with a mutable component are special instances of parametric types that
+allow for mutating certain parameters after construction.</p><h5 id=defining-a-type-storage-1>Defining a type storage&nbsp;<a class=headline-hash href=#defining-a-type-storage-1>¶</a></h5><p>In addition to the requirements for the type storage class for parametric types,
+the storage class for types with a mutable component must additionally obey the
+following.</p><ul><li>The mutable component must not participate in the storage <code>KeyTy</code>.</li><li>Provide a mutation method that is used to modify an existing instance of the
+storage. This method modifies the mutable component based on arguments,
+using <code>allocator</code> for any newly dynamically-allocated storage, and indicates
+whether the modification was successful.<ul><li><code>LogicalResult mutate(StorageAllocator &allocator, Args ...&& args)</code></li></ul></li></ul><p>Let&rsquo;s define a simple storage for recursive types, where a type is identified by
+its name and may contain another type including itself.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=c1>/// Here we define a storage class for a RecursiveType that is identified by its
+</span><span class=c1>/// name and contains another type.
+</span><span class=c1></span><span class=k>struct</span> <span class=nc>RecursiveTypeStorage</span> <span class=o>:</span> <span class=k>public</span> <span class=n>TypeStorage</span> <span class=p>{</span>
+  <span class=c1>/// The type is uniquely identified by its name. Note that the contained type
+</span><span class=c1></span>  <span class=c1>/// is _not_ a part of the key.
+</span><span class=c1></span>  <span class=k>using</span> <span class=n>KeyTy</span> <span class=o>=</span> <span class=n>StringRef</span><span class=p>;</span>
+
+  <span class=c1>/// Construct the storage from the type name. Explicitly initialize the
+</span><span class=c1></span>  <span class=c1>/// containedType to nullptr, which is used as marker for the mutable
+</span><span class=c1></span>  <span class=c1>/// component being not yet initialized.
+</span><span class=c1></span>  <span class=n>RecursiveTypeStorage</span><span class=p>(</span><span class=n>StringRef</span> <span class=n>name</span><span class=p>)</span> <span class=o>:</span> <span class=n>name</span><span class=p>(</span><span class=n>name</span><span class=p>),</span> <span class=n>containedType</span><span class=p>(</span><span class=k>nullptr</span><span class=p>)</span> <span class=p>{}</span>
+
+  <span class=c1>/// Define the comparison function.
+</span><span class=c1></span>  <span class=kt>bool</span> <span class=k>operator</span><span class=o>==</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span> <span class=k>return</span> <span class=n>key</span> <span class=o>==</span> <span class=n>name</span><span class=p>;</span> <span class=p>}</span>
+
+  <span class=c1>/// Define a construction method for creating a new instance of the storage.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>RecursiveTypeStorage</span> <span class=o>*</span><span class=nf>construct</span><span class=p>(</span><span class=n>StorageAllocator</span> <span class=o>&amp;</span><span class=n>allocator</span><span class=p>,</span>
+                                         <span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Note that the key string is copied into the allocator to ensure it
+</span><span class=c1></span>    <span class=c1>// remains live as long as the storage itself.
+</span><span class=c1></span>    <span class=k>return</span> <span class=k>new</span> <span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>allocate</span><span class=o>&lt;</span><span class=n>RecursiveTypeStorage</span><span class=o>&gt;</span><span class=p>())</span>
+        <span class=n>RecursiveTypeStorage</span><span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>copyInto</span><span class=p>(</span><span class=n>key</span><span class=p>));</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Define a mutation method for changing the type after it is created. In
+</span><span class=c1></span>  <span class=c1>/// many cases, we only want to set the mutable component once and reject
+</span><span class=c1></span>  <span class=c1>/// any further modification, which can be achieved by returning failure from
+</span><span class=c1></span>  <span class=c1>/// this function.
+</span><span class=c1></span>  <span class=n>LogicalResult</span> <span class=nf>mutate</span><span class=p>(</span><span class=n>StorageAllocator</span> <span class=o>&amp;</span><span class=p>,</span> <span class=n>Type</span> <span class=n>body</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// If the contained type has been initialized already, and the call tries
+</span><span class=c1></span>    <span class=c1>// to change it, reject the change.
+</span><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>containedType</span> <span class=o>&amp;&amp;</span> <span class=n>containedType</span> <span class=o>!=</span> <span class=n>body</span><span class=p>)</span>
+      <span class=k>return</span> <span class=n>failure</span><span class=p>();</span>
+
+    <span class=c1>// Change the body successfully.
+</span><span class=c1></span>    <span class=n>containedType</span> <span class=o>=</span> <span class=n>body</span><span class=p>;</span>
+    <span class=k>return</span> <span class=n>success</span><span class=p>();</span>
+  <span class=p>}</span>
+
+  <span class=n>StringRef</span> <span class=n>name</span><span class=p>;</span>
+  <span class=n>Type</span> <span class=n>containedType</span><span class=p>;</span>
+<span class=p>};</span>
+</code></pre></div><h5 id=type-class-definition-1>Type class definition&nbsp;<a class=headline-hash href=#type-class-definition-1>¶</a></h5><p>Having defined the storage class, we can define the type class itself.
+<code>Type::TypeBase</code> provides a <code>mutate</code> method that forwards its arguments to the
+<code>mutate</code> method of the storage and ensures the mutation happens safely.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>class</span> <span class=nc>RecursiveType</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Type</span><span class=o>::</span><span class=n>TypeBase</span><span class=o>&lt;</span><span class=n>RecursiveType</span><span class=p>,</span> <span class=n>Type</span><span class=p>,</span>
+                                            <span class=n>RecursiveTypeStorage</span><span class=o>&gt;</span> <span class=p>{</span>
+<span class=k>public</span><span class=o>:</span>
+  <span class=c1>/// Inherit parent constructors.
+</span><span class=c1></span>  <span class=k>using</span> <span class=n>Base</span><span class=o>::</span><span class=n>Base</span><span class=p>;</span>
+
+  <span class=c1>/// Creates an instance of the Recursive type. This only takes the type name
+</span><span class=c1></span>  <span class=c1>/// and returns the type with uninitialized body.
+</span><span class=c1></span>  <span class=k>static</span> <span class=n>RecursiveType</span> <span class=nf>get</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span><span class=p>,</span> <span class=n>StringRef</span> <span class=n>name</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Call into the base to get a uniqued instance of this type. The parameter
+</span><span class=c1></span>    <span class=c1>// (name) is passed after the context.
+</span><span class=c1></span>    <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>ctx</span><span class=p>,</span> <span class=n>name</span><span class=p>);</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Now we can change the mutable component of the type. This is an instance
+</span><span class=c1></span>  <span class=c1>/// method callable on an already existing RecursiveType.
+</span><span class=c1></span>  <span class=kt>void</span> <span class=nf>setBody</span><span class=p>(</span><span class=n>Type</span> <span class=n>body</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Call into the base to mutate the type.
+</span><span class=c1></span>    <span class=n>LogicalResult</span> <span class=n>result</span> <span class=o>=</span> <span class=n>Base</span><span class=o>::</span><span class=n>mutate</span><span class=p>(</span><span class=n>body</span><span class=p>);</span>
+
+    <span class=c1>// Most types expect the mutation to always succeed, but types can implement
+</span><span class=c1></span>    <span class=c1>// custom logic for handling mutation failures.
+</span><span class=c1></span>    <span class=n>assert</span><span class=p>(</span><span class=n>succeeded</span><span class=p>(</span><span class=n>result</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+           <span class=s>&#34;attempting to change the body of an already-initialized type&#34;</span><span class=p>);</span>
+
+    <span class=c1>// Avoid unused-variable warning when building without assertions.
+</span><span class=c1></span>    <span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=n>result</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Returns the contained type, which may be null if it has not been
+</span><span class=c1></span>  <span class=c1>/// initialized yet.
+</span><span class=c1></span>  <span class=n>Type</span> <span class=nf>getBody</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>containedType</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=c1>/// Returns the name.
+</span><span class=c1></span>  <span class=n>StringRef</span> <span class=nf>getName</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>name</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>};</span>
+</code></pre></div><h3 id=registering-types-with-a-dialect>Registering types with a Dialect&nbsp;<a class=headline-hash href=#registering-types-with-a-dialect>¶</a></h3><p>Once the dialect types have been defined, they must then be registered with a
+<code>Dialect</code>. This is done via a similar mechanism to
+<a href=/docs/LangRef/#operations>operations</a>
+, with the <code>addTypes</code> method. The one
+distinct difference with operations, is that when a type is registered the
+definition of its storage class must be visible.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>struct</span> <span class=nc>MyDialect</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Dialect</span> <span class=p>{</span>
+  <span class=n>MyDialect</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span> <span class=o>:</span> <span class=n>Dialect</span><span class=p>(</span><span class=cm>/*name=*/</span><span class=s>&#34;mydialect&#34;</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span> <span class=p>{</span>
+    <span class=c1>/// Add these defined types to the dialect.
+</span><span class=c1></span>    <span class=n>addTypes</span><span class=o>&lt;</span><span class=n>SimpleType</span><span class=p>,</span> <span class=n>ComplexType</span><span class=p>,</span> <span class=n>RecursiveType</span><span class=o>&gt;</span><span class=p>();</span>
+  <span class=p>}</span>
+<span class=p>};</span>
+</code></pre></div><h3 id=parsing-and-printing>Parsing and Printing&nbsp;<a class=headline-hash href=#parsing-and-printing>¶</a></h3><p>As a final step after registration, a dialect must override the <code>printType</code> and
+<code>parseType</code> hooks. These enable native support for round-tripping the type in
+the textual <code>.mlir</code>.</p><div class=highlight><pre class=chroma><code class=language-c++ data-lang=c++><span class=k>class</span> <span class=nc>MyDialect</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Dialect</span> <span class=p>{</span>
+<span class=k>public</span><span class=o>:</span>
+  <span class=c1>/// Parse an instance of a type registered to the dialect.
+</span><span class=c1></span>  <span class=n>Type</span> <span class=n>parseType</span><span class=p>(</span><span class=n>DialectAsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span><span class=p>;</span>
+
+  <span class=c1>/// Print an instance of a type registered to the dialect.
+</span><span class=c1></span>  <span class=kt>void</span> <span class=nf>printType</span><span class=p>(</span><span class=n>Type</span> <span class=n>type</span><span class=p>,</span> <span class=n>DialectAsmPrinter</span> <span class=o>&amp;</span><span class=n>printer</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span><span class=p>;</span>
+<span class=p>};</span>
+</code></pre></div><p>These methods take an instance of a high-level parser or printer that allows for
+easily implementing the necessary functionality. As described in the
+<a href=/docs/LangRef/#dialect-types>MLIR language reference</a>
+, dialect types are
+generally represented as: <code>! dialect-namespace &lt; type-data ></code>, with a pretty
+form available under certain circumstances. The responsibility of our parser and
+printer is to provide the <code>type-data</code> bits.</p><h3 id=traits>Traits&nbsp;<a class=headline-hash href=#traits>¶</a></h3><p>Similarly to operations, <code>Type</code> classes may attach <code>Traits</code> that provide
+additional mixin methods and other data. <code>Trait</code> classes may be specified via
+the trailing template argument of the <code>Type::TypeBase</code> class. See the main
+<a href=/docs/Traits/><code>Trait</code></a>
+documentation for more information on defining and using
+traits.</p><h3 id=interfaces>Interfaces&nbsp;<a class=headline-hash href=#interfaces>¶</a></h3><p>Similarly to operations, <code>Type</code> classes may attach <code>Interfaces</code> to provide an
+abstract interface into the type. See the main
+<a href=/docs/Interfaces/><code>Interface</code></a>
+documentation for more information on defining and using interfaces.</p><h2 id=attributes>Attributes&nbsp;<a class=headline-hash href=#attributes>¶</a></h2><p>As stated in the introduction, the process for defining dialect attributes is
+nearly identical to that of defining dialect types. That key difference is that
+the things named <code>*Type</code> are generally now named <code>*Attr</code>.</p><ul><li><code>Type::TypeBase</code> -> <code>Attribute::AttrBase</code></li><li><code>TypeStorageAllocator</code> -> <code>AttributeStorageAllocator</code></li><li><code>addTypes</code> -> <code>addAttributes</code></li></ul><p>Aside from that, all of the interfaces for uniquing and storage construction are
+all the same.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=/docs/Tutorials/CreatingADialect/ title="Creating a Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i>Prev - Creating a Dialect</a>
+<a class="nav nav-next" href=/docs/Tutorials/QuickstartRewrites/ title="Quickstart tutorial to adding MLIR graph rewrite">Next - Quickstart tutorial to adding MLIR graph rewrite <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=/talks/>Talks and Related Publications</a></li><li><a href=/users/>Users of MLIR</a></li><li class=has-sub-menu><a href=/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/getting_started/Debugging/>Debugging</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li><a href=/getting_started/Contributing/>How to Contribute</a></li><li><a href=/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=/getting_started/openprojects/>Open Projects</a></li><li><a href=/getting_started/Glossary/>Glossary</a></li><li><a href=/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=/docs/Bufferization/>Bufferization</a></li><li><a href=/docs/LLVMDialectMemRefConvention/>Built-in Function and MemRef Calling Convention</a></li><li><a href=/docs/ConversionToLLVMDialect/>Conversion to the LLVM Dialect</a></li><li><a href=/docs/DataLayout/>Data Layout Modeling</a></li><li><a href=/docs/DebugActions/>Debug Actions</a></li><li><a href=/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/DLTIDialect/></a></li><li><a href=/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=/docs/Dialects/GPU/>'gpu' Dialect</a></li><li class=has-sub-menu><a href=/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=/docs/Dialects/SPIR-V/>'spv' Dialect</a></li><li><a href=/docs/Dialects/Standard/>'std' Dialect</a></li><li><a href=/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li></ul></li><li><a href=/docs/Interfaces/>Interfaces</a></li><li><a href=/docs/CAPI/>MLIR C API</a></li><li><a href=/docs/LangRef/>MLIR Language Reference</a></li><li><a href=/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=/docs/OpDefinitions/>Operation Definition Specification (ODS)</a></li><li><a href=/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=/docs/Passes/>Passes</a></li><li><a href=/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=/docs/ShapeInference/>Shape Inference</a></li><li><a href=/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li><a href=/docs/Traits/>Traits</a></li><li class="parent has-sub-menu"><a href=/docs/Tutorials/>Tutorials<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li class=active><a href=/docs/Tutorials/DefiningAttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li><a href=/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i><i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
