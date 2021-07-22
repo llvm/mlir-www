@@ -68,7 +68,7 @@ weight: 1
 [slides](/OpenMeetings/2021-07-22-MLIR-data-visualization.pdf) -
 [recording](https://youtu.be/FEXab1sgZLA)
 * 2021-07-15: From MHLO To Linalg in IREE ;
-[slides](https://mlir.llvm.org/OpenMeetings/2021-07-25-From-MHLO-To-Linalg-in-IREE.pdf) -
+[slides](https://mlir.llvm.org/OpenMeetings/2021-07-15-From-MHLO-To-Linalg-in-IREE.pdf) -
 [recording](https://youtu.be/GkorNMHPFPI)
 * 2021-06-24: Typedefs in MLIR ;
 [slides](https://mlir.llvm.org/OpenMeetings/2021-06-24-Typedefs-in-MLIR.pdf) -
