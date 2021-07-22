@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-07-22: MLIR data visualization using PassInstrumentation ;
+[slides](/OpenMeetings/2021-07-22-MLIR-data-visualization.pdf) -
+[recording](https://youtu.be/FEXab1sgZLA)
 * 2021-07-15: From MHLO To Linalg in IREE ;
 [slides](https://mlir.llvm.org/OpenMeetings/2021-07-25-From-MHLO-To-Linalg-in-IREE.pdf) -
 [recording](https://youtu.be/GkorNMHPFPI)
