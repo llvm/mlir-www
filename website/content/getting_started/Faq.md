@@ -5,6 +5,41 @@ menu: "main"
 weight: 10
 ---
 
+## How to refer to MLIR in publications? Is there an accompanying paper?
+
+MLIR has been presented in the 2021 IEEE/ACM International Symposium on Code
+Generation and Optimization, the full text of the paper is [available from
+IEEE](https://ieeexplore.ieee.org/abstract/document/9370308). A pre-publication
+draft is available on [arXiv](https://arxiv.org/pdf/2002.11054) but may be
+missing improvements and corrections. Please also note that MLIR keeps evolving
+and IR snippets presented in the paper may no longer use modern syntax, refer to
+the MLIR documentation for the new syntax.
+
+To cite MLIR in academic or other publications, please use: _Chris Lattner,
+Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar, River
+Riddle, Tatiana Shpeisman, Nicolas Vasilache, and Oleksandr Zinenko. "MLIR:
+Scaling compiler infrastructure for domain specific computation." In 2021
+IEEE/ACM International Symposium on Code Generation and Optimization (CGO), pp.
+2-14. IEEE, 2021._
+
+The BibTeX entry is as follows.
+
+```
+@inproceedings{mlir,
+  author={Lattner, Chris and Amini, Mehdi and Bondhugula, Uday and Cohen, Albert and Davis, Andy and Pienaar, Jacques and Riddle, River and Shpeisman, Tatiana and Vasilache, Nicolas and Zinenko, Oleksandr},
+  booktitle={2021 {{IEEE/ACM}} International Symposium on Code Generation and Optimization (CGO)},
+  title={{{MLIR}}: Scaling Compiler Infrastructure for Domain Specific Computation},
+  year={2021},
+  volume={},
+  number={},
+  pages={2-14},
+  doi={10.1109/CGO51591.2021.9370308}
+}
+```
+
+Please do **not** cite the arXiv preprint as it is not a formal peer-reviewed
+publication.
+
 ## What is the difference between the Tensor and Vector types?
 
 1) Conceptual: vectors are meant to and occur in lower level dialects - often where you expect hardware to have registers of that size. Tensors model higher-level "closer to the source" abstract representation. This is reflected in the abstraction modeled by the operations from the [`vector` dialect](https://mlir.llvm.org/docs/Dialects/Vector/), while Tensors would be more naturally present in the operations of the [`linalg` dialect](https://mlir.llvm.org/docs/Dialects/Linalg/).
