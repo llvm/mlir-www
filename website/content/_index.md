@@ -79,18 +79,9 @@ the same time. MLIR solves these problems by having limited SSA scope to reduce
 the use-def chains and by replacing cross-function references with explicit
 [`symbol reference`](docs/LangRef/#symbol-reference-attribute).
 
-To cite MLIR, please use [this publication](https://doi.org/10.1109/CGO51591.2021.9370308).
+## Citing MLIR
 
-```
-@INPROCEEDINGS{9370308,
-  author={C. {Lattner} and M. {Amini} and U. {Bondhugula} and A. {Cohen} and A. {Davis} and J. {Pienaar} and R. {Riddle} and T. {Shpeisman} and N. {Vasilache} and O. {Zinenko}},
-  booktitle={2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)},
-  title={MLIR: Scaling Compiler Infrastructure for Domain Specific Computation},
-  year={2021},
-  volume={},
-  number={},
-  pages={2-14},
-  doi={10.1109/CGO51591.2021.9370308}}
-```
-
+Please see the [FAQ
+entry](https://mlir.llvm.org/getting_started/Faq/#how-to-refer-to-mlir-in-publications-is-there-an-accompanying-paper)
+on how to cite MLIR in publications.
 
