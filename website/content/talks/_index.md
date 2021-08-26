@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-08-26: High Performance GPU Tensor CoreCode Generation for Matmul Using MLIR ;
+[slides](/OpenMeetings/2021-08-26-High-Performance-GPU-Tensor-CoreCode-Generation-for-Matmul-Using-MLIR.pdf) -
+[recording](https://youtu.be/XEfkPEUw-08)
 * 2021-07-22: MLIR data visualization using PassInstrumentation ;
 [slides](/OpenMeetings/2021-07-22-MLIR-data-visualization.pdf) -
 [recording](https://youtu.be/FEXab1sgZLA)
