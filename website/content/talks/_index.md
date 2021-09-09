@@ -64,6 +64,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-09-09: An ML-Driven Autoconfigurator for Sparse Tensor Kernels in MLIR ;
+[slides](/OpenMeetings/2021-09-09-ML-Driven-Autoconfigurator-for-Sparse-Tensor-Kernels.pdf) -
+[recording](https://youtu.be/B5hM0ijowOM)
 * 2021-08-26: High Performance GPU Tensor CoreCode Generation for Matmul Using MLIR ;
 [slides](/OpenMeetings/2021-08-26-High-Performance-GPU-Tensor-CoreCode-Generation-for-Matmul-Using-MLIR.pdf) -
 [recording](https://youtu.be/XEfkPEUw-08)
