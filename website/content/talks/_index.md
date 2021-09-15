@@ -25,6 +25,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* [MLIR: Scaling Compiler Infrastructure for Domain Specific
+  Computation](https://www.youtube.com/watch?v=C_MdJu70z2o&list=PLadGdFFn83gXCQAj8D8LuabxOu3XMbgPJ&index=1) ; Alex Zinenko @ [CGO 2021](https://conf.researchr.org/home/cgo-2021).
+
 * [LLVM Compiler Infrastructure in HPC Workshop](https://llvm-hpc-2020-workshop.github.io) Keynote: MLIR: an Agile Infrastructure for Building a Compiler Ecosystem ([slides](https://llvm-hpc-2020-workshop.github.io/presentations/llvmhpc2020-amini.pdf) - [recording](https://www.youtube.com/watch?v=0bxyZDGs-aA)) ; Mehdi Amini
 
 * CGO 2020 [Keynote: MLIR Compiler Infrastructure](https://docs.google.com/presentation/d/11-VjSNNNJoRhPlLxFgvtb909it1WNdxTnQFipryfAPU/edit#slide=id.g7d334b12e5_0_4) ; Chris Lattner, Tatiana Shpeisman
