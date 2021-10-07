@@ -184,6 +184,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2021-10-7: The Torch MLIR Project ;
+[slides](/OpenMeetings/2021-10-07-The-Torch-MLIR-project.pdf) -
+[recording](https://youtu.be/QbNkex-gizs)
 * 2021-05-27: Quantum-Classical Compilation with MLIR ;
 [slides](/OpenMeetings/2021-05-27-Quantum-Classical-Compilation-with-MLIR.pdf) -
 [recording](https://www.youtube.com/watch?v=_qXCzP5YAZY)
