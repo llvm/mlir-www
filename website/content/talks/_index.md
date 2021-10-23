@@ -1,5 +1,5 @@
 ---
-title: "Talks and Related Publications"
+title: "Talks"
 date: 2019-11-29T15:26:15Z
 draft: false
 weight: 1
@@ -264,29 +264,6 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 * 2019-08-01: TensorFlow Graph Representation in MLIR ;
 [slides](https://drive.google.com/a/google.com/file/d/1Xaa3tuxqiRBVHioIB74BiFwyWZSq0c9m/view?usp=sharing) -
 [recording](https://drive.google.com/a/google.com/file/d/1sk6iTcBfoXcmgJrGwPlpcI1nZdrG2qkX/view?usp=sharing)
-
-## Publications
-
-### About MLIR and MLIR Components
-
-* [MLIR: Scaling Compiler Infrastructure for Domain Specific
-  Computation](https://ieeexplore.ieee.org/abstract/document/9370308) -
-  Chris Lattner, Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar, River Riddle, Tatiana Shpeisman, Nicolas Vasilache, Oleksandr Zinenko - In proceedings of 2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO) -
-  pp. 2-14 -
-  A preprint is available on [arXiv](https://arxiv.org/abs/2002.11054), see
-  [FAQ](https://mlir.llvm.org/getting_started/Faq/#how-to-refer-to-mlir-in-publications-is-there-an-accompanying-paper)
-  for citation how-to.
-
-### Using MLIR
-
-* [A MLIR Dialect for Quantum Assembly Languages](https://arxiv.org/abs/2101.11365):
-* [On using MLIR for Verona](https://systemcall.eu/2020/10/22/on-using-mlir-for-verona/)
-* [Compiling ONNX Neural Network Models Using MLIR](https://arxiv.org/abs/2008.08272)
-* [SyFER-MLIR: Integrating Fully Homomorphic Encryption Into the MLIR Compiler Framework](https://math.mit.edu/research/highschool/primes/materials/2020/Govindarajan-Moses.pdf)
-* [Domain-Specific Multi-Level IR Rewriting for GPU](https://arxiv.org/abs/2005.13014)
-* [High Performance Code Generation in MLIR: An Early Case Study with GEMM](https://arxiv.org/abs/2003.00532) -
-  Uday Bondhugula
-
 
 ## Upcoming talks or presentations
 
