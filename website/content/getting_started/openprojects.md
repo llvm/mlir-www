@@ -34,6 +34,7 @@ starting on these projects.
 * TableGen "front-end dialect" (mentor: Jacques Pienaar)
 * Making MLIR interact with existing polyhedral tools: isl, pluto (mentor: Alex Zinenko)
 * MLIR visualization (mentor: Jacques Pienaar)
+* MLIR sparse compiler [starter tasks](https://bugs.llvm.org/buglist.cgi?bug_status=__open__&component=SparseTensor&list_id=225465&product=MLIR) (mentor: Aart Bik)
 
   MLIR allows for representing multiple levels of abstraction all together in the same IR/function. Visualizing MLIR modules therefore requires going beyond visualizing a graph of nodes all at the same level (which is not trivial in and of itself!), nor is it specific to Machine Learning. Beyond visualizing a MLIR module, there is also visualizing MLIR itself that is of interest. In particular, visualizing the rewrite rules, visualizing the matching process (including the failure to match, sort of like https://www.debuggex.com/ but for declarative rewrites), considering effects of rewrites over time, etc.
 
