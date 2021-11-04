@@ -68,7 +68,7 @@ weight: 1
 ### About MLIR and MLIR Components
 
 * 2021-11-04: PDLL: a Frontend for PDL
-[slides](/OpenMeetings/website/static/OpenMeetings/2021-11-04-PDLL-Pattern-Frontend-Language.pdf) -
+[slides](/OpenMeetings/2021-11-04-PDLL-Pattern-Frontend-Language.pdf) -
 [recording](https://youtu.be/T0yz4SqG5nc)
 * 2021-09-09: An ML-Driven Autoconfigurator for Sparse Tensor Kernels in MLIR ;
 [slides](/OpenMeetings/2021-09-09-ML-Driven-Autoconfigurator-for-Sparse-Tensor-Kernels.pdf) -
