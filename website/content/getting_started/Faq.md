@@ -90,3 +90,15 @@ implementing a feature or chose an alternative modeling that provides a similar
 functionality. Such design decisions are usually noted in the dialect or
 rationale documents.
 
+## Many dialects define a `constant` operation, I just want to handle these uniformly how to I get a constant value?
+
+```mlir
+#include "mlir/IR/Matchers.h"
+
+// Return the constant attribute, or null if the Operation isn't a constant.
+Attribute getConstantAttr(Operation *constantOp) {
+  Attribute constant;
+  matchPattern(value.getDefiningOp(), m_Constant());
+  return constant;
+}
+```
