@@ -90,7 +90,7 @@ implementing a feature or chose an alternative modeling that provides a similar
 functionality. Such design decisions are usually noted in the dialect or
 rationale documents.
 
-## Many dialects define a `constant` operation, I just want to handle these uniformly how to I get a constant value?
+## Many dialects define a `constant` operation, how do I get a constant value generically?
 
 ```mlir
 #include "mlir/IR/Matchers.h"
