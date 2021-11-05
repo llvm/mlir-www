@@ -92,7 +92,7 @@ rationale documents.
 
 ## Many dialects define a `constant` operation, how do I get a constant value generically?
 
-```mlir
+```c++
 #include "mlir/IR/Matchers.h"
 
 // Return the constant attribute, or null if the Operation isn't a constant.
