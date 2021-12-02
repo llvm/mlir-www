@@ -67,6 +67,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2021-12-02: End-to-end flow for ML Compilation
+[slides](/OpenMeetings/2021-12-02-End2End-ML-Compiler-Flow.pdf) -
+[recording](https://youtu.be/NCMme4H_HYQ)
 * 2021-11-04: PDLL: a Frontend for PDL
 [slides](/OpenMeetings/2021-11-04-PDLL-Pattern-Frontend-Language.pdf) -
 [recording](https://youtu.be/T0yz4SqG5nc)
