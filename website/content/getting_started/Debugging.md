@@ -24,6 +24,8 @@ There's no silver bullet for debugging the compilation process. Standard debuggi
 
 - `-mlir-elide-elementsattrs-if-larger` prints large constants in a redacted form, making the IR easier to scan.
 
+- `--print-ir-after-failure` will print the entire IR when the verifier fails and not just the failing operation.
+
 ## Isolating test cases
 
 Isolating your problem to the inspection of manageable set of passes (ideally a single pass) is one of the most important parts of debugging a compiler, but sometimes this can be difficult in larger compilation flow.
