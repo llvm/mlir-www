@@ -47,7 +47,7 @@ git clone https://github.com/llvm/llvm-project.git
 mkdir llvm-project\build
 cd llvm-project\build
 cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host" -DCMAKE_BUILD_TYPE=Release -Thost=x64 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON
-cmake --build . --target check-mlir
+cmake --build . --target tools/mlir/test/check-mlir
 ```
 
 As a starter, you may try [the tutorial](docs/Tutorials/Toy/Ch-1.md) on
