@@ -32,7 +32,7 @@ weight: 1
 
 * CGO 2020 [Keynote: MLIR Compiler Infrastructure](https://docs.google.com/presentation/d/11-VjSNNNJoRhPlLxFgvtb909it1WNdxTnQFipryfAPU/edit#slide=id.g7d334b12e5_0_4) ; Chris Lattner, Tatiana Shpeisman
 
-* IMPACT 2020 [Keynote: High-Performance Compilation Opportunities in MLIR](http://impact.gforge.inria.fr/impact2020/slides/IMPACT_2020_keynote.pdf) ; Uday Bondhugula
+* IMPACT 2020 [Keynote: Polyhedral Compilation Opportunities in MLIR](https://acohen.gitlabpages.inria.fr/impact/impact2020/slides/IMPACT_2020_keynote.pdf) ; Uday Bondhugula
 
 * MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure ;
 [slides](https://llvm.org/devmtg/2019-04/talks.html#Keynote_1) ; Tatiana Shpeisman, Chris Lattner
