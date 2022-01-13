@@ -67,6 +67,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2022-01-13: One-Shot Function Bufferization of Tensor Programs
+[slides](/OpenMeetings/2022-01-13-One-Shot-Bufferization.pdf) -
+[recording](https://youtu.be/TXEo59CYS9A)
 * 2021-12-02: End-to-end flow for ML Compilation
 [slides](/OpenMeetings/2021-12-02-End2End-ML-Compiler-Flow.pdf) -
 [recording](https://youtu.be/NCMme4H_HYQ)
