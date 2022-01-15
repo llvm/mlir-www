@@ -25,6 +25,8 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* [Compiler Support for Sparse Tensor Computations in MLIR](https://youtu.be/x-nHc3hBxHM) ; [Aart Bik](https://www.aartbik.com/) @ [2021 LLVM Developers' Meeting](https://llvm.swoogo.com/2021devmtg/) November 16-19, 2021.
+
 * [MLIR: Scaling Compiler Infrastructure for Domain Specific
   Computation](https://www.youtube.com/watch?v=C_MdJu70z2o&list=PLadGdFFn83gXCQAj8D8LuabxOu3XMbgPJ&index=1) ; Alex Zinenko @ [CGO 2021](https://conf.researchr.org/home/cgo-2021).
 
