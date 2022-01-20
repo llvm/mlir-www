@@ -69,15 +69,19 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2022-01-13: One-Shot Function Bufferization of Tensor Programs
+* 2022-01-20: A Data-Centric Model for Performance Portability on Heterogeneous
+Architectures ;
+[slides](/OpenMeetings/2022-01-2001~Data-Centric-Model.pdf) -
+[recording](https://youtu.be/VxUifMWaHeI)
+* 2022-01-13: One-Shot Function Bufferization of Tensor Programs ;
 [slides](/OpenMeetings/2022-01-13-One-Shot-Bufferization.pdf) -
 [recording](https://youtu.be/TXEo59CYS9A)
-* 2021-12-02: End-to-end flow for ML Compilation
+* 2021-12-02: End-to-end flow for ML Compilation;
 [slides](/OpenMeetings/2021-12-02-End2End-ML-Compiler-Flow.pdf) -
 [recording](https://youtu.be/NCMme4H_HYQ)
-* 2021-11-04: PDLL: a Frontend for PDL
+* 2021-11-04: PDLL: a Frontend for PDL ;
 [slides](/OpenMeetings/2021-11-04-PDLL-Pattern-Frontend-Language.pdf) -
-[recording](https://youtu.be/T0yz4SqG5nc)
+[recording](https://youtu.be/T0yz4SqG5nc) ;
 * 2021-09-09: An ML-Driven Autoconfigurator for Sparse Tensor Kernels in MLIR ;
 [slides](/OpenMeetings/2021-09-09-ML-Driven-Autoconfigurator-for-Sparse-Tensor-Kernels.pdf) -
 [recording](https://youtu.be/B5hM0ijowOM)
