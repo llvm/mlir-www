@@ -102,3 +102,21 @@ Attribute getConstantAttr(Operation *constantOp) {
   return constant;
 }
 ```
+
+## What is the difference between traits and operation interfaces?
+
+Both [traits](https://mlir.llvm.org/docs/Traits/) and [operation
+interfaces](https://mlir.llvm.org/docs/Interfaces/#attributeoperationtype-interfaces)
+can be used to inject common behavior into various operations without
+duplication.  However, conceptually these are quite different.
+
+Traits inject static behavior into `Op`s whereas operation interfaces
+dynamically dispatch behavior based on the operation type.  Operation interfaces
+need a vtable or equivalent while traits don't.  In other words, traits are like
+C++ base classes without virtual methods while op interfaces are like C++ base
+classes with virtual methods.
+
+There is one similarity between op interfaces and traits: it is possible to
+dynamically check whether an operation has a specific trait (via `hasTrait`) or
+implements an op interface (via `isa<>`).  However, this similarity does not run
+deep, and was added for practical ergonomic reasons.
