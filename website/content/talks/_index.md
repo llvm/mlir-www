@@ -69,10 +69,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* 2022-01-20: A Data-Centric Model for Performance Portability on Heterogeneous
-Architectures ;
-[slides](/OpenMeetings/2022-01-2001~Data-Centric-Model.pdf) -
-[recording](https://youtu.be/VxUifMWaHeI)
+* 2022-01-27: Anatomy of Linalg.generic ;
+[slides](/OpenMeetings/2022-01-27-Intro-to-Linalg.pdf) -
+[recording](https://youtu.be/A805W2KSCxQ)
 * 2022-01-13: One-Shot Function Bufferization of Tensor Programs ;
 [slides](/OpenMeetings/2022-01-13-One-Shot-Bufferization.pdf) -
 [recording](https://youtu.be/TXEo59CYS9A)
@@ -199,6 +198,10 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2022-01-20: A Data-Centric Model for Performance Portability on Heterogeneous
+Architectures ;
+[slides](/OpenMeetings/2022-01-2001~Data-Centric-Model.pdf) -
+[recording](https://youtu.be/VxUifMWaHeI)
 * 2021-10-7: The Torch MLIR Project ;
 [slides](/OpenMeetings/2021-10-07-The-Torch-MLIR-project.pdf) -
 [recording](https://youtu.be/QbNkex-gizs)
