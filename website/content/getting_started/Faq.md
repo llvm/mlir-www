@@ -102,3 +102,32 @@ Attribute getConstantAttr(Operation *constantOp) {
   return constant;
 }
 ```
+
+## What is the difference between traits and interfaces?
+
+Both [traits](https://mlir.llvm.org/docs/Traits/) and
+[interfaces](https://mlir.llvm.org/docs/Interfaces) can be used to inject common
+behavior into operations, types and attributes without introducing duplication.
+However, conceptually these are quite different.
+
+Traits inject static behavior into operations/types/attributes whereas
+interfaces dynamically dispatch behavior based on their runtime type.  For
+instance, since
+[`ModuleOp`](https://github.com/llvm/llvm-project/blob/f3e1f44340dc26e3810d601edf0e052813b7a11c/mlir/include/mlir/IR/BuiltinOps.td#L167)
+implements the
+[`SymtolTable`](https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/SymbolTable.h#L338)
+trait, `mlir::ModuleOp` exposes `lookupSymbol` as a member function.  However,
+there is no type-erased way to access this functionality -- it is available only
+via `mlir::ModuleOp`.  On the other hand, if an operation implements
+[`CallOpInterface`](https://github.com/llvm/llvm-project/blob/902184e6cc263e4c66440c95a21665b6fdffe57c/mlir/include/mlir/Interfaces/CallInterfaces.td#L25),
+its implementation of `getCallableForCallee` can be invoked in a type-erased
+manner by `dyn_cast`ing the operation to a `CallOpInterface`.  The caller does
+not need to know the concrete type of the operation to do this.
+
+There is one similarity between interfaces and traits: both their presence can
+be checked dynamically (i.e. without access to the concrete type).
+Specifically, presence of traits can be checked using
+[`Operation::hasTrait`](https://github.com/llvm/llvm-project/blob/902184e6cc263e4c66440c95a21665b6fdffe57c/mlir/include/mlir/IR/Operation.h#L470)
+and presence of interfaces can be checked using `isa<>`.  However, this
+similarity does not run deep, and was only added for practical ergonomic
+reasons.
