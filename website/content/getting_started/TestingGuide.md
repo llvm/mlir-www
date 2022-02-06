@@ -227,3 +227,71 @@ cmake -G Ninja ../llvm \
 ```
 After this one-time set up, the tests run as shown earlier, but will
 now include the indicated emulated tests as well.
+
+## Command Line Incantations
+
+While developing in MLIR, it is common to run parts of the test suite many
+times. While invoking the `check-mlir` target is a nice shortcut, the
+interaction with the build system can be confusing. Since most people don't
+understand how all of this is put together in the build system, this section
+attempts to demystify how to operate the testing tools independently.
+
+Invoking the `check-mlir` target is roughly equivalent to running (from the
+build directory):
+
+```shell
+./bin/llvm-lit tools/mlir/test
+```
+
+See the [Lit Documentation](https://llvm.org/docs/CommandGuide/lit.html) for a
+description of all options.
+
+Subsets of the testing tree can be invoked by passing a more specific path
+instead of `tools/mlir/test` above. Example:
+
+```shell
+./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic
+
+# Note that it is possible to test at the file granularity, but since these
+# files do not actually exist in the build directory, you need to know the
+# name.
+./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
+```
+
+Lit has a number of options that control test execution. Here are some of the
+most useful for development purposes:
+
+* [`--filter=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter) :
+  Only runs tests whose name matches the REGEXP. Can also be specified via
+  the `LIT_FILTER` environment variable.
+* [`--filter-out=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter-out) :
+  Only runs tests whose name matches the REGEXP. Can also be specified via
+  the `LIT_FILTER_OUT` environment variable.
+* [`-a`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-a) : Shows
+  all information (useful while iterating on a small set of tests).
+* [`--time-tests`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-time-tests) :
+  Prints timing statistics about slow tests and overall histograms.
+
+Any Lit options can be set in the `LIT_OPTS` environment variable. This is
+especially useful when using the build system target `check-mlir`.
+
+Examples:
+
+```
+# Only run tests that have "python" in the name and print all invocations.
+LIT_OPTS="--filter=python -a" cmake --build . --target check-mlir
+
+# Only run the array_attributes python test, using the LIT_FILTER mechanism.
+LIT_FILTER="python/ir/array_attributes" cmake --build . --target check-mlir
+
+# Run everything except for example and integration tests (which are both
+# somewhat slow).
+LIT_FILTER_OUT="Examples|Integrations" cmake --build . --target check-mlir
+```
+
+Note that the above use the generic cmake command for invoking the `check-mlir`
+target, but you can typically use the generator directly to be more concise
+(i.e. if configured for `ninja`, then `ninja check-mlir` can replace the
+`cmake --build . --target check-mlir` command). We use generic `cmake`
+commands in documentation for consistency, but being concise is often better
+for interactive workflows.

@@ -18,6 +18,22 @@ The following instructions for compiling and testing MLIR assume that you have
 `git`, [`ninja`](https://ninja-build.org/), and a working C++ toolchain (see
 [LLVM requirements](https://llvm.org/docs/GettingStarted.html#requirements)).
 
+As a starter, you may try [the tutorial](docs/Tutorials/Toy/Ch-1.md) on
+building a compiler for a Toy language.
+
+---
+
+**TIP**
+
+See the
+[Testing Guide - CLI Incantations](TestingGuide/#command-line-incantations)
+section for additional ways to invoke and filter tests that can help you be more
+efficient for regular development.
+
+---
+
+### Unix-like compile/testing:
+
 ```sh
 git clone https://github.com/llvm/llvm-project.git
 mkdir llvm-project/build
@@ -37,6 +53,9 @@ It is recommended that you install `clang` and `lld` on your machine (`sudo apt-
 install clang lld` on Ubuntu for example) and uncomment the last part of the
 cmake invocation above.
 
+---
+
+### Windows compile/testing:
 To compile and test on Windows using Visual Studio 2017:
 
 ```bat
@@ -49,6 +68,3 @@ cd llvm-project\build
 cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="host" -DCMAKE_BUILD_TYPE=Release -Thost=x64 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON
 cmake --build . --target tools/mlir/test/check-mlir
 ```
-
-As a starter, you may try [the tutorial](docs/Tutorials/Toy/Ch-1.md) on
-building a compiler for a Toy language.
