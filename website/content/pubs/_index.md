@@ -18,6 +18,15 @@ weight: 1
   for citation how-to.
 * [The Deep Learning Compiler: A Comprehensive Survey](https://arxiv.org/abs/2002.03794) - Li, Mingzhen, Yi Liu, Xiaoyan Liu, Qingxiao Sun, Xin You, Hailong Yang, Zhongzhi Luan, Lin Gan, Guangwen Yang, and Depei Qian. "The deep learning compiler: A comprehensive survey." IEEE Transactions on Parallel and Distributed Systems 32, no. 3 (2020): 708-727.
 
+### Inside MLIR
+
+* [Compiler Support for Sparse Tensor Computations in MLIR](https://arxiv.org/abs/2202.04305)
+  - Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, Fredrik Kjolstad.
+  Pre-print on arXiv. February 9, 2022.
+* [Composable and Modular Code Generation in MLIR: A Structured and Retargetable Approach to Tensor Compiler Construction](https://arxiv.org/abs/2202.03293)
+  - Nicolas Vasilache, Oleksandr Zinenko, Aart J.C. Bik, Mahesh Ravishankar, Thomas Raoux, Alexander Belyaev, Matthias Springer, Tobias Gysi, Diego Caballero, Stephan Herhut, Stella Laurenzo, Albert Cohen.
+  Pre-print on arXiv. February 7, 2022.
+
 ### Using MLIR
 
 * [A MLIR Dialect for Quantum Assembly Languages](https://arxiv.org/abs/2101.11365)
