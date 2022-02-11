@@ -69,6 +69,9 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* 2022-01-27: PyTACO - An End-to-End Use Case for the Sparse Tensor Compiler ;
+[slides](/OpenMeetings/2022-02-10-PyTACO.pdf) -
+[recording](https://youtu.be/koxh9NuxIDM)
 * 2022-01-27: Anatomy of Linalg.generic ;
 [slides](/OpenMeetings/2022-01-27-Intro-to-Linalg.pdf) -
 [recording](https://youtu.be/A805W2KSCxQ)
