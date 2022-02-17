@@ -201,6 +201,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2022-02-17: IREE's ML input dialects ;
+[slides](/OpenMeetings/2022-02-17-IREE_Input_Dialect.pdf) -
+[recording](https://youtu.be/mhyz5S7uYJE)
 * 2022-01-20: A Data-Centric Model for Performance Portability on Heterogeneous
 Architectures ;
 [slides](/OpenMeetings/2022-01-2001~Data-Centric-Model.pdf) -
