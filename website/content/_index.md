@@ -12,13 +12,7 @@ compilation for heterogeneous hardware, significantly reduce the cost of
 building domain specific compilers, and aid in connecting existing compilers
 together.
 
-## More resources
-
-For more information on MLIR, please see:
-
-*   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/mlir/31) for any questions.
-*   Real-time discussion on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362) server.
-*   Previous [talks](talks/).
+# Weekly Public Meeting
 
 We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
 to discuss a particular topic or have questions, please add it to the
@@ -27,6 +21,15 @@ Details on how to join the meeting are in the agenda doc, you can get a Google
 calendar invite by joining
 [this googlegroup](https://groups.google.com/a/tensorflow.org/g/mlir). The meetings
 are recorded and published in the [talks](talks/) section.
+
+
+## More resources
+
+For more information on MLIR, please see:
+
+*   The MLIR section of the [LLVM forums](https://llvm.discourse.group/c/mlir/31) for any questions.
+*   Real-time discussion on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362) server.
+*   Previous [talks](talks/).
 
 ## What is MLIR for?
 
@@ -84,4 +87,3 @@ the use-def chains and by replacing cross-function references with explicit
 Please see the [FAQ
 entry](https://mlir.llvm.org/getting_started/Faq/#how-to-refer-to-mlir-in-publications-is-there-an-accompanying-paper)
 on how to cite MLIR in publications.
-
