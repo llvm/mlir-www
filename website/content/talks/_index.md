@@ -76,6 +76,9 @@ calendar invite by joining
 
 ### About MLIR and MLIR Components
 
+* 2022-03-17: Interfaces and dialects for precise IR transformation control
+[slides](/OpenMeetings/2022-03-17-Transform_Interfaces.pdf) -
+[recording](https://youtu.be/A19Qp6kcFNM)
 * 2022-01-27: PyTACO - An End-to-End Use Case for the Sparse Tensor Compiler ;
 [slides](/OpenMeetings/2022-02-10-PyTACO.pdf) -
 [recording](https://youtu.be/koxh9NuxIDM)
