@@ -131,3 +131,11 @@ Specifically, presence of traits can be checked using
 and presence of interfaces can be checked using `isa<>`.  However, this
 similarity does not run deep, and was only added for practical ergonomic
 reasons.
+
+## How to convert a `memref` to a pointer?
+
+It is impossible in the general case. Structured memory reference (`memref`) type **is not (only) a pointer**. This type supports multi-dimensional indexing and customizable data layouts to support advanced yet analyzable addressing modes. Implementing address computation requires understanding the layout and storing additional information such as sizes and layout parameters that would be impossible with a plain, single-typed pointer to a contiguous block of data. Even the single-dimensional `memref<?xi8>` with the default layout is *not a pointer* as it must store at the very least the size of the data (think C++ `std::string` vs. C `NULL`-terminated `const char *`).
+
+It is, however, possible to define operations that create pointer-like types out of a `memref` as well as operations that, conversely, create `memref` out of pointers combined with additional information. Before implementing such operations, dialect authors are advised to carefully consider the implication of such operations on aliasing properties of the resulting IR.
+
+Interoperability with C is often cited to motivate an opaque cast from `memref`s to pointers. The [LLVM IR target](https://mlir.llvm.org/docs/TargetLLVMIR/#ranked-memref-types) provides an interface compatible with C for a well-defined subset of `memrefs` with [strided layout](https://mlir.llvm.org/docs/Dialects/Builtin/#strided-memref). At the function boundary, it even provides a minimalist support for passing memrefs as [bare pointers](https://mlir.llvm.org/docs/TargetLLVMIR/#bare-pointer-calling-convention-for-ranked-memref) provided their sizes are known statically and their layout is trivially identity.
