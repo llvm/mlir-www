@@ -45,6 +45,14 @@ for frontend development. It is also possible to use Lumen to target other
 platforms as well, by producing self-contained executables on platforms such as
 x86.
 
+## [MLIR-AIE](https://github.com/Xilinx/mlir-aie): Toolchain for AMD/Xilinx AIEngine devices
+
+MLIR-AIE is a toolchain providing low-level device configuration for Versal
+AIEngine-based devices. Support is provided to target the AIEngine portion of
+the device, including processors, stream switches, TileDMA and ShimDMA blocks.
+Backend code generation is included, targetting the LibXAIE library, along with
+some higher-level abstractions enabling higher-level design 
+
 ## [Nod Distributed Runtime](https://nod.ai/project/distributedruntime/): Asynchronous fine-grained op-level parallel runtime
 
 Nod's MLIR based Parallel Compiler and Distributed Runtime  provide a way to
