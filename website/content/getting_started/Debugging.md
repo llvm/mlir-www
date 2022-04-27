@@ -1,11 +1,9 @@
 ---
-title: "Debugging"
+title: "Debugging Tips"
 date: "2020-03-30"
 menu: "main"
 weight: 10
 ---
-
-# MLIR Debugging Tips
 
 ## Inspecting compilation
 
