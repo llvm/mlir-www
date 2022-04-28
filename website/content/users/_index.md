@@ -53,6 +53,19 @@ the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
 some higher-level abstractions enabling higher-level design 
 
+## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
+
+MLIR-EmitC provides a way to translate ML models into C++ code. The repository
+contains scripts and tools to translate Keras and TensorFlow models into the
+[TOSA](https://mlir.llvm.org/docs/Dialects/TOSA/) and
+[MHLO](https://github.com/tensorflow/mlir-hlo) dialect and to convert those to
+[EmitC](https://mlir.llvm.org/docs/Dialects/EmitC/).
+The latter is used to generate calls to a reference implementation.
+
+The [EmitC](https://mlir.llvm.org/docs/Dialects/EmitC/) dialect itself, as well
+as the C++ emitter, are part of MLIR core and are no longer provided as part of
+the MLIR-EmitC repository.
+
 ## [Nod Distributed Runtime](https://nod.ai/project/distributedruntime/): Asynchronous fine-grained op-level parallel runtime
 
 Nod's MLIR based Parallel Compiler and Distributed Runtime  provide a way to
