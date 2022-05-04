@@ -101,6 +101,13 @@ PlaidML is a tensor compiler that facilitates reusable and performance portable
 ML models across various hardware targets including CPUs, GPUs, and
 accelerators.
 
+## [Pylir](https://github.com/zero9178/Pylir)
+
+Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
+conformance. It uses MLIR Dialects for the task of high level, language specific
+optimizations as well as LLVM for code genereation and garbage collector 
+support.
+
 ## [RISE](https://rise-lang.org/)
 
 RISE is a spiritual successor to the
