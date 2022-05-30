@@ -34,4 +34,5 @@ weight: 1
 * [Domain-Specific Multi-Level IR Rewriting for GPU](https://arxiv.org/abs/2005.13014)
 * [High Performance Code Generation in MLIR: An Early Case Study with GEMM](https://arxiv.org/abs/2003.00532) -
   Uday Bondhugula
+* [TinyIREE: An ML Execution Environment for Embedded Systems from Compilation to Deployment](https://doi.org/10.1109/MM.2022.3178068)
 
