@@ -22,7 +22,7 @@ There's no silver bullet for debugging the compilation process. Standard debuggi
 
 - `-mlir-elide-elementsattrs-if-larger` prints large constants in a redacted form, making the IR easier to scan.
 
-- `--print-ir-after-failure` will print the entire IR when the verifier fails and not just the failing operation.
+- `--mlir-print-ir-after-failure` will print the entire IR when the verifier fails and not just the failing operation.
 
 ## Isolating test cases
 
@@ -34,11 +34,11 @@ MLIR's core infrastructure has the ability to [create a "crash reproducer"](../d
 
 ### Isolating a buggy pass
 
-Once one has a `.mlir` file and a pass pipeline to run (such as that dumped in the crash reproducer file), then one should use `-print-ir-before-all` option to `mlir-opt` to print the IR before each pass. Additionally, `-print-ir-module-scope` and `-mlir-disable-threading` can be useful here.
+Once one has a `.mlir` file and a pass pipeline to run (such as that dumped in the crash reproducer file), then one should use `-mlir-print-ir-before-all` option to `mlir-opt` to print the IR before each pass. Additionally, `-mlir-print-ir-module-scope` and `-mlir-disable-threading` can be useful here.
 
 If one is developing an MLIR-based compiler correctly (that is, with an attention to correct program translation, high quality verifiers, and clear diagnostics when correct translation isn't possible), then by far the most common class of bugs is that an error diagnostic is emitted. When this happens, the recommended course of action is to run all passes up to just before the pass that emitted the error diagnostic and save off a new `.mlir` file representing the IR just before the problematic pass was run.
 
-If the problem is more complex than just a diagnostic / verifier error in a single pass, then more analysis of the `-print-ir-before-all` dumps will be needed, possibly by inserting extra debug printing into various passes to see where things went off the rails.
+If the problem is more complex than just a diagnostic / verifier error in a single pass, then more analysis of the `-mlir-print-ir-before-all` dumps will be needed, possibly by inserting extra debug printing into various passes to see where things went off the rails.
 
 Either way, at the end of this process one should ideally have a `.mlir` file and a single pass (or manageable set of passes) to run in `mlir-opt` for further analysis.
 
