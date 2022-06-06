@@ -77,7 +77,7 @@ calendar invite by joining
 ### About MLIR and MLIR Components
 
 * 2022-06-02: IRDL, a dialect to represent IR definitions
-[slides](OpenMeetings/2022-06-02-IRDL-dialect-to-represent-IR-definitions.pdf) -
+[slides](/OpenMeetings/2022-06-02-IRDL-dialect-to-represent-IR-definitions.pdf) -
 [recording](https://youtu.be/SlCXx5IFV40)
 * 2022-03-17: Interfaces and dialects for precise IR transformation control
 [slides](/OpenMeetings/2022-03-17-Transform_Interfaces.pdf) -
