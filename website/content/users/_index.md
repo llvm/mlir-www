@@ -73,16 +73,6 @@ easily scale out training and inference of very large models across multiple
 heterogeneous devices (CPUs/GPUs/Accelerators/FPGAs)  in a cluster while
 exploiting fine-grained op-level parallelism.
 
-## [NPComp](https://github.com/llvm/mlir-npcomp): MLIR based compiler toolkit for numerical python programs
-
-The NPComp project aims to provide tooling for compiling numerical python programs
-of various forms to take advantage of MLIR+LLVM code generation and backend runtime
-systems.
-
-In addition to providing a bridge to a variety of Python based numerical programming
-frameworks, NPComp also directly develops components for tracing and compilation of
-generic Python program fragments.
-
 ## [ONNX-MLIR](https://github.com/onnx/onnx-mlir)
 
 To represent neural network models, users often use [Open Neural Network
@@ -124,6 +114,11 @@ asynchronous runtime system.
 
 MLIR is used as a Graph Transformation framework and the foundation for
 building many tools (XLA, TFLite converter, quantization, ...).
+
+## [Torch-MLIR](https://github.com/llvm/torch-mlir)
+
+The Torch-MLIR project aims to provide first class compiler support from the
+PyTorch ecosystem to the MLIR ecosystem.
 
 ## [Verona](https://github.com/microsoft/verona)
 
