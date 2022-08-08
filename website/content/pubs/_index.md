@@ -9,21 +9,22 @@ weight: 1
 
 * [MLIR: Scaling Compiler Infrastructure for Domain Specific
   Computation](https://ieeexplore.ieee.org/abstract/document/9370308) -
-  Chris Lattner, Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar, River Riddle, Tatiana Shpeisman, Nicolas Vasilache, Oleksandr Zinenko - In proceedings of 2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO) -
-  pp. 2-14 -
+  Chris Lattner, Mehdi Amini, Uday Bondhugula, Albert Cohen, Andy Davis, Jacques Pienaar, River Riddle, Tatiana Shpeisman, Nicolas Vasilache, Oleksandr Zinenko - In proceedings of 2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO) - pp. 2-14 -
   A preprint is available on [arXiv](https://arxiv.org/abs/2002.11054), see
   [FAQ](https://mlir.llvm.org/getting_started/Faq/#how-to-refer-to-mlir-in-publications-is-there-an-accompanying-paper)
   for citation how-to.
 
 ### About MLIR and MLIR Components
 
-* [Compiler Support for Sparse Tensor Computations in MLIR](https://arxiv.org/abs/2202.04305)
-  - Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, Fredrik Kjolstad.
-  Pre-print on arXiv. February 9, 2022.
-* [Composable and Modular Code Generation in MLIR: A Structured and Retargetable Approach to Tensor Compiler Construction](https://arxiv.org/abs/2202.03293)
-  - Nicolas Vasilache, Oleksandr Zinenko, Aart J.C. Bik, Mahesh Ravishankar, Thomas Raoux, Alexander Belyaev, Matthias Springer, Tobias Gysi, Diego Caballero, Stephan Herhut, Stella Laurenzo, Albert Cohen.
+* [Compiler Support for Sparse Tensor Computations in MLIR](see https://dl.acm.org/doi/10.1145/3544559) -
+  Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, Fredrik Kjolstad.
+  ACM Transactions on Architecture and Code Optimization, June, 2022.
+  Appeared as preprint on arXiv [arXiv](https://arxiv.org/abs/2202.04305), February 9, 2022.
+* [Composable and Modular Code Generation in MLIR: A Structured and Retargetable Approach to Tensor Compiler Construction](https://arxiv.org/abs/2202.03293) -
+  Nicolas Vasilache, Oleksandr Zinenko, Aart J.C. Bik, Mahesh Ravishankar, Thomas Raoux, Alexander Belyaev, Matthias Springer, Tobias Gysi, Diego Caballero, Stephan Herhut, Stella Laurenzo, Albert Cohen.
   Pre-print on arXiv. February 7, 2022.
-* [The Deep Learning Compiler: A Comprehensive Survey](https://arxiv.org/abs/2002.03794) - Li, Mingzhen, Yi Liu, Xiaoyan Liu, Qingxiao Sun, Xin You, Hailong Yang, Zhongzhi Luan, Lin Gan, Guangwen Yang, and Depei Qian. "The deep learning compiler: A comprehensive survey." IEEE Transactions on Parallel and Distributed Systems 32, no. 3 (2020): 708-727.
+* [The Deep Learning Compiler: A Comprehensive Survey](https://arxiv.org/abs/2002.03794) -
+  Li, Mingzhen, Yi Liu, Xiaoyan Liu, Qingxiao Sun, Xin You, Hailong Yang, Zhongzhi Luan, Lin Gan, Guangwen Yang, and Depei Qian. "The deep learning compiler: A comprehensive survey." IEEE Transactions on Parallel and Distributed Systems 32, no. 3 (2020): 708-727.
 
 ### Using MLIR
 
