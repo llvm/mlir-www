@@ -16,10 +16,10 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
-* [Compiler Support for Sparse Tensor Computations in MLIR](see https://dl.acm.org/doi/10.1145/3544559) -
+* [Compiler Support for Sparse Tensor Computations in MLIR](https://dl.acm.org/doi/10.1145/3544559) -
   Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, Fredrik Kjolstad.
   ACM Transactions on Architecture and Code Optimization, June, 2022.
-  Appeared as preprint on arXiv [arXiv](https://arxiv.org/abs/2202.04305), February 9, 2022.
+  Appeared as preprint on [arXiv](https://arxiv.org/abs/2202.04305), February 9, 2022.
 * [Composable and Modular Code Generation in MLIR: A Structured and Retargetable Approach to Tensor Compiler Construction](https://arxiv.org/abs/2202.03293) -
   Nicolas Vasilache, Oleksandr Zinenko, Aart J.C. Bik, Mahesh Ravishankar, Thomas Raoux, Alexander Belyaev, Matthias Springer, Tobias Gysi, Diego Caballero, Stephan Herhut, Stella Laurenzo, Albert Cohen.
   Pre-print on arXiv. February 7, 2022.
