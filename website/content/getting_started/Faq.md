@@ -61,7 +61,9 @@ requiring every pass to declare a list of *dependent* Dialects: these are
 Dialects for which an entity (Operation, Type, or Attribute) can be created by
 the pass, other than for Dialects that would already be in the input.
 For example, a `convertLinalgToLoops` pass would declare the `SCF` Dialect as
-dependent, but does not need to declare `Linalg`.
+dependent, but does not need to declare `Linalg`. See also
+[dependent dialects](https://mlir.llvm.org/docs/PassManagement/#dependent-dialects)
+in the pass infrastructure documentation.
 
 Finally, dialects can be *registered* with the context. The sole purpose of the
 registration is to make these dialects available for the textual parser used by
