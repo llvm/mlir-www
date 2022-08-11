@@ -214,6 +214,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2022-08-11: HeteroCL, an MLIR-based Intermediate Representation for Accelerator Design with Decoupled Customizations ;
+[slides](/OpenMeetings/2022-08-11-HeteroCL.pdf) -
+[recording](https://youtu.be/yOk63LWbkqk)
 * 2022-02-17: IREE's ML input dialects ;
 [slides](/OpenMeetings/2022-02-17-IREE_Input_Dialect.pdf) -
 [recording](https://youtu.be/mhyz5S7uYJE)
