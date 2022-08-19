@@ -117,7 +117,7 @@ interfaces dynamically dispatch behavior based on their runtime type.  For
 instance, since
 [`ModuleOp`](https://github.com/llvm/llvm-project/blob/f3e1f44340dc26e3810d601edf0e052813b7a11c/mlir/include/mlir/IR/BuiltinOps.td#L167)
 implements the
-[`SymtolTable`](https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/SymbolTable.h#L338)
+[`SymbolTable`](https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/SymbolTable.h#L338)
 trait, `mlir::ModuleOp` exposes `lookupSymbol` as a member function.  However,
 there is no type-erased way to access this functionality -- it is available only
 via `mlir::ModuleOp`.  On the other hand, if an operation implements
