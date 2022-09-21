@@ -36,4 +36,6 @@ weight: 1
 * [High Performance Code Generation in MLIR: An Early Case Study with GEMM](https://arxiv.org/abs/2003.00532) -
   Uday Bondhugula
 * [TinyIREE: An ML Execution Environment for Embedded Systems from Compilation to Deployment](https://doi.org/10.1109/MM.2022.3178068)
+* [Polygeist: Raising C to Polyhedral MLIR](https://ieeexplore.ieee.org/document/9563011)
+* [High-Performance GPU-to-CPU Transpilation and Optimization via High-Level Parallel Constructs](https://arxiv.org/abs/2207.00257)
 
