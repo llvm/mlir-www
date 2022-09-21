@@ -91,7 +91,7 @@ PlaidML is a tensor compiler that facilitates reusable and performance portable
 ML models across various hardware targets including CPUs, GPUs, and
 accelerators.
 
-## [Polygeist](https://github.com/llvm/Polygeist)
+## [Polygeist](https://github.com/llvm/Polygeist): C/C++ frontend and optimizations for MLIR
 
 Polygeist is a C/C++ frontend for MLIR which preserves high-level structure
 from programs such as parallelism. Polygeist also includes high-level optimizations
