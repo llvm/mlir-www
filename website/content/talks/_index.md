@@ -65,6 +65,10 @@ weight: 1
 
 * Inside TensorFlow: MLIR for TF developers ; [recording](https://youtu.be/R5LLIj8EMxw) ; Jacques Pienaar
 
+* Compiling Ruby with MLIR ; [recording](https://youtu.be/Cl5SgDxvZ8w) ; Alex Denisov @ [LLVM Social Berlin #20](https://www.meetup.com/llvm-social-berlin/events/287586655/)
+
+
+
 ## Open design meeting presentations
 
 We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
