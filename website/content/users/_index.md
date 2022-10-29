@@ -91,6 +91,17 @@ PlaidML is a tensor compiler that facilitates reusable and performance portable
 ML models across various hardware targets including CPUs, GPUs, and
 accelerators.
 
+## [Polygeist](https://github.com/llvm/Polygeist): C/C++ frontend and optimizations for MLIR
+
+Polygeist is a C/C++ frontend for MLIR which preserves high-level structure
+from programs such as parallelism. Polygeist also includes high-level optimizations
+for MLIR, as well as various raising/lowering utilities.
+
+See both the polyhedral Polygeist paper
+[Polygeist: Raising C to Polyhedral MLIR](https://ieeexplore.ieee.org/document/9563011)
+and the GPU Polygeist paper
+[High-Performance GPU-to-CPU Transpilation and Optimization via High-Level Parallel Constructs](https://arxiv.org/abs/2207.00257)
+
 ## [Pylir](https://github.com/zero9178/Pylir)
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
