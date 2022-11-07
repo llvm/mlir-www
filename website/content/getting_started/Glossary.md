@@ -155,7 +155,7 @@ be done entirely within the MLIR representation. This separation - making the
 [importer](#import) as simple as possible and performing all further
 cleanups/lowering in MLIR - has proven to be a useful design pattern.
 
-#### [Terminator operation](LangRef.md#terminator-operations)
+#### [Terminator operation](LangRef.md#control-flow-and-ssacfg-regions)
 
 An [operation](#operation-op) which *must* terminate a [block](#block).
 Terminator operations are a special category of operations.
