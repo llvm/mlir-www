@@ -12,7 +12,7 @@ documentation.
 
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
-#### [Block](LangRef.md#blocks)
+#### [Block](../docs/LangRef#blocks)
 
 A sequential list of operations without control flow.
 
@@ -36,14 +36,14 @@ defined declaratively (e.g. through specification in a
 [TableGen](https://llvm.org/docs/TableGen/) record). At compiler build time,
 these rules are expanded into an equivalent `mlir::RewritePattern` subclass.
 
-#### [Dialect](LangRef.md#dialects)
+#### [Dialect](../docs/LangRef#dialects)
 
 A dialect is a grouping of functionality which can be used to extend the MLIR
 system.
 
 A dialect creates a unique `namespace` within which new
-[operations](#operation-op), [attributes](LangRef.md#attributes), and
-[types](LangRef.md#type-system) are defined. This is the fundamental method by
+[operations](#operation-op), [attributes](../docs/LangRef#attributes), and
+[types](../docs/LangRef#type-system) are defined. This is the fundamental method by
 which to extend MLIR.
 
 In this way, MLIR is a meta-IR: its extensible framework allows it to be
@@ -73,7 +73,7 @@ The tool that performs such a transformation is called an exporter.
 
 See also: [translation](#translation).
 
-#### [Function](LangRef.md#functions)
+#### [Function](../docs/LangRef#functions)
 
 An [operation](#operation-op) with a name containing one [region](#region).
 
@@ -112,7 +112,7 @@ operations are legal versus illegal after lowering.
 
 See also: [legalization](#legalization).
 
-#### [Module](LangRef.md#module)
+#### [Module](../docs/LangRef#module)
 
 An [operation](#operation-op) which contains a single region containing a single
 block that is comprised of operations.
@@ -120,7 +120,7 @@ block that is comprised of operations.
 This provides an organizational structure for MLIR operations, and is the
 expected top-level operation in the IR: the textual parser returns a Module.
 
-#### [Operation](LangRef.md#operations) (op)
+#### [Operation](../docs/LangRef#operations) (op)
 
 A unit of code in MLIR. Operations are the building blocks for all code and
 computations represented by MLIR. They are fully extensible (there is no fixed
@@ -136,7 +136,7 @@ general API into an operation instance. An `Op` is the base class of a derived
 operation, like `ConstantOp`, and acts as smart pointer wrapper around a
 `Operation*`
 
-#### [Region](LangRef.md#regions)
+#### [Region](../docs/LangRef#regions)
 
 A [CFG](https://en.wikipedia.org/wiki/Control-flow_graph) of MLIR
 [blocks](#block).
@@ -155,7 +155,7 @@ be done entirely within the MLIR representation. This separation - making the
 [importer](#import) as simple as possible and performing all further
 cleanups/lowering in MLIR - has proven to be a useful design pattern.
 
-#### [Terminator operation](LangRef.md#control-flow-and-ssacfg-regions)
+#### [Terminator operation](../docs/LangRef#control-flow-and-ssacfg-regions)
 
 An [operation](#operation-op) which *must* terminate a [block](#block).
 Terminator operations are a special category of operations.
