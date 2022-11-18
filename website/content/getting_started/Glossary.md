@@ -105,7 +105,7 @@ The process of transforming a higher-level representation of an operation into a
 lower-level, but semantically equivalent, representation.
 
 In MLIR, this is typically accomplished through
-[dialect conversion](DialectConversion.md). This provides a framework by which
+[dialect conversion](../docs/DialectConversion.md). This provides a framework by which
 to define the requirements of the lower-level representation, called the
 [conversion target](DialectConversion.md#conversion-target), by specifying which
 operations are legal versus illegal after lowering.
