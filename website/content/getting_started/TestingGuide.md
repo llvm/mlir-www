@@ -35,13 +35,13 @@ An example FileCheck test is shown below:
 ```mlir
 // RUN: mlir-opt %s -cse | FileCheck %s
 
-// CHECK-LABEL: func @simple_constant
-func @simple_constant() -> (i32, i32) {
-  // CHECK-NEXT: %[[RESULT:.*]] = constant 1
+// CHECK-LABEL: func.func @simple_constant
+func.func @simple_constant() -> (i32, i32) {
+  // CHECK-NEXT: %[[RESULT:.*]] = arith.constant 1
   // CHECK-NEXT: return %[[RESULT]], %[[RESULT]]
 
-  %0 = constant 1 : i32
-  %1 = constant 1 : i32
+  %0 = arith.constant 1 : i32
+  %1 = arith.constant 1 : i32
   return %0, %1 : i32, i32
 }
 ```
@@ -60,14 +60,14 @@ functionalities needed. Let's see an example:
 ```mlir
 // RUN: mlir-opt %s -cse | FileCheck %s
 
-// CHECK-LABEL: func @simple_constant() -> (i32, i32)
-func @simple_constant() -> (i32, i32) {
-  // CHECK-NEXT: %result = constant 1 : i32
+// CHECK-LABEL: func.func @simple_constant() -> (i32, i32)
+func.func @simple_constant() -> (i32, i32) {
+  // CHECK-NEXT: %result = arith.constant 1 : i32
   // CHECK-NEXT: return %result, %result : i32, i32
   // CHECK-NEXT: }
 
-  %0 = constant 1 : i32
-  %1 = constant 1 : i32
+  %0 = arith.constant 1 : i32
+  %1 = arith.constant 1 : i32
   return %0, %1 : i32, i32
 }
 ```
@@ -95,21 +95,21 @@ If we naively remove the unrelated `CHECK` lines in our source file, we may end
 up with:
 
 ```mlir
-// CHECK-LABEL: func @simple_constant
-func @simple_constant() -> (i32, i32) {
-  // CHECK-NEXT: %result = constant 1 : i32
+// CHECK-LABEL: func.func @simple_constant
+func.func @simple_constant() -> (i32, i32) {
+  // CHECK-NEXT: %result = arith.constant 1 : i32
   // CHECK-NEXT: return %result, %result : i32, i32
 
-  %0 = constant 1 : i32
-  %1 = constant 1 : i32
+  %0 = arith.constant 1 : i32
+  %1 = arith.constant 1 : i32
   return %0, %1 : i32, i32
 }
 ```
 
 It may seem like this is a minimal test case, but it still checks several
 aspects of the output that are unrelated to the CSE transformation. Namely the
-result types of the `constant` and `return` operations, as well the actual SSA
-value names that are produced. FileCheck `CHECK` lines may contain
+result types of the `arith.constant` and `return` operations, as well the
+actual SSA value names that are produced. FileCheck `CHECK` lines may contain
 [regex statements](https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-regex-matching-syntax)
 as well as named
 [string substitution blocks](https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-string-substitution-blocks).
@@ -117,15 +117,15 @@ Utilizing the above, we end up with the example shown in the main
 [FileCheck tests](#filecheck-tests) section.
 
 ```mlir
-// CHECK-LABEL: func @simple_constant
-func @simple_constant() -> (i32, i32) {
+// CHECK-LABEL: func.func @simple_constant
+func.func @simple_constant() -> (i32, i32) {
   /// Here we use a substitution variable as the output of the constant is
   /// useful for the test, but we omit as much as possible of everything else.
-  // CHECK-NEXT: %[[RESULT:.*]] = constant 1
+  // CHECK-NEXT: %[[RESULT:.*]] = arith.constant 1
   // CHECK-NEXT: return %[[RESULT]], %[[RESULT]]
 
-  %0 = constant 1 : i32
-  %1 = constant 1 : i32
+  %0 = arith.constant 1 : i32
+  %1 = arith.constant 1 : i32
   return %0, %1 : i32, i32
 }
 ```
@@ -149,16 +149,16 @@ An example .mlir test running under `mlir-opt` is shown below:
 // RUN: mlir-opt %s -split-input-file -verify-diagnostics
 
 // Expect an error on the same line.
-func @bad_branch() {
-  br ^missing  // expected-error {{reference to an undefined block}}
+func.func @bad_branch() {
+  cf.br ^missing  // expected-error {{reference to an undefined block}}
 }
 
 // -----
 
 // Expect an error on an adjacent line.
-func @foo(%a : f32) {
-  // expected-error@+1 {{unknown comparison predicate "foo"}}
-  %result = cmpf "foo", %a, %a : f32
+func.func @foo(%a : f32) {
+  // expected-error@+1 {{invalid predicate attribute specification: "foo"}}
+  %result = arith.cmpf "foo", %a, %a : f32
   return
 }
 ```
