@@ -29,7 +29,6 @@ weight: 1
 ### Using MLIR
 
 * [A MLIR Dialect for Quantum Assembly Languages](https://arxiv.org/abs/2101.11365)
-* [On using MLIR for Verona](https://systemcall.eu/2020/10/22/on-using-mlir-for-verona/)
 * [Compiling ONNX Neural Network Models Using MLIR](https://arxiv.org/abs/2008.08272)
 * [SyFER-MLIR: Integrating Fully Homomorphic Encryption Into the MLIR Compiler Framework](https://math.mit.edu/research/highschool/primes/materials/2020/Govindarajan-Moses.pdf)
 * [Domain-Specific Multi-Level IR Rewriting for GPU](https://arxiv.org/abs/2005.13014)
