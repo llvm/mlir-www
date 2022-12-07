@@ -63,13 +63,13 @@ details.
 ### Issue tracking
 
 To report a bug, use the [MLIR product on the LLVM bug
-tracker](https://bugs.llvm.org/enter_bug.cgi?product=MLIR), try to pick a
+tracker](https://github.com/llvm/llvm-project/issues/new), try to pick a
 suitable component for the bug, or leave it in the default.
 
 If you want to contribute, start working through the MLIR codebase, navigate to
-[the "beginner" issues](https://bugs.llvm.org/buglist.cgi?keywords=beginner%2C%20&keywords_type=allwords&list_id=176893&product=MLIR&query_format=advanced&resolution=---)
+[the "good first issue" issues](https://github.com/llvm/llvm-project/issues)
 and start looking through interesting issues. If you decide to start on an
-issue, assign it to yourself and leave a comment so that other people know that
+issue, leave a comment so that other people know that
 you're working on it. If you want to help out, but not alone, use the issue
 comment thread to coordinate.
 
