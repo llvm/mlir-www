@@ -221,6 +221,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2022-12-15: Embedded reactive programming in MLIR ;
+[slides](/OpenMeetings/2022-12-15-Reactive-Programming.pdf) -
+[recording](https://youtu.be/euws5GvM3oo)
 * 2022-10-06: Coordinate Transformations in AMD’s rocMLIR ;
 [slides](/OpenMeetings/2022-10-06-Rocm-affine.pdf) -
 [recording](https://youtu.be/xrMJis3Rak0)
