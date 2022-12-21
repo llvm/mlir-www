@@ -131,6 +131,13 @@ building many tools (XLA, TFLite converter, quantization, ...).
 The Torch-MLIR project aims to provide first class compiler support from the
 PyTorch ecosystem to the MLIR ecosystem.
 
+## [Triton](https://github.com/openai/triton)
+
+Triton is a language and compiler for writing highly efficient custom
+Deep-Learning primitives. The aim of Triton is to provide an open-source
+environment to write fast code at higher productivity than CUDA, but also
+with higher flexibility than other existing DSLs.
+
 ## [Verona](https://github.com/microsoft/verona)
 
 Project Verona is a research programming language to explore the concept of
