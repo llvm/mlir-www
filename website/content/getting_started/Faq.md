@@ -40,6 +40,10 @@ The BibTeX entry is as follows.
 Please do **not** cite the arXiv preprint as it is not a formal peer-reviewed
 publication.
 
+## Why is \<small feature\> not available in MLIR?
+	
+On general basis, there is never a reason why a small feature is not available in MLIR other than nobody needed it enough to implement it. Consider submitting a patch. For larger features and dialects, follow the [request-for-comments](https://mlir.llvm.org/getting_started/DeveloperGuide/#guidelines-on-contributing-a-new-dialect-or-important-components) process.
+
 ## What is the difference between the Tensor and Vector types?
 
 1) Conceptual: vectors are meant to and occur in lower level dialects - often where you expect hardware to have registers of that size. Tensors model higher-level "closer to the source" abstract representation. This is reflected in the abstraction modeled by the operations from the [`vector` dialect](https://mlir.llvm.org/docs/Dialects/Vector/), while Tensors would be more naturally present in the operations of the [`linalg` dialect](https://mlir.llvm.org/docs/Dialects/Linalg/).
