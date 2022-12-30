@@ -138,6 +138,14 @@ Deep-Learning primitives. The aim of Triton is to provide an open-source
 environment to write fast code at higher productivity than CUDA, but also
 with higher flexibility than other existing DSLs.
 
+## [VAST](https://github.com/trailofbits/vast): C/C++ frontend for MLIR
+
+VAST is a library for program analysis and instrumentation of C/C++ and related languages.
+VAST provides a foundation for customizable program representation for a broad spectrum
+of analyses. Using the MLIR infrastructure, VAST provides a toolset to represent C/C++
+program at various stages of the compilation and to transform the representation to the
+best-fit program abstraction.
+
 ## [Verona](https://github.com/microsoft/verona)
 
 Project Verona is a research programming language to explore the concept of
