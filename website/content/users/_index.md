@@ -112,7 +112,7 @@ and the GPU Polygeist paper
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
 conformance. It uses MLIR Dialects for the task of high level, language specific
-optimizations as well as LLVM for code genereation and garbage collector
+optimizations as well as LLVM for code genereation and garbage collector 
 support.
 
 ## [RISE](https://rise-lang.org/)
