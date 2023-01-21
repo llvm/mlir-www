@@ -57,7 +57,7 @@ MLIR-AIE is a toolchain providing low-level device configuration for Versal
 AIEngine-based devices. Support is provided to target the AIEngine portion of
 the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
-some higher-level abstractions enabling higher-level design 
+some higher-level abstractions enabling higher-level design
 
 ## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
 
@@ -112,7 +112,7 @@ and the GPU Polygeist paper
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
 conformance. It uses MLIR Dialects for the task of high level, language specific
-optimizations as well as LLVM for code genereation and garbage collector
+optimizations as well as LLVM for code genereation and garbage collector 
 support.
 
 ## [RISE](https://rise-lang.org/)
