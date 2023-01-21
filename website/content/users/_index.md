@@ -151,3 +151,7 @@ best-fit program abstraction.
 Project Verona is a research programming language to explore the concept of
 concurrent ownership. They are providing a new concurrency model that seamlessly
 integrates ownership.
+
+## [Beaver](https://github.com/beaver-lodge/beaver)
+
+Beaver is an MLIR frondend in Elixir and Zig. Powered by Elixir's composable modularity and meta-programming features, Beaver provides a simple, intuitive, and extensible interface for MLIR.
