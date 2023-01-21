@@ -7,6 +7,12 @@ weight: 1
 
 In alphabetical order below.
 
+## [Beaver](https://github.com/beaver-lodge/beaver)
+
+Beaver is an MLIR frondend in Elixir and Zig.
+Powered by Elixir's composable modularity and meta-programming features,
+Beaver provides a simple, intuitive, and extensible interface for MLIR.
+
 ## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
 
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
@@ -51,7 +57,7 @@ MLIR-AIE is a toolchain providing low-level device configuration for Versal
 AIEngine-based devices. Support is provided to target the AIEngine portion of
 the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
-some higher-level abstractions enabling higher-level design 
+some higher-level abstractions enabling higher-level design
 
 ## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
 
@@ -106,7 +112,7 @@ and the GPU Polygeist paper
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
 conformance. It uses MLIR Dialects for the task of high level, language specific
-optimizations as well as LLVM for code genereation and garbage collector 
+optimizations as well as LLVM for code genereation and garbage collector
 support.
 
 ## [RISE](https://rise-lang.org/)
@@ -151,7 +157,3 @@ best-fit program abstraction.
 Project Verona is a research programming language to explore the concept of
 concurrent ownership. They are providing a new concurrency model that seamlessly
 integrates ownership.
-
-## [Beaver](https://github.com/beaver-lodge/beaver)
-
-Beaver is an MLIR frondend in Elixir and Zig. Powered by Elixir's composable modularity and meta-programming features, Beaver provides a simple, intuitive, and extensible interface for MLIR.
