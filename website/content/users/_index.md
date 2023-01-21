@@ -9,10 +9,10 @@ In alphabetical order below.
 
 ## [Beaver](https://github.com/beaver-lodge/beaver)
 
- Beaver is an MLIR frondend in Elixir and Zig.
- Powered by Elixir's composable modularity and meta-programming features,
- Beaver provides a simple, intuitive, and extensible interface for MLIR.
- 
+Beaver is an MLIR frondend in Elixir and Zig.
+Powered by Elixir's composable modularity and meta-programming features,
+Beaver provides a simple, intuitive, and extensible interface for MLIR.
+
 ## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
 
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
@@ -57,7 +57,7 @@ MLIR-AIE is a toolchain providing low-level device configuration for Versal
 AIEngine-based devices. Support is provided to target the AIEngine portion of
 the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
-some higher-level abstractions enabling higher-level design
+some higher-level abstractions enabling higher-level design 
 
 ## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
 
