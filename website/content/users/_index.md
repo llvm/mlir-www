@@ -7,6 +7,12 @@ weight: 1
 
 In alphabetical order below.
 
+## [Beaver](https://github.com/beaver-lodge/beaver)
+
+Beaver is an MLIR frondend in Elixir and Zig.
+Powered by Elixir's composable modularity and meta-programming features,
+Beaver provides a simple, intuitive, and extensible interface for MLIR.
+
 ## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
 
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
