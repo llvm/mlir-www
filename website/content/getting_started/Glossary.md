@@ -29,7 +29,7 @@ Conversion refers to a transformation between (or within) dialects, but all
 still within MLIR, whereas translation refers to a transformation between MLIR
 and an external representation.
 
-#### [Declarative Rewrite Rule](DeclarativeRewrites.md) (DRR)
+#### [Declarative Rewrite Rule](../docs/DeclarativeRewrites) (DRR)
 
 A [rewrite rule](https://en.wikipedia.org/wiki/Graph_rewriting) which can be
 defined declaratively (e.g. through specification in a
@@ -52,17 +52,12 @@ process). Dialects provide an abstraction for the different uses of MLIR while
 recognizing that they are all a part of the meta-IR that is MLIR.
 
 The tutorial provides an example of
-[interfacing with MLIR](../docs/Tutorials/Toy/Ch-2.md#interfacing-with-mlir) in this
+[interfacing with MLIR](../docs/Tutorials/Toy/Ch-2#interfacing-with-mlir) in this
 way.
 
 (Note that we have intentionally selected the term "dialect" instead of
 "language", as the latter would wrongly suggest that these different namespaces
 define entirely distinct IRs.)
-
-#### [EDSC](../docs/EDSC.md)
-
-Embedded Domain Specific Constructs, a library of declarative builders for
-constructing MLIR programmatically with an idiomatic C++ API.
 
 #### Export
 
@@ -94,7 +89,7 @@ See also: [translation](#translation).
 
 The process of transforming operations into a semantically equivalent
 representation which adheres to the requirements set by the
-[conversion target](DialectConversion.md#conversion-target).
+[conversion target](../docs/DialectConversion#conversion-target).
 
 That is, legalization is accomplished if and only if the new representation
 contains only operations which are legal, as specified in the conversion target.
@@ -105,9 +100,9 @@ The process of transforming a higher-level representation of an operation into a
 lower-level, but semantically equivalent, representation.
 
 In MLIR, this is typically accomplished through
-[dialect conversion](../docs/DialectConversion.md). This provides a framework by which
+[dialect conversion](../docs/DialectConversion). This provides a framework by which
 to define the requirements of the lower-level representation, called the
-[conversion target](DialectConversion.md#conversion-target), by specifying which
+[conversion target](../docs/DialectConversion#conversion-target), by specifying which
 operations are legal versus illegal after lowering.
 
 See also: [legalization](#legalization).
@@ -170,7 +165,7 @@ This provides the flexibility that the [conversion](#conversion) framework may
 perform the lowering in multiple stages of applying patterns (which may utilize
 intermediate patterns not in the conversion target) in order to fully legalize
 an operation. This is accomplished through
-[partial conversion](DialectConversion.md#modes-of-conversion).
+[partial conversion](../docs/DialectConversion#modes-of-conversion).
 
 #### Translation
 
