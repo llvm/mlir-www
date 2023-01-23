@@ -59,11 +59,6 @@ way.
 "language", as the latter would wrongly suggest that these different namespaces
 define entirely distinct IRs.)
 
-#### [EDSC](../docs/EDSC.md)
-
-Embedded Domain Specific Constructs, a library of declarative builders for
-constructing MLIR programmatically with an idiomatic C++ API.
-
 #### Export
 
 To transform code represented in MLIR into a semantically equivalent
