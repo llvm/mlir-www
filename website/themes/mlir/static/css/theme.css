@@ -416,7 +416,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "游ゴシック体", YuGothic, "メイリオ", Meiryo, "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-feature-settings: 'pwid';
   line-height: 1.8;
-  background: #fafafa;
   margin: 0;
 }
 
@@ -732,6 +731,8 @@ body {
   display: flex;
   flex-flow: column nowrap;
   margin: auto;
+  border-left: solid 1px #eee;
+  border-right: solid 1px #eee;
 }
 
 .content-container {
@@ -748,7 +749,7 @@ main {
   flex: 0 0 25%;
   order: -1;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 @media screen and (max-width: 480px) {
