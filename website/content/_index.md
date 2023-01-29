@@ -14,13 +14,17 @@ together.
 
 # Weekly Public Meeting
 
-We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
-to discuss a particular topic or have questions, please add it to the
+We host a **weekly public meeting** about MLIR and the ecosystem.
+To be notified of the next meeting, please subscribe to the
+[MLIR Announcements](https://discourse.llvm.org/c/mlir/mlir-announcements/44)
+category on Discourse.
+
+If you’d like to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
-Details on how to join the meeting are in the agenda doc, you can get a Google
-calendar invite by joining
-[this googlegroup](https://groups.google.com/a/tensorflow.org/g/mlir). The meetings
-are recorded and published in the [talks](talks/) section.
+
+
+
+The meetings are recorded and published in the [talks](talks/) section.
 
 
 ## More resources
