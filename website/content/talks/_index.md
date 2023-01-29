@@ -82,7 +82,7 @@ calendar invite by joining
 
 * 2023-01-26: Controllable Transformations in MLIR ;
 [slides](/OpenMeetings/2023-01-26-Controllable-transformations.pdf) -
-[recording](https://youtu.be/KWfl9muiT_8)
+[recording](https://youtu.be/j0xAlkvvEEg)
 * 2022-11-03: Poison Semantics in MLIR ;
 [slides](/OpenMeetings/2022-11-03-Poison-Semantics-For-MLIR.pdf) -
 [recording](https://youtu.be/WulQdjPy8DQ)
