@@ -98,6 +98,10 @@ IBM Power Systems, and IBM System Z.
 See also this paper: [Compiling ONNX Neural Network Models Using
 MLIR](https://arxiv.org/abs/2008.08272).
 
+## [OpenXLA](https://github.com/openxla)
+
+A community-driven, open source ML compiler ecosystem, using the best of XLA & MLIR.
+
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
 PlaidML is a tensor compiler that facilitates reusable and performance portable
