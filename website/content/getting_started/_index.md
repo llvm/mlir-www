@@ -44,7 +44,7 @@ cmake -G Ninja ../llvm \
    -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" \
    -DCMAKE_BUILD_TYPE=Release \
    -DLLVM_ENABLE_ASSERTIONS=ON
-# Using clang and lld speeds up the build, we recomment adding:
+# Using clang and lld speeds up the build, we recommend adding:
 #  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_LLD=ON
 # CCache can drastically speed up further rebuilds, try adding:
 #  -DLLVM_CCACHE_BUILD=ON
