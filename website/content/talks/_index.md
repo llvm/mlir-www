@@ -25,6 +25,8 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* [How to Build your own MLIR Dialect](https://fosdem.org/2023/schedule/event/mlirdialect/) ; Marius Brehler @ [FOSDEM 2023](https://fosdem.org/2023/)
+
 * [Compiler Support for Sparse Tensor Computations in MLIR](https://youtu.be/x-nHc3hBxHM) ; [Aart Bik](https://www.aartbik.com/) @ [2021 LLVM Developers' Meeting](https://llvm.swoogo.com/2021devmtg/) November 16-19, 2021.
 
 * [MLIR: Scaling Compiler Infrastructure for Domain Specific
