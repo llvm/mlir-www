@@ -82,6 +82,9 @@ calendar invite by joining
 
 ### About MLIR and MLIR Components
 
+* 2023-02-09: Deep Dive on MLIR Internals, Operation&Attribute, towards Properties
+[slides](/OpenMeetings/2023-01-26-Properties.pdf) -
+[recording](https://youtu.be/7ofnlCFzlqg)
 * 2023-01-26: Controllable Transformations in MLIR ;
 [slides](/OpenMeetings/2023-01-26-Controllable-transformations.pdf) -
 [recording](https://youtu.be/j0xAlkvvEEg)
