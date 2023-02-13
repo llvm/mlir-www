@@ -27,6 +27,9 @@ LLVM style guide):
     recursive way). At the moment, we tolerate it for the two following cases:
     *   The nesting of the IR: we use recursion when traversing nested regions.
     *   Type nesting: recursion may be used for the nesting of composite types.
+*   Use free functions to perform casts, e.g., `dyn_cast<T>(x)`, `isa<T>(x)`,
+    etc. Use of cast methods (e.g., `x.dyn_cast<T>()`) in new code discouraged
+    and will be be discontinued in the future.
 *   Follows git conventions for
     [commit messages](Contributing.md#commit-messages).
 
