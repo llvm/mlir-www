@@ -19,10 +19,11 @@ To be notified of the next meeting, please subscribe to the
 [MLIR Announcements](https://discourse.llvm.org/c/mlir/mlir-announcements/44)
 category on Discourse.
 
+You can register to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+to keep up-to-date with the schedule. 
+
 If you’d like to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
-
-
 
 The meetings are recorded and published in the [talks](talks/) section.
 
