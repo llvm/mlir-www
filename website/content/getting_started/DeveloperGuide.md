@@ -83,12 +83,20 @@ TLDR: only verify local aspects of an operation, in particular don't follow
 def-use chains (don't look at the producer of any operand or the user of any
 results).
 
-MLIR encourages to enforce invariants around operations. For example it is
+MLIR encourages to enforce invariants around operations in verifiers. It is
 common for operations defined in [ODS](/docs/DefiningDialects/Operations/)
 to define constraint on the type of operands they accept, or the relationship
 between operands and results. For example the operations in the `arith`
 dialect are defined with the `SameOperandsAndResultType` trait, which enforces
 a self-describing invariant.
+
+When an invariant fails, we consider the IR to be "invalid" and we abort the
+compilation flow. By convention the contract of any pass in the compiler is
+to assume its input IR is valid and it must produce a valid output as well.
+The default setting for the pass manager is to enforce this between every
+single pass. Because the process is aborted when a verifier is failing, they
+must only fire on things that are definitive broken invariant, and not on
+"possibly invalid" cases.
 
 While it is encouraged to verify as much invariants as possible in order to
 catch bugs during development as soon as possible, there is some important
