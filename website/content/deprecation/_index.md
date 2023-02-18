@@ -5,7 +5,7 @@ draft: false
 weight: 2
 ---
 
-This page collects current depreciation in MLIR of API and features we intend
+This page collects current deprecations in MLIR of API and features we intend
 to remove soon, as well as large refactoring an migration on-going.
 We try to list these here for the purpose of helping downstream users keeping
 up with MLIR development.
@@ -23,5 +23,5 @@ methods in the future.
 ## On-going Refactoring
 
 
-## Past Depreciation and Refactoring
+## Past Deprecation and Refactoring
 
