@@ -12,7 +12,7 @@ up with MLIR development.
 
 ## Deprecated
 
-### Use free function for `dyn_cast`/`cast`/`isa`/...
+### Use the free function variants for `dyn_cast`/`cast`/`isa`/...
 
 When casting attributes or type, use the free functions variants, e.g.,
 `dyn_cast<T>(x)`, `isa<T>(x)`, etc. Use of the cast methods variants (e.g.,
