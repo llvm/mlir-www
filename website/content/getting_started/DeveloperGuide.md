@@ -77,6 +77,68 @@ mechanism. This allows for these options to be serialized in a pass pipeline
 description, as well as passing different options to multiple instances of a
 pass in the same pipeline.
 
+## IR Verifier
+
+TLDR: only verify local aspects of an operation, in particular don't follow
+def-use chains (don't look at the producer of any operand or the user of any
+results).
+
+MLIR encourages to enforce invariants around operations in verifiers. It is
+common for operations defined in [ODS](/docs/DefiningDialects/Operations/)
+to define constraint on the type of operands they accept, or the relationship
+between operands and results. For example the operations in the `arith`
+dialect are defined with the `SameOperandsAndResultType` trait, which enforces
+a self-describing invariant.
+
+When an invariant fails, we consider the IR to be "invalid" and we abort the
+compilation flow. By convention the contract of any pass in the compiler is
+to assume its input IR is valid and it must produce a valid output as well.
+The default setting for the pass manager is to enforce this between every
+single pass. Because the process is aborted when a verifier is failing, they
+must only fire on things that are definitive broken invariant, and not on
+"possibly invalid" cases.
+
+While it is encouraged to verify as much invariants as possible in order to
+catch bugs during development as soon as possible, there is some important
+aspect to keep in mind. In particular a common point of confusion is about how
+to handle "undefined behavior" cases. For example the `tensor.dim` operation:
+
+```
+// Returns the dimension of %A indexed by %dim.
+%y = tensor.dim %A, %dim : memref<4x?xf32>
+```
+
+The `%dim` indicates what dimension to return. If the dimension index is out
+of bounds, the behavior is undefined. What about:
+
+```
+%ten = arith.constant 10 : index
+%y = tensor.dim %A, %ten : memref<4x?xf32>
+```
+
+We have unambiguously a violation of the spec here, and we can statically
+verify it. However this is not the kind of invariants to enforce in a
+verifier because it relies on non-local properties, which makes the design
+of the compiler much less flexible. For example:
+
+```
+  %five = arith.constant 5 : index
+  %ten = arith.addi %five, %five : index
+  %y = tensor.dim %A, %ten : memref<4x?xf32>
+}
+```
+
+The IR would be valid, and going through constant folding for `arith.addi`
+would lead to the situation above, if we deemed this invalid IR that would
+mean that the folder for `arith.addi` has a bug: it is turning valid IR
+into invalid IR. The same would apply to many other transformations
+(inlining for example).
+
+This is why the guidelines to write verifier is to stick to information local
+to an operation (think "what I see when I print this operation alone").
+Looking through operands or results is extremely unusual and should be
+avoided.
+
 ## Testing guidelines
 
 See here for the [testing guide](TestingGuide.md).
