@@ -70,15 +70,16 @@ weight: 1
 * Compiling Ruby with MLIR ; [recording](https://youtu.be/Cl5SgDxvZ8w) ; Alex Denisov @ [LLVM Social Berlin #20](https://www.meetup.com/llvm-social-berlin/events/287586655/)
 
 
-
 ## Open design meeting presentations
 
 We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
 to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
-Details on how to join the meeting are in the agenda doc, you can get a Google
-calendar invite by joining
-[this googlegroup](https://groups.google.com/a/tensorflow.org/g/mlir).
+
+The meetings are announced on [Discourse]https://discourse.llvm.org/c/mlir/mlir-announcements/44),
+subscribing to this category is the best way to stay informed. You can also register
+to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t). 
+
 
 ### About MLIR and MLIR Components
 
@@ -328,7 +329,8 @@ Architectures ;
 
 ## Upcoming talks or presentations
 
-The schedule for the open design meetings and upcoming presentations can be found on the Agenda document of the [SIG](https://github.com/tensorflow/community/blob/master/sigs/mlir/CHARTER.md). Additional talks or conferences of interest will be added below.
+The schedule for the open design meetings and upcoming presentations can be found in the [agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
+
 
 ## Past conferences and workshops
 
