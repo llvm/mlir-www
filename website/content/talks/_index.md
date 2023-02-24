@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-02-23: MLIR Actions: Tracing and Debugging MLIR-based Compilers
+[slides](/OpenMeetings/2023-02-23-Actions.pdf) -
+[recording](https://youtu.be/ayQSyekVa3c)
 * 2023-02-09: Deep Dive on MLIR Internals, Operation&Attribute, towards Properties
 [slides](/OpenMeetings/2023-02-09-Properties.pdf) -
 [recording](https://youtu.be/7ofnlCFzlqg)
