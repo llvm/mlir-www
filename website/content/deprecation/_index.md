@@ -20,6 +20,14 @@ When casting attributes or type, use the free functions variants, e.g.,
 methods in the future.
 [Discussion on Discourse](https://discourse.llvm.org/t/preferred-casting-style-going-forward/68443)
 
+### Port uses of LLVM Dialect to opaque pointers
+
+LLVM 17 has stopped officially supporting typed pointers and MLIRs LLVM Dialect 
+will follow suit soon by removing them. Users of the LLVM Dialect must switch
+to using opaque pointers and stop relying on pointers having an element type.
+See the initial [PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738)
+post for precise instructions and timeline. 
+
 ## On-going Refactoring
 
 
