@@ -22,10 +22,6 @@ starting on these projects.
 * Automatic formatter for TableGen (similar to clang-format for C/C++)
 * LLVM IR declaratively defined. (mentor: Alex Zinenko)
 * MLIR Binary serialization / bitcode format (Mehdi Amini)
-* SPIR-V module combiner (mentor: Lei Zhang)
-  * Basic: merging modules and remove identical functions
-  * Advanced: comparing logic and use features like spec constant to reduce
-  similar but not identical functions
 * GLSL to SPIR-V dialect frontend (mentor: Lei Zhang)
   * Requires: building up graphics side of the SPIR-V dialect
   * Purpose: give MLIR more frontends :) improve graphics tooling
