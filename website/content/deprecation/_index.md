@@ -12,6 +12,21 @@ up with MLIR development.
 
 ## Deprecated
 
+### `preloadDialectInContext` has been deprecated for >1y and will be removed
+
+If you have an mlir-opt tool and you’re still depending on
+`preloadDialectInContext`, you need to revisit your pipeline. This option
+used with mlir-opt is hiding issues with the pipeline, and indications of
+missing getDependentDialects().
+[Discussion on Discourse](https://discourse.llvm.org/t/psa-preloaddialectincontext-has-been-deprecated-for-1y-and-will-be-removed/68992)
+
+### Migrating `mlir-opt`-like tools to use `MlirOptMainConfig`
+
+If your `mlir-opt`-like tool is using the
+`MlirOptMain(int argc, char **argv, ...)` entry point you won’t be affected,
+otherwise, see the
+[Discussion on Discourse](https://discourse.llvm.org/t/psa-migrating-mlir-opt-like-tools-to-use-mliroptmainconfig/68991)
+
 ### Use the free function variants for `dyn_cast`/`cast`/`isa`/...
 
 When casting attributes or type, use the free functions variants, e.g.,
