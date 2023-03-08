@@ -265,7 +265,7 @@ most useful for development purposes:
   Only runs tests whose name matches the REGEXP. Can also be specified via
   the `LIT_FILTER` environment variable.
 * [`--filter-out=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter-out) :
-  Only runs tests whose name matches the REGEXP. Can also be specified via
+  Filters out tests whose name matches the REGEXP. Can also be specified via
   the `LIT_FILTER_OUT` environment variable.
 * [`-a`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-a) : Shows
   all information (useful while iterating on a small set of tests).
