@@ -66,6 +66,14 @@ the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
 some higher-level abstractions enabling higher-level design 
 
+## [MLIR-DaCe](https://github.com/spcl/mlir-dace): Data-Centric MLIR Dialect
+
+MLIR-DaCe is a project aiming to bridge the gap between control-centric and 
+data-centric intermediate representations. By bridging these two groups of IRs, 
+it allows the combination of control-centric and data-centric optimizations in 
+optimization pipelines. In order to achieve this, MLIR-DaCe provides a data-centric 
+dialect in MLIR to connect the MLIR and DaCe frameworks.
+
 ## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
 
 MLIR-EmitC provides a way to translate ML models into C++ code. The repository
