@@ -16,7 +16,7 @@ website. The source pages are written in Markdown format under the
 
 The expected workflow is to download hugo on your machine, and run
 `hugo server` from the `website` directory. You can then access a local
-version of the website from http://localhost:1313/ ; anychange you
+version of the website from http://localhost:1313/ ; any change you
 make to the source Markdown will automatically be refreshed by the local
 hugo server.
 
