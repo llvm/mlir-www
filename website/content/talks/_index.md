@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-03-09: Integrating Convolution Optimization into MLIR to Improve Performance Beyond Im2Col+GEMM
+[slides](/OpenMeetings/2023-03-09-Convolution-Optimization.pdf) -
+[recording](https://youtu.be/ayQSyekVa3c)
 * 2023-02-23: MLIR Actions: Tracing and Debugging MLIR-based Compilers
 [slides](/OpenMeetings/2023-02-23-Actions.pdf) -
 [recording](https://youtu.be/ayQSyekVa3c)
