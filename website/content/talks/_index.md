@@ -74,7 +74,7 @@ weight: 1
 
 We host a **weekly public meeting** about MLIR and the ecosystem. If you’d like
 to discuss a particular topic or have questions, please add it to the
-[agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
+[agenda doc](https://docs.google.com/document/d/1y2YlcOVMPocQjSFi3X6gYGRjA0onyqr41ilXji10phw/edit#).
 
 The meetings are announced on [Discourse]https://discourse.llvm.org/c/mlir/mlir-announcements/44),
 subscribing to this category is the best way to stay informed. You can also register

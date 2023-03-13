@@ -23,7 +23,7 @@ You can register to [this public calendar](https://calendar.google.com/calendar/
 to keep up-to-date with the schedule. 
 
 If you’d like to discuss a particular topic or have questions, please add it to the
-[agenda doc](https://docs.google.com/document/d/1y_9f1AbfgcoVdJh4_aM6-BaSHvrHl8zuA5G4jv_94K8/edit#).
+[agenda doc](https://docs.google.com/document/d/1y2YlcOVMPocQjSFi3X6gYGRjA0onyqr41ilXji10phw/edit#).
 
 The meetings are recorded and published in the [talks](talks/) section.
 
