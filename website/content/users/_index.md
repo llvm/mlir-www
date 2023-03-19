@@ -44,6 +44,12 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [LingoDB](https://github.com/lingo-db/lingo-db)
+
+LingoDB is a new analytical database system that blurs the lines between databases
+and compilers.
+
+
 ## [Lumen](https://github.com/lumen/lumen): A new compiler and runtime for BEAM languages
 
 Lumen is not only a compiler, but a runtime as well. It consists of two parts:
