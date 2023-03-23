@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-03-23: Nelli, a lightweight, Pythonic, frontend for MLIR
+[slides](/OpenMeetings/2023-03-23-Nelli.pdf) -
+[recording](https://youtu.be/Z8knnMYRPx0)
 * 2023-03-09: Integrating Convolution Optimization into MLIR to Improve Performance Beyond Im2Col+GEMM
 [slides](/OpenMeetings/2023-03-09-Convolution-Optimization.pdf) -
 [recording](https://youtu.be/4qJanPAMUBs)
