@@ -76,7 +76,7 @@ We host a **weekly public meeting** about MLIR and the ecosystem. If you’d lik
 to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y2YlcOVMPocQjSFi3X6gYGRjA0onyqr41ilXji10phw/edit#).
 
-The meetings are announced on [Discourse]https://discourse.llvm.org/c/mlir/mlir-announcements/44),
+The meetings are announced on [Discourse](https://discourse.llvm.org/c/mlir/mlir-announcements/44),
 subscribing to this category is the best way to stay informed. You can also register
 to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t). 
 
