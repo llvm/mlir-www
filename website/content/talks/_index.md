@@ -239,6 +239,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2023-03-30: Representing dataflow with MLIR ;
+[slides](/OpenMeetings/2023-03-30-Representing-Dataflow-With-MLIR.pdf) -
+[recording](https://youtu.be/kEcLBhbncEg)
 * 2022-12-15: Embedded reactive programming in MLIR ;
 [slides](/OpenMeetings/2022-12-15-Reactive-Programming.pdf) -
 [recording](https://youtu.be/euws5GvM3oo)
