@@ -18,6 +18,10 @@ The following instructions for compiling and testing MLIR assume that you have
 `git`, [`ninja`](https://ninja-build.org/), and a working C++ toolchain (see
 [LLVM requirements](https://llvm.org/docs/GettingStarted.html#requirements)).
 
+Alternatively, if you're using a Debian or Ubuntu system, you can use [apt.llvm.org](https://apt.llvm.org/)
+to install packages for your distro; you can even install development snapshot packages 
+(see [Install development branch](https://apt.llvm.org/#install_dev) at the same site).
+
 As a starter, you may try [the tutorial](docs/Tutorials/Toy/Ch-1.md) on
 building a compiler for a Toy language.
 
