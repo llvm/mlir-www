@@ -28,11 +28,19 @@ to using opaque pointers and stop relying on pointers having an element type.
 See the initial [PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738)
 post for precise instructions and timeline. 
 
-## On-going Refactoring
+## On-going Refactoring & large changes
 
 # Past Deprecation and Refactoring
 
 ## LLVM 17
+
+### Properties && changes to the generic printing format
+
+See on [Discourse](https://discourse.llvm.org/t/rfc-introducing-mlir-operation-properties/67846/19).
+
+Properties is a new feature in MLIR that will allow to separate the storage of
+inherent attributes from the discardable ones. One key visible change is the
+generic assembly format which gain a new attribute entry in-between `<` `>`.
 
 ### `preloadDialectInContext` has been deprecated for >1y and was removed
 
