@@ -1,6 +1,6 @@
 ---
 title: "Users of MLIR"
-date: 2019-11-29T15:26:15Z
+date: 2023-05-04T21:00:54Z
 draft: false
 weight: 1
 ---
@@ -92,6 +92,15 @@ The latter is used to generate calls to a reference implementation.
 The [EmitC](https://mlir.llvm.org/docs/Dialects/EmitC/) dialect itself, as well
 as the C++ emitter, are part of MLIR core and are no longer provided as part of
 the MLIR-EmitC repository.
+
+## [Mojo](https://docs.modular.com/mojo/)
+
+Mojo is a new programming language that bridges the gap between research and
+production by combining the best of Python syntax with systems programming and
+metaprogramming, all leveraging the MLIR ecosystem.
+It aims to be a strict superset of Python (i.e. be compatible with existing
+programs) and to embrace the CPython immediately for long-tail ecosystem
+enablement.
 
 ## [Nod Distributed Runtime](https://nod.ai/project/distributedruntime/): Asynchronous fine-grained op-level parallel runtime
 
