@@ -241,7 +241,7 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 * 2023-05-04: Catalyst, an AOT/JIT compiler for hybrid quantum programs
 [slides](/OpenMeetings/2023-05-04-Catalyst-compiler-for-hybrid-quantum-programs.pdf)
-[recording](https://youtu.be/bL5p7_zirkg)
+[recording](https://youtu.be/VY-Rsi5SFB8)
 * 2023-03-30: Representing dataflow with MLIR ;
 [slides](/OpenMeetings/2023-03-30-Representing-Dataflow-With-MLIR.pdf) -
 [recording](https://youtu.be/kEcLBhbncEg)
