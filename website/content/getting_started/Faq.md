@@ -145,3 +145,12 @@ It is impossible in the general case. Structured memory reference (`memref`) typ
 It is, however, possible to define operations that create pointer-like types out of a `memref` as well as operations that, conversely, create `memref` out of pointers combined with additional information. Before implementing such operations, dialect authors are advised to carefully consider the implication of such operations on aliasing properties of the resulting IR.
 
 Interoperability with C is often cited to motivate an opaque cast from `memref`s to pointers. The [LLVM IR target](https://mlir.llvm.org/docs/TargetLLVMIR/#ranked-memref-types) provides an interface compatible with C for a well-defined subset of `memrefs` with [strided layout](https://mlir.llvm.org/docs/Dialects/Builtin/#strided-memref). At the function boundary, it even provides a minimalist support for passing memrefs as [bare pointers](https://mlir.llvm.org/docs/TargetLLVMIR/#bare-pointer-calling-convention-for-ranked-memref) provided their sizes are known statically and their layout is trivially identity.
+
+## What's with "op symbol declaration cannot have public visibility"?
+
+A common mistake is to try to provide a function declaration (that is a function
+without a body) but leaving it "public". Declaration must be private, only
+definitions can be public in the MLIR symbol system. See the
+[symbol visibility](https://mlir.llvm.org/docs/SymbolsAndSymbolTables/#symbol-visibility)
+documentation.
+
