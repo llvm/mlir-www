@@ -20,6 +20,20 @@ Beaver is an MLIR frondend in Elixir and Zig.
 Powered by Elixir's composable modularity and meta-programming features,
 Beaver provides a simple, intuitive, and extensible interface for MLIR.
 
+## [Catalyst](https://github.com/PennyLaneAI/catalyst)
+
+Catalyst is an AOT/JIT compiler for [PennyLane](https://pennylane.ai/) that
+accelerates hybrid quantum programs, with:
+
+- full auto-differentiation support, via custom quantum gradients
+  and [Enzyme](https://github.com/EnzymeAD/Enzyme)-based backpropagation,
+- a dynamic quantum programming model,
+- and integration into the Python ML ecosytem.
+
+Catalyst also comes with the [Lightning](https://github.com/PennyLaneAI/pennylane-lightning/)
+high performance simulator by default, but supports an extensible backend system that is
+constantly evolving, aiming to deliver execution on heterogenous architectures with GPUs and QPUs.
+
 ## [CIRCT](https://github.com/llvm/circt): Circuit IR Compilers and Tools
 
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
