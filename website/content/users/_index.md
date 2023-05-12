@@ -16,7 +16,7 @@ cross-compiling to a wide range of processor targets.
 
 ## [Beaver](https://github.com/beaver-lodge/beaver)
 
-Beaver is an MLIR frondend in Elixir and Zig.
+Beaver is an MLIR frontend in Elixir and Zig.
 Powered by Elixir's composable modularity and meta-programming features,
 Beaver provides a simple, intuitive, and extensible interface for MLIR.
 
