@@ -154,3 +154,13 @@ definitions can be public in the MLIR symbol system. See the
 [symbol visibility](https://mlir.llvm.org/docs/SymbolsAndSymbolTables/#symbol-visibility)
 documentation.
 
+## I'm confused about iterating on `getUsers()` vs `getUses()`: what's the difference?
+
+The "users" of an SSA value are instances of `Operation`, while the "uses" refer to
+the operands of these operations. For example considering `test.op(%0, %0) : ...`, when
+iterating on the "uses" of `%0` you would see two instances of `OpOperand` (one for each
+use in `test.op`), whereas iterating on the "users" of `%0` would yield directly two
+`Operation *` corresponding to `test.op`. Note that you see `test.op` twice as it is
+twice a user of `%0`, it's up to the call site to use a set to unique these if needed.
+[The tutorial on use-def chains](https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/#traversing-the-def-use-chains) may help understand the details as well.
+
