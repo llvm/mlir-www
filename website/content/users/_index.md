@@ -64,17 +64,17 @@ LingoDB is a new analytical database system that blurs the lines between databas
 and compilers.
 
 
-## [Lumen](https://github.com/lumen/lumen): A new compiler and runtime for BEAM languages
+## [Firefly](https://github.com/GetFirefly/firefly): A new compiler and runtime for BEAM languages
 
-Lumen is not only a compiler, but a runtime as well. It consists of two parts:
+Firefly is not only a compiler, but a runtime as well. It consists of two parts:
 
 - A compiler for Erlang to native code for a given target (x86, ARM, WebAssembly)
 - An Erlang runtime, implemented in Rust, which provides the core functionality
   needed to implement OTP
 
-The primary motivator for Lumen's development was the ability to compile Elixir
+The primary motivator for Firefly's development was the ability to compile Elixir
 applications that could target WebAssembly, enabling use of Elixir as a language
-for frontend development. It is also possible to use Lumen to target other
+for frontend development. It is also possible to use Firefly to target other
 platforms as well, by producing self-contained executables on platforms such as
 x86.
 
