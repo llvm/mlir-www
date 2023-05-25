@@ -83,7 +83,7 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
-* 2023-05-25: Disctinct Attributes: Modeling LLVM's distinct metadata in MLIR
+* 2023-05-25: Distinct Attributes: Modeling LLVM's distinct metadata in MLIR
 [slides](/OpenMeetings/2023-05-25-Distinct_Attributes.pdf) -
 [recording](https://youtu.be/BwrQkHmp1Ss)
 * 2023-03-23: Nelli, a lightweight, Pythonic, frontend for MLIR
