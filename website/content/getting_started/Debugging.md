@@ -42,6 +42,27 @@ If the problem is more complex than just a diagnostic / verifier error in a sing
 
 Either way, at the end of this process one should ideally have a `.mlir` file and a single pass (or manageable set of passes) to run in `mlir-opt` for further analysis.
 
+
+## Debugging Rewrite Pattern Application
+
+### Detecting Invalid API Usage
+
+`RewritePattern`s are typically applied by a driver such as the greedy pattern rewrite driver or as part of a dialect conversion. These drivers must know which parts of the IR were modified by a pattern, so that further pattern applications on the same piece of IR can be scheduled (in case of a greedy pattern rewrite) or rewrites can be reverted (in case of a dialect conversion).
+
+The greedy pattern rewrite driver can be built with extra checks (`-DMLIR_ENABLE_EXPENSIVE_PATTERN_API_CHECKS=ON`) to detect patterns that do not use the rewriter/pattern API correctly. These checks significantly slow down greedy rewrites, so they are not activated by default. These extra checks detect cases such as:
+
+* Pattern returned "success" but did not modify the IR.
+* Pattern returned "failure" but modified the IR.
+* Pattern modified IR directly, bypassing the rewriter API.
+
+These checks are best-effort; they are based on comparing operation finger prints, so there could be false positives in theory. Similarly, when the same piece of IR is modified multiple times, some API violations could be missed.
+
+Program execution is terminated when invalid pattern API usage is detected. In that case, it is recommended to re-run the program with `-debug`, to find out which pattern was the last one that was executed. Furthermore, ASAN can help with debugging. As an example, consider a case where a pattern mistakenly uses `Operation::erase` instead of `RewriterBase::eraseOp`. As part of the finger print computation, deallocated memory will be accessed, which will be detected by ASAN with a detailed error message.
+
+### Randomizing Operation Selection
+
+A greedy pattern rewrite should converge to the same IR, regardless of the order in which ops are processed. Rewrites that do not have this property are brittle and could get "stuck". Note, a relative pattern order can be specified with "benefit", but there is no such mechanism for the selection of ops. For debugging purposes, the greedy pattern rewrite driver can be built with worklist randomization (`-DMLIR_GREEDY_REWRITE_RANDOMIZER_SEED=<number>`), which will randomize the selection of ops.
+
 ## Miscellaneous tips
 
 - For printf debugging, instead of using `llvm::errs()`, one can emit diagnostics. For example, using `op.emitWarning() << "HERE: " << myVariable;` instead of `llvm::errs() << "HERE: " << myVariable << "\n";`. This prints nicely with colors, shows the op (and its location) for free, and can even give you a stacktrace with `-mlir-print-stacktrace-on-diagnostic`.
