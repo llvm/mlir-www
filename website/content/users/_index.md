@@ -84,14 +84,14 @@ MLIR-AIE is a toolchain providing low-level device configuration for Versal
 AIEngine-based devices. Support is provided to target the AIEngine portion of
 the device, including processors, stream switches, TileDMA and ShimDMA blocks.
 Backend code generation is included, targetting the LibXAIE library, along with
-some higher-level abstractions enabling higher-level design 
+some higher-level abstractions enabling higher-level design.
 
 ## [MLIR-DaCe](https://github.com/spcl/mlir-dace): Data-Centric MLIR Dialect
 
-MLIR-DaCe is a project aiming to bridge the gap between control-centric and 
-data-centric intermediate representations. By bridging these two groups of IRs, 
-it allows the combination of control-centric and data-centric optimizations in 
-optimization pipelines. In order to achieve this, MLIR-DaCe provides a data-centric 
+MLIR-DaCe is a project aiming to bridge the gap between control-centric and
+data-centric intermediate representations. By bridging these two groups of IRs,
+it allows the combination of control-centric and data-centric optimizations in
+optimization pipelines. In order to achieve this, MLIR-DaCe provides a data-centric
 dialect in MLIR to connect the MLIR and DaCe frameworks.
 
 ## [MLIR-EmitC](https://github.com/iml130/mlir-emitc)
@@ -145,6 +145,14 @@ PlaidML is a tensor compiler that facilitates reusable and performance portable
 ML models across various hardware targets including CPUs, GPUs, and
 accelerators.
 
+## [PolyBlocks](https://www.polymagelabs.com/technology/#polyblocks): An MLIR-based JIT and AOT compiler
+
+PolyBlocks is a high-performance, modular, and fully automatic MLIR-based
+end-to-end compiler for DL and non-DL computations. PolyBlocks is a JIT as
+well as an AOT compiler that is aimed at being fully automatic, analytical
+model-driven, and fully code generating (no reliance on vendor/HPC
+libraries).
+
 ## [Polygeist](https://github.com/llvm/Polygeist): C/C++ frontend and optimizations for MLIR
 
 Polygeist is a C/C++ frontend for MLIR which preserves high-level structure
@@ -160,7 +168,7 @@ and the GPU Polygeist paper
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
 conformance. It uses MLIR Dialects for the task of high level, language specific
-optimizations as well as LLVM for code genereation and garbage collector 
+optimizations as well as LLVM for code genereation and garbage collector
 support.
 
 ## [RISE](https://rise-lang.org/)
