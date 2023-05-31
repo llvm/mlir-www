@@ -147,11 +147,10 @@ accelerators.
 
 ## [PolyBlocks](https://www.polymagelabs.com/technology/#polyblocks): An MLIR-based JIT and AOT compiler
 
-PolyBlocks is a high-performance, modular, and fully automatic MLIR-based
-end-to-end compiler for DL and non-DL computations. PolyBlocks is a JIT as
-well as an AOT compiler that is aimed at being fully automatic, analytical
-model-driven, and fully code generating (no reliance on vendor/HPC
-libraries).
+PolyBlocks is a high-performance MLIR-based end-to-end compiler for DL and
+non-DL computations. It can perform both JIT and AOT compilation. Its compiler
+engine is aimed at being fully automatic, modular, analytical model-driven, and
+fully code generating (no reliance on vendor/HPC libraries).
 
 ## [Polygeist](https://github.com/llvm/Polygeist): C/C++ frontend and optimizations for MLIR
 
