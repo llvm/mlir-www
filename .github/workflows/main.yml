@@ -11,18 +11,20 @@ on:
 
 jobs:
   build-deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-22.04
     steps:
     - name: Timestamp Begin
       run: date
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
 
     - name: Install doxygen
       run: sudo apt-get install doxygen graphviz
 
     - name: Clone LLVM repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: llvm/llvm-project
         ref: 'main'
@@ -50,7 +52,7 @@ jobs:
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
-        hugo-version: '0.80.0'
+        hugo-version: '0.111.3'
         # extended: true
 
     - name: Build Website
@@ -59,8 +61,9 @@ jobs:
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
       with:
-        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
         publish_dir: ./public
         force_orphan: true
