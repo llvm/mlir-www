@@ -11,6 +11,12 @@ on:
 
 jobs:
   build-deploy:
+    # This ensures that the `GITHUB_TOKEN` set in this GitHub Action job
+    # has sufficient privileges to write to a secondary branch. On older
+    # repositories, the `GITHUB_TOKEN` used to have lots of privileges,
+    # but this needs to now be set explicitly. After setting this, people
+    # can just fork `mlir-www` and having a working deploy to the
+    # `gh-pages` branch.
     permissions:
       contents: write
     runs-on: ubuntu-22.04
