@@ -242,6 +242,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2023-06-08/15: Update on Numba/MLIR
+[slides](/OpenMeetings/2023-06-08-Numba.pdf)
+[recording](https://youtu.be/ATvH4JOW4tA)
 * 2023-05-04: Catalyst, an AOT/JIT compiler for hybrid quantum programs
 [slides](/OpenMeetings/2023-05-04-Catalyst-compiler-for-hybrid-quantum-programs.pdf)
 [recording](https://youtu.be/VY-Rsi5SFB8)
