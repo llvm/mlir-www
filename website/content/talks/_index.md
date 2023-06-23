@@ -83,6 +83,10 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-06-22: Targeting ARM SME from MLIR and SME Dialect
+[slides part 1](/OpenMeetings/2023-06-22-Targeting-SME.pdf) -
+[slides part 2](/OpenMeetings/2023-06-22-SME-Dialect.pdf) -
+[recording](https://youtu.be/jrniGW_Hzno)
 * 2023-05-25: Distinct Attributes: Modeling LLVM's distinct metadata in MLIR
 [slides](/OpenMeetings/2023-05-25-Distinct_Attributes.pdf) -
 [recording](https://youtu.be/BwrQkHmp1Ss)
