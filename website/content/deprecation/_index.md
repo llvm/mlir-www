@@ -34,6 +34,13 @@ post for precise instructions and timeline.
 
 ## LLVM 17
 
+### "Promised Interface" and the need to explicitly register InlinerExtension for the `FuncDialect`.
+
+We're tightening the contract around injecting interfaces into the system externally, starting with
+`DialectInterface`. As an important visible change at the moment is that if you're using the inliner
+with the `FuncDialect`, you need to call `func::registerAllExtensions(registry);` when setting up
+your `MLIRContext`.
+
 ### Properties && changes to the generic printing format
 
 See on [Discourse](https://discourse.llvm.org/t/rfc-introducing-mlir-operation-properties/67846/19).
