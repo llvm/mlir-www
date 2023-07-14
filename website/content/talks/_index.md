@@ -83,8 +83,8 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
-* 2023-07-06: mlir-query: Tool to query MLIR IR dynamically
-[slides](/OpenMeetings/2023-07-06-MLIR-query.pdf) -
+* 2023-07-13: mlir-query: Tool to query MLIR IR dynamically
+[slides](/OpenMeetings/2023-07-13-MLIR-query.pdf) -
 [recording](https://youtu.be/eFNS4ubazO4)
 * 2023-07-06: RFC on Pattern Matching for Library and Acceleration Instruction Rewriting
 [slides](/OpenMeetings/2023-07-06-SMR.pdf) -
