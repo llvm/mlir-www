@@ -44,6 +44,30 @@ publication.
 	
 On general basis, there is never a reason why a small feature is not available in MLIR other than nobody needed it enough to implement it. Consider submitting a patch. For larger features and dialects, follow the [request-for-comments](https://mlir.llvm.org/getting_started/DeveloperGuide/#guidelines-on-contributing-a-new-dialect-or-important-components) process.
 
+## MLIR is too heavy framework, should I just reimplement my own compiler from scratch?
+
+Maybe: it is hard to tell as it depends on your requirements, even C++ may already be too
+large for some micro-controllers. In our experience most projects ends up growing beyond
+what their original author intended, and reimplementing the features you would get from
+MLIR would also have a footprint. MLIR footprint is representative of the features it
+provides. More importantly we have a "you don't pay for what you don't use" approach:
+MLIR is very modular and you can link a binary with a very minimal set of libraries.
+If you use just the core IR, some pieces of the infrastructure, and a few dialects
+you should expect a few MBs. We have
+[three examples](https://github.com/llvm/llvm-project/commit/e7f8b459532de54a8606c7d387ded7ccf5108cb5)
+in the repo showing some small possible configurations of MLIR. Here are binary size
+reported on a Linux machine with a Release build of LLVM 17:
+
+- `mlir-cat` (parse to memory and print back): 2MB
+  This includes the Core IR, the textual parser/printer, the support for
+  bytecode.
+- `mlir-minimal-opt`: 3MB
+  This adds all the tooling for an mlir-opt tool: the pass infrastructure
+  and all the instrumentation associated with it.
+- `mlir-miminal-opt-canonicalize`: 4.8MB
+  This add the canonicalizer pass, which pulls in all the pattern/rewrite
+  machinery, including the PDL compiler and intepreter.
+
 ## What is the difference between the Tensor and Vector types?
 
 1) Conceptual: vectors are meant to and occur in lower level dialects - often where you expect hardware to have registers of that size. Tensors model higher-level "closer to the source" abstract representation. This is reflected in the abstraction modeled by the operations from the [`vector` dialect](https://mlir.llvm.org/docs/Dialects/Vector/), while Tensors would be more naturally present in the operations of the [`linalg` dialect](https://mlir.llvm.org/docs/Dialects/Linalg/).
