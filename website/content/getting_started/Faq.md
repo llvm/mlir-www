@@ -54,19 +54,9 @@ provides. More importantly we have a "you don't pay for what you don't use" appr
 MLIR is very modular and you can link a binary with a very minimal set of libraries.
 If you use just the core IR, some pieces of the infrastructure, and a few dialects
 you should expect a few MBs. We have
-[three examples](https://github.com/llvm/llvm-project/commit/e7f8b459532de54a8606c7d387ded7ccf5108cb5)
-in the repo showing some small possible configurations of MLIR. Here are binary size
-reported on a Linux machine with a Release build of LLVM 17:
-
-- `mlir-cat` (parse to memory and print back): 2MB
-  This includes the Core IR, the textual parser/printer, the support for
-  bytecode.
-- `mlir-minimal-opt`: 3MB
-  This adds all the tooling for an mlir-opt tool: the pass infrastructure
-  and all the instrumentation associated with it.
-- `mlir-miminal-opt-canonicalize`: 4.8MB
-  This add the canonicalizer pass, which pulls in all the pattern/rewrite
-  machinery, including the PDL compiler and intepreter.
+[three examples]([https://github.com/llvm/llvm-project/commit/e7f8b459532de54a8606c7d387ded7ccf5108cb5](https://github.com/llvm/llvm-project/tree/main/mlir/examples/minimal-opt)
+in the repo showing some small possible configurations of MLIR, showing that the
+core of MLIR can take around 1MB.
 
 ## What is the difference between the Tensor and Vector types?
 
