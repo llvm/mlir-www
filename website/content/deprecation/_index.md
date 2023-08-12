@@ -68,3 +68,19 @@ If your `mlir-opt`-like tool is using the
 otherwise, see the
 [Discussion on Discourse](https://discourse.llvm.org/t/psa-migrating-mlir-opt-like-tools-to-use-mliroptmainconfig/68991)
 
+### Migrating GPU compilation `gpu-to-(cubin|hsaco)` to GPU compilation attributes
+
+[Discussion on Discourse](https://discourse.llvm.org/t/rfc-extending-mlir-gpu-device-codegen-pipeline/70199)
+
+GPU compilation attributes are a completely new mechanism for handling the compilation
+of GPU modules down to binary or other formats in an extensible way. This mechanism lifts
+many current restrictions the GPU serialization passes had, like being present only if the
+CUDA driver is there or not linking to LibDevice.
+
+One key difference is the usage of `ptxas` or the `nvptxcompiler` library for compiling PTX
+to binary; hence the CUDATollkit is required for generating binaries.
+
+For these attributes to work correctly, making registration calls to `registerNVVMTarget`,
+`registerROCDLTarget` and `registerGPUDialectTranslation` are necessary.
+
+The passes `gpu-to-(cubin|hsaco)` will be deprecated and removed in a future release.
