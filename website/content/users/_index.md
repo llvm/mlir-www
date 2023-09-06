@@ -99,7 +99,7 @@ dialect in MLIR to connect the MLIR and DaCe frameworks.
 MLIR-EmitC provides a way to translate ML models into C++ code. The repository
 contains scripts and tools to translate Keras and TensorFlow models into the
 [TOSA](https://mlir.llvm.org/docs/Dialects/TOSA/) and
-[MHLO](https://github.com/tensorflow/mlir-hlo) dialect and to convert those to
+[StableHLO](https://github.com/openxla/stablehlo/) dialect and to convert those to
 [EmitC](https://mlir.llvm.org/docs/Dialects/EmitC/).
 The latter is used to generate calls to a reference implementation.
 
