@@ -16,40 +16,9 @@ which pledges to foster an open and welcoming environment.
 
 ### Contributing code
 
-We don't accept pull-request on GitHub, instead we use
-[Phabricator](https://llvm.org/docs/Phabricator.html).
-At the moment you need to also join this [group](https://reviews.llvm.org/project/members/78/)
-to enable build and test of your Phabricator revisions.
-
-Once a patch is approved on Phabricator and pass continuous integration checks,
-it can be pushed directly to the main branch of the repository.
-
-#### Using Arcanist
-
-Use [Arcanist](https://llvm.org/docs/Phabricator.html#requesting-a-review-via-the-command-line)
-to send your patches for review. This triggers the continuous build system and
-preserves the authorship information in case somebody else commits the patch on
-your behalf.
-
-You can also setup a check as a git hook to prevent accidentally pushing
-unformatted commits with:
-`ln -sf ../../llvm/utils/git/pre-push.py .git/hooks/pre-push`
-
-#### First-time contributors
-
-LLVM follows a [policy](https://llvm.org/docs/DeveloperPolicy.html#obtaining-commit-access)
-of granting established contributors direct commit access to the repository.
-If you make your first contributions to the LLVM infrastructure, you are unlikely
-to have commit access. In this case, ask the reviewers to commit the change
-for you after it has been accepted. Once you have demonstrated the ability to
-write high-quality patches, follow the
-[policy](https://llvm.org/docs/DeveloperPolicy.html#obtaining-commit-access) to
-obtain commit access for yourself.
-
-*Note:* if you haven't used Arcanist to send your patch for review, committers
-don't have access to your preferred identity for commit messages. Make sure
-to communicate it to them through available channels or use the git sign-off
-functionality to make your identity visible in the commit message.
+Please send [pull-request](https://llvm.org/docs/GitHub.html#github-reviews) on
+GitHub. If you don't have write access to the repo, just leave a comment asking
+the reviewer to hit the merge button it for you.
 
 #### Commit messages
 
