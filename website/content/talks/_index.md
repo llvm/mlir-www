@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-09-28: Sharding Framework for Device Mesh
+[slides](/OpenMeetings/2023-09-28-Sharding-Framework-Design-for-Device-Mesh.pdf) -
+[recording](https://youtu.be/vL6VNbJkc6Q)
 * 2023-07-13: mlir-query: Tool to query MLIR IR dynamically
 [slides](/OpenMeetings/2023-07-13-MLIR-query.pdf) -
 [recording](https://youtu.be/eFNS4ubazO4)
