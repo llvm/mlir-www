@@ -20,6 +20,13 @@ Beaver is an MLIR frontend in Elixir and Zig.
 Powered by Elixir's composable modularity and meta-programming features,
 Beaver provides a simple, intuitive, and extensible interface for MLIR.
 
+## [Bᴛᴏʀ2ᴍʟɪʀ](https://github.com/jetafese/btor2mlir): A Format and Toolchain for Hardware Verification
+
+Bᴛᴏʀ2ᴍʟɪʀ applies MLIR to the domain of hardware verification by offering a clean way to take advantage of a format's
+strengths. For example, we support the use of software verification methods for hardware 
+verification problems represented in the Bᴛᴏʀ2 format. The project aims to spur and support research 
+in the formal verification domain, and has been shown to be competitive with existing methods. 
+
 ## [Catalyst](https://github.com/PennyLaneAI/catalyst)
 
 Catalyst is an AOT/JIT compiler for [PennyLane](https://pennylane.ai/) that
