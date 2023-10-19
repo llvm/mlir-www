@@ -19,9 +19,8 @@ starting on these projects.
 * llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
 * IR query tool to make exploring the IR easier (e.g., all operations dominated
   by X, find possible path between two ops, etc.) (mentor: Jacques Pienaar)
-* Automatic formatter for TableGen (similar to clang-format for C/C++)
 * LLVM IR declaratively defined. (mentor: Alex Zinenko)
-* MLIR Binary serialization / bitcode format (Mehdi Amini)
+* Fuzzer for the MLIR Binary serialization / bitcode format (Mehdi Amini)
 * GLSL to SPIR-V dialect frontend (mentor: Lei Zhang)
   * Requires: building up graphics side of the SPIR-V dialect
   * Purpose: give MLIR more frontends :) improve graphics tooling
