@@ -64,6 +64,7 @@ core of MLIR can take around 1MB.
 2) Tensors can be dynamically shaped, unranked, or have 0 dimensions ; but Vectors can't be.
 3) You can have a memref (a buffer in memory) containing Vectors but you can't have a memref of a tensor type.
 4) The set of allowed element types is different: the Tensor type isn't limited while Vector is limited to float and integer types.
+5) Tensors accept an optional "encoding" attribute, vector don't at the moment.
 
 ## Registered, loaded, dependent: what's up with Dialects management?
 
