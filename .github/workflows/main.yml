@@ -49,23 +49,11 @@ jobs:
           -DLLVM_ENABLE_PROJECTS=mlir \
           -DLLVM_TARGETS_TO_BUILD="host" \
           -DMLIR_INCLUDE_DOCS="true" \
-          -DLLVM_ENABLE_DOXYGEN="true" \
-          -DCMAKE_C_COMPILER=clang \
-          -DCMAKE_CXX_COMPILER=clang++
+          -DLLVM_ENABLE_DOXYGEN="true"
         make -j$(nproc) mlir-doc doxygen-mlir
 
     - name: Install docs
-      run: |
-        LLVM_SRC="llvm_src"
-        WEB_DST="website"
-
-        ./mlir-www-helper.sh --copy-docs-dir "$LLVM_SRC/build/tools/mlir/docs/" "$WEB_DST/content/docs/"
-        ./mlir-www-helper.sh --copy-docs-dir "$LLVM_SRC/mlir/docs/" "$WEB_DST/content/docs/"
-        ./mlir-www-helper.sh --process-included-docs "$WEB_DST/content/docs/"
-        ./mlir-www-helper.sh --solve-name-conflict
-
-        echo "Installing doxygen docs"
-        cp -r "$LLVM_SRC/build/tools/mlir/docs/doxygen/html" "$WEB_DST/static/doxygen"
+      run: ./mlir-www-helper.sh --install-docs "llvm_src" "website"
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2

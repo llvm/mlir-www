@@ -3,7 +3,7 @@
 set -e
 
 print_help() {
-  echo "Helper script for mlir-www"
+  echo "Helper functions for mlir-www"
   echo ""
   echo "Usage: mlir-www-helper [ARGUMENTS]"
   echo ""
@@ -11,7 +11,8 @@ print_help() {
   echo "  --help"
   echo "  --copy-docs-dir <INPUT_PATH> <OUTPUT_PATH>"
   echo "  --process-included-docs <OUTPUT_PATH>"
-  echo "  --solve-name-conflict"
+  echo "  --solve-name-conflict <LLVM_SRC> <WEB_DST>"
+  echo "  --install-docs <LLVM_SRC> <WEB_DST>"
 }
 
 copy_docs_dir() {
@@ -93,10 +94,29 @@ process_included_docs() {
 }
 
 solve_name_conflict() {
-  echo "Hack around file/directory name conflict"
-  rm -Rf website/content/docs/Interfaces
-  mkdir -p website/content/includes/
-  cp -rv llvm_src/mlir/docs/includes/img website/content/includes/
+  LLVM_SRC="$1"
+  WEB_DST="$2"
+
+  echo "Hack around file/directory name conflict in '$WEB_DST'"
+
+  rm -Rf "$WEB_DST/content/docs/Interfaces"
+  mkdir -p "$WEB_DST/content/includes/"
+  cp -rv "$LLVM_SRC/mlir/docs/includes/img" "$WEB_DST/content/includes/"
+}
+
+install_docs() {
+  LLVM_SRC="$1"
+  WEB_DST="$2"
+
+  echo "Installing docs from '$LLVM_SRC' into '$WEB_DST'"
+
+  copy_docs_dir "$LLVM_SRC/build/tools/mlir/docs/" "$WEB_DST/content/docs/"
+  copy_docs_dir "$LLVM_SRC/mlir/docs/" "$WEB_DST/content/docs/"
+  process_included_docs "$WEB_DST/content/docs/"
+  solve_name_conflict "$LLVM_SRC/" "$WEB_DST/"
+
+  echo "Installing doxygen docs"
+  cp -r "$LLVM_SRC/build/tools/mlir/docs/doxygen/html" "$WEB_DST/static/doxygen"
 }
 
 if [[ "$#" == 0 || "$1" == "--help" ]]; then
@@ -114,7 +134,17 @@ elif [[ "$1" == "--process-included-docs" ]]; then
   fi
   process_included_docs "$2"
 elif [[ "$1" == "--solve-name-conflict" ]]; then
-  solve_name_conflict
+  if [[ "$#" != 3 ]]; then
+    echo "ERROR: --solve-name-confict requires 2 arguments"
+    exit 1
+  fi
+  solve_name_conflict "$2" "$3"
+elif [[ "$1" == "--install-docs" ]]; then
+  if [[ "$#" != 3 ]]; then
+    echo "ERROR: --install-docs requires 2 arguments"
+    exit 1
+  fi
+  install_docs "$2" "$3"
 else
   echo "ERROR: Unknown argument(s) '$1'"
   exit 1
