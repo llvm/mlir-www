@@ -7,6 +7,7 @@ on:
   schedule:
     # Always regenerate once every 4 hour
     - cron:  '15 */4 * * *'
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -26,7 +27,10 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: Install doxygen
+    - name: Print mlir-www-helper --help
+      run: ./mlir-www-helper.sh --help
+
+    - name: Install dependencies
       run: sudo apt-get install doxygen graphviz
 
     - name: Clone LLVM repo
@@ -37,33 +41,31 @@ jobs:
         path: 'llvm_src'
 
     - name: Build MLIR Dialect docs & doxygen src
-      run: (mkdir llvm_src/build &&
-            cd llvm_src/build &&
-            cmake ../llvm -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_TARGETS_TO_BUILD="host" -DMLIR_INCLUDE_DOCS="true" -DLLVM_ENABLE_DOXYGEN="true" &&
-            make -j$(nproc) mlir-doc doxygen-mlir)
+      run: |
+        mkdir llvm_src/build
+        cd llvm_src/build
+        cmake ../llvm \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DLLVM_ENABLE_PROJECTS=mlir \
+          -DLLVM_TARGETS_TO_BUILD="host" \
+          -DMLIR_INCLUDE_DOCS="true" \
+          -DLLVM_ENABLE_DOXYGEN="true"
+        make -j$(nproc) mlir-doc doxygen-mlir
 
-    - name: Install MLIR Dialect docs
-      run:  ./copy_docs.sh llvm_src/build/tools/mlir/docs/ website/content/docs/
-
-    - name: Install MLIR Source docs
-      run:  ./copy_docs.sh llvm_src/mlir/docs/ website/content/docs/ &&
-            ./process_included_docs.sh website/content/docs/ &&
-            echo "Hack around file/directory name conflict" && rm -Rf website/content/docs/Interfaces &&
-            mkdir -p website/content/includes/ &&
-            cp -rv llvm_src/mlir/docs/includes/img website/content/includes/
-
-    - name: Install doxygen docs
-      run:  cp -r llvm_src/build/tools/mlir/docs/doxygen/html website/static/doxygen
+    - name: Install docs
+      run: ./mlir-www-helper.sh --install-docs "llvm_src" "website"
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
-        hugo-version: '0.111.3'
-        # extended: true
+        hugo-version: '0.119.0'
+        extended: false
 
     - name: Build Website
-      run: (cd website && hugo --minify -d ../public &&
-            echo -n mlir.llvm.org > ../public/CNAME )
+      run: |
+        cd website
+        hugo --minify -d ../public
+        echo -n mlir.llvm.org > ../public/CNAME
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
