@@ -22,11 +22,13 @@ methods in the future.
 
 ### Port uses of LLVM Dialect to opaque pointers
 
-LLVM 17 has stopped officially supporting typed pointers and MLIRs LLVM Dialect 
-will follow suit soon by removing them. Users of the LLVM Dialect must switch
-to using opaque pointers and stop relying on pointers having an element type.
-See the initial [PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738)
-post for precise instructions and timeline. 
+LLVM 17 has stopped officially supporting typed pointers, and MLIRs LLVM Dialect 
+is now in the process of dropping the support as well. This was announced back
+in February 2023 ([PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738))
+, and now the final steps, i.e., removing the typed pointers, have started
+([PSA](https://discourse.llvm.org/t/psa-removal-of-typed-pointers-from-the-llvm-dialect/74502)).
+If you are still targeting LLVM dialect with typed pointers, an update to
+support opaque pointers will be necessary.
 
 ## On-going Refactoring & large changes
 
