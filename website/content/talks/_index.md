@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-11-02: A MPI Dialect Proposal
+[slides](/OpenMeetings/2023-11-02-MPI-Dialect.pdf) -
+[recording](https://youtu.be/VB6Ec3RnMEE)
 * 2023-10-26: A Polynomial Dialect Proposal
 [slides](/OpenMeetings/2023-10-26-Polynomial-dialect.pdf) -
 [recording](https://youtu.be/wsKP-guEB5s)
