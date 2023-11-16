@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-11-16: Targeting H100 with NVGPU and NVVM Dialects
+[slides](/OpenMeetings/2023-11-16-Targeting_H100_in_MLIR_ODM.pdf) -
+[recording](https://youtu.be/xNe9fPvU7-U)
 * 2023-11-02: A MPI Dialect Proposal
 [slides](/OpenMeetings/2023-11-02-MPI-Dialect.pdf) -
 [recording](https://youtu.be/VB6Ec3RnMEE)
