@@ -54,7 +54,7 @@ provides. More importantly we have a "you don't pay for what you don't use" appr
 MLIR is very modular and you can link a binary with a very minimal set of libraries.
 If you use just the core IR, some pieces of the infrastructure, and a few dialects
 you should expect a few MBs. We have
-[three examples]([https://github.com/llvm/llvm-project/commit/e7f8b459532de54a8606c7d387ded7ccf5108cb5](https://github.com/llvm/llvm-project/tree/main/mlir/examples/minimal-opt)
+[three examples](https://github.com/llvm/llvm-project/tree/main/mlir/examples/minimal-opt)
 in the repo showing some small possible configurations of MLIR, showing that the
 core of MLIR can take around 1MB.
 
