@@ -267,6 +267,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2023-12-22: PyDSL, a small subset of Python for constructing affine & transform dialects
+[slides](/OpenMeetings/2023-12-21-PyDSL.pdf)
+[recording](https://youtu.be/nmtHeRkl850)
 * 2023-06-08/15: Update on Numba/MLIR
 [slides](/OpenMeetings/2023-06-08-Numba.pdf)
 [recording](https://youtu.be/ATvH4JOW4tA)
