@@ -29,14 +29,8 @@ starting on these projects.
 * TableGen "front-end dialect" (mentor: Jacques Pienaar)
 * Making MLIR interact with existing polyhedral tools: isl, pluto (mentor: Alex Zinenko)
 * MLIR visualization (mentor: Jacques Pienaar)
-* MLIR sparse compiler [starter tasks](https://github.com/llvm/llvm-project/labels/mlir%3Asparse) (mentor: Aart Bik)
-
-  MLIR allows for representing multiple levels of abstraction all together in the same IR/function. Visualizing MLIR modules therefore requires going beyond visualizing a graph of nodes all at the same level (which is not trivial in and of itself!), nor is it specific to Machine Learning. Beyond visualizing a MLIR module, there is also visualizing MLIR itself that is of interest. In particular, visualizing the rewrite rules, visualizing the matching process (including the failure to match, sort of like https://www.debuggex.com/ but for declarative rewrites), considering effects of rewrites over time, etc.
-
-  The visualizations should all be built with open source components but whether standalone (e.g., combining with, say, GraphViz to generate offline images) or dynamic tools (e.g., displayed in browser) is open for discussion. It should be usable completely offline in either case.
-	
-	We will be working with interested students to refine the exact project based on interests given the wide scope of potential approaches. And open to proposals within this general area.
-
+* MLIR sparsifier (aka sparse compiler) [starter tasks](https://github.com/llvm/llvm-project/labels/mlir%3Asparse) (mentor: Aart Bik)
+* MLIR allows for representing multiple levels of abstraction all together in the same IR/function. Visualizing MLIR modules therefore requires going beyond visualizing a graph of nodes all at the same level (which is not trivial in and of itself!), nor is it specific to Machine Learning. Beyond visualizing a MLIR module, there is also visualizing MLIR itself that is of interest. In particular, visualizing the rewrite rules, visualizing the matching process (including the failure to match, sort of like https://www.debuggex.com/ but for declarative rewrites), considering effects of rewrites over time, etc. The visualizations should all be built with open source components but whether standalone (e.g., combining with, say, GraphViz to generate offline images) or dynamic tools (e.g., displayed in browser) is open for discussion. It should be usable completely offline in either case. We will be working with interested students to refine the exact project based on interests given the wide scope of potential approaches. And open to proposals within this general area.
 * Rewrite patterns expressed in MLIR (mentor: Jacques Pienaar)
 * Generic value range analysis for MLIR (mentor: River Riddle)
 
@@ -45,12 +39,12 @@ starting on these projects.
 This is section for projects that have not yet started but there are
 individuals/groups intending to start work on in near future.
 
-* Rework the MLIR python bindings, add a C APIs for core concepts (mentor: 
+* Rework the MLIR python bindings, add a C APIs for core concepts (mentor:
   Nicolas Vasilache, Alex Zinenko)
 * [bugpoint/llvm-reduce](https://llvm.org/docs/BugpointRedesign.html) kind
   of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
 * MLIR visualization, there are some projects in flight but we unfortunately
   don't know the project plans of those teams. But if you intend to work on
-	something in this area it would be good to discuss on the forum early
-	in case there are collaboration opportunity.
-  
+  something in this area it would be good to discuss on the forum early
+  in case there are collaboration opportunity.
+
