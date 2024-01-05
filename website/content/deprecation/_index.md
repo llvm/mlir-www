@@ -20,16 +20,6 @@ When casting attributes or type, use the free functions variants, e.g.,
 methods in the future.
 [Discussion on Discourse](https://discourse.llvm.org/t/preferred-casting-style-going-forward/68443)
 
-### Port uses of LLVM Dialect to opaque pointers
-
-LLVM 17 has stopped officially supporting typed pointers, and MLIRs LLVM Dialect 
-is now in the process of dropping the support as well. This was announced back
-in February 2023 ([PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738))
-, and now the final steps, i.e., removing the typed pointers, have started
-([PSA](https://discourse.llvm.org/t/psa-removal-of-typed-pointers-from-the-llvm-dialect/74502)).
-If you are still targeting LLVM dialect with typed pointers, an update to
-support opaque pointers will be necessary.
-
 ## On-going Refactoring & large changes
 
 # Past Deprecation and Refactoring
@@ -84,3 +74,15 @@ For these attributes to work correctly, making registration calls to `registerNV
 `registerROCDLTargetInterfaceExternalModels` and `registerOffloadingLLVMTranslationInterfaceExternalModels` are necessary.
 
 The passes `gpu-to-(cubin|hsaco)` will be removed in a future release.
+
+## LLVM 18
+
+### Port uses of LLVM Dialect to opaque pointers
+
+LLVM 17 has stopped officially supporting typed pointers, and MLIRs LLVM Dialect 
+is now in the process of dropping the support as well. This was announced back
+in February 2023 ([PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738))
+, and now the final steps, i.e., removing the typed pointers, have started
+([PSA](https://discourse.llvm.org/t/psa-removal-of-typed-pointers-from-the-llvm-dialect/74502)).
+If you are still targeting LLVM dialect with typed pointers, an update to
+support opaque pointers will be necessary.
