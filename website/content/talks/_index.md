@@ -78,7 +78,7 @@ to discuss a particular topic or have questions, please add it to the
 
 The meetings are announced on [Discourse](https://discourse.llvm.org/c/mlir/mlir-announcements/44),
 subscribing to this category is the best way to stay informed. You can also register
-to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t). 
+to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t).
 
 
 ### About MLIR and MLIR Components

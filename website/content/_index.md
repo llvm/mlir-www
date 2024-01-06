@@ -20,7 +20,7 @@ To be notified of the next meeting, please subscribe to the
 category on Discourse.
 
 You can register to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3NTBjMjkzYWU5MTY5NGNlMmQ3YjJlN2JjNWEyYjViNjg1NTRmODcxOWZiOTU1MmIzNGQxYjkwNGJkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
-to keep up-to-date with the schedule. 
+to keep up-to-date with the schedule.
 
 If you’d like to discuss a particular topic or have questions, please add it to the
 [agenda doc](https://docs.google.com/document/d/1y2YlcOVMPocQjSFi3X6gYGRjA0onyqr41ilXji10phw/edit#).

@@ -49,7 +49,7 @@ cmake -G Ninja ../llvm \
 # CCache can drastically speed up further rebuilds, try adding:
 #  -DLLVM_CCACHE_BUILD=ON
 # Optionally, using ASAN/UBSAN can find bugs early in development, enable with:
-# -DLLVM_USE_SANITIZER="Address;Undefined" 
+# -DLLVM_USE_SANITIZER="Address;Undefined"
 # Optionally, enabling integration tests as well
 # -DMLIR_INCLUDE_INTEGRATION_TESTS=ON
 cmake --build . --target check-mlir

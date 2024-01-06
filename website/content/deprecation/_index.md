@@ -79,7 +79,7 @@ The passes `gpu-to-(cubin|hsaco)` will be removed in a future release.
 
 ### Port uses of LLVM Dialect to opaque pointers
 
-LLVM 17 has stopped officially supporting typed pointers, and MLIRs LLVM Dialect 
+LLVM 17 has stopped officially supporting typed pointers, and MLIRs LLVM Dialect
 is now in the process of dropping the support as well. This was announced back
 in February 2023 ([PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-passes-can-now-be-used-with-llvm-opaque-pointers-please-switch-your-downstream-projects/68738))
 , and now the final steps, i.e., removing the typed pointers, have started

@@ -41,7 +41,7 @@ Please do **not** cite the arXiv preprint as it is not a formal peer-reviewed
 publication.
 
 ## Why is \<small feature\> not available in MLIR?
-	
+
 On general basis, there is never a reason why a small feature is not available in MLIR other than nobody needed it enough to implement it. Consider submitting a patch. For larger features and dialects, follow the [request-for-comments](https://mlir.llvm.org/getting_started/DeveloperGuide/#guidelines-on-contributing-a-new-dialect-or-important-components) process.
 
 ## MLIR is too heavy framework, should I just reimplement my own compiler from scratch?
