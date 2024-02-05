@@ -85,6 +85,20 @@ for frontend development. It is also possible to use Firefly to target other
 platforms as well, by producing self-contained executables on platforms such as
 x86.
 
+## [Lingo DB](https://www.lingo-db.com): Revolutionizing Data Processing with Compiler Technology
+
+LingoDB is a cutting-edge data processing system that leverages compiler technology
+to achieve unprecedented flexibility and extensibility without sacrificing
+performance. It supports a wide range of data-processing workflows beyond
+relational SQL queries, thanks to declarative sub-operators. Furthermore,
+LingoDB can perform cross-domain optimization by interleaving optimization
+passes of different domains and its flexibility enables sustainable support
+for heterogeneous hardware.
+
+LingoDB heavily builds on the MLIR compiler framework for compiling queries
+to efficient machine code without much latency.
+
+
 ## [MLIR-AIE](https://github.com/Xilinx/mlir-aie): Toolchain for AMD/Xilinx AIEngine devices
 
 MLIR-AIE is a toolchain providing low-level device configuration for Versal
