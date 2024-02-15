@@ -46,6 +46,20 @@ constantly evolving, aiming to deliver execution on heterogenous architectures w
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
+## [Firefly](https://github.com/GetFirefly/firefly): A new compiler and runtime for BEAM languages
+
+Firefly is not only a compiler, but a runtime as well. It consists of two parts:
+
+- A compiler for Erlang to native code for a given target (x86, ARM, WebAssembly)
+- An Erlang runtime, implemented in Rust, which provides the core functionality
+  needed to implement OTP
+
+The primary motivator for Firefly's development was the ability to compile Elixir
+applications that could target WebAssembly, enabling use of Elixir as a language
+for frontend development. It is also possible to use Firefly to target other
+platforms as well, by producing self-contained executables on platforms such as
+x86.
+
 ## [Flang](https://github.com/llvm/llvm-project/tree/main/flang)
 
 Flang is a ground-up implementation of a Fortran front end written in modern C++.
@@ -65,26 +79,6 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
-## [LingoDB](https://github.com/lingo-db/lingo-db)
-
-LingoDB is a new analytical database system that blurs the lines between databases
-and compilers.
-
-
-## [Firefly](https://github.com/GetFirefly/firefly): A new compiler and runtime for BEAM languages
-
-Firefly is not only a compiler, but a runtime as well. It consists of two parts:
-
-- A compiler for Erlang to native code for a given target (x86, ARM, WebAssembly)
-- An Erlang runtime, implemented in Rust, which provides the core functionality
-  needed to implement OTP
-
-The primary motivator for Firefly's development was the ability to compile Elixir
-applications that could target WebAssembly, enabling use of Elixir as a language
-for frontend development. It is also possible to use Firefly to target other
-platforms as well, by producing self-contained executables on platforms such as
-x86.
-
 ## [Lingo DB](https://www.lingo-db.com): Revolutionizing Data Processing with Compiler Technology
 
 LingoDB is a cutting-edge data processing system that leverages compiler technology
@@ -97,7 +91,6 @@ for heterogeneous hardware.
 
 LingoDB heavily builds on the MLIR compiler framework for compiling queries
 to efficient machine code without much latency.
-
 
 ## [MLIR-AIE](https://github.com/Xilinx/mlir-aie): Toolchain for AMD/Xilinx AIEngine devices
 
@@ -198,20 +191,20 @@ RISE is a spiritual successor to the
 parallel language with a system of rewrite rules which encode algorithmic
 and hardware-specific optimisation choices".
 
-## [TFRT: TensorFlow Runtime](https://github.com/tensorflow/runtime)
+## [SOPHGO TPU-MLIR](https://github.com/sophgo/tpu-mlir)
 
-TFRT aims to provide a unified, extensible infrastructure layer for an
-asynchronous runtime system.
+TPU-MLIR is an open-source machine-learning compiler based on MLIR for
+SOPHGO TPU. https://arxiv.org/abs/2210.15016.
 
 ## [TensorFlow](https://www.tensorflow.org/mlir)
 
 MLIR is used as a Graph Transformation framework and the foundation for
 building many tools (XLA, TFLite converter, quantization, ...).
 
-## [SOPHGO TPU-MLIR](https://github.com/sophgo/tpu-mlir)
+## [TFRT: TensorFlow Runtime](https://github.com/tensorflow/runtime)
 
-TPU-MLIR is an open-source machine-learning compiler based on MLIR for
-SOPHGO TPU. https://arxiv.org/abs/2210.15016.
+TFRT aims to provide a unified, extensible infrastructure layer for an
+asynchronous runtime system.
 
 ## [Torch-MLIR](https://github.com/llvm/torch-mlir)
 
