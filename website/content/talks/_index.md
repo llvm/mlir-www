@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2023-02-15: OpenMP GPU target offload
+[slides](/OpenMeetings/2023-02-15-OpenMP-GPU-Offload.pdf) -
+[recording](https://youtu.be/lOK6JPuVFYg)
 * 2023-12-14: Vector dialect, reshape, and handling of unit dimensions
 [slides](/OpenMeetings/2023-12-14-Vector-reshapes.pdf) -
 [recording](https://youtu.be/csWPOQfgLMo)
