@@ -51,7 +51,7 @@ Enzyme (specifically EnzymeMLIR) is a first-class automatic differentiation
 sytem for MLIR. Operations and types implement or inheret general interfaces
 to specify their differentiable behavior, which allows Enzyme to provide
 efficient forward and reverse pass derivatives. Source code is available [here](https://github.com/EnzymeAD/Enzyme/tree/main/enzyme/Enzyme/MLIR).
-See also the Enzyme-JaX project (https://github.com/EnzymeAD/Enzyme-JAX) which
+See also the [Enzyme-JaX](https://github.com/EnzymeAD/Enzyme-JAX) project which
 uses Enzyme to differentiate StableHLO, and thus provide MLIR-native
 differentiation and codegen for JaX.
 
