@@ -46,6 +46,15 @@ constantly evolving, aiming to deliver execution on heterogenous architectures w
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
+## [Enzyme](https://enzyme.mit.edu): General Automatic Differentiation of MLIR
+Enzyme (specifically EnzymeMLIR) is a first-class automatic differentiation 
+sytem for MLIR. Operations and types implement or inheret general interfaces
+to specify their differentiable behavior, which allows Enzyme to provide
+efficient forward and reverse pass derivatives. Source code is available [here](https://github.com/EnzymeAD/Enzyme/tree/main/enzyme/Enzyme/MLIR).
+See also the [Enzyme-JaX](https://github.com/EnzymeAD/Enzyme-JAX) project which
+uses Enzyme to differentiate StableHLO, and thus provide MLIR-native
+differentiation and codegen for JaX.
+
 ## [Firefly](https://github.com/GetFirefly/firefly): A new compiler and runtime for BEAM languages
 
 Firefly is not only a compiler, but a runtime as well. It consists of two parts:
