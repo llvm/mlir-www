@@ -59,6 +59,11 @@ It is recommended that you install `clang` and `lld` on your machine (`sudo apt-
 install clang lld` on Ubuntu for example) and uncomment the last part of the
 cmake invocation above.
 
+If you need debug info, you can use `-DCMAKE_BUILD_TYPE=Debug` or
+-DCMAKE_BUILD_TYPE=RelWithDebInfo`. It is recommended to use
+`-DLLVM_USE_SPLIT_DWARF=ON` to save ~ 30%-40% disk space with debug
+builds.
+
 ---
 
 ### Windows compile/testing:
