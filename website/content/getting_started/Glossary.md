@@ -10,6 +10,11 @@ to be a quick reference document. For terms which are well-documented elsewhere,
 definitions are kept brief and the header links to the more in-depth
 documentation.
 
+
+!!! question - "Something missing?"
+
+    Don't see a term here that you think should be? Put it in [here](https://github.com/llvm/mlir-www/blob/main/website/content/getting_started/Glossary.md). Don't know what it means? Submit your term at [this GitHub Tracking issue](https://github.com/llvm/mlir-www/issues/183) to have it explained.
+
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
 #### [Block](../docs/LangRef#blocks)
