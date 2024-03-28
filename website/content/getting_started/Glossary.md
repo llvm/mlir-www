@@ -11,9 +11,12 @@ definitions are kept brief and the header links to the more in-depth
 documentation.
 
 
-!!! question - "Something missing?"
+#### Is Something Missing?
 
-    Don't see a term here that you think should be? Put it in [here](https://github.com/llvm/mlir-www/blob/main/website/content/getting_started/Glossary.md). Don't know what it means? Submit your term at [this GitHub Tracking issue](https://github.com/llvm/mlir-www/issues/183) to have it explained.
+Don't see a term here that you think should be?
+[Edit this page to add it](https://github.com/llvm/mlir-www/blob/main/website/content/getting_started/Glossary.md).
+Don't know what it means? Submit your term at
+[this GitHub Tracking issue](https://github.com/llvm/mlir-www/issues/183) to have it explained.
 
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
