@@ -1,0 +1,857 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Bufferization - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Bufferization/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Bufferization</h1><p><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#what-is-one-shot-bufferize>What is One-Shot Bufferize?</a></li><li><a href=#goals-of-bufferization>Goals of Bufferization</a></li><li><a href=#destination-passing-style>Destination-Passing Style</a></li><li><a href=#using-one-shot-bufferize>Using One-Shot Bufferize</a></li><li><a href=#buffer-deallocation>Buffer Deallocation</a></li><li><a href=#ownership-based-buffer-deallocation>Ownership-based Buffer Deallocation</a><ul><li><a href=#function-boundary-abi>Function boundary ABI</a></li><li><a href=#inserting-bufferizationdealloc-operations>Inserting <code>bufferization.dealloc</code> operations</a></li><li><a href=#supported-interfaces>Supported interfaces</a></li><li><a href=#limitations>Limitations</a></li><li><a href=#example>Example</a></li></ul></li><li><a href=#buffer-deallocation-simplification-pass>Buffer Deallocation Simplification Pass</a></li><li><a href=#lower-deallocations-pass>Lower Deallocations Pass</a><ul><li><a href=#generic-lowering>Generic Lowering</a></li><li><a href=#specialized-lowerings>Specialized Lowerings</a></li></ul></li><li><a href=#memory-layouts>Memory Layouts</a></li><li><a href=#extending-one-shot-bufferize>Extending One-Shot Bufferize</a></li><li><a href=#debugging-buffer-copies>Debugging Buffer Copies</a></li><li><a href=#understanding-the-ssa-use-def-chain-analysis>Understanding the SSA Use-Def Chain Analysis</a></li><li><a href=#migrating-from-dialect-conversion-based-bufferization>Migrating from Dialect Conversion-based Bufferization</a></li><li><a href=#bufferization-function-graphs>Bufferization Function Graphs</a></li><li><a href=#dialect-conversion-based-bufferization>Dialect Conversion-based Bufferization</a><ul><li><a href=#bufferizations-place-in-a-compilation-pipeline>Bufferization&rsquo;s place in a compilation pipeline</a></li><li><a href=#general-structure-of-the-bufferization-process>General structure of the bufferization process</a></li><li><a href=#example-1>Example</a></li><li><a href=#how-to-write-a-partial-bufferization-pass>How to write a partial bufferization pass</a></li><li><a href=#other-partial-bufferization-examples>Other partial bufferization examples</a></li><li><a href=#how-to-write-a-finalizing-bufferization-pass>How to write a finalizing bufferization pass</a></li><li><a href=#changes-since-the-talkthe-talk>Changes since <a href=#the-talk>the talk</a></a></li></ul></li></ul></nav><h2 id=overview>Overview&nbsp;<a class=headline-hash href=#overview>¶</a></h2><p>Bufferization in MLIR is the process of converting ops with <code>tensor</code> semantics
+to ops with <code>memref</code> semantics. MLIR provides an infrastructure that bufferizes
+an entire program in a single pass (<em>One-Shot Bufferize</em>). This infrastructure
+bufferizes all ops that implement the
+<a href=https://github.com/llvm/llvm-project/blob/17a68065c378da74805e4e1b9a5b78cc9f83e580/mlir/include/mlir/Dialect/Bufferization/IR/BufferizableOpInterface.td><code>BufferizableOpInterface</code></a>
+can be bufferized.</p><p>MLIR has an older bufferization infrastructure built around
+<a href=/docs/DialectConversion/>dialect conversion</a>. Most dialect conversion
+bufferization patterns have been migrated to One-Shot Bufferize, but some
+functionality such as function boundary bufferization still depends on dialect
+conversion and its type converter. New projects should use One-Shot Bufferize,
+as the dialect conversion-based bufferization will eventually be deprecated.
+Moreover, One-Shot Bufferize results in better bufferization with fewer memory
+allocations and buffer copies. This documentation is mostly about One-Shot
+Bufferize, but also describes how to gradually migrate a project from dialect
+conversion-based bufferization to One-Shot Bufferize.</p><h2 id=what-is-one-shot-bufferize>What is One-Shot Bufferize?&nbsp;<a class=headline-hash href=#what-is-one-shot-bufferize>¶</a></h2><p>One-Shot Bufferize is a new tensor bufferization pass designed for IR in
+<a href=https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/dps-fhpc17.pdf>destination-passing style</a>,
+and with aggressive in-place bufferization.</p><p>One-Shot Bufferize is:</p><ul><li><p><strong>Monolithic</strong>: A single MLIR pass does the entire work, whereas the
+previous bufferization in MLIR was split across multiple passes residing in
+different dialects. In One-Shot Bufferize, <code>BufferizableOpInterface</code>
+implementations are spread across different dialects.</p></li><li><p>A <strong>whole-function at a time analysis</strong>. In-place bufferization decisions
+are made by analyzing SSA use-def chains on tensors. Op interface
+implementations not only provide the rewrite logic from tensor ops to memref
+ops, but also helper methods for One-Shot Bufferize&rsquo;s analysis to query
+information about an op&rsquo;s bufferization/memory semantics.</p></li><li><p><strong>Extensible</strong> via an op interface: All ops that implement
+<code>BufferizableOpInterface</code> can be bufferized.</p></li><li><p><strong>2-Pass</strong>: Bufferization is internally broken down into 2 steps: First,
+analyze the entire IR and make bufferization decisions. Then, bufferize
+(rewrite) the IR. The analysis has access to exact SSA use-def information.
+It incrementally builds alias and equivalence sets and does not rely on a
+posteriori-alias analysis from preallocated memory.</p></li><li><p><strong>Greedy</strong>: Operations are analyzed one-by-one and it is decided on the spot
+whether a tensor OpOperand must be copied or not. Heuristics determine the
+order of analysis.</p></li><li><p><strong>Modular</strong>: The current One-Shot Analysis can be replaced with a different
+analysis. The result of the analysis are queried by the bufferization via
+<code>AnalysisState</code>, in particular <code>AnalysisState::isInPlace</code>. Any derived class
+of <code>AnalysisState</code> that implements a small number virtual functions can
+serve as a custom analysis. It is even possible to run One-Shot Bufferize
+without any analysis (<code>AlwaysCopyAnalysisState</code>), in which case One-Shot
+Bufferize behaves exactly like the old dialect conversion-based
+bufferization (i.e., copy every buffer before writing to it).</p></li></ul><p>To reduce complexity, One-Shot Bufferize should be
+<a href=https://llvm.discourse.group/t/rfc-linalg-on-tensors-update-and-comprehensive-bufferization-rfc/3373>run after other transformations</a>,
+typically as one of the last steps right before lowering memref ops. Many
+transformations are easier in tensor land; e.g., tile/fuse/… on tensors first,
+then bufferize the remaining IR.</p><p>From an architecture perspective, One-Shot Bufferize consists of
+<a href=https://github.com/llvm/llvm-project/blob/17a68065c378da74805e4e1b9a5b78cc9f83e580/mlir/include/mlir/Dialect/Bufferization/IR/BufferizableOpInterface.td>BufferizableOpInterface</a>
+(and its implementations) and an
+<a href=https://github.com/llvm/llvm-project/blob/ae2764e835a26bad9774803eca0a6530df2a3e2d/mlir/include/mlir/Dialect/Bufferization/Transforms/OneShotAnalysis.h#L164>analysis</a>
+of tensor SSA values that decides if a buffer can be used directly or must be
+copied. The [bufferize] method of the op interface inspects analysis results and
+rewrites tensor ops into memref ops.</p><h2 id=goals-of-bufferization>Goals of Bufferization&nbsp;<a class=headline-hash href=#goals-of-bufferization>¶</a></h2><p>The high-level goal of every bufferization technique is to: 1. Use as little
+memory as possible. 2. Copy as little memory as possible.</p><p>This implies reusing already allocated buffers when possible, turning
+bufferization into an algorithmically complex problem with similarities to
+register allocation.</p><p>Depending on the concrete use case, there may be additional bufferization
+requirements. If the contents of a buffer are expensive to compute, there could
+be a tradeoff between <em>recomputation</em> and <em>compute once and copy</em>. On the
+contrary, it may not even be possible to allocate new buffers at runtime on some
+architectures.</p><h2 id=destination-passing-style>Destination-Passing Style&nbsp;<a class=headline-hash href=#destination-passing-style>¶</a></h2><p>Bufferization is an algorithmically complex problem. Given an op with a tensor
+result, bufferization has to choose a memref buffer in which the result can be
+stored. It is always safe to allocate a brand new buffer, but such a
+bufferization strategy would be unacceptable for high-performance codegen. When
+choosing an already existing buffer, we must be careful not to accidentally
+overwrite data that is still needed later in the program.</p><p>To simplify this problem, One-Shot Bufferize was designed to take advantage of
+<em>destination-passing style</em>. This form exists in itself independently of
+bufferization and is tied to SSA semantics: many ops are “updating” part of
+their input SSA variable. For example the LLVM instruction
+<a href=https://llvm.org/docs/LangRef.html#insertelement-instruction><code>insertelement</code></a>
+is inserting an element inside a vector. Since SSA values are immutable, the
+operation returns a copy of the input vector with the element inserted.
+Another example in MLIR is <code>linalg.generic</code>, which always has an extra <code>outs</code>
+operand which provides the initial values to update (for example when the
+operation is doing a reduction).</p><p>This input is referred to as &ldquo;destination&rdquo; in the following (quotes are
+important as this operand isn&rsquo;t modified in place but copied) and comes into
+place in the context of bufferization as a possible &ldquo;anchor&rdquo; for the
+bufferization algorithm. This allows the user to shape the input in a form that
+guarantees close to optimal bufferization result when carefully choosing the
+SSA value used as &ldquo;destination&rdquo;.</p><p>For every tensor result, a &ldquo;destination-passing&rdquo; style op has a corresponding
+tensor operand. If there aren&rsquo;t any other uses of this tensor, the bufferization
+can alias it with the op result and perform the operation &ldquo;in-place&rdquo; by reusing
+the buffer allocated for this &ldquo;destination&rdquo; input.</p><p>As an example, consider the following op: <code>%0 = tensor.insert %cst into %t[%idx] : tensor&lt;?xf32></code></p><p><code>%t</code> is the &ldquo;destination&rdquo; in this example. When choosing a buffer for the result
+<code>%0</code>, denoted as <code>buffer(%0)</code>, One-Shot Bufferize considers only two options:</p><ol><li><code>buffer(%0) = buffer(%t)</code> : alias the &ldquo;destination&rdquo; tensor with the
+result and perform the operation in-place.</li><li><code>buffer(%0)</code> is a newly allocated buffer.</li></ol><p>There may be other buffers in the same function that could potentially be used
+for <code>buffer(%0)</code>, but those are not considered by One-Shot Bufferize to keep the
+bufferization simple. One-Shot Bufferize could be extended to consider such
+buffers in the future to achieve a better quality of bufferization.</p><p>Tensor ops that are not in destination-passing style always bufferized to a
+memory allocation. E.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>generate <span class=nv>%sz</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%i</span> <span class=p>:</span> <span class=k>index</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%cst</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>tensor</span><span class=p>.</span>yield <span class=nv>%cst</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>The result of <code>tensor.generate</code> does not have a &ldquo;destination&rdquo; operand, so
+bufferization allocates a new buffer. This could be avoided by choosing an
+op such as <code>linalg.generic</code>, which can express the same computation with a
+&ldquo;destination&rdquo; operand, as specified behind outputs (<code>outs</code>):</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>#map</span> <span class=p>=</span> affine_map<span class=p>&lt;(</span>i<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>i<span class=p>)&gt;</span>
+</span></span><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> linalg<span class=p>.</span>generic <span class=p>{</span><span class=nl>indexing_maps =</span> <span class=p>[</span><span class=nv>#map</span><span class=p>],</span> <span class=nl>iterator_types =</span> <span class=p>[</span><span class=s>&#34;parallel&#34;</span><span class=p>]}</span>
+</span></span><span class=line><span class=cl>                    outs<span class=p>(</span><span class=nv>%t</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span> <span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%cst</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>    linalg<span class=p>.</span>yield <span class=nv>%cst</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>At first glance, the above <code>linalg.generic</code> op may not seem very useful because
+the output tensor <code>%t</code> is entirely overwritten. Why pass the tensor <code>%t</code> as an
+operand in the first place? As an example, this can be useful for overwriting a
+slice of a tensor:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%t</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>extract_slice <span class=nv>%s</span> <span class=p>[</span><span class=nv>%idx</span><span class=p>]</span> <span class=p>[</span><span class=nv>%sz</span><span class=p>]</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span> to <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> linalg<span class=p>.</span>generic <span class=p>...</span> outs<span class=p>(</span><span class=nv>%t</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>insert_slice <span class=nv>%0</span> into <span class=nv>%s</span> <span class=p>[</span><span class=nv>%idx</span><span class=p>]</span> <span class=p>[</span><span class=nv>%sz</span><span class=p>]</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span> into <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>The above example bufferizes to a <code>memref.subview</code>, followed by a
+&ldquo;<code>linalg.generic</code> on memrefs&rdquo; that overwrites the memory of the subview, assuming
+that the slice <code>%t</code> has no other user. The <code>tensor.insert_slice</code> then bufferizes
+to a no-op (in the absence of RaW conflicts such as a subsequent read of <code>%s</code>).</p><p>RaW conflicts are detected with an analysis of SSA use-def chains (details
+later). One-Shot Bufferize works best if there is a single SSA use-def chain,
+where the result of a tensor op is the operand of the next tensor ops, e.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;my_dialect.some_op&#34;</span><span class=p>(</span><span class=nv>%t</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> <span class=s>&#34;my_dialect.another_op&#34;</span><span class=p>(</span><span class=nv>%0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%2</span> <span class=p>=</span> <span class=s>&#34;my_dialect.yet_another_op&#34;</span><span class=p>(</span><span class=nv>%1</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span></code></pre></div><p>Buffer copies are likely inserted if the SSA use-def chain splits at some point,
+e.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=s>&#34;my_dialect.some_op&#34;</span><span class=p>(</span><span class=nv>%t</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> <span class=s>&#34;my_dialect.another_op&#34;</span><span class=p>(</span><span class=nv>%0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%2</span> <span class=p>=</span> <span class=s>&#34;my_dialect.yet_another_op&#34;</span><span class=p>(</span><span class=nv>%0</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span></code></pre></div><p>One-Shot Bufferize has debug flags (<code>test-analysis-only print-conflicts</code>) that
+print the results of the analysis and explain to the user why buffer copies were
+inserted.</p><h2 id=using-one-shot-bufferize>Using One-Shot Bufferize&nbsp;<a class=headline-hash href=#using-one-shot-bufferize>¶</a></h2><p>MLIR provides a pass
+<a href=https://mlir.llvm.org/docs/Passes/#-one-shot-bufferize-one-shot-bufferize><code>-one-shot-bufferize</code></a>
+that performs an analysis and bufferizes all ops with tensor semantics that
+implement <code>BufferizableOpInterface</code>. For modularity reasons, these op interface
+implementations are typically external models that live in a dialect&rsquo;s
+&ldquo;Transforms&rdquo; build unit. (External models are a mechanism for implementing an op
+interface in a different build unit.) It is the user&rsquo;s responsibility to ensure
+that all needed external models are registered before running One-Shot
+Bufferize.</p><p>By default, One-Shot Bufferize fails when it encounters an op with tensor
+semantics (i.e., tensor result or tensor operand) that is not bufferizable
+(i.e., does not implement <code>BufferizableOpInterface</code>). This can be avoided with
+<code>allow-unknown-ops</code>. In that case, One-Shot Bufferize inserts
+<code>to_memref</code>/<code>to_tensor</code> ops around the bufferization boundary. These ops are
+named versions of <code>unrealized_conversion_cast</code>. Note that One-Shot Bufferize&rsquo;s
+analysis can currently not analyze these ops, so input IR with such ops may fail
+bufferization. Therefore, running One-Shot Bufferize multiple times in a
+sequence is also not supported at the moment.</p><p>One-Shot Bufferize can be configured to bufferize only ops from a set of
+dialects with <code>dialect-filter</code>. This can be useful for gradually migrating from
+dialect conversion-based bufferization to One-Shot Bufferize. One-Shot Bufferize
+must run first in such a case, because dialect conversion-based bufferization
+generates <code>to_tensor</code>/<code>to_memref</code> ops which One-Shot Bufferize cannot analyze.</p><p>One-Shot Bufferize can also be called programmatically with
+<a href=https://github.com/llvm/llvm-project/blob/ae2764e835a26bad9774803eca0a6530df2a3e2d/mlir/include/mlir/Dialect/Bufferization/Transforms/OneShotAnalysis.h#L167><code>bufferization::runOneShotBufferize</code></a>.
+Alternatively,
+<a href=https://github.com/llvm/llvm-project/blob/ae2764e835a26bad9774803eca0a6530df2a3e2d/mlir/include/mlir/Dialect/Bufferization/Transforms/Bufferize.h#L78><code>bufferization::bufferizeOp</code></a>
+skips the analysis and inserts a copy on every buffer write, just like the
+dialect conversion-based bufferization.</p><h2 id=buffer-deallocation>Buffer Deallocation&nbsp;<a class=headline-hash href=#buffer-deallocation>¶</a></h2><p><strong>Important: this pass is deprecated, please use the ownership based buffer</strong>
+<strong>deallocation pass instead</strong></p><p>One-Shot Bufferize deallocates all buffers that it allocates. This is in
+contrast to the dialect conversion-based bufferization that delegates this job
+to the
+<a href=https://mlir.llvm.org/docs/Passes/#-buffer-deallocation-adds-all-required-dealloc-operations-for-all-allocations-in-the-input-program><code>-buffer-deallocation</code></a>
+pass. By default, One-Shot Bufferize rejects IR where a newly allocated buffer
+is returned from a block. Such IR will fail bufferization.</p><p>A new buffer allocation is returned from a block when the result of an op that
+is not in destination-passing style is returned. E.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> scf<span class=p>.</span>if <span class=nv>%c</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>generate <span class=p>...</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  scf<span class=p>.</span>yield <span class=nv>%1</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> else <span class=p>{</span>
+</span></span><span class=line><span class=cl>  scf<span class=p>.</span>yield <span class=nv>%another_tensor</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The <code>scf.yield</code> in the &ldquo;else&rdquo; branch is OK, but the <code>scf.yield</code> in the &ldquo;then&rdquo;
+branch will be rejected.</p><p>Another case in which a buffer allocation may be returned is when a buffer copy
+must be inserted due to a RaW conflict. E.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> scf<span class=p>.</span>if <span class=nv>%c</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>insert <span class=nv>%cst</span> into <span class=nv>%another_tensor</span><span class=p>[</span><span class=nv>%idx</span><span class=p>]</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=s>&#34;my_dialect.reading_tensor_op&#34;</span><span class=p>(</span><span class=nv>%another_tensor</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  scf<span class=p>.</span>yield <span class=nv>%1</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> else <span class=p>{</span>
+</span></span><span class=line><span class=cl>  scf<span class=p>.</span>yield <span class=nv>%yet_another_tensor</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In the above example, a buffer copy of <code>buffer(%another_tensor)</code> (with <code>%cst</code>
+inserted) is yielded from the &ldquo;then&rdquo; branch.</p><p>Note: Buffer allocations that are returned from a function are not deallocated.
+It is the caller&rsquo;s responsibility to deallocate the buffer. For the full
+function boundary ABI for MemRefs w.r.t. buffer deallocation refer to the
+<a href=#function-boundary-abi><em>Function Boundary ABI</em></a> section. In the future, this
+could be automated with allocation hoisting (across function boundaries) or
+reference counting.</p><p>One-Shot Bufferize leaks all memory and does not generate any buffer
+deallocations. The <code>-buffer-deallocation-pipeline</code> has to be run afterwards to
+insert the deallocation operations.</p><h2 id=ownership-based-buffer-deallocation>Ownership-based Buffer Deallocation&nbsp;<a class=headline-hash href=#ownership-based-buffer-deallocation>¶</a></h2><p>Recommended compilation pipeline:</p><pre tabindex=0><code>one-shot-bufferize
+       |          it&#39;s recommended to perform all bufferization here at latest,
+       |       &lt;- any allocations inserted after this point have to be handled
+       V          manually
+expand-realloc
+       V
+ownership-based-buffer-deallocation
+       V
+  canonicalize &lt;- mostly for scf.if simplifications
+       V
+buffer-deallocation-simplification
+       V       &lt;- from this point onwards no tensor values are allowed
+lower-deallocations
+       V
+      CSE
+       V
+  canonicalize
+</code></pre><p>One-Shot Bufferize does not deallocate any buffers that it allocates. This job
+is delegated to the
+<a href=https://mlir.llvm.org/docs/Passes/#-ownership-based-buffer-deallocation><code>-ownership-based-buffer-deallocation</code></a>
+pass, i.e., after running One-Shot Bufferize, the result IR may have a number of
+<code>memref.alloc</code> ops, but no <code>memref.dealloc</code> ops. This pass processes operations
+implementing <code>FunctionOpInterface</code> one-by-one without analysing the call-graph.
+This means, that there have to be
+<a href=#function-boundary-abi>some rules</a> on how
+MemRefs are handled when being passed from one function to another. The rest of
+the pass revolves heavily around the <code>bufferization.dealloc</code> operation which is
+inserted at the end of each basic block with appropriate operands and should be
+optimized using the Buffer Deallocation Simplification pass
+(<code>--buffer-deallocation-simplification</code>) and the regular canonicalizer
+(<code>--canonicalize</code>). Lowering the result of the
+<code>-ownership-based-buffer-deallocation</code> pass directly using
+<code>--convert-bufferization-to-memref</code> without beforehand optimization is not
+recommended as it will lead to very inefficient code (the runtime-cost of
+<code>bufferization.dealloc</code> is <code>O(|memrefs|^2+|memref|*|retained|)</code>).</p><h3 id=function-boundary-abi>Function boundary ABI&nbsp;<a class=headline-hash href=#function-boundary-abi>¶</a></h3><p>The Buffer Deallocation pass operates on the level of operations implementing
+the <code>FunctionOpInterface</code>. Such operations can take MemRefs as arguments, but
+also return them. To ensure compatibility among all functions (including
+external ones), some rules have to be enforced:</p><ul><li>When a MemRef is passed as a function argument, ownership is never acquired.
+It is always the caller&rsquo;s responsibility to deallocate such MemRefs.</li><li>Returning a MemRef from a function always passes ownership to the caller,
+i.e., it is also the caller&rsquo;s responsibility to deallocate memrefs returned
+from a called function.</li><li>A function must not return a MemRef with the same allocated base buffer as
+one of its arguments (in this case a copy has to be created). Note that in
+this context two subviews of the same buffer that don&rsquo;t overlap are also
+considered to alias.</li></ul><p>For external functions (e.g., library functions written externally in C), the
+externally provided implementation has to adhere to these rules and they are
+just assumed by the buffer deallocation pass. Functions on which the
+deallocation pass is applied and the implementation is accessible are modified
+by the pass such that the ABI is respected (i.e., buffer copies are inserted as
+necessary).</p><h3 id=inserting-bufferizationdealloc-operations>Inserting <code>bufferization.dealloc</code> operations&nbsp;<a class=headline-hash href=#inserting-bufferizationdealloc-operations>¶</a></h3><p><code>bufferization.dealloc</code> operations are unconditionally inserted at the end of
+each basic block (just before the terminator). The majority of the pass is about
+finding the correct operands for this operation. There are three variadic
+operand lists to be populated, the first contains all MemRef values that may
+need to be deallocated, the second list contains their associated ownership
+values (of <code>i1</code> type), and the third list contains MemRef values that are still
+needed at a later point and should thus not be deallocated. This operation
+allows us to deal with any kind of aliasing behavior: it lowers to runtime
+aliasing checks when not enough information can be collected statically. When
+enough aliasing information is statically available, operands or the entire op
+may fold away.</p><p><strong>Ownerships</strong></p><p>To do so, we use a concept of ownership indicators of memrefs which materialize
+as an <code>i1</code> value for any SSA value of <code>memref</code> type, indicating whether the
+basic block in which it was materialized has ownership of this MemRef. Ideally,
+this is a constant <code>true</code> or <code>false</code>, but might also be a non-constant SSA
+value. To keep track of those ownership values without immediately materializing
+them (which might require insertion of <code>bufferization.clone</code> operations or
+operations checking for aliasing at runtime at positions where we don&rsquo;t actually
+need a materialized value), we use the <code>Ownership</code> class. This class represents
+the ownership in three states forming a lattice on a partial order:</p><pre tabindex=0><code>forall X in SSA values. uninitialized &lt; unique(X) &lt; unknown
+forall X, Y in SSA values.
+  unique(X) == unique(Y) iff X and Y always evaluate to the same value
+  unique(X) != unique(Y) otherwise
+</code></pre><p>Intuitively, the states have the following meaning:</p><ul><li>Uninitialized: the ownership is not initialized yet, this is the default
+state; once an operation is finished processing the ownership of all
+operation results with MemRef type should not be uninitialized anymore.</li><li>Unique: there is a specific SSA value that can be queried to check ownership
+without materializing any additional IR</li><li>Unknown: no specific SSA value is available without materializing additional
+IR, typically this is because two ownerships in &lsquo;Unique&rsquo; state would have to
+be merged manually (e.g., the result of an <code>arith.select</code> either has the
+ownership of the then or else case depending on the condition value,
+inserting another <code>arith.select</code> for the ownership values can perform the
+merge and provide a &lsquo;Unique&rsquo; ownership for the result), however, in the
+general case this &lsquo;Unknown&rsquo; state has to be assigned.</li></ul><p>Implied by the above partial order, the pass combines two ownerships in the
+following way:</p><table><thead><tr><th style=text-align:left>Ownership 1</th><th style=text-align:left>Ownership 2</th><th style=text-align:left>Combined Ownership</th></tr></thead><tbody><tr><td style=text-align:left>uninitialized</td><td style=text-align:left>uninitialized</td><td style=text-align:left>uninitialized</td></tr><tr><td style=text-align:left>unique(X)</td><td style=text-align:left>uninitialized</td><td style=text-align:left>unique(X)</td></tr><tr><td style=text-align:left>unique(X)</td><td style=text-align:left>unique(X)</td><td style=text-align:left>unique(X)</td></tr><tr><td style=text-align:left>unique(X)</td><td style=text-align:left>unique(Y)</td><td style=text-align:left>unknown</td></tr><tr><td style=text-align:left>unknown</td><td style=text-align:left>unique</td><td style=text-align:left>unknown</td></tr><tr><td style=text-align:left>unknown</td><td style=text-align:left>uninitialized</td><td style=text-align:left>unknown</td></tr><tr><td style=text-align:left><td colspan=3>+ symmetric cases</td><td></td><td></td></tr></tbody></table><p><strong>Collecting the list of MemRefs that potentially need to be deallocated</strong></p><p>For a given block, the list of MemRefs that potentially need to be deallocated
+at the end of that block is computed by keeping track of all values for which
+the block potentially takes over ownership. This includes MemRefs provided as
+basic block arguments, interface handlers for operations like <code>memref.alloc</code> and
+<code>func.call</code>, but also liveness information in regions with multiple basic
+blocks. More concretely, it is computed by taking the MemRefs in the &lsquo;in&rsquo; set
+of the liveness analysis of the current basic block B, appended by the MemRef
+block arguments and by the set of MemRefs allocated in B itself (determined by
+the interface handlers), then subtracted (also determined by the interface
+handlers) by the set of MemRefs deallocated in B.</p><p>Note that we don&rsquo;t have to take the intersection of the liveness &lsquo;in&rsquo; set with
+the &lsquo;out&rsquo; set of the predecessor block because a value that is in the &lsquo;in&rsquo; set
+must be defined in an ancestor block that dominates all direct predecessors and
+thus the &lsquo;in&rsquo; set of this block is a subset of the &lsquo;out&rsquo; sets of each
+predecessor.</p><pre tabindex=0><code>memrefs = filter((liveIn(block) U
+  allocated(block) U arguments(block)) \ deallocated(block), isMemRef)
+</code></pre><p>The list of conditions for the second variadic operands list of
+<code>bufferization.dealloc</code> is computed by querying the stored ownership value for
+each of the MemRefs collected as described above. The ownership state is updated
+by the interface handlers while processing the basic block.</p><p><strong>Collecting the list of MemRefs to retain</strong></p><p>Given a basic block B, the list of MemRefs that have to be retained can be
+different for each successor block S. For the two basic blocks B and S and the
+values passed via block arguments to the destination block S, we compute the
+list of MemRefs that have to be retained in B by taking the MemRefs in the
+successor operand list of the terminator and the MemRefs in the &lsquo;out&rsquo; set of the
+liveness analysis for B intersected with the &lsquo;in&rsquo; set of the destination block
+S.</p><p>This list of retained values makes sure that we cannot run into use-after-free
+situations even if no aliasing information is present at compile-time.</p><pre tabindex=0><code>toRetain = filter(successorOperands + (liveOut(fromBlock) insersect
+  liveIn(toBlock)), isMemRef)
+</code></pre><h3 id=supported-interfaces>Supported interfaces&nbsp;<a class=headline-hash href=#supported-interfaces>¶</a></h3><p>The pass uses liveness analysis and a few interfaces:</p><ul><li><code>FunctionOpInterface</code></li><li><code>CallOpInterface</code></li><li><code>MemoryEffectOpInterface</code></li><li><code>RegionBranchOpInterface</code></li><li><code>RegionBranchTerminatorOpInterface</code></li></ul><p>Due to insufficient information provided by the interface, it also special-cases
+on the <code>cf.cond_br</code> operation and makes some assumptions about operations
+implementing the <code>RegionBranchOpInterface</code> at the moment, but improving the
+interfaces would allow us to remove those dependencies in the future.</p><h3 id=limitations>Limitations&nbsp;<a class=headline-hash href=#limitations>¶</a></h3><p>The Buffer Deallocation pass has some requirements and limitations on the input
+IR. These are checked in the beginning of the pass and errors are emitted
+accordingly:</p><ul><li>The set of interfaces the pass operates on must be implemented (correctly).
+E.g., if there is an operation present with a nested region, but does not
+implement the <code>RegionBranchOpInterface</code>, an error is emitted because the
+pass cannot know the semantics of the nested region (and does not make any
+default assumptions on it).</li><li>No explicit control-flow loops are present. Currently, only loops using
+structural-control-flow are supported. However, this limitation could be
+lifted in the future.</li><li>Deallocation operations should not be present already. The pass should
+handle them correctly already (at least in most cases), but it&rsquo;s not
+supported yet due to insufficient testing.</li><li>Terminators must implement either <code>RegionBranchTerminatorOpInterface</code> or
+<code>BranchOpInterface</code>, but not both. Terminators with more than one successor
+are not supported (except <code>cf.cond_br</code>). This is not a fundamental
+limitation, but there is no use-case justifying the more complex
+implementation at the moment.</li></ul><h3 id=example>Example&nbsp;<a class=headline-hash href=#example>¶</a></h3><p>The following example contains a few interesting cases:</p><ul><li>Basic block arguments are modified to also pass along the ownership
+indicator, but not for entry blocks, where the function boundary ABI
+is applied instead.</li><li>The result of <code>arith.select</code> initially has &lsquo;Unknown&rsquo; assigned as ownership,
+but once the <code>bufferization.dealloc</code> operation is inserted it is put in the
+&lsquo;retained&rsquo; list (since it has uses in a later basic block) and thus the
+&lsquo;Unknown&rsquo; ownership can be replaced with a &lsquo;Unique&rsquo; ownership using the
+corresponding result of the dealloc operation.</li><li>The <code>cf.cond_br</code> operation has more than one successor and thus has to
+insert two <code>bufferization.dealloc</code> operations (one for each successor).
+While they have the same list of MemRefs to deallocate (because they perform
+the deallocations for the same block), it must be taken into account that
+some MemRefs remain <em>live</em> for one branch but not the other (thus set
+intersection is performed on the <em>live-out</em> of the current block and the
+<em>live-in</em> of the target block). Also, <code>cf.cond_br</code> supports separate
+forwarding operands for each successor. To make sure that no MemRef is
+deallocated twice (because there are two <code>bufferization.dealloc</code> operations
+with the same MemRefs to deallocate), the condition operands are adjusted to
+take the branch condition into account. While a generic lowering for such
+terminator operations could be implemented, a specialized implementation can
+take all the semantics of this particular operation into account and thus
+generate a more efficient lowering.</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@example</span><span class=p>(</span><span class=nv>%memref</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=nv>%select_cond</span><span class=p>:</span> <span class=k>i1</span><span class=p>,</span> <span class=nv>%br_cond</span><span class=p>:</span> <span class=k>i1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%alloc</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%alloca</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloca<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%select</span> <span class=p>=</span> arith<span class=p>.</span>select <span class=nv>%select_cond</span><span class=p>,</span> <span class=nv>%alloc</span><span class=p>,</span> <span class=nv>%alloca</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  cf<span class=p>.</span>cond_br <span class=nv>%br_cond</span><span class=p>,</span> <span class=nl>^bb1</span><span class=p>(</span><span class=nv>%alloc</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;),</span> <span class=nl>^bb1</span><span class=p>(</span><span class=nv>%memref</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb1</span><span class=p>(</span><span class=nv>%bbarg</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;):</span>
+</span></span><span class=line><span class=cl>  test<span class=p>.</span>copy<span class=p>(</span><span class=nv>%bbarg</span><span class=p>,</span> <span class=nv>%select</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>After running <code>--ownership-based-buffer-deallocation</code>, it looks as follows:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// Function boundary ABI: ownership of `%memref` will never be acquired.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@example</span><span class=p>(</span><span class=nv>%memref</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=nv>%select_cond</span><span class=p>:</span> <span class=k>i1</span><span class=p>,</span> <span class=nv>%br_cond</span><span class=p>:</span> <span class=k>i1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%false</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> false
+</span></span><span class=line><span class=cl>  <span class=nv>%true</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> true
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// The ownership of a MemRef defined by the `memref.alloc` operation is always
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// assigned to be &#39;true&#39;.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%alloc</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// The ownership of a MemRef defined by the `memref.alloca` operation is
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// always assigned to be &#39;false&#39;.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%alloca</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloca<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// The ownership of %select will be the join of the ownership of %alloc and
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// the ownership of %alloca, i.e., of %true and %false. Because the pass does
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// not know about the semantics of the `arith.select` operation (unless a
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// custom handler is implemented), the ownership join will be &#39;Unknown&#39;. If
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// the materialized ownership indicator of %select is needed, either a clone
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// has to be created for which %true is assigned as ownership or the result
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// of a `bufferization.dealloc` where %select is in the retain list has to be
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// used.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%select</span> <span class=p>=</span> arith<span class=p>.</span>select <span class=nv>%select_cond</span><span class=p>,</span> <span class=nv>%alloc</span><span class=p>,</span> <span class=nv>%alloca</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// We use `memref.extract_strided_metadata` to get the base memref since it is
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// not allowed to pass arbitrary memrefs to `memref.dealloc`. This property is
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// already enforced for `bufferization.dealloc`
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%base_buffer_memref</span><span class=p>,</span> <span class=nl>... =</span> <span class=kt>memref</span><span class=p>.</span>extract_strided_metadata <span class=nv>%memref</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%base_buffer_alloc</span><span class=p>,</span> <span class=nl>... =</span> <span class=kt>memref</span><span class=p>.</span>extract_strided_metadata <span class=nv>%alloc</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%base_buffer_alloca</span><span class=p>,</span> <span class=nl>... =</span> <span class=kt>memref</span><span class=p>.</span>extract_strided_metadata <span class=nv>%alloca</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// The deallocation conditions need to be adjusted to incorporate the branch
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// condition. In this example, this requires only a single negation, but might
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// also require multiple arith.andi operations.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%not_br_cond</span> <span class=p>=</span> arith<span class=p>.</span>xori <span class=nv>%true</span><span class=p>,</span> <span class=nv>%br_cond</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// There are two dealloc operations inserted in this basic block, one per
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// successor. Both have the same list of MemRefs to deallocate and the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// conditions only differ by the branch condition conjunct.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// Note, however, that the retained list differs. Here, both contain the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// %select value because it is used in both successors (since it&#39;s the same
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// block), but the value passed via block argument differs (%memref vs.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// %alloc).
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%10</span><span class=p>:</span><span class=nl>2 =</span> bufferization<span class=p>.</span>dealloc
+</span></span><span class=line><span class=cl>           <span class=p>(</span><span class=nv>%base_buffer_memref</span><span class=p>,</span> <span class=nv>%base_buffer_alloc</span><span class=p>,</span> <span class=nv>%base_buffer_alloca</span>
+</span></span><span class=line><span class=cl>             <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>        if <span class=p>(</span><span class=nv>%false</span><span class=p>,</span> <span class=nv>%br_cond</span><span class=p>,</span> <span class=nv>%false</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    retain <span class=p>(</span><span class=nv>%alloc</span><span class=p>,</span> <span class=nv>%select</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%11</span><span class=p>:</span><span class=nl>2 =</span> bufferization<span class=p>.</span>dealloc
+</span></span><span class=line><span class=cl>           <span class=p>(</span><span class=nv>%base_buffer_memref</span><span class=p>,</span> <span class=nv>%base_buffer_alloc</span><span class=p>,</span> <span class=nv>%base_buffer_alloca</span>
+</span></span><span class=line><span class=cl>             <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>        if <span class=p>(</span><span class=nv>%false</span><span class=p>,</span> <span class=nv>%not_br_cond</span><span class=p>,</span> <span class=nv>%false</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    retain <span class=p>(</span><span class=nv>%memref</span><span class=p>,</span> <span class=nv>%select</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Because %select is used in ^bb1 without passing it via block argument, we
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// need to update it&#39;s ownership value here by merging the ownership values
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// returned by the dealloc operations
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%new_ownership</span> <span class=p>=</span> arith<span class=p>.</span>select <span class=nv>%br_cond</span><span class=p>,</span> <span class=nv>%10#1</span><span class=p>,</span> <span class=nv>%11#1</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// The terminator is modified to pass along the ownership indicator values
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// with each MemRef value.
+</span></span></span><span class=line><span class=cl><span class=c></span>  cf<span class=p>.</span>cond_br <span class=nv>%br_cond</span><span class=p>,</span> <span class=nl>^bb1</span><span class=p>(</span><span class=nv>%alloc</span><span class=p>,</span> <span class=nv>%10#0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>i1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                       <span class=nl>^bb1</span><span class=p>(</span><span class=nv>%memref</span><span class=p>,</span> <span class=nv>%11#0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>i1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// All non-entry basic blocks are modified to have an additional i1 argument for
+</span></span></span><span class=line><span class=cl><span class=c>// each MemRef value in the argument list.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nl>^bb1</span><span class=p>(</span><span class=nv>%13</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=nv>%14</span><span class=p>:</span> <span class=k>i1</span><span class=p>):</span>  <span class=c>// 2 preds: ^bb0, ^bb0
+</span></span></span><span class=line><span class=cl><span class=c></span>  test<span class=p>.</span>copy<span class=p>(</span><span class=nv>%13</span><span class=p>,</span> <span class=nv>%select</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%base_buffer_13</span><span class=p>,</span> <span class=nl>... =</span> <span class=kt>memref</span><span class=p>.</span>extract_strided_metadata <span class=nv>%13</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%base_buffer_select</span><span class=p>,</span> <span class=nl>... =</span> <span class=kt>memref</span><span class=p>.</span>extract_strided_metadata <span class=nv>%select</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span><span class=p>,</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Here, we don&#39;t have a retained list, because the block has no successors
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// and the return has no operands.
+</span></span></span><span class=line><span class=cl><span class=c></span>  bufferization<span class=p>.</span>dealloc <span class=p>(</span><span class=nv>%base_buffer_13</span><span class=p>,</span> <span class=nv>%base_buffer_select</span>
+</span></span><span class=line><span class=cl>                          <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=k>i8</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>                     if <span class=p>(</span><span class=nv>%14</span><span class=p>,</span> <span class=nv>%new_ownership</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=buffer-deallocation-simplification-pass>Buffer Deallocation Simplification Pass&nbsp;<a class=headline-hash href=#buffer-deallocation-simplification-pass>¶</a></h2><p>The
+<a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/#bufferizationdealloc-bufferizationdeallocop>semantics of the <code>bufferization.dealloc</code> operation</a>
+provide a lot of opportunities for optimizations which can be conveniently split
+into patterns using the greedy pattern rewriter. Some of those patterns need
+access to additional analyses such as an analysis that can determine whether two
+MemRef values must, may, or never originate from the same buffer allocation.
+These patterns are collected in the Buffer Deallocation Simplification pass,
+while patterns that don&rsquo;t need additional analyses are registered as part of the
+regular canonicalizer pass. This pass is best run after
+<code>--ownership-based-buffer-deallocation</code> followed by <code>--canonicalize</code>.</p><p>The pass applies patterns for the following simplifications:</p><ul><li>Remove MemRefs from retain list when guaranteed to not alias with any value
+in the &lsquo;memref&rsquo; operand list. This avoids an additional aliasing check with
+the removed value.</li><li>Split off values in the &lsquo;memref&rsquo; list to new <code>bufferization.dealloc</code>
+operations only containing this value in the &lsquo;memref&rsquo; list when it is
+guaranteed to not alias with any other value in the &lsquo;memref&rsquo; list. This
+avoids at least one aliasing check at runtime and enables using a more
+efficient lowering for this new <code>bufferization.dealloc</code> operation.</li><li>Remove values from the &lsquo;memref&rsquo; operand list when it is guaranteed to alias
+with at least one value in the &lsquo;retained&rsquo; list and may not alias any other
+value in the &lsquo;retain&rsquo; list.</li></ul><h2 id=lower-deallocations-pass>Lower Deallocations Pass&nbsp;<a class=headline-hash href=#lower-deallocations-pass>¶</a></h2><p>The <code>-lower-deallocations</code> pass transforms all <code>bufferization.dealloc</code>
+operations to <code>memref.dealloc</code> operations and may also insert operations from
+the <code>scf</code>, <code>func</code>, and <code>arith</code> dialects to make deallocations conditional and
+check whether two MemRef values come from the same allocation at runtime (when
+the <code>buffer-deallocation-simplification</code> pass wasn&rsquo;t able to determine it
+statically).</p><p>The same lowering of the <code>bufferization.dealloc</code> operation is also part of the
+<code>-convert-bufferization-to-memref</code> conversion pass which also lowers all the
+other operations of the bufferization dialect.</p><p>We distinguish multiple cases in this lowering pass to provide an overall more
+efficient lowering. In the general case, a library function is created to avoid
+quadratic code size explosion (relative to the number of operands of the dealloc
+operation). The specialized lowerings aim to avoid this library function because
+it requires allocating auxiliary MemRefs of index values.</p><h3 id=generic-lowering>Generic Lowering&nbsp;<a class=headline-hash href=#generic-lowering>¶</a></h3><p>A library function is generated to avoid code-size blow-up. On a high level, the
+base-memref of all operands is extracted as an index value and stored into
+specifically allocated MemRefs and passed to the library function which then
+determines whether they come from the same original allocation. This information
+is needed to avoid double-free situations and to correctly retain the MemRef
+values in the <code>retained</code> list.</p><p><strong>Dealloc Operation Lowering</strong></p><p>This lowering supports all features the dealloc operation has to offer. It
+computes the base pointer of each memref (as an index), stores it in a
+new memref helper structure and passes it to the helper function generated
+in <code>buildDeallocationLibraryFunction</code>. The results are stored in two lists
+(represented as MemRefs) of booleans passed as arguments. The first list
+stores whether the corresponding condition should be deallocated, the
+second list stores the ownership of the retained values which can be used
+to replace the result values of the <code>bufferization.dealloc</code> operation.</p><p>Example:</p><pre tabindex=0><code>%0:2 = bufferization.dealloc (%m0, %m1 : memref&lt;2xf32&gt;, memref&lt;5xf32&gt;)
+                          if (%cond0, %cond1)
+                      retain (%r0, %r1 : memref&lt;1xf32&gt;, memref&lt;2xf32&gt;)
+</code></pre><p>lowers to (simplified):</p><pre tabindex=0><code>%c0 = arith.constant 0 : index
+%c1 = arith.constant 1 : index
+%dealloc_base_pointer_list = memref.alloc() : memref&lt;2xindex&gt;
+%cond_list = memref.alloc() : memref&lt;2xi1&gt;
+%retain_base_pointer_list = memref.alloc() : memref&lt;2xindex&gt;
+%m0_base_pointer = memref.extract_aligned_pointer_as_index %m0
+memref.store %m0_base_pointer, %dealloc_base_pointer_list[%c0]
+%m1_base_pointer = memref.extract_aligned_pointer_as_index %m1
+memref.store %m1_base_pointer, %dealloc_base_pointer_list[%c1]
+memref.store %cond0, %cond_list[%c0]
+memref.store %cond1, %cond_list[%c1]
+%r0_base_pointer = memref.extract_aligned_pointer_as_index %r0
+memref.store %r0_base_pointer, %retain_base_pointer_list[%c0]
+%r1_base_pointer = memref.extract_aligned_pointer_as_index %r1
+memref.store %r1_base_pointer, %retain_base_pointer_list[%c1]
+%dyn_dealloc_base_pointer_list = memref.cast %dealloc_base_pointer_list :
+   memref&lt;2xindex&gt; to memref&lt;?xindex&gt;
+%dyn_cond_list = memref.cast %cond_list : memref&lt;2xi1&gt; to memref&lt;?xi1&gt;
+%dyn_retain_base_pointer_list = memref.cast %retain_base_pointer_list :
+   memref&lt;2xindex&gt; to memref&lt;?xindex&gt;
+%dealloc_cond_out = memref.alloc() : memref&lt;2xi1&gt;
+%ownership_out = memref.alloc() : memref&lt;2xi1&gt;
+%dyn_dealloc_cond_out = memref.cast %dealloc_cond_out :
+   memref&lt;2xi1&gt; to memref&lt;?xi1&gt;
+%dyn_ownership_out = memref.cast %ownership_out :
+   memref&lt;2xi1&gt; to memref&lt;?xi1&gt;
+call @dealloc_helper(%dyn_dealloc_base_pointer_list,
+                     %dyn_retain_base_pointer_list,
+                     %dyn_cond_list,
+                     %dyn_dealloc_cond_out,
+                     %dyn_ownership_out) : (...)
+%m0_dealloc_cond = memref.load %dyn_dealloc_cond_out[%c0] : memref&lt;2xi1&gt;
+scf.if %m0_dealloc_cond {
+  memref.dealloc %m0 : memref&lt;2xf32&gt;
+}
+%m1_dealloc_cond = memref.load %dyn_dealloc_cond_out[%c1] : memref&lt;2xi1&gt;
+scf.if %m1_dealloc_cond {
+  memref.dealloc %m1 : memref&lt;5xf32&gt;
+}
+%r0_ownership = memref.load %dyn_ownership_out[%c0] : memref&lt;2xi1&gt;
+%r1_ownership = memref.load %dyn_ownership_out[%c1] : memref&lt;2xi1&gt;
+memref.dealloc %dealloc_base_pointer_list : memref&lt;2xindex&gt;
+memref.dealloc %retain_base_pointer_list : memref&lt;2xindex&gt;
+memref.dealloc %cond_list : memref&lt;2xi1&gt;
+memref.dealloc %dealloc_cond_out : memref&lt;2xi1&gt;
+memref.dealloc %ownership_out : memref&lt;2xi1&gt;
+// replace %0#0 with %r0_ownership
+// replace %0#1 with %r1_ownership
+</code></pre><p><strong>Library function</strong></p><p>A library function is built per compilation unit that can be called at
+bufferization dealloc sites to determine whether two MemRefs come from the same
+allocation and their new ownerships.</p><p>The generated function takes two MemRefs of indices and three MemRefs of
+booleans as arguments:</p><ul><li>The first argument A should contain the result of the
+extract_aligned_pointer_as_index operation applied to the MemRefs to be
+deallocated</li><li>The second argument B should contain the result of the
+extract_aligned_pointer_as_index operation applied to the MemRefs to be
+retained</li><li>The third argument C should contain the conditions as passed directly
+to the deallocation operation.</li><li>The fourth argument D is used to pass results to the caller. Those
+represent the condition under which the MemRef at the corresponding
+position in A should be deallocated.</li><li>The fifth argument E is used to pass results to the caller. It
+provides the ownership value corresponding the the MemRef at the same
+position in B</li></ul><p>This helper function is supposed to be called once for each
+<code>bufferization.dealloc</code> operation to determine the deallocation need and
+new ownership indicator for the retained values, but does not perform the
+deallocation itself.</p><p>Generated code:</p><pre tabindex=0><code>func.func @dealloc_helper(
+    %dyn_dealloc_base_pointer_list: memref&lt;?xindex&gt;,
+    %dyn_retain_base_pointer_list: memref&lt;?xindex&gt;,
+    %dyn_cond_list: memref&lt;?xi1&gt;,
+    %dyn_dealloc_cond_out: memref&lt;?xi1&gt;,
+    %dyn_ownership_out: memref&lt;?xi1&gt;) {
+  %c0 = arith.constant 0 : index
+  %c1 = arith.constant 1 : index
+  %true = arith.constant true
+  %false = arith.constant false
+  %num_dealloc_memrefs = memref.dim %dyn_dealloc_base_pointer_list, %c0
+  %num_retain_memrefs = memref.dim %dyn_retain_base_pointer_list, %c0
+  // Zero initialize result buffer.
+  scf.for %i = %c0 to %num_retain_memrefs step %c1 {
+    memref.store %false, %dyn_ownership_out[%i] : memref&lt;?xi1&gt;
+  }
+  scf.for %i = %c0 to %num_dealloc_memrefs step %c1 {
+    %dealloc_bp = memref.load %dyn_dealloc_base_pointer_list[%i]
+    %cond = memref.load %dyn_cond_list[%i]
+    // Check for aliasing with retained memrefs.
+    %does_not_alias_retained = scf.for %j = %c0 to %num_retain_memrefs
+        step %c1 iter_args(%does_not_alias_aggregated = %true) -&gt; (i1) {
+      %retain_bp = memref.load %dyn_retain_base_pointer_list[%j]
+      %does_alias = arith.cmpi eq, %retain_bp, %dealloc_bp : index
+      scf.if %does_alias {
+        %curr_ownership = memref.load %dyn_ownership_out[%j]
+        %updated_ownership = arith.ori %curr_ownership, %cond : i1
+        memref.store %updated_ownership, %dyn_ownership_out[%j]
+      }
+      %does_not_alias = arith.cmpi ne, %retain_bp, %dealloc_bp : index
+      %updated_aggregate = arith.andi %does_not_alias_aggregated,
+                                      %does_not_alias : i1
+      scf.yield %updated_aggregate : i1
+    }
+    // Check for aliasing with dealloc memrefs in the list before the
+    // current one, i.e.,
+    // `fix i, forall j &lt; i: check_aliasing(%dyn_dealloc_base_pointer[j],
+    // %dyn_dealloc_base_pointer[i])`
+    %does_not_alias_any = scf.for %j = %c0 to %i step %c1
+       iter_args(%does_not_alias_agg = %does_not_alias_retained) -&gt; (i1) {
+      %prev_dealloc_bp = memref.load %dyn_dealloc_base_pointer_list[%j]
+      %does_not_alias = arith.cmpi ne, %prev_dealloc_bp, %dealloc_bp
+      %updated_alias_agg = arith.andi %does_not_alias_agg, %does_not_alias
+      scf.yield %updated_alias_agg : i1
+    }
+    %dealloc_cond = arith.andi %does_not_alias_any, %cond : i1
+    memref.store %dealloc_cond, %dyn_dealloc_cond_out[%i] : memref&lt;?xi1&gt;
+  }
+  return
+}
+</code></pre><h3 id=specialized-lowerings>Specialized Lowerings&nbsp;<a class=headline-hash href=#specialized-lowerings>¶</a></h3><p>Currently, there are two special lowerings for common cases to avoid the library
+function and thus unnecessary memory load and store operations and function
+calls:</p><p><strong>One memref, no retained</strong></p><p>Lower a simple case without any retained values and a single MemRef. Ideally,
+static analysis can provide enough information such that the
+<code>buffer-deallocation-simplification</code> pass is able to split the dealloc
+operations up into this simple case as much as possible before running this
+pass.</p><p>Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>bufferization<span class=p>.</span>dealloc <span class=p>(</span><span class=nv>%arg0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x</span><span class=k>f32</span><span class=p>&gt;)</span> if <span class=p>(</span><span class=nv>%arg1</span><span class=p>)</span>
+</span></span></code></pre></div><p>is lowered to</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>scf<span class=p>.</span>if <span class=nv>%arg1</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>memref</span><span class=p>.</span>dealloc <span class=nv>%arg0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In most cases, the branch condition is either constant &rsquo;true&rsquo; or &lsquo;false&rsquo; and can
+thus be optimized away entirely by the canonicalizer pass.</p><p><strong>One memref, arbitrarily many retained</strong></p><p>A special case lowering for the deallocation operation with exactly one MemRef,
+but an arbitrary number of retained values. The size of the code produced by
+this lowering is linear to the number of retained values.</p><p>Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span><span class=p>:</span><span class=nl>2 =</span> bufferization<span class=p>.</span>dealloc <span class=p>(</span><span class=nv>%m</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x</span><span class=k>f32</span><span class=p>&gt;)</span> if <span class=p>(</span><span class=nv>%cond</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                      retain <span class=p>(</span><span class=nv>%r0</span><span class=p>,</span> <span class=nv>%r1</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=kt>return</span> <span class=nv>%0#0</span><span class=p>,</span> <span class=nv>%0#1</span> <span class=p>:</span> <span class=k>i1</span><span class=p>,</span> <span class=k>i1</span>
+</span></span></code></pre></div><p>is lowered to</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%m_base_pointer</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>extract_aligned_pointer_as_index <span class=nv>%m</span>
+</span></span><span class=line><span class=cl><span class=nv>%r0_base_pointer</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>extract_aligned_pointer_as_index <span class=nv>%r0</span>
+</span></span><span class=line><span class=cl><span class=nv>%r0_does_not_alias</span> <span class=p>=</span> arith<span class=p>.</span>cmpi ne<span class=p>,</span> <span class=nv>%m_base_pointer</span><span class=p>,</span> <span class=nv>%r0_base_pointer</span>
+</span></span><span class=line><span class=cl><span class=nv>%r1_base_pointer</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>extract_aligned_pointer_as_index <span class=nv>%r1</span>
+</span></span><span class=line><span class=cl><span class=nv>%r1_does_not_alias</span> <span class=p>=</span> arith<span class=p>.</span>cmpi ne<span class=p>,</span> <span class=nv>%m_base_pointer</span><span class=p>,</span> <span class=nv>%r1_base_pointer</span>
+</span></span><span class=line><span class=cl><span class=nv>%not_retained</span> <span class=p>=</span> arith<span class=p>.</span>andi <span class=nv>%r0_does_not_alias</span><span class=p>,</span> <span class=nv>%r1_does_not_alias</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl><span class=nv>%should_dealloc</span> <span class=p>=</span> arith<span class=p>.</span>andi <span class=nv>%not_retained</span><span class=p>,</span> <span class=nv>%cond</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl>scf<span class=p>.</span>if <span class=nv>%should_dealloc</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>memref</span><span class=p>.</span>dealloc <span class=nv>%m</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>%true</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> true
+</span></span><span class=line><span class=cl><span class=nv>%r0_does_alias</span> <span class=p>=</span> arith<span class=p>.</span>xori <span class=nv>%r0_does_not_alias</span><span class=p>,</span> <span class=nv>%true</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl><span class=nv>%r0_ownership</span> <span class=p>=</span> arith<span class=p>.</span>andi <span class=nv>%r0_does_alias</span><span class=p>,</span> <span class=nv>%cond</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl><span class=nv>%r1_does_alias</span> <span class=p>=</span> arith<span class=p>.</span>xori <span class=nv>%r1_does_not_alias</span><span class=p>,</span> <span class=nv>%true</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl><span class=nv>%r1_ownership</span> <span class=p>=</span> arith<span class=p>.</span>andi <span class=nv>%r1_does_alias</span><span class=p>,</span> <span class=nv>%cond</span> <span class=p>:</span> <span class=k>i1</span>
+</span></span><span class=line><span class=cl><span class=kt>return</span> <span class=nv>%r0_ownership</span><span class=p>,</span> <span class=nv>%r1_ownership</span> <span class=p>:</span> <span class=k>i1</span><span class=p>,</span> <span class=k>i1</span>
+</span></span></code></pre></div><h2 id=memory-layouts>Memory Layouts&nbsp;<a class=headline-hash href=#memory-layouts>¶</a></h2><p>One-Shot Bufferize bufferizes ops from top to bottom. This works well when all
+ops are bufferizable. However, when encountering a non-bufferizable tensor with
+<code>allow-unknown-ops</code>, One-Shot Bufferize must insert <code>to_memref</code> ops at the
+bufferization boundary and decide on a memref type. By default, One-Shot
+Bufferize choose the most dynamic memref type wrt. layout maps. E.g.:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=err>&#34;</span>my_dialect<span class=p>.</span>unbufferizable_op<span class=p>(</span><span class=nv>%t</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>extract <span class=nv>%0</span><span class=p>[</span><span class=nv>%idx1</span><span class=p>,</span> <span class=nv>%idx2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>When bufferizing the above IR, One-Shot Bufferize inserts a <code>to_memref</code> ops with
+dynamic offset and strides:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=err>&#34;</span>my_dialect<span class=p>.</span>unbufferizable_op<span class=p>(</span><span class=nv>%t</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=nv>%0_m</span> <span class=p>=</span> bufferization<span class=p>.</span>to_memref <span class=nv>%0</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>,</span> strided<span class=p>&lt;[</span><span class=err>?</span><span class=p>,</span> <span class=err>?</span><span class=p>],</span> offset<span class=p>:</span> <span class=err>?</span><span class=p>&gt;&gt;</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>load <span class=nv>%0_m</span><span class=p>[</span><span class=nv>%idx1</span><span class=p>,</span> <span class=nv>%idx2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>,</span> strided<span class=p>&lt;[</span><span class=err>?</span><span class=p>,</span> <span class=err>?</span><span class=p>],</span> offset<span class=p>:</span> <span class=err>?</span><span class=p>&gt;&gt;</span>
+</span></span></code></pre></div><p>All users of <code>%0</code> have fully dynamic layout maps. This ensures that the
+bufferized IR composes well with future bufferizations of <code>unbufferizable_op</code>
+(maybe bufferized by another pass), regardless of the exact memref type of the
+future bufferization. If the op turns out to be bufferized to an op with a
+simpler memref type (e.g., identity layout map), we expect that canonicalization
+patterns would clean up unnecessarily dynamic layout maps. (Some of these
+canonicalization patterns may not be implemented yet.)</p><p>One-Shot Bufferize tries to infer the most precise memref type when bufferizing
+an op. If the entire IR is bufferizable, we do not have to resort to
+conservatively use fully dynamic layout maps. In that case, we also do not have
+to rely on canonicalization patterns to clean up the bufferized IR.</p><p>Note: There are some bufferizable ops for which a percise layout map cannot be
+inferred. E.g., a <code>tensor.cast</code> from a <code>tensor&lt;*xf32></code> to a <code>tensor&lt;?x?xf32></code>
+must be bufferized to a <code>memref.cast</code> with a memref type that has a fully
+dynamic layout map.</p><p>One-Shot Bufferize has an option <code>unknown-type-conversion</code> to control the
+generation of layout maps when no precise layout can be inferred:</p><ul><li><code>fully-dynamic-layout-map</code> uses fully dynamic layout maps and is the default
+behavior. This composes well when IR is partially bufferized.</li><li><code>identity-layout-map</code> uses static identity layout maps. This option can be
+useful for legacy code that cannot handle memref types with layout maps.
+Note that this setting can lead to additional buffer copies when folding a
+<code>to_tensor</code>/<code>to_memref</code> pair with memref types that are not cast-compatible.</li></ul><p>Note: The <code>unknown-type-conversion</code> option does not affect layout maps of
+function signatures. There is a separate <code>function-signature-type-conversion</code>
+option that controls layout maps of function parameters and function results.</p><h2 id=extending-one-shot-bufferize>Extending One-Shot Bufferize&nbsp;<a class=headline-hash href=#extending-one-shot-bufferize>¶</a></h2><p>Custom ops can be bufferized if they implement <code>BufferizableOpInterface</code>. Users
+must at least implement the following interface methods.</p><ul><li><code>bufferizesToMemoryRead</code>: Return <code>true</code> if the buffer of the given tensor
+OpOperand is read.</li><li><code>bufferizesToMemoryWrite</code>: Return <code>true</code> if the buffer of the given tensor
+OpOperand is written (if bufferizing in-place).</li><li><code>getAliasingOpResult</code>: Return the OpResults that may share the same buffer
+as the given OpOperand. This interface method describes to
+OpOperand-to-OpResult mapping wrt. destination-passing style.</li><li><code>bufferRelation</code>: Return <code>BufferRelation::Equivalent</code> if the given OpResult
+is the exact same memref as the aliasing OpOperand after bufferization (in
+case of in-place bufferization). Otherwise, (e.g., they overlap but are not
+necessarily the exact same memrefs), <code>BufferRelation::Unknown</code> should be
+returned. Additional buffer relations will be added in the future, but
+<code>BufferRelation::Unknown</code> is always safe.</li><li><code>bufferize</code>: Rewrite the op with the given rewriter. Ops should be replaced
+with <code>bufferization::replaceOpWithBufferizedValues</code>.</li></ul><p>To get a better intuition of the interface methods, we invite users to take a
+look at existing implementations in MLIR, e.g., the implementation of
+<code>tensor.insert</code> or <code>tensor.extract</code>.</p><h2 id=debugging-buffer-copies>Debugging Buffer Copies&nbsp;<a class=headline-hash href=#debugging-buffer-copies>¶</a></h2><p>To get a better understanding of why One-Shot Bufferize introduced a buffer
+copy, users can run the pass with <code>test-analysis-only print-conflicts</code>. Every
+tensor op is then annotated with an attribute that has a boolean value for each
+tensor OpOperand. <code>true</code> means that the OpOperand bufferizes in-place. <code>false</code>
+means that the OpOperand bufferizes out-of-place and a buffer copy will be
+inserted.</p><p>There are two reasons why a buffer copy may be inserted.</p><ol><li>Due to a RaW conflict, it is not safe to bufferize in-place. I.e., the
+overwritten data is still needed.</li><li>The buffer is not writable. E.g., <code>memref.global</code> buffers that are the
+result of <code>arith.constant</code> ops are never modified.</li></ol><p>In the first case, <code>print-conflicts</code> illustrates the conflict in the form of a
+(&ldquo;read&rdquo;, &ldquo;conflicting write&rdquo;, &ldquo;last write&rdquo;) tuple.</p><h2 id=understanding-the-ssa-use-def-chain-analysis>Understanding the SSA Use-Def Chain Analysis&nbsp;<a class=headline-hash href=#understanding-the-ssa-use-def-chain-analysis>¶</a></h2><p>To get a better understanding of the SSA Use-Def Chain Analysis and the RaW
+conflict detection algorithm, we invite interested users to read the
+<a href=https://discourse.llvm.org/uploads/short-url/5kckJ3DftYwQokG252teFgw3sYa.pdf>design document</a>
+and watch the corresponding
+<a href=https://youtu.be/TXEo59CYS9A>ODM talk</a>
+(
+<a href=https://mlir.llvm.org/OpenMeetings/2022-01-13-One-Shot-Bufferization.pdf>slides</a>).
+can be used to bufferize a program in a single pass, as long as each op</p><h2 id=migrating-from-dialect-conversion-based-bufferization>Migrating from Dialect Conversion-based Bufferization&nbsp;<a class=headline-hash href=#migrating-from-dialect-conversion-based-bufferization>¶</a></h2><p>Both dialect conversion-based bufferization and One-Shot Bufferize generate
+<code>to_tensor</code>/<code>to_memref</code> ops at the bufferization boundary (when run with
+<code>allow-unknown-ops</code>). They can be combined and run in sequence. However,
+One-Shot Bufferize must run first because it cannot analyze those boundary ops.
+To update existing code step-by-step, it may be useful to specify a dialect
+filter for One-Shot Bufferize, so that dialects can be switched over one-by-one.</p><h2 id=bufferization-function-graphs>Bufferization Function Graphs&nbsp;<a class=headline-hash href=#bufferization-function-graphs>¶</a></h2><p>One-Shot Bufferize does currently not support function graph bufferization.
+I.e., <code>CallOp</code>, <code>ReturnOp</code> and function bbArgs are not bufferizable. Users can
+run the existing <code>--func-bufferize</code> bufferization pass after One-Shot Bufferize.</p><p>Alternatively, users can try
+<a href=https://github.com/llvm/llvm-project/blob/ae2764e835a26bad9774803eca0a6530df2a3e2d/mlir/include/mlir/Dialect/Linalg/ComprehensiveBufferize/ModuleBufferization.h#L31><code>ModuleBufferization</code></a>,
+which is an extension of One-Shot Bufferize. This bufferization is still under
+development and does not support arbitrary IR. In essence, returning a tensor
+from a function is not supported, unless it is equivalent to a function bbArg.
+In that case, the corresponding return value can simply be dropped during
+bufferization.</p><h2 id=dialect-conversion-based-bufferization>Dialect Conversion-based Bufferization&nbsp;<a class=headline-hash href=#dialect-conversion-based-bufferization>¶</a></h2><p>Disclaimer: Most dialect conversion-based bufferization has been migrated to
+One-Shot Bufferize. New users should use One-Shot Bufferize (with or without
+analysis). The following documentation is only for existing users of dialect
+conversion-based bufferization.</p><p>This system is a simple application of MLIR&rsquo;s dialect conversion infrastructure.
+The bulk of the code related to bufferization is a set of ordinary
+<code>ConversionPattern</code>&rsquo;s that dialect authors write for converting ops that operate
+on <code>tensor</code>&rsquo;s to ops that operate on <code>memref</code>&rsquo;s. A set of conventions and best
+practices are followed that allow these patterns to be run across multiple
+independent passes (rather than requiring a single huge atomic conversion pass),
+which makes the compilation pipelines scalable, robust, and easy to debug.</p><p>This document is targeted at people looking to utilize MLIR&rsquo;s bufferization
+functionality, along with people who want to extend it to cover their own ops.</p><p><a name=the-talk><strong>NOTE:</strong></a> Before reading this document, please watch the
+talk &ldquo;Type Conversions the Not-So-Hard-Way: MLIR&rsquo;s New Bufferization
+Infrastructure&rdquo;
+(
+<a href="https://drive.google.com/file/d/1FVbzCXxZzS9LBLuvpPNLWJD-XDkt54ky/view?usp=sharing">slides</a>,
+<a href="https://drive.google.com/file/d/1VfVajitgf8ZPnd-HRkJvaJiFLhBsluXN/view?usp=sharing">recording</a>).
+That talk gives a high-level overview of the bufferization infrastructure and
+important conceptual details related to using the MLIR dialect conversion
+infrastructure.</p><h3 id=bufferizations-place-in-a-compilation-pipeline>Bufferization&rsquo;s place in a compilation pipeline&nbsp;<a class=headline-hash href=#bufferizations-place-in-a-compilation-pipeline>¶</a></h3><p>Bufferization itself does not free any of the buffers that have been allocated,
+nor does it do anything particularly intelligent with the placement of buffers
+w.r.t. control flow. Thus, a realistic compilation pipeline will usually consist
+of:</p><ol><li>Bufferization</li><li>Buffer optimizations such as <code>buffer-hoisting</code>, <code>buffer-loop-hoisting</code>, and
+<code>promote-buffers-to-stack</code>, which do optimizations that are only exposed
+after bufferization.</li><li>Finally, running the
+<a href=/docs/BufferDeallocationInternals/>buffer deallocation</a>
+pass.</li></ol><p>After buffer deallocation has been completed, the program will be quite
+difficult to transform due to the presence of the deallocation ops. Thus, other
+optimizations such as linalg fusion on memrefs should be done before that stage.</p><h3 id=general-structure-of-the-bufferization-process>General structure of the bufferization process&nbsp;<a class=headline-hash href=#general-structure-of-the-bufferization-process>¶</a></h3><p>Bufferization consists of running multiple <em>partial</em> bufferization passes,
+followed by one <em>finalizing</em> bufferization pass.</p><p>There is typically one partial bufferization pass per dialect (though other
+subdivisions are possible). For example, for a dialect <code>X</code> there will typically
+be a pass <code>X-bufferize</code> that knows how to bufferize all the ops in that dialect.
+By running pass <code>X-bufferize</code> for each dialect <code>X</code> in the program, all the ops
+in the program are incrementally bufferized.</p><p>Partial bufferization passes create programs where only some ops have been
+bufferized. These passes will create <em>materializations</em> (also sometimes called
+&ldquo;casts&rdquo;) that convert between the <code>tensor</code> and <code>memref</code> type, which allows
+bridging between ops that have been bufferized and ops that have not yet been
+bufferized.</p><p>Finalizing bufferizations complete the bufferization process, and guarantee that
+there are no tensors remaining in the program. This involves eliminating the
+materializations. The pass <code>finalizing-bufferize</code> provides a minimal pass that
+only eliminates materializations and issues an error if any unbufferized ops
+exist in the program.</p><p>However, it is possible for a finalizing bufferization to do more than just
+eliminate materializations. By adding patterns (just as a partial bufferization
+would), it is possible for a finalizing bufferization pass to simultaneously
+bufferize ops and eliminate materializations. This has a number of disadvantages
+discussed in the talk and should generally be avoided.</p><h3 id=example-1>Example&nbsp;<a class=headline-hash href=#example-1>¶</a></h3><p>As a concrete example, we will look at the bufferization pipeline from the
+<code>mlir-npcomp</code> reference backend
+(
+<a href=https://github.com/llvm/mlir-npcomp/blob/97d6d04d41216e73d40b89ffd79620973fc14ce3/lib/RefBackend/RefBackend.cpp#L232>code</a>).
+The code, slightly simplified and annotated, is reproduced here:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl>  <span class=c1>// Partial bufferization passes.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createTensorConstantBufferizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createTCPBufferizePass</span><span class=p>());</span> <span class=c1>// Bufferizes the downstream `tcp` dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createSCFBufferizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createLinalgBufferizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createTensorBufferizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createFuncBufferizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Finalizing bufferization pass.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>pm</span><span class=p>.</span><span class=n>addNestedPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>createFinalizingBufferizePass</span><span class=p>());</span>
+</span></span></code></pre></div><p>Looking first at the partial bufferization passes, we see that there are a
+sequence of <code>FuncOp</code> passes (which run in parallel on functions). These function
+passes are bracketed by <code>arith-bufferize</code> and <code>func-bufferize</code>, which are module
+passes (and thus serialize the parallel compilation process). These two passes
+must be module passes because they make changes to the top-level module.</p><p>The bulk of the bufferization work is done by the function passes. Most of these
+passes are provided as part of the upstream MLIR distribution and bufferize
+their respective dialects (e.g. <code>scf-bufferize</code> bufferizes the <code>scf</code> dialect).
+The <code>tcp-bufferize</code> pass is an exception &ndash; it is a partial bufferization pass
+used to bufferize the downstream <code>tcp</code> dialect, and fits in perfectly with all
+the other passes provided upstream.</p><p>The last pass is the finalizing bufferization pass. The <code>mlir-npcomp</code> reference
+backend has arranged that all ops are bufferized by partial bufferizations, so
+that the upstream <code>finalizing-bufferize</code> pass can be used as the finalizing
+bufferization pass. This gives excellent diagnostics when something goes wrong
+with the bufferization process, such as due to an op that wasn&rsquo;t handled by any
+pattern.</p><h3 id=how-to-write-a-partial-bufferization-pass>How to write a partial bufferization pass&nbsp;<a class=headline-hash href=#how-to-write-a-partial-bufferization-pass>¶</a></h3><p>The contract of a partial bufferization pass is that a subset of ops (or kinds
+of ops, customizable by a ConversionTarget) get bufferized.</p><p>A partial bufferization pass is just a pass that uses the
+<a href=/docs/DialectConversion/>dialect conversion</a> framework to apply
+<code>ConversionPattern</code>s with a <code>tensor</code> to <code>memref</code> type conversion.</p><p>To describe how to write such a pass, we will walk through an example, the
+<code>tensor-bufferize</code> pass
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L23>code</a>,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/Tensor/bufferize.mlir#L1>test</a>)
+that bufferizes the <code>tensor</code> dialect. Note that these passes have been replaced
+with a <code>BufferizableOpInterface</code>-based implementation in the meantime, so we
+have to take a looker at an older version of the code.</p><p>The bulk of the code in the pass will be a set of conversion patterns, with a
+simple example being
+<a href=https://github.com/llvm/llvm-project/blob/2bf6e443e54604c7818c4d1a1837f3d091023270/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L23>BufferizeCastOp</a>).</p><pre tabindex=0><code>class BufferizeCastOp : public OpConversionPattern&lt;tensor::CastOp&gt; {
+public:
+  using OpConversionPattern::OpConversionPattern;
+  LogicalResult
+  matchAndRewrite(tensor::CastOp op, OpAdaptor adaptor,
+                  ConversionPatternRewriter &amp;rewriter) const override {
+    auto resultType = getTypeConverter()-&gt;convertType(op.getType());
+    rewriter.replaceOpWithNewOp&lt;MemRefCastOp&gt;(op, resultType, adaptor.source());
+    return success();
+  }
+};
+</code></pre><p>See
+<a href=#the-talk>the talk</a> for more details on how to write these patterns.</p><p>The
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/Tensor/Transforms/Bufferize.cpp#L57>pass itself</a>
+is very small, and follows the basic pattern of any dialect conversion pass.</p><pre tabindex=0><code>void mlir::populateTensorBufferizePatterns(
+    BufferizeTypeConverter &amp;typeConverter, RewritePatternSet &amp;patterns) {
+  patterns.add&lt;BufferizeCastOp, BufferizeExtractOp&gt;(typeConverter,
+                                                    patterns.getContext());
+}
+
+struct TensorBufferizePass : public TensorBufferizeBase&lt;TensorBufferizePass&gt; {
+  void runOnOperation() override {
+    auto *context = &amp;getContext();
+    BufferizeTypeConverter typeConverter;
+    RewritePatternSet patterns(context);
+    ConversionTarget target(*context);
+
+    populateTensorBufferizePatterns(typeConverter, patterns);
+    target.addIllegalOp&lt;tensor::CastOp, tensor::ExtractOp&gt;();
+    target.addLegalDialect&lt;func::FuncDialect&gt;();
+
+    if (failed(
+            applyPartialConversion(getOperation(), target, std::move(patterns))))
+      signalPassFailure();
+  }
+};
+</code></pre><p>The pass has all the hallmarks of a dialect conversion pass that does type
+conversions: a <code>TypeConverter</code>, a <code>RewritePatternSet</code>, and a <code>ConversionTarget</code>,
+and a call to <code>applyPartialConversion</code>. Note that a function
+<code>populateTensorBufferizePatterns</code> is separated, so that power users can use the
+patterns independently, if necessary (such as to combine multiple sets of
+conversion patterns into a single conversion call, for performance).</p><p>One convenient utility provided by the MLIR bufferization infrastructure is the
+<code>BufferizeTypeConverter</code>, which comes pre-loaded with the necessary conversions
+and materializations between <code>tensor</code> and <code>memref</code>.</p><p>In this case, the <code>BufferizationOpsDialect</code> is marked as legal, so the
+<code>bufferization.to_tensor</code> and <code>bufferization.to_memref</code> ops, which are inserted
+automatically by the dialect conversion framework as materializations, are
+legal. There is a helper <code>populateBufferizeMaterializationLegality</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/a0b65a7bcd6065688189b3d678c42ed6af9603db/mlir/include/mlir/Transforms/Bufferize.h#L53>code</a>)
+which helps with this in general.</p><h3 id=other-partial-bufferization-examples>Other partial bufferization examples&nbsp;<a class=headline-hash href=#other-partial-bufferization-examples>¶</a></h3><ul><li><p><code>scf-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/lib/Dialect/SCF/Transforms/Bufferize.cpp#L1>code</a>,
+<a href=https://github.com/llvm/llvm-project/blob/bc8acf2ce8ad6e8c9b1d97b2e02d3f4ad26e1d9d/mlir/test/Dialect/SCF/bufferize.mlir#L1>test</a>)</p><ul><li>Bufferizes ops from the <code>scf</code> dialect.</li><li>This is an example of how to bufferize ops that implement
+<code>RegionBranchOpInterface</code> (that is, they use regions to represent
+control flow).</li><li>The bulk of the work is done by
+<code>lib/Dialect/SCF/Transforms/StructuralTypeConversions.cpp</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/daaaed6bb89044ac58a23f1bb1ccdd12342a5a58/mlir/lib/Dialect/SCF/Transforms/StructuralTypeConversions.cpp#L1>code</a>),
+which is well-commented and covers how to correctly convert ops that
+contain regions.</li></ul></li><li><p><code>func-bufferize</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/2f5715dc78328215d51d5664c72c632a6dac1046/mlir/lib/Dialect/Func/Transforms/FuncBufferize.cpp#L1>code</a>,
+<a href=https://github.com/llvm/llvm-project/blob/2f5715dc78328215d51d5664c72c632a6dac1046/mlir/test/Dialect/Func/func-bufferize.mlir#L1>test</a>)</p><ul><li>Bufferizes <code>func</code>, <code>call</code>, and <code>BranchOpInterface</code> ops.</li><li>This is an example of how to bufferize ops that have multi-block
+regions.</li><li>This is an example of a pass that is not split along dialect
+subdivisions.</li></ul></li></ul><h3 id=how-to-write-a-finalizing-bufferization-pass>How to write a finalizing bufferization pass&nbsp;<a class=headline-hash href=#how-to-write-a-finalizing-bufferization-pass>¶</a></h3><p>The contract of a finalizing bufferization pass is that all tensors are gone
+from the program.</p><p>The easiest way to write a finalizing bufferize pass is to not write one at all!
+MLIR provides a pass <code>finalizing-bufferize</code> which eliminates the
+<code>bufferization.to_tensor</code> / <code>bufferization.to_memref</code> materialization ops
+inserted by partial bufferization passes and emits an error if that is not
+sufficient to remove all tensors from the program.</p><p>This pass is sufficient when partial bufferization passes have bufferized all
+the ops in the program, leaving behind only the materializations. When possible,
+it is recommended to structure your pass pipeline this way, as this has the
+significant advantage that if an op does not get bufferized (due to a missing
+pattern, bug in the code, etc.), <code>finalizing-bufferize</code> will emit a nice clean
+error, and the IR seen by <code>finalizing-bufferize</code> will only contain only one
+unbufferized op.</p><p>However, before the current bufferization infrastructure was put in place,
+bufferization could only be done as a single finalizing bufferization mega-pass
+that used the <code>populate*BufferizePatterns</code> functions from multiple dialects to
+simultaneously bufferize everything at once. Thus, one might see code in
+downstream projects structured this way. This structure is not recommended in
+new code. A helper, <code>populateEliminateBufferizeMaterializationsPatterns</code>
+(
+<a href=https://github.com/llvm/llvm-project/blob/a0b65a7bcd6065688189b3d678c42ed6af9603db/mlir/include/mlir/Transforms/Bufferize.h#L58>code</a>)
+is available for such passes to provide patterns that eliminate
+<code>bufferization.to_tensor</code> and <code>bufferization.to_memref</code>.</p><h3 id=changes-since-the-talkthe-talk>Changes since
+<a href=#the-talk>the talk</a></h3><ul><li><code>func-bufferize</code> was changed to be a partial conversion pass, and there is a
+new <code>finalizing-bufferize</code> which serves as a general finalizing
+bufferization pass.</li><li>Most partial bufferization passes have been reimplemented in terms of
+<code>BufferizableOpInterface</code>. New users should use One-Shot Bufferize instead
+of dialect conversion-based bufferization.</li></ul><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/BufferDeallocationInternals/ title="Buffer Deallocation - Internals"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Buffer Deallocation - Internals</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/DataLayout/ title="Data Layout Modeling">Next - Data Layout Modeling <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li class=active><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
