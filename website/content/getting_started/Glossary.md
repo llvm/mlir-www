@@ -29,6 +29,16 @@ Conversion refers to a transformation between (or within) dialects, but all
 still within MLIR, whereas translation refers to a transformation between MLIR
 and an external representation.
 
+### [CSE (Constant Subexpression Elimination)](../docs/Passes/#-cse)
+
+CSE eliminates expressions computing already-computed values.
+
+### DCE (Dead Code Elimination)
+
+DCE removes unreachable code and expressions leading to unused results.
+
+The [canonicalize pass](https://mlir.llvm.org/docs/Canonicalization/) performs DCE as part of the canonicalization.
+
 #### [Declarative Rewrite Rule](../docs/DeclarativeRewrites) (DRR)
 
 A [rewrite rule](https://en.wikipedia.org/wiki/Graph_rewriting) which can be
