@@ -33,9 +33,11 @@ and an external representation.
 
 CSE eliminates expressions computing already-computed values.
 
-### [DCE (Dead Code Elimination)](../docs/Passes/#-symbol-dce)
+### DCE (Dead Code Elimination)
 
 DCE removes unreachable code and expressions leading to unused results.
+
+The [canonicalize pass](https://mlir.llvm.org/docs/Canonicalization/) is performs DCE as part of the canonicalization.
 
 #### [Declarative Rewrite Rule](../docs/DeclarativeRewrites) (DRR)
 
