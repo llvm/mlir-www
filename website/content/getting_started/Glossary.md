@@ -37,7 +37,7 @@ CSE eliminates expressions computing already-computed values.
 
 DCE removes unreachable code and expressions leading to unused results.
 
-The [canonicalize pass](https://mlir.llvm.org/docs/Canonicalization/) is performs DCE as part of the canonicalization.
+The [canonicalize pass](https://mlir.llvm.org/docs/Canonicalization/) performs DCE as part of the canonicalization.
 
 #### [Declarative Rewrite Rule](../docs/DeclarativeRewrites) (DRR)
 
