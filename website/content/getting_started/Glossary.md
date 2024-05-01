@@ -15,8 +15,7 @@ documentation.
 
 Don't see a term here that you think should be?
 [Edit this page to add it](https://github.com/llvm/mlir-www/blob/main/website/content/getting_started/Glossary.md).
-Don't know what it means? Submit your term at
-[this GitHub Tracking issue](https://github.com/llvm/mlir-www/issues/183) to have it explained.
+Don't know what it means? Join the [LLVM Discord](https://discord.gg/xS7Z362) and ask in the [#torch-mlir channel](https://discord.com/channels/636084430946959380/742573221882364009)
 
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
