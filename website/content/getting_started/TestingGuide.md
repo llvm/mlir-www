@@ -175,6 +175,12 @@ IR interfaces makes the tests more fragile as those C++ APIs evolve over time.
 This makes future API refactorings, which may happen frequently, much more
 cumbersome as the number of tests scale.
 
+To run the unit tests after building MLIR:
+
+```sh
+cmake --build . --target check-mlir-unit
+```
+
 ## Integration tests
 
 Integration tests are check tests that verify the output of MLIR code running
