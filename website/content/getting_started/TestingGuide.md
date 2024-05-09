@@ -87,7 +87,7 @@ pattern appears in the output.
 
 The above test asserts that, after running Common Subexpression Elimination
 (`-cse`), only one constant remains in the IR, and the sole SSA value is
-returned twice from th function.
+returned twice from the function.
 
 #### Build system details
 
