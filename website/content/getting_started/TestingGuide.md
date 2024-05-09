@@ -274,7 +274,7 @@ should be accompanied by a corresponding diagnostic test.
 
 When you cannot use the above,
 such as for testing a non-user-facing API like a data structure,
-then you should write unit tests.
+then you may write C++ unit tests.
 This is preferred because the C++ APIs are not stable and subject to frequent refactoring.
 Using `lit` and `FileCheck` allows maintainers to improve the MLIR internals more easily.
 
