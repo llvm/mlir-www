@@ -243,7 +243,7 @@ understand how all of this is put together in the build system, this section
 attempts to demystify how to operate the testing tools independently.
 
 Invoking the `check-mlir` target is roughly equivalent to running (from the
-build directory):
+build directory, after building):
 
 ```shell
 ./bin/llvm-lit tools/mlir/test
@@ -262,6 +262,26 @@ instead of `tools/mlir/test` above. Example:
 # files do not actually exist in the build directory, you need to know the
 # name.
 ./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
+```
+
+Or for running all the C++ unit-tests:
+
+```shell
+./bin/llvm-lit tools/mlir/Unit
+```
+
+The C++ unit-tests can also be executed as individual binaries, which is
+convenient when iterating on cycles of rebuild-test:
+
+```shell
+# Rebuild the minimum amount of libraries needed for the C++ MLIRIRTests
+cmake --build . --target tools/mlir/unittests/IR/MLIRIRTests
+
+# Invoke the MLIRIRTest C++ Unit Test directly
+tools/mlir/unittests/IR/MLIRIRTests
+
+# Run just one specific subset inside the MLIRIRTests:
+tools/mlir/unittests/IR/MLIRIRTests --gtest_filter=OpPropertiesTest.Properties
 ```
 
 Lit has a number of options that control test execution. Here are some of the
@@ -289,6 +309,9 @@ LIT_OPTS="--filter=python -a" cmake --build . --target check-mlir
 
 # Only run the array_attributes python test, using the LIT_FILTER mechanism.
 LIT_FILTER="python/ir/array_attributes" cmake --build . --target check-mlir
+
+# It works for specific C++ unit-tests as well:
+LIT_OPTS="--filter=MLIRIRTests -a" cmake --build . --target check-mlir
 
 # Run everything except for example and integration tests (which are both
 # somewhat slow).
