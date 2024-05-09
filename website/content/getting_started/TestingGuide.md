@@ -206,10 +206,7 @@ cmake --build . --target check-mlir-integration
 ```
 
 The source files of the integration tests are organized within the `mlir` source
-tree by dialect (for example, `test/Integration/Dialect/Vector`). Within these
-directories, a `CPU` directory is used for tests that run with the
-`mlir-cpu-runner` tool (this latter leaf structure may eventually disappear,
-since so far all tests are cpu tests).
+tree by dialect (for example, `test/Integration/Dialect/Vector`).
 
 ### Emulator
 
