@@ -9,9 +9,10 @@ weight: 40
 
 ## Quickstart commands
 
-These commands are explained below in more detail.
+These commands are explained below in more detail. All commands are run from the
+cmake build directory `build/`.
 
-### Run the main MLIR test suite:
+### Run all MLIR tests:
 
 ```sh
 cmake --build . --target check-mlir
@@ -26,22 +27,18 @@ cmake --build . --target check-mlir-integration
 ### Run C++ unit tests:
 
 ```sh
-cmake --build . --target check-mlir-unit
+bin/llvm-lit -v tools/mlir/Unit
 ```
 
 ### Run `lit` tests in a specific directory
 
 ```sh
-# from build/
-# -v shows output of failed tests
 bin/llvm-lit -v tools/mlir/test/Dialect/Arithmetic
 ```
 
 ### Run a specific `lit` test file
 
 ```sh
-# from build/
-# -v shows output of failed tests
 bin/llvm-lit -v tools/mlir/test/Dialect/Polynomial/ops.mlir
 ```
 
@@ -51,16 +48,16 @@ bin/llvm-lit -v tools/mlir/test/Dialect/Polynomial/ops.mlir
 
 [`FileCheck`](https://llvm.org/docs/CommandGuide/FileCheck.html) is a tool that
 "reads two files (one from standard input, and one specified on the command
-line) and uses one to verify the other." One file contains a set of `CHECK`
-tags that specify strings and patterns expected to appear in the other file.
-MLIR utilizes `FileCheck`, in combination with
-[`lit`](https://llvm.org/docs/CommandGuide/lit.html), to verify different
-aspects of the IR—such as the output of a transformation pass.
+line) and uses one to verify the other." One file contains a set of `CHECK` tags
+that specify strings and patterns expected to appear in the other file. MLIR
+utilizes [`lit`](https://llvm.org/docs/CommandGuide/lit.html) to orchestrate the
+execution of tools like `mlir-opt` to produce an output, and `FileCheck` to
+verify different aspects of the IR—such as the output of a transformation pass.
 
 The source files of `lit`/`FileCheck` tests are organized within the `mlir`
 source tree under `mlir/test/`. Within this directory, tests are organized
-roughly mirroring `mlir/include/mlir/`, including subdirectories for
-`Dialect/`, `Transforms/`, `Conversion/`, etc.
+roughly mirroring `mlir/include/mlir/`, including subdirectories for `Dialect/`,
+`Transforms/`, `Conversion/`, etc.
 
 #### Example
 
@@ -91,14 +88,15 @@ returned twice from the function.
 
 #### Build system details
 
-While developing in MLIR, it is common to run parts of the test suite many
-times. While invoking the `check-mlir` target is a nice shortcut, the
-interaction with the build system can be confusing. Since most people don't
-understand how all of this is put together in the build system, this section
-attempts to demystify how to operate the testing tools independently.
+The main way to run all the tests mentioned above in a single invocation can be
+done using the `check-mlir` target:
+
+```sh
+cmake --build . --target check-mlir
+```
 
 Invoking the `check-mlir` target is roughly equivalent to running (from the
-build directory):
+build directory, after building):
 
 ```shell
 ./bin/llvm-lit tools/mlir/test
@@ -119,19 +117,42 @@ instead of `tools/mlir/test` above. Example:
 ./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
 ```
 
+Or for running all the C++ unit-tests:
+
+```shell
+./bin/llvm-lit tools/mlir/Unit
+```
+
+The C++ unit-tests can also be executed as individual binaries, which is
+convenient when iterating on cycles of rebuild-test:
+
+```shell
+# Rebuild the minimum amount of libraries needed for the C++ MLIRIRTests
+cmake --build . --target tools/mlir/unittests/IR/MLIRIRTests
+
+# Invoke the MLIRIRTest C++ Unit Test directly
+tools/mlir/unittests/IR/MLIRIRTests
+
+# It works for specific C++ unit-tests as well:
+LIT_OPTS="--filter=MLIRIRTests -a" cmake --build . --target check-mlir
+
+# Run just one specific subset inside the MLIRIRTests:
+tools/mlir/unittests/IR/MLIRIRTests --gtest_filter=OpPropertiesTest.Properties
+```
+
 Lit has a number of options that control test execution. Here are some of the
 most useful for development purposes:
 
-* [`--filter=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter) :
-  Only runs tests whose name matches the REGEXP. Can also be specified via
-  the `LIT_FILTER` environment variable.
-* [`--filter-out=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter-out) :
-  Filters out tests whose name matches the REGEXP. Can also be specified via
-  the `LIT_FILTER_OUT` environment variable.
-* [`-a`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-a) : Shows
-  all information (useful while iterating on a small set of tests).
-* [`--time-tests`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-time-tests) :
-  Prints timing statistics about slow tests and overall histograms.
+*   [`--filter=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter) :
+    Only runs tests whose name matches the REGEXP. Can also be specified via the
+    `LIT_FILTER` environment variable.
+*   [`--filter-out=REGEXP`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter-out) :
+    Filters out tests whose name matches the REGEXP. Can also be specified via
+    the `LIT_FILTER_OUT` environment variable.
+*   [`-a`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-a) : Shows
+    all information (useful while iterating on a small set of tests).
+*   [`--time-tests`](https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-time-tests) :
+    Prints timing statistics about slow tests and overall histograms.
 
 Any Lit options can be set in the `LIT_OPTS` environment variable. This is
 especially useful when using the build system target `check-mlir`.
@@ -152,25 +173,25 @@ LIT_FILTER_OUT="Examples|Integrations" cmake --build . --target check-mlir
 
 Note that the above use the generic cmake command for invoking the `check-mlir`
 target, but you can typically use the generator directly to be more concise
-(i.e. if configured for `ninja`, then `ninja check-mlir` can replace the
-`cmake --build . --target check-mlir` command). We use generic `cmake`
-commands in documentation for consistency, but being concise is often better
-for interactive workflows.
+(i.e. if configured for `ninja`, then `ninja check-mlir` can replace the `cmake
+--build . --target check-mlir` command). We use generic `cmake` commands in
+documentation for consistency, but being concise is often better for interactive
+workflows.
 
 ### Diagnostic tests
 
 MLIR provides rich source location tracking that can be used to emit errors,
 warnings, etc. from anywhere throughout the codebase, which are jointly called
-_diagnostics_. Diagnostic tests assert that specific diagnostic messages are
+*diagnostics*. Diagnostic tests assert that specific diagnostic messages are
 emitted for a given input program. These tests are useful in that they allow
 checking specific invariants of the IR without transforming or changing
 anything.
 
 Some examples of tests in this category are:
 
- - Verifying invariants of operations
- - Checking the expected results of an analysis
- - Detecting malformed IR
+-   Verifying invariants of operations
+-   Checking the expected results of an analysis
+-   Detecting malformed IR
 
 Diagnostic verification tests are written utilizing the
 [source manager verifier handler](../docs/Diagnostics#sourcemgr-diagnostic-verifier-handler),
@@ -198,8 +219,8 @@ func.func @foo(%a : f32) {
 
 ### Integration tests
 
-Integration tests are `FileCheck` tests that verify functional correctness
-of MLIR code by running it, usually by means of JIT compilation using
+Integration tests are `FileCheck` tests that verify functional correctness of
+MLIR code by running it, usually by means of JIT compilation using
 `mlir-cpu-runner` and runtime support libraries.
 
 Integration tests don't run by default. To enable them, set the
@@ -225,31 +246,25 @@ To run only the integration tests, run the `check-mlir-integration` target.
 cmake --build . --target check-mlir-integration
 ```
 
-The source files of the integration tests are organized within the `mlir`
-source tree by dialect (for example, `test/Integration/Dialect/Vector`).
+The source files of the integration tests are organized within the `mlir` source
+tree by dialect (for example, `test/Integration/Dialect/Vector`).
 
 #### Hardware emulators
 
 The integration tests include some tests for targets that are not widely
-available yet, such as specific AVX512 features (like `vp2intersect`)
-and the Intel AMX instructions. These tests require an emulator to
-run correctly (lacking real hardware, of course). To enable these specific
-tests, first download and install the
+available yet, such as specific AVX512 features (like `vp2intersect`) and the
+Intel AMX instructions. These tests require an emulator to run correctly
+(lacking real hardware, of course). To enable these specific tests, first
+download and install the
 [Intel Emulator](https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html).
-Then, include the following additional configuration flags in the initial
-set up (X86Vector and AMX can be individually enabled or disabled), where
-`<path to emulator>` denotes the path to the installed emulator binary.
-```sh
-cmake -G Ninja ../llvm \
-   ... \
-   -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
-   -DMLIR_RUN_X86VECTOR_TESTS=ON \
-   -DMLIR_RUN_AMX_TESTS=ON \
-   -DINTEL_SDE_EXECUTABLE=<path to emulator> \
-   ...
-```
-After this one-time set up, the tests run as shown earlier, but will
-now include the indicated emulated tests as well.
+Then, include the following additional configuration flags in the initial set up
+(X86Vector and AMX can be individually enabled or disabled), where `<path to
+emulator>` denotes the path to the installed emulator binary. `sh cmake -G Ninja
+../llvm \ ... \ -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
+-DMLIR_RUN_X86VECTOR_TESTS=ON \ -DMLIR_RUN_AMX_TESTS=ON \
+-DINTEL_SDE_EXECUTABLE=<path to emulator> \ ...` After this one-time set up, the
+tests run as shown earlier, but will now include the indicated emulated tests as
+well.
 
 ### Unit tests
 
@@ -259,24 +274,22 @@ the `mlir/unittests/` directory.
 
 ## Contributor guidelines
 
-In general, all
-commits to the MLIR repository should include an accompanying test of some form.
-Commits that include no functional changes, such as API changes like symbol
-renaming, should be tagged with NFC (No Functional Changes). This signals to the
-reviewer why the change doesn't/shouldn't include a test.
+In general, all commits to the MLIR repository should include an accompanying
+test of some form. Commits that include no functional changes, such as API
+changes like symbol renaming, should be tagged with NFC (No Functional Changes).
+This signals to the reviewer why the change doesn't/shouldn't include a test.
 
-`lit` tests with `FileCheck` are the preferred method of testing in MLIR
-for non-erroneous output verification.
+`lit` tests with `FileCheck` are the preferred method of testing in MLIR for
+non-erroneous output verification.
 
-Diagnostic tests are the preferred method of asserting error messages are
-output correctly. Every user-facing error message (e.g., `op.emitError()`)
-should be accompanied by a corresponding diagnostic test.
+Diagnostic tests are the preferred method of asserting error messages are output
+correctly. Every user-facing error message (e.g., `op.emitError()`) should be
+accompanied by a corresponding diagnostic test.
 
-When you cannot use the above,
-such as for testing a non-user-facing API like a data structure,
-then you may write C++ unit tests.
-This is preferred because the C++ APIs are not stable and subject to frequent refactoring.
-Using `lit` and `FileCheck` allows maintainers to improve the MLIR internals more easily.
+When you cannot use the above, such as for testing a non-user-facing API like a
+data structure, then you may write C++ unit tests. This is preferred because the
+C++ APIs are not stable and subject to frequent refactoring. Using `lit` and
+`FileCheck` allows maintainers to improve the MLIR internals more easily.
 
 ### FileCheck best practices
 
@@ -337,8 +350,8 @@ func.func @simple_constant() -> (i32, i32) {
 
 It may seem like this is a minimal test case, but it still checks several
 aspects of the output that are unrelated to the CSE transformation. Namely the
-result types of the `arith.constant` and `return` operations, as well the
-actual SSA value names that are produced. FileCheck `CHECK` lines may contain
+result types of the `arith.constant` and `return` operations, as well the actual
+SSA value names that are produced. FileCheck `CHECK` lines may contain
 [regex statements](https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-regex-matching-syntax)
 as well as named
 [string substitution blocks](https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-string-substitution-blocks).
@@ -358,3 +371,4 @@ func.func @simple_constant() -> (i32, i32) {
   return %0, %1 : i32, i32
 }
 ```
+
