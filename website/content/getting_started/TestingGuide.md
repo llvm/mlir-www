@@ -12,7 +12,7 @@ renaming, should be tagged with NFC(no functional changes). This signals to the
 reviewer why the change doesn't/shouldn't include a test.
 
 MLIR generally separates testing into three main categories, [Check](#check-tests)
-tests, [Unit](#unit-tests) tests, and [Integration](#integration-tests) tests.
+tests, [C++ Unit](#unit-tests) tests, and [Integration](#integration-tests) tests.
 
 ## Check tests
 
@@ -163,9 +163,9 @@ func.func @foo(%a : f32) {
 }
 ```
 
-## Unit tests
+## C++ Unit tests
 
-Unit tests are written using
+C++ Unit tests are written using
 [Google Test](https://github.com/google/googletest/blob/master/googletest/docs/primer.md)
 and are located in the unittests/ directory. Tests of these form *should* be
 limited to API tests that cannot be reasonably written as [Check](#check-tests)
@@ -174,12 +174,6 @@ C++ APIs are not stable, and evolve over time. As such, directly testing the C++
 IR interfaces makes the tests more fragile as those C++ APIs evolve over time.
 This makes future API refactorings, which may happen frequently, much more
 cumbersome as the number of tests scale.
-
-To run the unit tests after building MLIR:
-
-```sh
-cmake --build . --target check-mlir-unit
-```
 
 ## Integration tests
 
@@ -195,21 +189,10 @@ cmake -G Ninja ../llvm \
    -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \
    ...
 ```
-After this one-time set up, the tests run as part of regular testing as follows.
-```sh
-cmake --build . --target check-mlir
-```
-Alternatively, to just run the integration tests, the following command can be
-used.
-```sh
-cmake --build . --target check-mlir-integration
-```
+After this one-time set up, the tests run as part of regular testing.
 
 The source files of the integration tests are organized within the `mlir` source
-tree by dialect (for example, `test/Integration/Dialect/Vector`). Within these
-directories, a `CPU` directory is used for tests that run with the
-`mlir-cpu-runner` tool (this latter leaf structure may eventually disappear,
-since so far all tests are cpu tests).
+tree by dialect (for example, `test/Integration/Dialect/Vector`).
 
 ### Emulator
 
@@ -236,11 +219,12 @@ now include the indicated emulated tests as well.
 
 ## Command Line Incantations
 
-While developing in MLIR, it is common to run parts of the test suite many
-times. While invoking the `check-mlir` target is a nice shortcut, the
-interaction with the build system can be confusing. Since most people don't
-understand how all of this is put together in the build system, this section
-attempts to demystify how to operate the testing tools independently.
+The main way to run all the tests mentioned above in a single invocation can
+be done using the `check-mlir` target:
+
+```sh
+cmake --build . --target check-mlir
+```
 
 Invoking the `check-mlir` target is roughly equivalent to running (from the
 build directory):
@@ -263,6 +247,7 @@ instead of `tools/mlir/test` above. Example:
 # name.
 ./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
 ```
+
 
 Lit has a number of options that control test execution. Here are some of the
 most useful for development purposes:
@@ -301,3 +286,4 @@ target, but you can typically use the generator directly to be more concise
 `cmake --build . --target check-mlir` command). We use generic `cmake`
 commands in documentation for consistency, but being concise is often better
 for interactive workflows.
+
