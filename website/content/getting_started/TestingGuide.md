@@ -266,7 +266,7 @@ emulator>` denotes the path to the installed emulator binary. `sh cmake -G Ninja
 tests run as shown earlier, but will now include the indicated emulated tests as
 well.
 
-### Unit tests
+### C++ Unit tests
 
 Unit tests are written using the
 [googletest](https://google.github.io/googletest/) framework and are located in
