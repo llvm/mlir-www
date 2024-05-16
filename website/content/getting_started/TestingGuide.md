@@ -10,7 +10,7 @@ weight: 40
 ## Quickstart commands
 
 These commands are explained below in more detail. All commands are run from the
-cmake build directory `build/`.
+cmake build directory `build/`, after [building the project](/getting_started/).
 
 ### Run all MLIR tests:
 
