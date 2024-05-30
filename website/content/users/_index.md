@@ -101,6 +101,17 @@ for heterogeneous hardware.
 LingoDB heavily builds on the MLIR compiler framework for compiling queries
 to efficient machine code without much latency.
 
+## [MARCO](https://github.com/marco-compiler/marco): Modelica Advanced Research COmpiler
+MARCO is a prototype compiler for the Modelica language, with focus on the
+efficient compilation and simulation of large-scale models.
+The Modelica source code is processed by external tools to obtain a
+modeling language independent representation in Base Modelica, for which an
+MLIR dialect has been designed.
+
+The project is complemented by multiple runtime libraries, written in C++, that
+are used to drive the generated simulation, provide support functions, and to
+ease interfacing with external differential equations solvers.
+
 ## [MLIR-AIE](https://github.com/Xilinx/mlir-aie): Toolchain for AMD/Xilinx AIEngine devices
 
 MLIR-AIE is a toolchain providing low-level device configuration for Versal
