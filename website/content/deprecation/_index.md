@@ -60,9 +60,7 @@ If your `mlir-opt`-like tool is using the
 otherwise, see the
 [Discussion on Discourse](https://discourse.llvm.org/t/psa-migrating-mlir-opt-like-tools-to-use-mliroptmainconfig/68991)
 
-### Removal of `gpu-to-(cubin|hsaco)` in favor of GPU compilation attributes
-
-**Notice: The passes `gpu-to-(cubin|hsaco)` have been removed from the monorepo, use target attributes instead.**
+### Deprecation of `gpu-to-(cubin|hsaco)` in favor of GPU compilation attributes
 
 [GPU compilation attributes](https://mlir.llvm.org/docs/Dialects/GPU/#gpu-compilation) are a completely new mechanism for handling the compilation
 of GPU modules down to binary or other formats in an extensible way. This mechanism lifts
@@ -75,6 +73,7 @@ to binary; hence the CUDATollkit is required for generating binaries.
 For these attributes to work correctly, making registration calls to `registerNVVMTargetInterfaceExternalModels`,
 `registerROCDLTargetInterfaceExternalModels` and `registerOffloadingLLVMTranslationInterfaceExternalModels` are necessary.
 
+The passes `gpu-to-(cubin|hsaco)` will be removed in a future release.
 
 ## LLVM 18
 
@@ -87,3 +86,10 @@ in February 2023 ([PSA](https://discourse.llvm.org/t/psa-in-tree-conversion-pass
 ([PSA](https://discourse.llvm.org/t/psa-removal-of-typed-pointers-from-the-llvm-dialect/74502)).
 If you are still targeting LLVM dialect with typed pointers, an update to
 support opaque pointers will be necessary.
+
+
+## LLVM 19
+
+### Removal of `gpu-to-(cubin|hsaco)` in favor of GPU compilation attributes
+
+**Notice: The passes `gpu-to-(cubin|hsaco)` have been removed from the monorepo, use target attributes instead. See the LLVM 17 section on this page for more information.**
