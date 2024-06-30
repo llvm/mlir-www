@@ -88,6 +88,22 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [Kokkos](https://kokkos.org):
+
+The Kokkos C++ Performance Portability Ecosystem is a production level solution 
+for writing modern C++ applications in a hardware agnostic way. It is part of the 
+US Department of Energies Exascale Project – the leading effort in the US to prepare 
+the HPC community for the next generation of super computing platforms. The Ecosystem 
+consists of multiple libraries addressing the primary concerns for developing and 
+maintaining applications in a portable way. The three main components are the Kokkos 
+Core Programming Model, the Kokkos Kernels Math Libraries and the Kokkos Profiling and 
+Debugging Tools.
+
+There is current [work](https://github.com/kokkos/kokkos.github.io/files/13651039/Kokkos_MLIR.pdf) 
+ongoing to convert MLIR to portable Kokkos-based source code, add a partition dialect 
+to MLIR to support tiled and distributed sparse tensors and target spatial dataflow 
+accelerators.
+
 ## [Lingo DB](https://www.lingo-db.com): Revolutionizing Data Processing with Compiler Technology
 
 LingoDB is a cutting-edge data processing system that leverages compiler technology
