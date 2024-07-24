@@ -46,6 +46,22 @@ constantly evolving, aiming to deliver execution on heterogenous architectures w
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
+## [Concrete](https://github.com/zama-ai/concrete): TFHE Compiler that converts python programs into FHE equivalent
+
+Concrete is an open-source framework that simplifies the use of
+[Fully Homomorphic Encryption](https://fhe.org) (FHE) and makes writing FHE
+programs easy for developers
+
+FHE is a powerful technology that enables computations on encrypted data without
+needing to decrypt it. This capability ensures user privacy and provides robust
+protection against data breaches.
+
+Concrete enables developers to efficiently develop privacy-preserving
+applications for various use cases. For instance,
+[Concrete ML](https://github.com/zama-ai/concrete-ml) is built on top of
+Concrete to integrate privacy-preserving features of FHE into machine learning
+use cases.
+
 ## [Enzyme](https://enzyme.mit.edu): General Automatic Differentiation of MLIR
 Enzyme (specifically EnzymeMLIR) is a first-class automatic differentiation 
 sytem for MLIR. Operations and types implement or inheret general interfaces
