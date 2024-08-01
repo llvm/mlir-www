@@ -315,9 +315,9 @@ func.func @simple_constant() -> (i32, i32) {
 ```
 
 The above example is another way to write the original example shown in the main
-[FileCheck tests](#filecheck-tests) section. There are a few problems with this
-test; below is a breakdown of the no-nos of this test to specifically highlight
-best practices.
+[`lit` and `FileCheck` tests](#lit-and-filecheck-tests) section. There are a few
+problems with this test; below is a breakdown of the no-nos of this test to
+specifically highlight best practices.
 
 *   Tests should be self-contained.
 
