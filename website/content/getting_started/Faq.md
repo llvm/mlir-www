@@ -94,7 +94,7 @@ dialects.
 ## In dialect conversion, I want an operation to be removed after its users get converted, how do I do that?
 
 This operation can be marked "illegal" and you can just do speculatively
-`rewriter.erase(op);`. The operation won't be actually removed right now,
+`rewriter.eraseOp(op);`. The operation won't be actually removed right now,
 instead when mark something as erased you are basically saying to the driver
 "I expect all uses of this to go away by the time everything is over". The
 conversion will fail if the operation you marked as erased doesn't actually get
