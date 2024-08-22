@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2024-08-22: Upstream SPIR-V Conversion
+[slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf)
+[recording](https://youtu.be/-qoMMrlYvGs)
 * 2023-02-15: OpenMP GPU target offload
 [slides](/OpenMeetings/2023-02-15-OpenMP-GPU-Offload.pdf) -
 [recording](https://youtu.be/lOK6JPuVFYg)
