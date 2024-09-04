@@ -46,6 +46,10 @@ constantly evolving, aiming to deliver execution on heterogenous architectures w
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
+## [DSP-MLIR](https://github.com/MPSLab-ASU/DSP_MLIR): A Framework for Digital Signal Processing Applications in MLIR
+
+DSP-MLIR is a framework designed specifically for DSP applications. It provides a DSL (Frontend), compiler, and rewrite patterns that detect DSP patterns and apply optimizations based on DSP theorems. The framework supports a wide range of DSP operations, including filters (FIR, IIR, filter response), transforms (DCT, FFT, IFFT), and other signal processing operations such as delay and gain, along with additional functionalities for application development. 
+
 ## [Enzyme](https://enzyme.mit.edu): General Automatic Differentiation of MLIR
 Enzyme (specifically EnzymeMLIR) is a first-class automatic differentiation 
 sytem for MLIR. Operations and types implement or inheret general interfaces
