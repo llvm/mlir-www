@@ -273,6 +273,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2024-09-12: XLA Indexing Maps
+[slides](/OpenMeetings/2024-09-12-XLA-Indexing-Analysis.pdf)
+[recording](https://youtu.be/8KKjYeXGHOM)
 * 2023-12-22: PyDSL, a small subset of Python for constructing affine & transform dialects
 [slides](/OpenMeetings/2023-12-21-PyDSL.pdf)
 [recording](https://youtu.be/nmtHeRkl850)
