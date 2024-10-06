@@ -10,6 +10,13 @@ to be a quick reference document. For terms which are well-documented elsewhere,
 definitions are kept brief and the header links to the more in-depth
 documentation.
 
+
+#### Is Something Missing?
+
+Don't see a term here that you think should be?
+[Edit this page to add it](https://github.com/llvm/mlir-www/blob/main/website/content/getting_started/Glossary.md).
+Don't know what it means? Join the [LLVM Discord](https://discord.gg/xS7Z362) and ask in the [#torch-mlir channel](https://discord.com/channels/636084430946959380/742573221882364009)
+
 <!-- When contributing, please ensure that entries remain in alphabetical order. -->
 
 #### [Block](../docs/LangRef#blocks)
