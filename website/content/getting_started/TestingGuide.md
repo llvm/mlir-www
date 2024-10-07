@@ -246,14 +246,17 @@ To run only the integration tests, run the `check-mlir-integration` target.
 cmake --build . --target check-mlir-integration
 ```
 
-Note that integration tests are relatively expensive to run (primarily due JIT
-compilation), and hence we reserve e2e tests for verifying complex compilation
-pipelines. Use them when e.g. lowering high-level operations like
-`linalg.matmul` through involved transformations/optimizations such as tiling,
-vectorization, progressive vector lowering or other. For less involved lowering
-pipelines or when there's almost 1-1 mapping between an Op and it's LLVM IR
-counterpart (e.g. `arith.cmpi` and LLVM IR `icmp` instruction), use regular
-tests (not requiring JIT compilation) instead.
+Note that integration tests are relatively expensive to run (primarily due to
+JIT compilation), and tend to be trickier to debug (with multiple compilation
+steps _integrated_, it usually takes a bit of triaging to find the root cause
+of a failure). We reserve e2e tests for cases that are hard to verify
+otherwise, e.g. when composing and testing complex compilation pipelines. In
+those cases, verifying run-time output tends to be easier then the checking
+e.g. LLVM IR with FileCheck. Lowering optimized `linalg.matmul` (with tiling
+and vectorization) is a good example. For less involved lowering pipelines or
+when there's almost 1-1 mapping between an Op and it's LLVM IR counterpart
+(e.g. `arith.cmpi` and LLVM IR `icmp` instruction), use regular tests (not
+requiring JIT compilation) instead.
 
 The source files of the integration tests are organized within the `mlir` source
 tree by dialect (for example, `test/Integration/Dialect/Vector`).
