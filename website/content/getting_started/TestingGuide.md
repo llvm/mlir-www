@@ -255,8 +255,8 @@ those cases, verifying run-time output tends to be easier then the checking
 e.g. LLVM IR with FileCheck. Lowering optimized `linalg.matmul` (with tiling
 and vectorization) is a good example. For less involved lowering pipelines or
 when there's almost 1-1 mapping between an Op and it's LLVM IR counterpart
-(e.g. `arith.cmpi` and LLVM IR `icmp` instruction), use regular tests (not
-requiring JIT compilation) instead.
+(e.g. `arith.cmpi` and LLVM IR `icmp` instruction),  regular unit tests are considered
+enough.
 
 The source files of the integration tests are organized within the `mlir` source
 tree by dialect (for example, `test/Integration/Dialect/Vector`).
