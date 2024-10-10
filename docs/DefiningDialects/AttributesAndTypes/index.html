@@ -1,0 +1,725 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Defining Dialect Attributes and Types - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Defining Dialect Attributes and Types</h1><p>This document describes how to define dialect
+<a href=/docs/LangRef/#attributes>attributes</a> and
+<a href=/docs/LangRef/#type-system>types</a>.</p><p><nav id=TableOfContents><ul><li><a href=#langref-refresher>LangRef Refresher</a><ul><li><a href=#attributes>Attributes</a></li><li><a href=#types>Types</a></li></ul></li><li><a href=#attributes-and-types>Attributes and Types</a><ul><li><a href=#adding-a-new-attribute-or-type-definition>Adding a new Attribute or Type definition</a></li><li><a href=#class-name>Class Name</a></li><li><a href=#cmake-targets>CMake Targets</a></li><li><a href=#documentation>Documentation</a></li><li><a href=#mnemonic>Mnemonic</a></li><li><a href=#parameters>Parameters</a></li><li><a href=#traits>Traits</a></li><li><a href=#interfaces>Interfaces</a></li><li><a href=#builders>Builders</a></li><li><a href=#parsing-and-printing>Parsing and Printing</a></li><li><a href=#verification>Verification</a></li><li><a href=#storage-classes>Storage Classes</a></li><li><a href=#mutable-attributes-and-types>Mutable attributes and types</a></li><li><a href=#extra-declarations>Extra declarations</a></li><li><a href=#registering-with-the-dialect>Registering with the Dialect</a></li></ul></li></ul></nav><h2 id=langref-refresher>LangRef Refresher&nbsp;<a class=headline-hash href=#langref-refresher>¶</a></h2><p>Before diving into how to define these constructs, below is a quick refresher
+from the
+<a href=/docs/LangRef/>MLIR LangRef</a>.</p><h3 id=attributes>Attributes&nbsp;<a class=headline-hash href=#attributes>¶</a></h3><p>Attributes are the mechanism for specifying constant data on operations in
+places where a variable is never allowed - e.g. the comparison predicate of a
+<a href=/docs/Dialects/ArithOps/#arithcmpi-arithcmpiop><code>arith.cmpi</code> operation</a>, or
+the underlying value of a
+<a href=/docs/Dialects/ArithOps/#arithconstant-arithconstantop><code>arith.constant</code> operation</a>.
+Each operation has an attribute dictionary, which associates a set of attribute
+names to attribute values.</p><h3 id=types>Types&nbsp;<a class=headline-hash href=#types>¶</a></h3><p>Every SSA value, such as operation results or block arguments, in MLIR has a type
+defined by the type system. MLIR has an open type system with no fixed list of types,
+and there are no restrictions on the abstractions they represent. For example, take
+the following
+<a href=/docs/Dialects/ArithOps/#arithaddi-arithaddiop>Arithmetic AddI operation</a>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>  <span class=nv>%result</span> <span class=p>=</span> arith<span class=p>.</span>addi <span class=nv>%lhs</span><span class=p>,</span> <span class=nv>%rhs</span> <span class=p>:</span> <span class=k>i64</span>
+</span></span></code></pre></div><p>It takes two input SSA values (<code>%lhs</code> and <code>%rhs</code>), and returns a single SSA
+value (<code>%result</code>). The inputs and outputs of this operation are of type <code>i64</code>,
+which is an instance of the
+<a href=/docs/Dialects/Builtin/#integertype>Builtin IntegerType</a>.</p><h2 id=attributes-and-types>Attributes and Types&nbsp;<a class=headline-hash href=#attributes-and-types>¶</a></h2><p>The C++ Attribute and Type classes in MLIR (like Ops, and many other things) are
+value-typed. This means that instances of <code>Attribute</code> or <code>Type</code> are passed
+around by-value, as opposed to by-pointer or by-reference. The <code>Attribute</code> and
+<code>Type</code> classes act as wrappers around internal storage objects that are uniqued
+within an instance of an <code>MLIRContext</code>.</p><p>The structure for defining Attributes and Types is nearly identical, with only a
+few differences depending on the context. As such, a majority of this document
+describes the process for defining both Attributes and Types side-by-side with
+examples for both. If necessary, a section will explicitly call out any
+distinct differences.</p><p>One difference is that generating C++ classes from declarative TableGen
+definitions will require adding additional targets to your <code>CMakeLists.txt</code>.
+This is not necessary for custom types. The details are outlined further below.</p><h3 id=adding-a-new-attribute-or-type-definition>Adding a new Attribute or Type definition&nbsp;<a class=headline-hash href=#adding-a-new-attribute-or-type-definition>¶</a></h3><p>As described above, C++ Attribute and Type objects in MLIR are value-typed and
+essentially function as helpful wrappers around an internal storage object that
+holds the actual data for the type. Similarly to Operations, Attributes and Types
+are defined declaratively via
+<a href=https://llvm.org/docs/TableGen/index.html>TableGen</a>;
+a generic language with tooling to maintain records of domain-specific information.
+It is highly recommended that users review the
+<a href=https://llvm.org/docs/TableGen/ProgRef.html>TableGen Programmer&rsquo;s Reference</a>
+for an introduction to its syntax and constructs.</p><p>Starting the definition of a new attribute or type simply requires adding a
+specialization for either the <code>AttrDef</code> or <code>TypeDef</code> class respectively. Instances
+of the classes correspond to unqiue Attribute or Type classes.</p><p>Below show cases an example Attribute and Type definition. We generally recommend
+defining Attribute and Type classes in different <code>.td</code> files to better encapsulate
+the different constructs, and define a proper layering between them. This
+recommendation extends to all of the MLIR constructs, including
+<a href=/docs/Interfaces/>Interfaces</a>,
+Operations, etc.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=c>// Include the definition of the necessary tablegen constructs for defining
+</span></span></span><span class=line><span class=cl><span class=c>// our types.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>include</span> <span class=s>&#34;mlir/IR/AttrTypeBase.td&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// It&#39;s common to define a base classes for types in the same dialect. This
+</span></span></span><span class=line><span class=cl><span class=c>// removes the need to pass in the dialect for each type, and can also be used
+</span></span></span><span class=line><span class=cl><span class=c>// to define a few fields ahead of time.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>class</span> <span class=nv>MyDialect_Type</span><span class=p>&lt;</span><span class=k>string</span> <span class=nv>name</span><span class=p>,</span> <span class=k>string</span> <span class=nv>typeMnemonic</span><span class=p>,</span> <span class=k>list</span><span class=p>&lt;</span><span class=nv>Trait</span><span class=p>&gt;</span> <span class=nv>traits</span> <span class=p>=</span> <span class=p>[]&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=nv>name</span><span class=p>,</span> <span class=nv>traits</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=nv>typeMnemonic</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Here is a simple definition of an &#34;integer&#34; type, with a width parameter.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>My_IntegerType</span> <span class=p>:</span> <span class=nv>MyDialect_Type</span><span class=p>&lt;</span><span class=s>&#34;Integer&#34;</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;Integer type with arbitrary precision up to a fixed limit&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    Integer types have a designated bit width.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we defined a single parameter for the type, which is the bitwidth.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;unsigned&#34;</span><span class=p>:</span><span class=nv>$width</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we define the textual format of the type declaratively, which will
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// automatically generate parser and printer logic. This will allow for
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// instances of the type to be output as, for example:
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///    !my.int&lt;10&gt; // a 10-bit integer.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` $width `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Indicate that our type will add additional verification to the parameters.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>genVerifyDecl</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Below is an example of an Attribute:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=c>// Include the definition of the necessary tablegen constructs for defining
+</span></span></span><span class=line><span class=cl><span class=c>// our attributes.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>include</span> <span class=s>&#34;mlir/IR/AttrTypeBase.td&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// It&#39;s common to define a base classes for attributes in the same dialect. This
+</span></span></span><span class=line><span class=cl><span class=c>// removes the need to pass in the dialect for each attribute, and can also be used
+</span></span></span><span class=line><span class=cl><span class=c>// to define a few fields ahead of time.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>class</span> <span class=nv>MyDialect_Attr</span><span class=p>&lt;</span><span class=k>string</span> <span class=nv>name</span><span class=p>,</span> <span class=k>string</span> <span class=nv>attrMnemonic</span><span class=p>,</span> <span class=k>list</span><span class=p>&lt;</span><span class=nv>Trait</span><span class=p>&gt;</span> <span class=nv>traits</span> <span class=p>=</span> <span class=p>[]&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=nv>AttrDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=nv>name</span><span class=p>,</span> <span class=nv>traits</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=nv>attrMnemonic</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Here is a simple definition of an &#34;integer&#34; attribute, with a type and value parameter.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>My_IntegerAttr</span> <span class=p>:</span> <span class=nv>MyDialect_Attr</span><span class=p>&lt;</span><span class=s>&#34;Integer&#34;</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;An Attribute containing a integer value&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    An integer attribute is a literal attribute that represents an integral
+</span></span></span><span class=line><span class=cl><span class=s>    value of the specified integer type.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we&#39;ve defined two parameters, one is a &#34;self&#34; type parameter, and the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// other is the integer value of the attribute. The self type parameter is
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// specially handled by the assembly format.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>AttributeSelfTypeParameter</span><span class=p>&lt;</span><span class=s>&#34;&#34;</span><span class=p>&gt;:</span><span class=nv>$type</span><span class=p>,</span> <span class=s>&#34;APInt&#34;</span><span class=p>:</span><span class=nv>$value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we&#39;ve defined a custom builder for the type, that removes the need to pass
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// in an MLIRContext instance; as it can be infered from the `type`.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>AttrBuilderWithInferredContext</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;Type&#34;</span><span class=p>:</span><span class=nv>$type</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                        <span class=s>&#34;const APInt &amp;&#34;</span><span class=p>:</span><span class=nv>$value</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      return $_get(type.getContext(), type, value);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we define the textual format of the attribute declaratively, which will
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// automatically generate parser and printer logic. This will allow for
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// instances of the attribute to be output as, for example:
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///    #my.int&lt;50&gt; : !my.int&lt;32&gt; // a 32-bit integer of value 50.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// Note that the self type parameter is not included in the assembly format.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// Its value is derived from the optional trailing type on all attributes.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` $value `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Indicate that our attribute will add additional verification to the parameters.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>genVerifyDecl</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>/// Indicate to the ODS generator that we do not want the default builders,
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// as we have defined our own simpler ones.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>skipDefaultBuilders</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=class-name>Class Name&nbsp;<a class=headline-hash href=#class-name>¶</a></h3><p>The name of the C++ class which gets generated defaults to
+<code>&lt;classParamName>Attr</code> or <code>&lt;classParamName>Type</code> for attributes and types
+respectively. In the examples above, this was the <code>name</code> template parameter that
+was provided to <code>MyDialect_Attr</code> and <code>MyDialect_Type</code>. For the definitions we
+added above, we would get C++ classes named <code>IntegerType</code> and <code>IntegerAttr</code>
+respectively. This can be explicitly overridden via the <code>cppClassName</code> field.</p><h3 id=cmake-targets>CMake Targets&nbsp;<a class=headline-hash href=#cmake-targets>¶</a></h3><p>If you added your dialect using <code>add_mlir_dialect()</code> in your <code>CMakeLists.txt</code>,
+the above mentioned classes will automatically get generated for custom
+<em>types</em>. They will be output in a file named <code>&lt;Your Dialect>Types.h.inc</code>.</p><p>To also generate the classes for custom <em>attributes</em>, you will need to add
+two additional TableGen targets to your <code>CMakeLists.txt</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmake data-lang=cmake><span class=line><span class=cl><span class=nb>mlir_tablegen</span><span class=p>(</span><span class=s>&lt;Your</span> <span class=s>Dialect&gt;AttrDefs.h.inc</span> <span class=s>-gen-attrdef-decls</span> 
+</span></span><span class=line><span class=cl>              <span class=s>-attrdefs-dialect=&lt;Your</span> <span class=s>Dialect&gt;</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>mlir_tablegen</span><span class=p>(</span><span class=s>&lt;Your</span> <span class=s>Dialect&gt;AttrDefs.cpp.inc</span> <span class=s>-gen-attrdef-defs</span> 
+</span></span><span class=line><span class=cl>              <span class=s>-attrdefs-dialect=&lt;Your</span> <span class=s>Dialect&gt;</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_public_tablegen_target</span><span class=p>(</span><span class=s>&lt;Your</span> <span class=s>Dialect&gt;AttrDefsIncGen</span><span class=p>)</span><span class=err>
+</span></span></span></code></pre></div><p>The generated <code>&lt;Your Dialect>AttrDefs.h.inc</code> will need to be included whereever
+you are referencing the custom attribute types.</p><h3 id=documentation>Documentation&nbsp;<a class=headline-hash href=#documentation>¶</a></h3><p>The <code>summary</code> and <code>description</code> fields allow for providing user documentation
+for the attribute or type. The <code>summary</code> field expects a simple single-line
+string, with the <code>description</code> field used for long and extensive documentation.
+This documentation can be used to generate markdown documentation for the
+dialect and is used by upstream
+<a href=https://mlir.llvm.org/docs/Dialects/>MLIR dialects</a>.</p><h3 id=mnemonic>Mnemonic&nbsp;<a class=headline-hash href=#mnemonic>¶</a></h3><p>The <code>mnemonic</code> field, i.e. the template parameters <code>attrMnemonic</code> and
+<code>typeMnemonic</code> we specified above, are used to specify a name for use during
+parsing. This allows for more easily dispatching to the current attribute or
+type class when parsing IR. This field is generally optional, and custom
+parsing/printing logic can be added without defining it, though most classes
+will want to take advantage of the convenience it provides. This is why we
+added it as a template parameter in the examples above.</p><h3 id=parameters>Parameters&nbsp;<a class=headline-hash href=#parameters>¶</a></h3><p>The <code>parameters</code> field is a variable length list containing the attribute or
+type&rsquo;s parameters. If no parameters are specified (the default), this type is
+considered a singleton type (meaning there is only one possible instance).
+Parameters in this list take the form: <code>"c++Type":$paramName</code>. Parameter types
+with a C++ type that requires allocation when constructing the storage instance
+in the context require one of the following:</p><ul><li>Utilize the <code>AttrParameter</code> or <code>TypeParameter</code> classes instead of the raw
+&ldquo;c++Type&rdquo; string. This allows for providing custom allocation code when using
+that parameter. <code>StringRefParameter</code> and <code>ArrayRefParameter</code> are examples of
+common parameter types that require allocation.</li><li>Set the <code>genAccessors</code> field to 1 (the default) to generate accessor methods
+for each parameter (e.g. <code>int getWidth() const</code> in the Type example above).</li><li>Set the <code>hasCustomStorageConstructor</code> field to <code>1</code> to generate a storage class
+that only declares the constructor, allowing for you to specialize it with
+whatever allocation code necessary.</li></ul><h4 id=attrparameter-typeparameter-and-attrortypeparameter>AttrParameter, TypeParameter, and AttrOrTypeParameter&nbsp;<a class=headline-hash href=#attrparameter-typeparameter-and-attrortypeparameter>¶</a></h4><p>As hinted at above, these classes allow for specifying parameter types with
+additional functionality. This is generally useful for complex parameters, or those
+with additional invariants that prevent using the raw C++ class. Examples
+include documentation (e.g. the <code>summary</code> and <code>syntax</code> field), the C++ type, a
+custom allocator to use in the storage constructor method, a custom comparator
+to decide if two instances of the parameter type are equal, etc. As the names
+may suggest, <code>AttrParameter</code> is intended for parameters on Attributes,
+<code>TypeParameter</code> for Type parameters, and <code>AttrOrTypeParameters</code> for either.</p><p>Below is an easy parameter pitfall, and highlights when to use these parameter
+classes.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;ArrayRef&lt;int&gt;&#34;</span><span class=p>:</span><span class=nv>$dims</span><span class=p>);</span>
+</span></span></code></pre></div><p>The above seems innocuous, but it is often a bug! The default storage
+constructor blindly copies parameters by value. It does not know anything about
+the types, meaning that the data of this ArrayRef will be copied as-is and is
+likely to lead to use-after-free errors when using the created Attribute or
+Type if the underlying does not have a lifetime exceeding that of the MLIRContext.
+If the lifetime of the data can&rsquo;t be guaranteed, the <code>ArrayRef&lt;int></code> requires
+allocation to ensure that its elements reside within the MLIRContext, e.g. with
+<code>dims = allocator.copyInto(dims)</code>.</p><p>Here is a simple example for the exact situation above:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>ArrayRefIntParam</span> <span class=p>:</span> <span class=nv>TypeParameter</span><span class=p>&lt;</span><span class=s>&#34;::llvm::ArrayRef&lt;int&gt;&#34;</span><span class=p>,</span> <span class=s>&#34;Array of int&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>allocator</span> <span class=p>=</span> <span class=s>&#34;$_dst = $_allocator.copyInto($_self);&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>The</span> <span class=nv>parameter</span> <span class=nv>can</span> <span class=nv>then</span> <span class=nv>be</span> <span class=nv>used</span> <span class=nv>as</span> <span class=nv>so</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>ArrayRefIntParam</span><span class=p>:</span><span class=nv>$dims</span><span class=p>);</span>
+</span></span></code></pre></div><p>Below contains descriptions for other various available fields:</p><p>The <code>allocator</code> code block has the following substitutions:</p><ul><li><code>$_allocator</code> is the TypeStorageAllocator in which to allocate objects.</li><li><code>$_dst</code> is the variable in which to place the allocated data.</li></ul><p>The <code>comparator</code> code block has the following substitutions:</p><ul><li><code>$_lhs</code> is an instance of the parameter type.</li><li><code>$_rhs</code> is an instance of the parameter type.</li></ul><p>MLIR includes several specialized classes for common situations:</p><ul><li><p><code>APFloatParameter</code> for APFloats.</p></li><li><p><code>StringRefParameter&lt;descriptionOfParam></code> for StringRefs.</p></li><li><p><code>ArrayRefParameter&lt;arrayOf, descriptionOfParam></code> for ArrayRefs of value types.</p></li><li><p><code>SelfAllocationParameter&lt;descriptionOfParam></code> for C++ classes which contain a
+method called <code>allocateInto(StorageAllocator &amp;allocator)</code> to allocate itself
+into <code>allocator</code>.</p></li><li><p><code>ArrayRefOfSelfAllocationParameter&lt;arrayOf, descriptionOfParam></code> for arrays of
+objects which self-allocate as per the last specialization.</p></li><li><p><code>AttributeSelfTypeParameter</code> is a special <code>AttrParameter</code> that represents
+parameters derived from the optional trailing type on attributes.</p></li></ul><h3 id=traits>Traits&nbsp;<a class=headline-hash href=#traits>¶</a></h3><p>Similarly to operations, Attribute and Type classes may attach <code>Traits</code> that
+provide additional mixin methods and other data. <code>Trait</code>s may be attached via
+the trailing template argument, i.e. the <code>traits</code> list parameter in the example
+above. See the main
+<a href=/docs/Traits/><code>Trait</code></a> documentation for more information
+on defining and using traits.</p><h3 id=interfaces>Interfaces&nbsp;<a class=headline-hash href=#interfaces>¶</a></h3><p>Attribute and Type classes may attach <code>Interfaces</code> to provide an virtual
+interface into the Attribute or Type. <code>Interfaces</code> are added in the same way as
+<a href=#Traits>Traits</a>, by using the <code>traits</code> list template parameter of the
+<code>AttrDef</code> or <code>TypeDef</code>. See the main
+<a href=/docs/Interfaces/><code>Interface</code></a>
+documentation for more information on defining and using interfaces.</p><h3 id=builders>Builders&nbsp;<a class=headline-hash href=#builders>¶</a></h3><p>For each attribute or type, there are a few builders(<code>get</code>/<code>getChecked</code>)
+automatically generated based on the parameters of the type. These are used to
+construct instances of the corresponding attribute or type. For example, given
+the following definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyAttrOrType</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The following builders are generated:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// Builders are named `get`, and return a new instance for a given set of parameters.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=n>MyAttrOrType</span> <span class=nf>get</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// If `genVerifyDecl` is set to 1, the following method is also generated. This method
+</span></span></span><span class=line><span class=cl><span class=c1>// is similar to `get`, but is failable and on error will return nullptr.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=n>MyAttrOrType</span> <span class=nf>getChecked</span><span class=p>(</span><span class=n>function_ref</span><span class=o>&lt;</span><span class=n>InFlightDiagnostic</span><span class=p>()</span><span class=o>&gt;</span> <span class=n>emitError</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                               <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span><span class=p>);</span>
+</span></span></code></pre></div><p>If these autogenerated methods are not desired, such as when they conflict with
+a custom builder method, the <code>skipDefaultBuilders</code> field may be set to 1 to
+signal that the default builders should not be generated.</p><h4 id=custom-builder-methods>Custom builder methods&nbsp;<a class=headline-hash href=#custom-builder-methods>¶</a></h4><p>The default builder methods may cover a majority of the simple cases related to
+construction, but when they cannot satisfy all of an attribute or type&rsquo;s needs,
+additional builders may be defined via the <code>builders</code> field. The <code>builders</code>
+field is a list of custom builders, either using <code>TypeBuilder</code> for types or
+<code>AttrBuilder</code> for attributes, that are added to the attribute or type class. The
+following will showcase several examples for defining builders for a custom type
+<code>MyType</code>, the process is the same for attributes except that attributes use
+<code>AttrBuilder</code> instead of <code>TypeBuilder</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyType</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=nv>CArg</span><span class=p>&lt;</span><span class=s>&#34;int&#34;</span><span class=p>,</span> <span class=s>&#34;0&#34;</span><span class=p>&gt;:</span><span class=nv>$intParam</span><span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=nv>CArg</span><span class=p>&lt;</span><span class=s>&#34;int&#34;</span><span class=p>,</span> <span class=s>&#34;0&#34;</span><span class=p>&gt;:</span><span class=nv>$intParam</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      // Write the body of the `get` builder inline here.
+</span></span></span><span class=line><span class=cl><span class=s>      return Base::get($_ctxt, intParam);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilderWithInferredContext</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;Type&#34;</span><span class=p>:</span><span class=nv>$typeParam</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      // This builder states that it can infer an MLIRContext instance from
+</span></span></span><span class=line><span class=cl><span class=s>      // its arguments.
+</span></span></span><span class=line><span class=cl><span class=s>      return Base::get(typeParam.getContext(), ...);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>),</span> <span class=s>[{}]</span><span class=p>,</span> <span class=s>&#34;IntegerType&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In this example, we provide several different convenience builders that are
+useful in different scenarios. The <code>ins</code> prefix is common to many function
+declarations in ODS, which use a TableGen
+<a href=#tablegen-syntax><code>dag</code></a>. What
+follows is a comma-separated list of types (quoted string or <code>CArg</code>) and names
+prefixed with the <code>$</code> sign. The use of <code>CArg</code> allows for providing a default
+value to that argument. Let&rsquo;s take a look at each of these builders individually</p><p>The first builder will generate the declaration of a builder method that looks
+like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyType</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>MyType</span> <span class=nf>get</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>This builder is identical to the one that will be automatically generated for
+<code>MyType</code>. The <code>context</code> parameter is implicitly added by the generator, and is
+used when building the Type instance (with <code>Base::get</code>). The distinction here is
+that we can provide the implementation of this <code>get</code> method. With this style of
+builder definition only the declaration is generated, the implementor of
+<code>MyType</code> will need to provide a definition of <code>MyType::get</code>.</p><p>The second builder will generate the declaration of a builder method that looks
+like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=nv>CArg</span><span class=p>&lt;</span><span class=s>&#34;int&#34;</span><span class=p>,</span> <span class=s>&#34;0&#34;</span><span class=p>&gt;:</span><span class=nv>$intParam</span><span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyType</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>MyType</span> <span class=nf>get</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span> <span class=o>=</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>The constraints here are identical to the first builder example except for the
+fact that <code>intParam</code> now has a default value attached.</p><p>The third builder will generate the declaration of a builder method that looks
+like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=nv>CArg</span><span class=p>&lt;</span><span class=s>&#34;int&#34;</span><span class=p>,</span> <span class=s>&#34;0&#34;</span><span class=p>&gt;:</span><span class=nv>$intParam</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      // Write the body of the `get` builder inline here.
+</span></span></span><span class=line><span class=cl><span class=s>      return Base::get($_ctxt, intParam);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyType</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>MyType</span> <span class=nf>get</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span> <span class=o>=</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>MyType</span> <span class=n>MyType</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Write the body of the `get` builder inline here.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>context</span><span class=p>,</span> <span class=n>intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This is identical to the second builder example. The difference is that now, a
+definition for the builder method will be generated automatically using the
+provided code block as the body. When specifying the body inline, <code>$_ctxt</code> may
+be used to access the <code>MLIRContext *</code> parameter.</p><p>The fourth builder will generate the declaration of a builder method that looks
+like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilderWithInferredContext</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;Type&#34;</span><span class=p>:</span><span class=nv>$typeParam</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      // This builder states that it can infer an MLIRContext instance from
+</span></span></span><span class=line><span class=cl><span class=s>      // its arguments.
+</span></span></span><span class=line><span class=cl><span class=s>      return Base::get(typeParam.getContext(), ...);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyType</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>MyType</span> <span class=nf>get</span><span class=p>(</span><span class=n>Type</span> <span class=n>typeParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>MyType</span> <span class=n>MyType</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>Type</span> <span class=n>typeParam</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// This builder states that it can infer an MLIRContext instance from its
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// arguments.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>typeParam</span><span class=p>.</span><span class=n>getContext</span><span class=p>(),</span> <span class=p>...);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In this builder example, the main difference from the third builder example
+there is that the <code>MLIRContext</code> parameter is no longer added. This is because
+the builder used <code>TypeBuilderWithInferredContext</code> implies that the context
+parameter is not necessary as it can be inferred from the arguments to the
+builder.</p><p>The fifth builder will generate the declaration of a builder method with a
+custom return type, like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TypeBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$intParam</span><span class=p>),</span> <span class=s>[{}]</span><span class=p>,</span> <span class=s>&#34;IntegerType&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyType</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>IntegerType</span> <span class=nf>get</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>,</span> <span class=kt>int</span> <span class=n>intParam</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>This generates a builder declaration the same as the first three examples, but
+the return type of the builder is user-specified instead of the attribute or
+type class. This is useful for defining builders of attributes and types that
+may fold or canonicalize on construction.</p><h3 id=parsing-and-printing>Parsing and Printing&nbsp;<a class=headline-hash href=#parsing-and-printing>¶</a></h3><p>If a mnemonic was specified, the <code>hasCustomAssemblyFormat</code> and <code>assemblyFormat</code>
+fields may be used to specify the assembly format of an attribute or type. Attributes
+and Types with no parameters need not use either of these fields, in which case
+the syntax for the Attribute or Type is simply the mnemonic.</p><p>For each dialect, two &ldquo;dispatch&rdquo; functions will be created: one for parsing and
+one for printing. These static functions placed alongside the class definitions
+and have the following function signatures:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>static</span> <span class=n>ParseResult</span> <span class=nf>generatedAttributeParser</span><span class=p>(</span><span class=n>DialectAsmParser</span><span class=o>&amp;</span> <span class=n>parser</span><span class=p>,</span> <span class=n>StringRef</span> <span class=o>*</span><span class=n>mnemonic</span><span class=p>,</span> <span class=n>Type</span> <span class=n>attrType</span><span class=p>,</span> <span class=n>Attribute</span> <span class=o>&amp;</span><span class=n>result</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=n>LogicalResult</span> <span class=nf>generatedAttributePrinter</span><span class=p>(</span><span class=n>Attribute</span> <span class=n>attr</span><span class=p>,</span> <span class=n>DialectAsmPrinter</span><span class=o>&amp;</span> <span class=n>printer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=n>ParseResult</span> <span class=nf>generatedTypeParser</span><span class=p>(</span><span class=n>DialectAsmParser</span><span class=o>&amp;</span> <span class=n>parser</span><span class=p>,</span> <span class=n>StringRef</span> <span class=o>*</span><span class=n>mnemonic</span><span class=p>,</span> <span class=n>Type</span> <span class=o>&amp;</span><span class=n>result</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=n>LogicalResult</span> <span class=nf>generatedTypePrinter</span><span class=p>(</span><span class=n>Type</span> <span class=n>type</span><span class=p>,</span> <span class=n>DialectAsmPrinter</span><span class=o>&amp;</span> <span class=n>printer</span><span class=p>);</span>
+</span></span></code></pre></div><p>The above functions should be added to the respective in your
+<code>Dialect::printType</code> and <code>Dialect::parseType</code> methods, or consider using the
+<code>useDefaultAttributePrinterParser</code> and <code>useDefaultTypePrinterParser</code> ODS Dialect
+options if all attributes or types define a mnemonic.</p><p>The mnemonic, hasCustomAssemblyFormat, and assemblyFormat fields are optional.
+If none are defined, the generated code will not include any parsing or printing
+code and omit the attribute or type from the dispatch functions above. In this
+case, the dialect author is responsible for parsing/printing in the respective
+<code>Dialect::parseAttribute</code>/<code>Dialect::printAttribute</code> and
+<code>Dialect::parseType</code>/<code>Dialect::printType</code> methods.</p><h4 id=using-hascustomassemblyformat>Using <code>hasCustomAssemblyFormat</code>&nbsp;<a class=headline-hash href=#using-hascustomassemblyformat>¶</a></h4><p>Attributes and types defined in ODS with a mnemonic can define an
+<code>hasCustomAssemblyFormat</code> to specify custom parsers and printers defined in C++.
+When set to <code>1</code> a corresponding <code>parse</code> and <code>print</code> method will be declared on
+the Attribute or Type class to be defined by the user.</p><p>For Types, these methods will have the form:</p><ul><li><p><code>static Type MyType::parse(AsmParser &amp;parser)</code></p></li><li><p><code>void MyType::print(AsmPrinter &amp;p) const</code></p></li></ul><p>For Attributes, these methods will have the form:</p><ul><li><p><code>static Attribute MyAttr::parse(AsmParser &amp;parser, Type attrType)</code></p></li><li><p><code>void MyAttr::print(AsmPrinter &amp;p) const</code></p></li></ul><h4 id=using-assemblyformat>Using <code>assemblyFormat</code>&nbsp;<a class=headline-hash href=#using-assemblyformat>¶</a></h4><p>Attributes and types defined in ODS with a mnemonic can define an
+<code>assemblyFormat</code> to declaratively describe custom parsers and printers. The
+assembly format consists of literals, variables, and directives.</p><ul><li>A literal is a keyword or valid punctuation enclosed in backticks, e.g.
+<code>`keyword`</code> or <code>`&lt;`</code>.</li><li>A variable is a parameter name preceded by a dollar sign, e.g. <code>$param0</code>,
+which captures one attribute or type parameter.</li><li>A directive is a keyword followed by an optional argument list that defines
+special parser and printer behaviour.</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=c>// An example type with an assembly format.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>MyType</span> <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=s>&#34;MyType&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// Define a mnemonic to allow the dialect&#39;s parser hook to call into the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// generated parser.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;my_type&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Define two parameters whose C++ types are indicated in string literals.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$count</span><span class=p>,</span> <span class=s>&#34;AffineMap&#34;</span><span class=p>:</span><span class=nv>$map</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Define the assembly format. Surround the format with less `&lt;` and greater
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// `&gt;` so that MLIR&#39;s printer uses the pretty format.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` $count `,` `map` `=` $map `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The declarative assembly format for <code>MyType</code> results in the following format in
+the IR:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>my_type<span class=p>&lt;</span><span class=m>42</span><span class=p>,</span> <span class=nl>map =</span> affine_map<span class=p>&lt;(</span>i<span class=p>,</span> j<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>j<span class=p>,</span> i<span class=p>)&gt;&gt;</span>
+</span></span></code></pre></div><h5 id=parameter-parsing-and-printing>Parameter Parsing and Printing&nbsp;<a class=headline-hash href=#parameter-parsing-and-printing>¶</a></h5><p>For many basic parameter types, no additional work is needed to define how these
+parameters are parsed or printed.</p><ul><li>The default printer for any parameter is <code>$_printer &lt;&lt; $_self</code>, where <code>$_self</code>
+is the C++ value of the parameter and <code>$_printer</code> is an <code>AsmPrinter</code>.</li><li>The default parser for a parameter is
+<code>FieldParser&lt;$cppClass>::parse($_parser)</code>, where <code>$cppClass</code> is the C++ type
+of the parameter and <code>$_parser</code> is an <code>AsmParser</code>.</li></ul><p>Printing and parsing behaviour can be added to additional C++ types by
+overloading these functions or by defining a <code>parser</code> and <code>printer</code> in an ODS
+parameter class.</p><p>Example of overloading:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>using</span> <span class=n>MyParameter</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>pair</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>AsmPrinter</span> <span class=o>&amp;</span><span class=k>operator</span><span class=o>&lt;&lt;</span><span class=p>(</span><span class=n>AsmPrinter</span> <span class=o>&amp;</span><span class=n>printer</span><span class=p>,</span> <span class=n>MyParameter</span> <span class=n>param</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>printer</span> <span class=o>&lt;&lt;</span> <span class=n>param</span><span class=p>.</span><span class=n>first</span> <span class=o>&lt;&lt;</span> <span class=s>&#34; * &#34;</span> <span class=o>&lt;&lt;</span> <span class=n>param</span><span class=p>.</span><span class=n>second</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>template</span> <span class=o>&lt;&gt;</span> <span class=k>struct</span> <span class=nc>FieldParser</span><span class=o>&lt;</span><span class=n>MyParameter</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=n>FailureOr</span><span class=o>&lt;</span><span class=n>MyParameter</span><span class=o>&gt;</span> <span class=n>parse</span><span class=p>(</span><span class=n>AsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>parser</span><span class=p>.</span><span class=n>parseInteger</span><span class=p>(</span><span class=n>a</span><span class=p>)</span> <span class=o>||</span> <span class=n>parser</span><span class=p>.</span><span class=n>parseStar</span><span class=p>()</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>        <span class=n>parser</span><span class=p>.</span><span class=n>parseInteger</span><span class=p>(</span><span class=n>b</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>failure</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nf>MyParameter</span><span class=p>(</span><span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>Example of using ODS parameter classes:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyParameter</span> <span class=p>:</span> <span class=nv>TypeParameter</span><span class=p>&lt;</span><span class=s>&#34;std::pair&lt;int, int&gt;&#34;</span><span class=p>,</span> <span class=s>&#34;pair of ints&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>printer</span> <span class=p>=</span> <span class=s>[{ $_printer &lt;&lt; $_self.first &lt;&lt; &#34; * &#34; &lt;&lt; $_self.second }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parser</span> <span class=p>=</span> <span class=s>[{ [&amp;] -&gt; FailureOr&lt;std::pair&lt;int, int&gt;&gt; {
+</span></span></span><span class=line><span class=cl><span class=s>    int a, b;
+</span></span></span><span class=line><span class=cl><span class=s>    if ($_parser.parseInteger(a) || $_parser.parseStar() ||
+</span></span></span><span class=line><span class=cl><span class=s>        $_parser.parseInteger(b))
+</span></span></span><span class=line><span class=cl><span class=s>      return failure();
+</span></span></span><span class=line><span class=cl><span class=s>    return std::make_pair(a, b);
+</span></span></span><span class=line><span class=cl><span class=s>  }() }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>A type using this parameter with the assembly format <code>`&lt;` $myParam `>`</code> will
+look as follows in the IR:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>my_type<span class=p>&lt;</span><span class=m>42</span> <span class=p>*</span> <span class=m>24</span><span class=p>&gt;</span>
+</span></span></code></pre></div><h6 id=non-pod-parameters>Non-POD Parameters&nbsp;<a class=headline-hash href=#non-pod-parameters>¶</a></h6><p>Parameters that aren&rsquo;t plain-old-data (e.g. references) may need to define a
+<code>cppStorageType</code> to contain the data until it is copied into the allocator. For
+example, <code>StringRefParameter</code> uses <code>std::string</code> as its storage type, whereas
+<code>ArrayRefParameter</code> uses <code>SmallVector</code> as its storage type. The parsers for
+these parameters are expected to return <code>FailureOr&lt;$cppStorageType></code>.</p><p>To add a custom conversion between the <code>cppStorageType</code> and the C++ type of the
+parameter, parameters can override <code>convertFromStorage</code>, which by default is
+<code>"$_self"</code> (i.e., it attempts an implicit conversion from <code>cppStorageType</code>).</p><h6 id=optional-and-default-valued-parameters>Optional and Default-Valued Parameters&nbsp;<a class=headline-hash href=#optional-and-default-valued-parameters>¶</a></h6><p>An optional parameter can be omitted from the assembly format of an attribute or
+a type. An optional parameter is omitted when it is equal to its default value.
+Optional parameters in the assembly format can be indicated by setting
+<code>defaultValue</code>, a string of the C++ default value. If a value for the parameter
+was not encountered during parsing, it is set to this default value. If a
+parameter is equal to its default value, it is not printed. The <code>comparator</code>
+field of the parameter is used, but if one is not specified, the equality
+operator is used.</p><p>When using <code>OptionalParameter</code>, the default value is set to the C++
+default-constructed value for the C++ storage type. For example, <code>Optional&lt;int></code>
+will be set to <code>std::nullopt</code> and <code>Attribute</code> will be set to <code>nullptr</code>. The
+presence of these parameters is tested by comparing them to their &ldquo;null&rdquo; values.</p><p>An optional group is a set of elements optionally printed based on the presence
+of an anchor. Only optional parameters or directives that only capture optional
+parameters can be used in optional groups. The group in which the anchor is
+placed is printed if it is present, otherwise the other one is printed. If a
+directive that captures more than one optional parameter is used as the anchor,
+the optional group is printed if any of the captured parameters is present. For
+example, a <code>custom</code> directive may only be used as an optional group anchor if it
+captures at least one optional parameter.</p><p>Suppose parameter <code>a</code> is an <code>IntegerAttr</code>.</p><pre tabindex=0><code>( `(` $a^ `)` ) : (`x`)?
+</code></pre><p>In the above assembly format, if <code>a</code> is present (non-null), then it will be
+printed as <code>(5 : i32)</code>. If it is not present, it will be <code>x</code>. Directives that
+are used inside optional groups are allowed only if all captured parameters are
+also optional.</p><p>An optional parameter can also be specified with <code>DefaultValuedParameter</code>, which
+specifies that a parameter should be omitted when it is equal to some given
+value.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>DefaultValuedParameter</span><span class=p>&lt;</span><span class=s>&#34;Optional&lt;int&gt;&#34;</span><span class=p>,</span> <span class=s>&#34;5&#34;</span><span class=p>&gt;:</span><span class=nv>$a</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;default_valued&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;(`&lt;` $a^ `&gt;`)?&#34;</span><span class=p>;</span>
+</span></span></code></pre></div><p>Which will look like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>test<span class=p>.</span>default_valued     <span class=c>// a = 5
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>!</span>test<span class=p>.</span>default_valued<span class=p>&lt;</span><span class=m>10</span><span class=p>&gt;</span> <span class=c>// a = 10
+</span></span></span></code></pre></div><p>For optional <code>Attribute</code> or <code>Type</code> parameters, the current MLIR context is
+available through <code>$_ctxt</code>. E.g.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=nv>DefaultValuedParameter</span><span class=p>&lt;</span><span class=s>&#34;IntegerType&#34;</span><span class=p>,</span> <span class=s>&#34;IntegerType::get($_ctxt, 32)&#34;</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>The value of parameters that appear <strong>before</strong> the default-valued parameter in
+the parameter declaration list are available as substitutions. E.g.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>  <span class=s>&#34;IntegerAttr&#34;</span><span class=p>:</span><span class=nv>$value</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nv>DefaultValuedParameter</span><span class=p>&lt;</span><span class=s>&#34;Type&#34;</span><span class=p>,</span> <span class=s>&#34;$value.getType()&#34;</span><span class=p>&gt;:</span><span class=nv>$type</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></div><h6 id=attribute-self-type-parameter>Attribute Self Type Parameter&nbsp;<a class=headline-hash href=#attribute-self-type-parameter>¶</a></h6><p>An attribute optionally has a trailing type after the assembly format of the
+attribute value itself. MLIR parses over the attribute value and optionally
+parses a colon-type before passing the <code>Type</code> into the dialect parser hook.</p><pre tabindex=0><code>dialect-attribute  ::= `#` dialect-namespace `&lt;` attr-data `&gt;`
+                       (`:` type)?
+                     | `#` alias-name pretty-dialect-sym-body? (`:` type)?
+</code></pre><p><code>AttributeSelfTypeParameter</code> is an attribute parameter specially handled by the
+assembly format generator. Only one such parameter can be specified, and its
+value is derived from the trailing type. This parameter&rsquo;s default value is
+<code>NoneType::get($_ctxt)</code>.</p><p>In order for the type to be printed by
+MLIR, however, the attribute must implement <code>TypedAttrInterface</code>. For example,</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=c>// This attribute has only a self type parameter.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>MyExternAttr</span> <span class=p>:</span> <span class=nv>AttrDef</span><span class=p>&lt;</span><span class=nv>MyDialect</span><span class=p>,</span> <span class=s>&#34;MyExtern&#34;</span><span class=p>,</span> <span class=p>[</span><span class=nv>TypedAttrInterface</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>AttributeSelfTypeParameter</span><span class=p>&lt;</span><span class=s>&#34;&#34;</span><span class=p>&gt;:</span><span class=nv>$type</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;extern&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This attribute can look like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>#my_dialect.extern</span> <span class=c>// none
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>#my_dialect.extern</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl><span class=nv>#my_dialect.extern</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>4x</span><span class=k>i32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=nv>#my_dialect.extern</span> <span class=p>:</span> <span class=p>!</span>my_dialect<span class=p>.</span>my_type
+</span></span></code></pre></div><h5 id=assembly-format-directives>Assembly Format Directives&nbsp;<a class=headline-hash href=#assembly-format-directives>¶</a></h5><p>Attribute and type assembly formats have the following directives:</p><ul><li><code>params</code>: capture all parameters of an attribute or type.</li><li><code>qualified</code>: mark a parameter to be printed with its leading dialect and
+mnemonic.</li><li><code>struct</code>: generate a &ldquo;struct-like&rdquo; parser and printer for a list of key-value
+pairs.</li><li><code>custom</code>: dispatch a call to user-define parser and printer functions</li><li><code>ref</code>: in a custom directive, references a previously bound variable</li></ul><h6 id=params-directive><code>params</code> Directive&nbsp;<a class=headline-hash href=#params-directive>¶</a></h6><p>This directive is used to refer to all parameters of an attribute or type, except
+for the attribute self type (which is handled separately from normal parameters).
+When used as a top-level directive, <code>params</code> generates a parser and printer for a
+comma-separated list of the parameters. For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyPairType</span> <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=s>&#34;MyPairType&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$a</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$b</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;pair&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` params `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In the IR, this type will appear as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>pair<span class=p>&lt;</span><span class=m>42</span><span class=p>,</span> <span class=m>24</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>The <code>params</code> directive can also be passed to other directives, such as <code>struct</code>,
+as an argument that refers to all parameters in place of explicitly listing all
+parameters as variables.</p><h6 id=qualified-directive><code>qualified</code> Directive&nbsp;<a class=headline-hash href=#qualified-directive>¶</a></h6><p>This directive can be used to wrap attribute or type parameters such that they
+are printed in a fully qualified form, i.e., they include the dialect name and
+mnemonic prefix.</p><p>For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>OuterType</span> <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=s>&#34;MyOuterType&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>MyPairType</span><span class=p>:</span><span class=nv>$inner</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;outer&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` pair `:` $inner `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>OuterQualifiedType</span> <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=s>&#34;MyOuterQualifiedType&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>MyPairType</span><span class=p>:</span><span class=nv>$inner</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;outer_qual&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` pair `:` qualified($inner) `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In the IR, the types will appear as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>outer<span class=p>&lt;</span>pair <span class=p>:</span> <span class=p>&lt;</span><span class=m>42</span><span class=p>,</span> <span class=m>24</span><span class=p>&gt;&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>outer_qual<span class=p>&lt;</span>pair <span class=p>:</span> <span class=p>!</span>mydialect<span class=p>.</span>pair<span class=p>&lt;</span><span class=m>42</span><span class=p>,</span> <span class=m>24</span><span class=p>&gt;&gt;</span>
+</span></span></code></pre></div><p>If optional parameters are present, they are not printed in the parameter list
+if they are not present.</p><h6 id=struct-directive><code>struct</code> Directive&nbsp;<a class=headline-hash href=#struct-directive>¶</a></h6><p>The <code>struct</code> directive accepts a list of variables to capture and will generate
+a parser and printer for a comma-separated list of key-value pairs. If an
+optional parameter is included in the <code>struct</code>, it can be elided. The variables
+are printed in the order they are specified in the argument list <strong>but can be
+parsed in any order</strong>. For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyStructType</span> <span class=p>:</span> <span class=nv>TypeDef</span><span class=p>&lt;</span><span class=nv>My_Dialect</span><span class=p>,</span> <span class=s>&#34;MyStructType&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>StringRefParameter</span><span class=p>&lt;&gt;:</span><span class=nv>$sym_name</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$a</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$b</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$c</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>mnemonic</span> <span class=p>=</span> <span class=s>&#34;struct&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;`&lt;` $sym_name `-&gt;` struct($a, $b, $c) `&gt;`&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In the IR, this type can appear with any permutation of the order of the
+parameters captured in the directive.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>struct<span class=p>&lt;</span><span class=s>&#34;foo&#34;</span> <span class=p>-&gt;</span> <span class=nl>a =</span> <span class=m>1</span><span class=p>,</span> <span class=nl>b =</span> <span class=m>2</span><span class=p>,</span> <span class=nl>c =</span> <span class=m>3</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>struct<span class=p>&lt;</span><span class=s>&#34;foo&#34;</span> <span class=p>-&gt;</span> <span class=nl>b =</span> <span class=m>2</span><span class=p>,</span> <span class=nl>c =</span> <span class=m>3</span><span class=p>,</span> <span class=nl>a =</span> <span class=m>1</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>Passing <code>params</code> as the only argument to <code>struct</code> makes the directive capture
+all the parameters of the attribute or type. For the same type above, an
+assembly format of <code>`&lt;` struct(params) `>`</code> will result in:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=p>!</span>my_dialect<span class=p>.</span>struct<span class=p>&lt;</span><span class=nl>b =</span> <span class=m>2</span><span class=p>,</span> <span class=nl>sym_name =</span> <span class=s>&#34;foo&#34;</span><span class=p>,</span> <span class=nl>c =</span> <span class=m>3</span><span class=p>,</span> <span class=nl>a =</span> <span class=m>1</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>The order in which the parameters are printed is the order in which they are
+declared in the attribute&rsquo;s or type&rsquo;s <code>parameter</code> list.</p><h6 id=custom-and-ref-directive><code>custom</code> and <code>ref</code> directive&nbsp;<a class=headline-hash href=#custom-and-ref-directive>¶</a></h6><p>The <code>custom</code> directive is used to dispatch calls to user-defined printer and
+parser functions. For example, suppose we had the following type:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$foo</span><span class=p>,</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$bar</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;custom&lt;Foo&gt;($foo) custom&lt;Bar&gt;($bar, ref($foo))&#34;</span><span class=p>;</span>
+</span></span></code></pre></div><p>The <code>custom</code> directive <code>custom&lt;Foo>($foo)</code> will in the parser and printer
+respectively generate calls to:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>LogicalResult</span> <span class=nf>parseFoo</span><span class=p>(</span><span class=n>AsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>,</span> <span class=kt>int</span> <span class=o>&amp;</span><span class=n>foo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>printFoo</span><span class=p>(</span><span class=n>AsmPrinter</span> <span class=o>&amp;</span><span class=n>printer</span><span class=p>,</span> <span class=kt>int</span> <span class=n>foo</span><span class=p>);</span>
+</span></span></code></pre></div><p>As you can see, by default parameters are passed into the parse function by
+reference. This is only possible if the C++ type is default constructible.
+If the C++ type is not default constructible, the parameter is wrapped in a
+<code>FailureOr</code>. Therefore, given the following definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;NotDefaultConstructible&#34;</span><span class=p>:</span><span class=nv>$foobar</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;custom&lt;Fizz&gt;($foobar)&#34;</span><span class=p>;</span>
+</span></span></code></pre></div><p>It will generate calls expecting the following signature for <code>parseFizz</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>LogicalResult</span> <span class=nf>parseFizz</span><span class=p>(</span><span class=n>AsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>,</span> <span class=n>FailureOr</span><span class=o>&lt;</span><span class=n>NotDefaultConstructible</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>foobar</span><span class=p>);</span>
+</span></span></code></pre></div><p>A previously bound variable can be passed as a parameter to a <code>custom</code> directive
+by wrapping it in a <code>ref</code> directive. In the previous example, <code>$foo</code> is bound by
+the first directive. The second directive references it and expects the
+following printer and parser signatures:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>LogicalResult</span> <span class=nf>parseBar</span><span class=p>(</span><span class=n>AsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>,</span> <span class=kt>int</span> <span class=o>&amp;</span><span class=n>bar</span><span class=p>,</span> <span class=kt>int</span> <span class=n>foo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>printBar</span><span class=p>(</span><span class=n>AsmPrinter</span> <span class=o>&amp;</span><span class=n>printer</span><span class=p>,</span> <span class=kt>int</span> <span class=n>bar</span><span class=p>,</span> <span class=kt>int</span> <span class=n>foo</span><span class=p>);</span>
+</span></span></code></pre></div><p>More complex C++ types can be used with the <code>custom</code> directive. The only caveat
+is that the parameter for the parser must use the storage type of the parameter.
+For example, <code>StringRefParameter</code> expects the parser and printer signatures as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>LogicalResult</span> <span class=nf>parseStringParam</span><span class=p>(</span><span class=n>AsmParser</span> <span class=o>&amp;</span><span class=n>parser</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>string</span> <span class=o>&amp;</span><span class=n>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>printStringParam</span><span class=p>(</span><span class=n>AsmPrinter</span> <span class=o>&amp;</span><span class=n>printer</span><span class=p>,</span> <span class=n>StringRef</span> <span class=n>value</span><span class=p>);</span>
+</span></span></code></pre></div><p>The custom parser is considered to have failed if it returns failure or if any
+bound parameters have failure values afterwards.</p><p>A string of C++ code can be used as a <code>custom</code> directive argument. When
+generating the custom parser and printer call, the string is pasted as a
+function argument. For example, <code>parseBar</code> and <code>printBar</code> can be re-used with
+a constant integer:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>parameters</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;int&#34;</span><span class=p>:</span><span class=nv>$bar</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>[{ custom&lt;Bar&gt;($foo, &#34;1&#34;) }]</span><span class=p>;</span>
+</span></span></code></pre></div><p>The string is pasted verbatim but with substitutions for <code>$_builder</code> and
+<code>$_ctxt</code>. String literals can be used to parameterize custom directives.</p><h3 id=verification>Verification&nbsp;<a class=headline-hash href=#verification>¶</a></h3><p>If the <code>genVerifyDecl</code> field is set, additional verification methods are
+generated on the class.</p><ul><li><code>static LogicalResult verify(function_ref&lt;InFlightDiagnostic()> emitError, parameters...)</code></li></ul><p>These methods are used to verify the parameters provided to the attribute or
+type class on construction, and emit any necessary diagnostics. This method is
+automatically invoked from the builders of the attribute or type class.</p><ul><li><code>AttrOrType getChecked(function_ref&lt;InFlightDiagnostic()> emitError, parameters...)</code></li></ul><p>As noted in the
+<a href=#Builders>Builders</a> section, these methods are companions to
+<code>get</code> builders that are failable. If the <code>verify</code> invocation fails when these
+methods are called, they return nullptr instead of asserting.</p><h3 id=storage-classes>Storage Classes&nbsp;<a class=headline-hash href=#storage-classes>¶</a></h3><p>Somewhat alluded to in the sections above is the concept of a &ldquo;storage class&rdquo;
+(often abbreviated to &ldquo;storage&rdquo;). Storage classes contain all of the data
+necessary to construct and unique a attribute or type instance. These classes
+are the &ldquo;immortal&rdquo; objects that get uniqued within an MLIRContext and get
+wrapped by the <code>Attribute</code> and <code>Type</code> classes. Every Attribute or Type class has
+a corresponding storage class, that can be accessed via the protected
+<code>getImpl()</code> method.</p><p>In most cases the storage class is auto generated, but if necessary it can be
+manually defined by setting the <code>genStorageClass</code> field to 0. The name and
+namespace (defaults to <code>detail</code>) can additionally be controlled via the The
+<code>storageClass</code> and <code>storageNamespace</code> fields.</p><h4 id=defining-a-storage-class>Defining a storage class&nbsp;<a class=headline-hash href=#defining-a-storage-class>¶</a></h4><p>User defined storage classes must adhere to the following:</p><ul><li>Inherit from the base type storage class of <code>AttributeStorage</code> or
+<code>TypeStorage</code> respectively.</li><li>Define a type alias, <code>KeyTy</code>, that maps to a type that uniquely identifies an
+instance of the derived type. For example, this could be a <code>std::tuple</code> of all
+of the storage parameters.</li><li>Provide a construction method that is used to allocate a new instance of the
+storage class.<ul><li><code>static Storage *construct(StorageAllocator &amp;allocator, const KeyTy &amp;key)</code></li></ul></li><li>Provide a comparison method between an instance of the storage and the
+<code>KeyTy</code>.<ul><li><code>bool operator==(const KeyTy &) const</code></li></ul></li><li>Provide a method to generate the <code>KeyTy</code> from a list of arguments passed to
+the uniquer when building an Attribute or Type. (Note: This is only necessary
+if the <code>KeyTy</code> cannot be default constructed from these arguments).<ul><li><code>static KeyTy getKey(Args...&& args)</code></li></ul></li><li>Provide a method to hash an instance of the <code>KeyTy</code>. (Note: This is not
+necessary if an <code>llvm::DenseMapInfo&lt;KeyTy></code> specialization exists)<ul><li><code>static llvm::hash_code hashKey(const KeyTy &)</code></li></ul></li><li>Provide a method to generate the <code>KeyTy</code> from an instance of the storage class.<ul><li><code>static KeyTy getAsKey()</code></li></ul></li></ul><p>Let&rsquo;s look at an example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Here we define a storage class for a ComplexType, that holds a non-zero
+</span></span></span><span class=line><span class=cl><span class=c1>/// integer and an integer type.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>ComplexTypeStorage</span> <span class=o>:</span> <span class=k>public</span> <span class=n>TypeStorage</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>ComplexTypeStorage</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>Type</span> <span class=n>integerType</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>nonZeroParam</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>),</span> <span class=n>integerType</span><span class=p>(</span><span class=n>integerType</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The hash key for this storage is a pair of the integer and type params.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>KeyTy</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>pair</span><span class=o>&lt;</span><span class=kt>unsigned</span><span class=p>,</span> <span class=n>Type</span><span class=o>&gt;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define the comparison function for the key type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>bool</span> <span class=k>operator</span><span class=o>==</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>key</span> <span class=o>==</span> <span class=n>KeyTy</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>integerType</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a hash function for the key type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// Note: This isn&#39;t necessary because std::pair, unsigned, and Type all have
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// hash functions already available.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>static</span> <span class=n>llvm</span><span class=o>::</span><span class=n>hash_code</span> <span class=n>hashKey</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>llvm</span><span class=o>::</span><span class=n>hash_combine</span><span class=p>(</span><span class=n>key</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>key</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a construction function for the key type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// Note: This isn&#39;t necessary because KeyTy can be directly constructed with
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// the given parameters.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>static</span> <span class=n>KeyTy</span> <span class=nf>getKey</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>Type</span> <span class=n>integerType</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>KeyTy</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>integerType</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a construction method for creating a new instance of this storage.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>static</span> <span class=n>ComplexTypeStorage</span> <span class=o>*</span><span class=nf>construct</span><span class=p>(</span><span class=n>StorageAllocator</span> <span class=o>&amp;</span><span class=n>allocator</span><span class=p>,</span> <span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>new</span> <span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>allocate</span><span class=o>&lt;</span><span class=n>ComplexTypeStorage</span><span class=o>&gt;</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=n>ComplexTypeStorage</span><span class=p>(</span><span class=n>key</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>key</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Construct an instance of the key from this storage class.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>KeyTy</span> <span class=nf>getAsKey</span><span class=p>()</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>KeyTy</span><span class=p>(</span><span class=n>nonZeroParam</span><span class=p>,</span> <span class=n>integerType</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The parametric data held by the storage class.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>unsigned</span> <span class=n>nonZeroParam</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Type</span> <span class=n>integerType</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h3 id=mutable-attributes-and-types>Mutable attributes and types&nbsp;<a class=headline-hash href=#mutable-attributes-and-types>¶</a></h3><p>Attributes and Types are immutable objects uniqued within an MLIRContext. That
+being said, some parameters may be treated as &ldquo;mutable&rdquo; and modified after
+construction. Mutable parameters should be reserved for parameters that can not
+be reasonably initialized during construction time. Given the mutable component,
+these parameters do not take part in the uniquing of the Attribute or Type.</p><p>TODO: Mutable parameters are currently not supported in the declarative
+specification of attributes and types, and thus requires defining the Attribute
+or Type class in C++.</p><h4 id=defining-a-mutable-storage>Defining a mutable storage&nbsp;<a class=headline-hash href=#defining-a-mutable-storage>¶</a></h4><p>In addition to the base requirements for a storage class, instances with a
+mutable component must additionally adhere to the following:</p><ul><li>The mutable component must not participate in the storage <code>KeyTy</code>.</li><li>Provide a mutation method that is used to modify an existing instance of the
+storage. This method modifies the mutable component based on arguments, using
+<code>allocator</code> for any newly dynamically-allocated storage, and indicates whether
+the modification was successful.<ul><li><code>LogicalResult mutate(StorageAllocator &amp;allocator, Args ...&& args)</code></li></ul></li></ul><p>Let&rsquo;s define a simple storage for recursive types, where a type is identified by
+its name and may contain another type including itself.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Here we define a storage class for a RecursiveType that is identified by its
+</span></span></span><span class=line><span class=cl><span class=c1>/// name and contains another type.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>RecursiveTypeStorage</span> <span class=o>:</span> <span class=k>public</span> <span class=n>TypeStorage</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The type is uniquely identified by its name. Note that the contained type
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// is _not_ a part of the key.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>KeyTy</span> <span class=o>=</span> <span class=n>StringRef</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Construct the storage from the type name. Explicitly initialize the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// containedType to nullptr, which is used as marker for the mutable
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// component being not yet initialized.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>RecursiveTypeStorage</span><span class=p>(</span><span class=n>StringRef</span> <span class=n>name</span><span class=p>)</span> <span class=o>:</span> <span class=n>name</span><span class=p>(</span><span class=n>name</span><span class=p>),</span> <span class=n>containedType</span><span class=p>(</span><span class=k>nullptr</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define the comparison function.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>bool</span> <span class=k>operator</span><span class=o>==</span><span class=p>(</span><span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span> <span class=k>return</span> <span class=n>key</span> <span class=o>==</span> <span class=n>name</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a construction method for creating a new instance of the storage.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>static</span> <span class=n>RecursiveTypeStorage</span> <span class=o>*</span><span class=nf>construct</span><span class=p>(</span><span class=n>StorageAllocator</span> <span class=o>&amp;</span><span class=n>allocator</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=k>const</span> <span class=n>KeyTy</span> <span class=o>&amp;</span><span class=n>key</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Note that the key string is copied into the allocator to ensure it
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// remains live as long as the storage itself.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=k>new</span> <span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>allocate</span><span class=o>&lt;</span><span class=n>RecursiveTypeStorage</span><span class=o>&gt;</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=n>RecursiveTypeStorage</span><span class=p>(</span><span class=n>allocator</span><span class=p>.</span><span class=n>copyInto</span><span class=p>(</span><span class=n>key</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a mutation method for changing the type after it is created. In
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// many cases, we only want to set the mutable component once and reject
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// any further modification, which can be achieved by returning failure from
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// this function.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>LogicalResult</span> <span class=nf>mutate</span><span class=p>(</span><span class=n>StorageAllocator</span> <span class=o>&amp;</span><span class=p>,</span> <span class=n>Type</span> <span class=n>body</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// If the contained type has been initialized already, and the call tries
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// to change it, reject the change.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>containedType</span> <span class=o>&amp;&amp;</span> <span class=n>containedType</span> <span class=o>!=</span> <span class=n>body</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>failure</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Change the body successfully.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>containedType</span> <span class=o>=</span> <span class=n>body</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>success</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>StringRef</span> <span class=n>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Type</span> <span class=n>containedType</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h4 id=type-class-definition>Type class definition&nbsp;<a class=headline-hash href=#type-class-definition>¶</a></h4><p>Having defined the storage class, we can define the type class itself.
+<code>Type::TypeBase</code> provides a <code>mutate</code> method that forwards its arguments to the
+<code>mutate</code> method of the storage and ensures the mutation happens safely.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>RecursiveType</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Type</span><span class=o>::</span><span class=n>TypeBase</span><span class=o>&lt;</span><span class=n>RecursiveType</span><span class=p>,</span> <span class=n>Type</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                            <span class=n>RecursiveTypeStorage</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Inherit parent constructors.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>Base</span><span class=o>::</span><span class=n>Base</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Creates an instance of the Recursive type. This only takes the type name
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// and returns the type with uninitialized body.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>static</span> <span class=n>RecursiveType</span> <span class=nf>get</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span><span class=p>,</span> <span class=n>StringRef</span> <span class=n>name</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Call into the base to get a uniqued instance of this type. The parameter
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// (name) is passed after the context.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=n>Base</span><span class=o>::</span><span class=n>get</span><span class=p>(</span><span class=n>ctx</span><span class=p>,</span> <span class=n>name</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Now we can change the mutable component of the type. This is an instance
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// method callable on an already existing RecursiveType.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>void</span> <span class=nf>setBody</span><span class=p>(</span><span class=n>Type</span> <span class=n>body</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Call into the base to mutate the type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>LogicalResult</span> <span class=n>result</span> <span class=o>=</span> <span class=n>Base</span><span class=o>::</span><span class=n>mutate</span><span class=p>(</span><span class=n>body</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Most types expect the mutation to always succeed, but types can implement
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// custom logic for handling mutation failures.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>assert</span><span class=p>(</span><span class=n>succeeded</span><span class=p>(</span><span class=n>result</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;attempting to change the body of an already-initialized type&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Avoid unused-variable warning when building without assertions.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=n>result</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Returns the contained type, which may be null if it has not been
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// initialized yet.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Type</span> <span class=nf>getBody</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>containedType</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Returns the name.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>StringRef</span> <span class=nf>getName</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>name</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h3 id=extra-declarations>Extra declarations&nbsp;<a class=headline-hash href=#extra-declarations>¶</a></h3><p>The declarative Attribute and Type definitions try to auto-generate as much
+logic and methods as possible. With that said, there will always be long-tail
+cases that won&rsquo;t be covered. For such cases, <code>extraClassDeclaration</code> and
+<code>extraClassDefinition</code> can be used. Code within the <code>extraClassDeclaration</code>
+field will be copied literally to the generated C++ Attribute or Type class.
+Code within <code>extraClassDefinition</code> will be added to the generated source file
+inside the class&rsquo;s C++ namespace. The substitution <code>$cppClass</code> will be replaced
+by the Attribute or Type&rsquo;s C++ class name.</p><p>Note that these are mechanisms intended for long-tail cases by power users; for
+not-yet-implemented widely-applicable cases, improving the infrastructure is
+preferable.</p><h3 id=registering-with-the-dialect>Registering with the Dialect&nbsp;<a class=headline-hash href=#registering-with-the-dialect>¶</a></h3><p>Once the attributes and types have been defined, they must then be registered
+with the parent <code>Dialect</code>. This is done via the <code>addAttributes</code> and <code>addTypes</code>
+methods. Note that when registering, the full definition of the storage classes
+must be visible.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyDialect</span><span class=o>::</span><span class=n>initialize</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Add the defined attributes to the dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>addAttributes</span><span class=o>&lt;</span>
+</span></span><span class=line><span class=cl><span class=cp>#define GET_ATTRDEF_LIST
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;MyDialect/Attributes.cpp.inc&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>  <span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Add the defined types to the dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>addTypes</span><span class=o>&lt;</span>
+</span></span><span class=line><span class=cl><span class=cp>#define GET_TYPEDEF_LIST
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;MyDialect/Types.cpp.inc&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>  <span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/ title=Constraints><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Constraints</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/DefiningDialects/Operations/ title="Operation Definition Specification (ODS)">Next - Operation Definition Specification (ODS) <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li class=active><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

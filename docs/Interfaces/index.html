@@ -1,0 +1,586 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Interfaces - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Interfaces/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Interfaces</h1><p>MLIR is a generic and extensible framework, representing different dialects with
+their own attributes, operations, types, and so on. MLIR Dialects can express
+operations with a wide variety of semantics and different levels of abstraction.
+The downside to this is that MLIR transformations and analyses need to be able
+to account for the semantics of every operation, or be overly conservative.
+Without care, this can result in code with special-cases for each supported
+operation type. To combat this, MLIR provides a concept of <code>interfaces</code>.</p><p><nav id=TableOfContents><ul><li><a href=#motivation>Motivation</a><ul><li><a href=#dialect-interfaces>Dialect Interfaces</a></li><li><a href=#attributeoperationtype-interfaces>Attribute/Operation/Type Interfaces</a></li></ul></li></ul></nav><h2 id=motivation>Motivation&nbsp;<a class=headline-hash href=#motivation>¶</a></h2><p>Interfaces provide a generic way of interacting with the IR. The goal is to be
+able to express transformations/analyses in terms of these interfaces without
+encoding specific knowledge about the exact operation or dialect involved. This
+makes the compiler more easily extensible by allowing the addition of new
+dialects and operations in a decoupled way with respect to the implementation of
+transformations/analyses.</p><h3 id=dialect-interfaces>Dialect Interfaces&nbsp;<a class=headline-hash href=#dialect-interfaces>¶</a></h3><p>Dialect interfaces are generally useful for transformation passes or analyses
+that want to operate generically on a set of attributes/operations/types, which
+may be defined in different dialects. These interfaces generally involve wide
+coverage over an entire dialect and are only used for a handful of analyses or
+transformations. In these cases, registering the interface directly on each
+operation is overly complex and cumbersome. The interface is not core to the
+operation, just to the specific transformation. An example of where this type of
+interface would be used is inlining. Inlining generally queries high-level
+information about the operations within a dialect, like cost modeling and
+legality, that often is not specific to one operation.</p><p>A dialect interface can be defined by inheriting from the
+<a href=https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern>CRTP</a> base
+class <code>DialectInterfaceBase::Base&lt;></code>. This class provides the necessary
+utilities for registering an interface with a dialect so that it can be
+referenced later. Once the interface has been defined, dialects can override it
+using dialect-specific information. The interfaces defined by a dialect are
+registered via <code>addInterfaces&lt;></code>, a similar mechanism to Attributes, Operations,
+Types, etc.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Define a base inlining interface class to allow for dialects to opt-in to
+</span></span></span><span class=line><span class=cl><span class=c1>/// the inliner.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>class</span> <span class=nc>DialectInlinerInterface</span> <span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=n>DialectInterface</span><span class=o>::</span><span class=n>Base</span><span class=o>&lt;</span><span class=n>DialectInlinerInterface</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Returns true if the given region &#39;src&#39; can be inlined into the region
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// &#39;dest&#39; that is attached to an operation registered to the current dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// &#39;valueMapping&#39; contains any remapped values from within the &#39;src&#39; region.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// This can be used to examine what values will replace entry arguments into
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// the &#39;src&#39; region, for example.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>virtual</span> <span class=kt>bool</span> <span class=n>isLegalToInline</span><span class=p>(</span><span class=n>Region</span> <span class=o>*</span><span class=n>dest</span><span class=p>,</span> <span class=n>Region</span> <span class=o>*</span><span class=n>src</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                               <span class=n>IRMapping</span> <span class=o>&amp;</span><span class=n>valueMapping</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Override the inliner interface to add support for the AffineDialect to
+</span></span></span><span class=line><span class=cl><span class=c1>/// enable inlining affine operations.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>AffineInlinerInterface</span> <span class=o>:</span> <span class=k>public</span> <span class=n>DialectInlinerInterface</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Affine structures have specific inlining constraints.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>bool</span> <span class=nf>isLegalToInline</span><span class=p>(</span><span class=n>Region</span> <span class=o>*</span><span class=n>dest</span><span class=p>,</span> <span class=n>Region</span> <span class=o>*</span><span class=n>src</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>IRMapping</span> <span class=o>&amp;</span><span class=n>valueMapping</span><span class=p>)</span> <span class=k>const</span> <span class=k>final</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Register the interface with the dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>AffineDialect</span><span class=o>::</span><span class=n>AffineDialect</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>addInterfaces</span><span class=o>&lt;</span><span class=n>AffineInlinerInterface</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Once registered, these interfaces can be queried from the dialect by an analysis
+or transformation without the need to determine the specific dialect subclass:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>Dialect</span> <span class=o>*</span><span class=n>dialect</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>DialectInlinerInterface</span> <span class=o>*</span><span class=n>interface</span> <span class=o>=</span> <span class=n>dyn_cast</span><span class=o>&lt;</span><span class=n>DialectInlinerInterface</span><span class=o>&gt;</span><span class=p>(</span><span class=n>dialect</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// The dialect has provided an implementation of this interface.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h4 id=dialectinterfacecollection>DialectInterfaceCollection&nbsp;<a class=headline-hash href=#dialectinterfacecollection>¶</a></h4><p>An additional utility is provided via <code>DialectInterfaceCollection</code>. This class
+allows collecting all of the dialects that have registered a given interface
+within an instance of the <code>MLIRContext</code>. This can be useful to hide and optimize
+the lookup of a registered dialect interface.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>InlinerInterface</span> <span class=o>:</span> <span class=k>public</span>
+</span></span><span class=line><span class=cl>    <span class=n>DialectInterfaceCollection</span><span class=o>&lt;</span><span class=n>DialectInlinerInterface</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The hooks for this class mirror the hooks for the DialectInlinerInterface,
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// with default implementations that call the hook on the interface for a
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// given dialect.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>virtual</span> <span class=kt>bool</span> <span class=nf>isLegalToInline</span><span class=p>(</span><span class=n>Region</span> <span class=o>*</span><span class=n>dest</span><span class=p>,</span> <span class=n>Region</span> <span class=o>*</span><span class=n>src</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                               <span class=n>IRMapping</span> <span class=o>&amp;</span><span class=n>valueMapping</span><span class=p>)</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=o>*</span><span class=n>handler</span> <span class=o>=</span> <span class=n>getInterfaceFor</span><span class=p>(</span><span class=n>dest</span><span class=o>-&gt;</span><span class=n>getContainingOp</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>handler</span> <span class=o>?</span> <span class=n>handler</span><span class=o>-&gt;</span><span class=n>isLegalToInline</span><span class=p>(</span><span class=n>dest</span><span class=p>,</span> <span class=n>src</span><span class=p>,</span> <span class=n>valueMapping</span><span class=p>)</span> <span class=o>:</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=n>InlinerInterface</span> <span class=nf>interface</span><span class=p>(</span><span class=n>ctx</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=n>interface</span><span class=p>.</span><span class=n>isLegalToInline</span><span class=p>(...))</span>
+</span></span><span class=line><span class=cl>   <span class=p>...</span>
+</span></span></code></pre></div><h3 id=attributeoperationtype-interfaces>Attribute/Operation/Type Interfaces&nbsp;<a class=headline-hash href=#attributeoperationtype-interfaces>¶</a></h3><p>Attribute/Operation/Type interfaces, as the names suggest, are those registered
+at the level of a specific attribute/operation/type. These interfaces provide
+access to derived objects by providing a virtual interface that must be
+implemented. As an example, many analyses and transformations want to reason
+about the side effects of an operation to improve performance and correctness.
+The side effects of an operation are generally tied to the semantics of a
+specific operation, for example an <code>affine.load</code> operation has a <code>read</code> effect
+(as the name may suggest).</p><p>These interfaces are defined by overriding the
+<a href=https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern>CRTP</a> class
+for the specific IR entity; <code>AttrInterface</code>, <code>OpInterface</code>, or <code>TypeInterface</code>
+respectively. These classes take, as a template parameter, a <code>Traits</code> class that
+defines a <code>Concept</code> and a <code>Model</code> class. These classes provide an implementation
+of concept-based polymorphism, where the <code>Concept</code> defines a set of virtual
+methods that are overridden by the <code>Model</code> that is templated on the concrete
+entity type. It is important to note that these classes should be pure, and
+should not contain non-static data members or other mutable data. To attach an
+interface to an object, the base interface classes provide a
+<a href=/docs/Traits/><code>Trait</code></a> class that can be appended to the trait list of that
+object.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>ExampleOpInterfaceTraits</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a base concept class that specifies the virtual interface to be
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// implemented.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>struct</span> <span class=nc>Concept</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=o>~</span><span class=n>Concept</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// This is an example of a non-static hook to an operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>virtual</span> <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=k>const</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// This is an example of a static hook to an operation. A static hook does
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// not require a concrete instance of the operation. The implementation is
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// a virtual hook, the same as the non-static case, because the
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// implementation of the hook itself still requires indirection.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>virtual</span> <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define a model class that specializes a concept on a given operation type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>ConcreteOp</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=nc>Model</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Concept</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Override the method to dispatch on the concrete operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=k>const</span> <span class=k>final</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>llvm</span><span class=o>::</span><span class=n>cast</span><span class=o>&lt;</span><span class=n>ConcreteOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>op</span><span class=p>).</span><span class=n>exampleInterfaceHook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Override the static method to dispatch to the concrete operation type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=k>final</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>ConcreteOp</span><span class=o>::</span><span class=n>exampleStaticInterfaceHook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Define the main interface class that analyses and transformations will
+</span></span></span><span class=line><span class=cl><span class=c1>/// interface with.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>class</span> <span class=nc>ExampleOpInterface</span> <span class=o>:</span> <span class=k>public</span> <span class=n>OpInterface</span><span class=o>&lt;</span><span class=n>ExampleOpInterface</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                              <span class=n>ExampleOpInterfaceTraits</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Inherit the base class constructor to support LLVM-style casting.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>OpInterface</span><span class=o>&lt;</span><span class=n>ExampleOpInterface</span><span class=p>,</span> <span class=n>ExampleOpInterfaceTraits</span><span class=o>&gt;::</span><span class=n>OpInterface</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The interface dispatches to &#39;getImpl()&#39;, a method provided by the base
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// `OpInterface` class that returns an instance of the concept.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>exampleInterfaceHook</span><span class=p>(</span><span class=n>getOperation</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>exampleStaticInterfaceHook</span><span class=p>(</span><span class=n>getOperation</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>getName</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>Once the interface has been defined, it is registered to an operation by adding
+the provided trait <code>ExampleOpInterface::Trait</code> as described earlier. Using this
+interface is just like using any other derived operation type, i.e. casting:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// When defining the operation, the interface is registered via the nested
+</span></span></span><span class=line><span class=cl><span class=c1>/// &#39;Trait&#39; class provided by the &#39;OpInterface&lt;&gt;&#39; base class.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>class</span> <span class=nc>MyOp</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Op</span><span class=o>&lt;</span><span class=n>MyOp</span><span class=p>,</span> <span class=n>ExampleOpInterface</span><span class=o>::</span><span class=n>Trait</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The definition of the interface method on the derived operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>unsigned</span> <span class=n>exampleInterfaceHook</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=p>...;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=p>...;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Later, we can query if a specific operation(like &#39;MyOp&#39;) overrides the given
+</span></span></span><span class=line><span class=cl><span class=c1>/// interface.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>ExampleOpInterface</span> <span class=n>example</span> <span class=o>=</span> <span class=n>dyn_cast</span><span class=o>&lt;</span><span class=n>ExampleOpInterface</span><span class=o>&gt;</span><span class=p>(</span><span class=n>op</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>  <span class=n>llvm</span><span class=o>::</span><span class=n>errs</span><span class=p>()</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;hook returned = &#34;</span> <span class=o>&lt;&lt;</span> <span class=n>example</span><span class=p>.</span><span class=n>exampleInterfaceHook</span><span class=p>()</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>;</span>
+</span></span></code></pre></div><h4 id=external-models-for-attribute-operation-and-type-interfaces>External Models for Attribute, Operation and Type Interfaces&nbsp;<a class=headline-hash href=#external-models-for-attribute-operation-and-type-interfaces>¶</a></h4><p>It may be desirable to provide an interface implementation for an IR object
+without modifying the definition of said object. Notably, this allows to
+implement interfaces for attributes, operations and types outside of the dialect
+that defines them, for example, to provide interfaces for built-in types.</p><p>This is achieved by extending the concept-based polymorphism model with two more
+classes derived from <code>Concept</code> as follows.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>ExampleTypeInterfaceTraits</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=nc>Concept</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=k>const</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>ConcreteType</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=nc>Model</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Concept</span> <span class=p>{</span> <span class=cm>/*...*/</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Unlike `Model`, `FallbackModel` passes the type object through to the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// hook, making it accessible in the method body even if the method is not
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// defined in the class itself and thus has no `this` access. ODS
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// automatically generates this class for all interfaces.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>ConcreteType</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=nc>FallbackModel</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Concept</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>getImpl</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>exampleInterfaceHook</span><span class=p>(</span><span class=n>type</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>ConcreteType</span><span class=o>::</span><span class=n>exampleStaticInterfaceHook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// `ExternalModel` provides a place for default implementations of interface
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// methods by explicitly separating the model class, which implements the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// interface, from the type class, for which the interface is being
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// implemented. Default implementations can be then defined generically
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// making use of `cast&lt;ConcreteType&gt;`. If `ConcreteType` does not provide
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// the APIs required by the default implementation, custom implementations
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// may use `FallbackModel` directly to override the default implementation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// Being located in a class template, it never gets instantiated and does not
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// lead to compilation errors. ODS automatically generates this class and
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// places default method implementations in it.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>ConcreteModel</span><span class=p>,</span> <span class=k>typename</span> <span class=n>ConcreteType</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=nc>ExternalModel</span> <span class=o>:</span> <span class=k>public</span> <span class=n>FallbackModel</span><span class=o>&lt;</span><span class=n>ConcreteModel</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Type</span> <span class=n>type</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// Default implementation can be provided here.
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=k>return</span> <span class=n>type</span><span class=p>.</span><span class=n>cast</span><span class=o>&lt;</span><span class=n>ConcreteType</span><span class=o>&gt;</span><span class=p>().</span><span class=n>callSomeTypeSpecificMethod</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>External models can be provided for attribute, operation and type interfaces by
+deriving either <code>FallbackModel</code> or <code>ExternalModel</code> and by registering the model
+class with the relevant class in a given context. Other contexts will not see
+the interface unless registered.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// External interface implementation for a concrete class. This does not
+</span></span></span><span class=line><span class=cl><span class=c1>/// require modifying the definition of the type class itself.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>ExternalModelExample</span>
+</span></span><span class=line><span class=cl>    <span class=o>:</span> <span class=k>public</span> <span class=n>ExampleTypeInterface</span><span class=o>::</span><span class=n>ExternalModel</span><span class=o>&lt;</span><span class=n>ExternalModelExample</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                 <span class=n>IntegerType</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Implementation is provided here.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=n>IntegerType</span><span class=o>::</span><span class=n>someStaticMethod</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// No need to define `exampleInterfaceHook` that has a default implementation
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// in `ExternalModel`. But it can be overridden if desired.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>MLIRContext</span> <span class=n>context</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/* ... */</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Attach the interface model to the type in the given context before
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// using it. The dialect containing the type is expected to have been loaded
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// at this point.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>IntegerType</span><span class=o>::</span><span class=n>attachInterface</span><span class=o>&lt;</span><span class=n>ExternalModelExample</span><span class=o>&gt;</span><span class=p>(</span><span class=n>context</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Note: It is strongly encouraged to only use this mechanism if you &ldquo;own&rdquo; the
+interface being externally applied. This prevents a situation where neither the
+owner of the dialect containing the object nor the owner of the interface are
+aware of an interface implementation, which can lead to duplicate or
+diverging implementations.</p><p>Forgetting to register an external model can lead to bugs which are hard to
+track down. The <code>declarePromisedInterface</code> function can be used to declare that
+an external model implementation for an operation must eventually be provided.</p><pre tabindex=0><code>  void MyDialect::initialize() {
+    declarePromisedInterface&lt;SomeInterface, SomeOp&gt;();
+     ...
+  }
+</code></pre><p>Now attempting to use the interface, e.g in a cast, without a prior registration
+of the external model will lead to a runtime error that will look similar to
+this:</p><pre tabindex=0><code>LLVM ERROR: checking for an interface (`SomeInterface`) that was promised by dialect &#39;mydialect&#39; but never implemented. This is generally an indication that the dialect extension implementing the interface was never registered.
+</code></pre><p>If you encounter this error for a dialect and an interface provided by MLIR, you
+may look for a method that will be named like
+<code>register&lt;Dialect>&lt;Interface>ExternalModels(DialectRegistry &amp;registry);</code> ; try
+to find it with <code>git grep 'register.*SomeInterface.*Model' mlir</code>.</p><h4 id=dialect-fallback-for-opinterface>Dialect Fallback for OpInterface&nbsp;<a class=headline-hash href=#dialect-fallback-for-opinterface>¶</a></h4><p>Some dialects have an open ecosystem and don&rsquo;t register all of the possible
+operations. In such cases it is still possible to provide support for
+implementing an <code>OpInterface</code> for these operation. When an operation isn&rsquo;t
+registered or does not provide an implementation for an interface, the query
+will fallback to the dialect itself.</p><p>A second model is used for such cases and automatically generated when using ODS
+(see below) with the name <code>FallbackModel</code>. This model can be implemented for a
+particular dialect:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// This is the implementation of a dialect fallback for `ExampleOpInterface`.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>FallbackExampleOpInterface</span>
+</span></span><span class=line><span class=cl>    <span class=o>:</span> <span class=k>public</span> <span class=n>ExampleOpInterface</span><span class=o>::</span><span class=n>FallbackModel</span><span class=o>&lt;</span>
+</span></span><span class=line><span class=cl>          <span class=n>FallbackExampleOpInterface</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>bool</span> <span class=nf>classof</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=k>return</span> <span class=nb>true</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=nf>exampleInterfaceHook</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=nf>exampleStaticInterfaceHook</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>A dialect can then instantiate this implementation and returns it on specific
+operations by overriding the <code>getRegisteredInterfaceForOp</code> method :</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=o>*</span><span class=n>TestDialect</span><span class=o>::</span><span class=n>getRegisteredInterfaceForOp</span><span class=p>(</span><span class=n>TypeID</span> <span class=n>typeID</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                               <span class=n>StringAttr</span> <span class=n>opName</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>typeID</span> <span class=o>==</span> <span class=n>TypeID</span><span class=o>::</span><span class=n>get</span><span class=o>&lt;</span><span class=n>ExampleOpInterface</span><span class=o>&gt;</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>isSupported</span><span class=p>(</span><span class=n>opName</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>fallbackExampleOpInterface</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>nullptr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>nullptr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h4 id=utilizing-the-ods-framework>Utilizing the ODS Framework&nbsp;<a class=headline-hash href=#utilizing-the-ods-framework>¶</a></h4><p>Note: Before reading this section, the reader should have some familiarity with
+the concepts described in the
+<a href=/docs/DefiningDialects/Operations/><code>Operation Definition Specification</code></a> documentation.</p><p>As detailed above,
+<a href=#attributeoperationtype-interfaces>Interfaces</a> allow for
+attributes, operations, and types to expose method calls without requiring that
+the caller know the specific derived type. The downside to this infrastructure,
+is that it requires a bit of boiler plate to connect all of the pieces together.
+MLIR provides a mechanism with which to defines interfaces declaratively in ODS,
+and have the C++ definitions auto-generated.</p><p>As an example, using the ODS framework would allow for defining the example
+interface above as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>ExampleOpInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;ExampleOpInterface&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    This is an example interface definition.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>methods</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>InterfaceMethod</span><span class=p>&lt;</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;This is an example of a non-static hook to an operation.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;unsigned&#34;</span><span class=p>,</span> <span class=s>&#34;exampleInterfaceHook&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>StaticInterfaceMethod</span><span class=p>&lt;</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;This is an example of a static hook to an operation.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;unsigned&#34;</span><span class=p>,</span> <span class=s>&#34;exampleStaticInterfaceHook&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Providing a definition of the <code>AttrInterface</code>, <code>OpInterface</code>, or <code>TypeInterface</code>
+class will auto-generate the C++ classes for the interface. Interfaces are
+comprised of the following components:</p><ul><li>C++ Class Name (Provided via template parameter)<ul><li>The name of the C++ interface class.</li></ul></li><li>Interface Base Classes<ul><li>A set of interfaces that the interface class should derived from. See
+<a href=#interface-inheritance>Interface Inheritance</a> below for more details.</li></ul></li><li>Description (<code>description</code>)<ul><li>A string description of the interface, its invariants, example usages,
+etc.</li></ul></li><li>C++ Namespace (<code>cppNamespace</code>)<ul><li>The C++ namespace that the interface class should be generated in.</li></ul></li><li>Methods (<code>methods</code>)<ul><li>The list of interface hook methods that are defined by the IR object.</li><li>The structure of these methods is defined below.</li></ul></li><li>Extra Class Declarations (Optional: <code>extraClassDeclaration</code>)<ul><li>Additional C++ code that is generated in the declaration of the
+interface class. This allows for defining methods and more on the user
+facing interface class, that do not need to hook into the IR entity.
+These declarations are <em>not</em> implicitly visible in default
+implementations of interface methods, but static declarations may be
+accessed with full name qualification.</li></ul></li><li>Extra Shared Class Declarations (Optional: <code>extraSharedClassDeclaration</code>)<ul><li>Additional C++ code that is injected into the declarations of both the
+interface and the trait class. This allows for defining methods and more
+that are exposed on both the interface and the trait class, e.g. to inject
+utilities on both the interface and the derived entity implementing the
+interface (e.g. attribute, operation, etc.).</li><li>In non-static methods, <code>$_attr</code>/<code>$_op</code>/<code>$_type</code>
+(depending on the type of interface) may be used to refer to an
+instance of the IR entity. In the interface declaration, the type of
+the instance is the interface class. In the trait declaration, the
+type of the instance is the concrete entity class
+(e.g. <code>IntegerAttr</code>, <code>FuncOp</code>, etc.).</li></ul></li><li>Extra Trait Class Declarations (Optional: <code>extraTraitClassDeclaration</code>)<ul><li>Additional C++ code that is injected into the interface trait
+declaration.</li><li>Allows the same replacements as extra shared class declarations.</li></ul></li></ul><p><code>OpInterface</code> classes may additionally contain the following:</p><ul><li>Verifier (<code>verify</code>)<ul><li>A C++ code block containing additional verification applied to the
+operation that the interface is attached to.</li><li>The structure of this code block corresponds 1-1 with the structure of a
+<a href=/docs/Traits/><code>Trait::verifyTrait</code></a> method.</li></ul></li></ul><h5 id=interface-methods>Interface Methods&nbsp;<a class=headline-hash href=#interface-methods>¶</a></h5><p>There are two types of methods that can be used with an interface,
+<code>InterfaceMethod</code> and <code>StaticInterfaceMethod</code>. They are both comprised of the
+same core components, with the distinction that <code>StaticInterfaceMethod</code> models a
+static method on the derived IR object.</p><p>Interface methods are comprised of the following components:</p><ul><li>Description<ul><li>A string description of this method, its invariants, example usages,
+etc.</li></ul></li><li>ReturnType<ul><li>A string corresponding to the C++ return type of the method.</li></ul></li><li>MethodName<ul><li>A string corresponding to the C++ name of the method.</li></ul></li><li>Arguments (Optional)<ul><li>A dag of strings that correspond to a C++ type and variable name
+respectively.</li></ul></li><li>MethodBody (Optional)<ul><li>An optional explicit implementation of the interface method.</li><li>This implementation is placed within the method defined on the <code>Model</code>
+traits class, and is not defined by the <code>Trait</code> class that is attached
+to the IR entity. More concretely, this body is only visible by the
+interface class and does not affect the derived IR entity.</li><li><code>ConcreteAttr</code>/<code>ConcreteOp</code>/<code>ConcreteType</code> is an implicitly defined
+<code>typename</code> that can be used to refer to the type of the derived IR
+entity currently being operated on.</li><li>In non-static methods, <code>$_op</code> and <code>$_self</code> may be used to refer to an
+instance of the derived IR entity.</li></ul></li><li>DefaultImplementation (Optional)<ul><li>An optional explicit default implementation of the interface method.</li><li>This implementation is placed within the <code>Trait</code> class that is attached
+to the IR entity, and does not directly affect any of the interface
+classes. As such, this method has the same characteristics as any other
+<a href=/docs/Traits/><code>Trait</code></a> method.</li><li><code>ConcreteAttr</code>/<code>ConcreteOp</code>/<code>ConcreteType</code> is an implicitly defined
+<code>typename</code> that can be used to refer to the type of the derived IR
+entity currently being operated on.</li><li>This may refer to static fields of the interface class using the
+qualified name, e.g., <code>TestOpInterface::staticMethod()</code>.</li></ul></li></ul><p>ODS also allows for generating declarations for the <code>InterfaceMethod</code>s of an
+operation if the operation specifies the interface with
+<code>DeclareOpInterfaceMethods</code> (see an example below).</p><p>Examples:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;MyInterface&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    This is the description of the interface. It provides concrete information
+</span></span></span><span class=line><span class=cl><span class=s>    on the semantics of the interface, and how it may be used by the compiler.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>methods</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>InterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method represents a simple non-static interface method with no
+</span></span></span><span class=line><span class=cl><span class=s>      inputs, and a void return type. This method is required to be implemented
+</span></span></span><span class=line><span class=cl><span class=s>      by all operations implementing this interface. This method roughly
+</span></span></span><span class=line><span class=cl><span class=s>      correlates to the following on an operation implementing this interface:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      class ConcreteOp ... {
+</span></span></span><span class=line><span class=cl><span class=s>      public:
+</span></span></span><span class=line><span class=cl><span class=s>        void nonStaticMethod();
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span> <span class=s>&#34;void&#34;</span><span class=p>,</span> <span class=s>&#34;nonStaticMethod&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>InterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method represents a non-static interface method with a non-void
+</span></span></span><span class=line><span class=cl><span class=s>      return value, as well as an `unsigned` input named `i`. This method is
+</span></span></span><span class=line><span class=cl><span class=s>      required to be implemented by all operations implementing this interface.
+</span></span></span><span class=line><span class=cl><span class=s>      This method roughly correlates to the following on an operation
+</span></span></span><span class=line><span class=cl><span class=s>      implementing this interface:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      class ConcreteOp ... {
+</span></span></span><span class=line><span class=cl><span class=s>      public:
+</span></span></span><span class=line><span class=cl><span class=s>        Value nonStaticMethod(unsigned i);
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span> <span class=s>&#34;Value&#34;</span><span class=p>,</span> <span class=s>&#34;nonStaticMethodWithParams&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;unsigned&#34;</span><span class=p>:</span><span class=nv>$i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>StaticInterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method represents a static interface method with no inputs, and a
+</span></span></span><span class=line><span class=cl><span class=s>      void return type. This method is required to be implemented by all
+</span></span></span><span class=line><span class=cl><span class=s>      operations implementing this interface. This method roughly correlates
+</span></span></span><span class=line><span class=cl><span class=s>      to the following on an operation implementing this interface:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      class ConcreteOp ... {
+</span></span></span><span class=line><span class=cl><span class=s>      public:
+</span></span></span><span class=line><span class=cl><span class=s>        static void staticMethod();
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span> <span class=s>&#34;void&#34;</span><span class=p>,</span> <span class=s>&#34;staticMethod&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>StaticInterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method corresponds to a static interface method that has an explicit
+</span></span></span><span class=line><span class=cl><span class=s>      implementation of the method body. Given that the method body has been
+</span></span></span><span class=line><span class=cl><span class=s>      explicitly implemented, this method should not be defined by the operation
+</span></span></span><span class=line><span class=cl><span class=s>      implementing this method. This method merely takes advantage of properties
+</span></span></span><span class=line><span class=cl><span class=s>      already available on the operation, in this case its `build` methods. This
+</span></span></span><span class=line><span class=cl><span class=s>      method roughly correlates to the following on the interface `Model` class:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      struct InterfaceTraits {
+</span></span></span><span class=line><span class=cl><span class=s>        /// ... The `Concept` class is elided here ...
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>        template &lt;typename ConcreteOp&gt;
+</span></span></span><span class=line><span class=cl><span class=s>        struct Model : public Concept {
+</span></span></span><span class=line><span class=cl><span class=s>          Operation *create(OpBuilder &amp;builder, Location loc) const override {
+</span></span></span><span class=line><span class=cl><span class=s>            return builder.create&lt;ConcreteOp&gt;(loc);
+</span></span></span><span class=line><span class=cl><span class=s>          }
+</span></span></span><span class=line><span class=cl><span class=s>        }
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      Note above how no modification is required for operations implementing an
+</span></span></span><span class=line><span class=cl><span class=s>      interface with this method.
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;Operation *&#34;</span><span class=p>,</span> <span class=s>&#34;create&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nv>ins</span> <span class=s>&#34;OpBuilder &amp;&#34;</span><span class=p>:</span><span class=nv>$builder</span><span class=p>,</span> <span class=s>&#34;Location&#34;</span><span class=p>:</span><span class=nv>$loc</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>      <span class=err>/</span><span class=p>*</span><span class=nv>methodBody</span><span class=p>=*</span><span class=err>/</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>        return builder.create&lt;ConcreteOp&gt;(loc);
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>InterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method represents a non-static method that has an explicit
+</span></span></span><span class=line><span class=cl><span class=s>      implementation of the method body. Given that the method body has been
+</span></span></span><span class=line><span class=cl><span class=s>      explicitly implemented, this method should not be defined by the operation
+</span></span></span><span class=line><span class=cl><span class=s>      implementing this method. This method merely takes advantage of properties
+</span></span></span><span class=line><span class=cl><span class=s>      already available on the operation, in this case its `build` methods. This
+</span></span></span><span class=line><span class=cl><span class=s>      method roughly correlates to the following on the interface `Model` class:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      struct InterfaceTraits {
+</span></span></span><span class=line><span class=cl><span class=s>        /// ... The `Concept` class is elided here ...
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>        template &lt;typename ConcreteOp&gt;
+</span></span></span><span class=line><span class=cl><span class=s>        struct Model : public Concept {
+</span></span></span><span class=line><span class=cl><span class=s>          unsigned getNumInputsAndOutputs(Operation *opaqueOp) const override {
+</span></span></span><span class=line><span class=cl><span class=s>            ConcreteOp op = cast&lt;ConcreteOp&gt;(opaqueOp);
+</span></span></span><span class=line><span class=cl><span class=s>            return op.getNumInputs() + op.getNumOutputs();
+</span></span></span><span class=line><span class=cl><span class=s>          }
+</span></span></span><span class=line><span class=cl><span class=s>        }
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      Note above how no modification is required for operations implementing an
+</span></span></span><span class=line><span class=cl><span class=s>      interface with this method.
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;unsigned&#34;</span><span class=p>,</span> <span class=s>&#34;getNumInputsAndOutputs&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nv>ins</span><span class=p>),</span> <span class=err>/</span><span class=p>*</span><span class=nv>methodBody</span><span class=p>=*</span><span class=err>/</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>        return $_op.getNumInputs() + $_op.getNumOutputs();
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>InterfaceMethod</span><span class=p>&lt;</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      This method represents a non-static method that has a default
+</span></span></span><span class=line><span class=cl><span class=s>      implementation of the method body. This means that the implementation
+</span></span></span><span class=line><span class=cl><span class=s>      defined here will be placed in the trait class that is attached to every
+</span></span></span><span class=line><span class=cl><span class=s>      operation that implements this interface. This has no effect on the
+</span></span></span><span class=line><span class=cl><span class=s>      generated `Concept` and `Model` class. This method roughly correlates to
+</span></span></span><span class=line><span class=cl><span class=s>      the following on the interface `Trait` class:
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      template &lt;typename ConcreteOp&gt;
+</span></span></span><span class=line><span class=cl><span class=s>      class MyTrait : public OpTrait::TraitBase&lt;ConcreteType, MyTrait&gt; {
+</span></span></span><span class=line><span class=cl><span class=s>      public:
+</span></span></span><span class=line><span class=cl><span class=s>        bool isSafeToTransform() {
+</span></span></span><span class=line><span class=cl><span class=s>          ConcreteOp op = cast&lt;ConcreteOp&gt;(this-&gt;getOperation());
+</span></span></span><span class=line><span class=cl><span class=s>          return op.getProperties().hasFlag;
+</span></span></span><span class=line><span class=cl><span class=s>        }
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      As detailed in [Traits](Traits), given that each operation implementing
+</span></span></span><span class=line><span class=cl><span class=s>      this interface will also add the interface trait, the methods on this
+</span></span></span><span class=line><span class=cl><span class=s>      interface are inherited by the derived operation. This allows for
+</span></span></span><span class=line><span class=cl><span class=s>      injecting a default implementation of this method into each operation that
+</span></span></span><span class=line><span class=cl><span class=s>      implements this interface, without changing the interface class itself. If
+</span></span></span><span class=line><span class=cl><span class=s>      an operation wants to override this default implementation, it merely
+</span></span></span><span class=line><span class=cl><span class=s>      needs to implement the method and the derived implementation will be
+</span></span></span><span class=line><span class=cl><span class=s>      picked up transparently by the interface class.
+</span></span></span><span class=line><span class=cl><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>      ```c++
+</span></span></span><span class=line><span class=cl><span class=s>      class ConcreteOp ... {
+</span></span></span><span class=line><span class=cl><span class=s>      public:
+</span></span></span><span class=line><span class=cl><span class=s>        bool isSafeToTransform() {
+</span></span></span><span class=line><span class=cl><span class=s>          // Here we can override the default implementation of the hook
+</span></span></span><span class=line><span class=cl><span class=s>          // provided by the trait.
+</span></span></span><span class=line><span class=cl><span class=s>        }
+</span></span></span><span class=line><span class=cl><span class=s>      };
+</span></span></span><span class=line><span class=cl><span class=s>      ```
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s>&#34;bool&#34;</span><span class=p>,</span> <span class=s>&#34;isSafeToTransform&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nv>ins</span><span class=p>),</span> <span class=err>/</span><span class=p>*</span><span class=nv>methodBody</span><span class=p>=*</span><span class=err>/</span><span class=s>[{}]</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=err>/</span><span class=p>*</span><span class=nv>defaultImplementation</span><span class=p>=*</span><span class=err>/</span><span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>        return $_op.getProperties().hasFlag;
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Operation interfaces can optionally be wrapped inside
+</span></span></span><span class=line><span class=cl><span class=c>// `DeclareOpInterfaceMethods`. This would result in autogenerating declarations
+</span></span></span><span class=line><span class=cl><span class=c>// for members `foo`, `bar` and `fooStatic`. Methods with bodies are not
+</span></span></span><span class=line><span class=cl><span class=c>// declared inside the op declaration but instead handled by the op interface
+</span></span></span><span class=line><span class=cl><span class=c>// trait directly.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>OpWithInferTypeInterfaceOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;...</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nv>DeclareOpInterfaceMethods</span><span class=p>&lt;</span><span class=nv>MyInterface</span><span class=p>&gt;]&gt;</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Methods that have a default implementation do not have declarations
+</span></span></span><span class=line><span class=cl><span class=c>// generated. If an operation wishes to override the default behavior, it can
+</span></span></span><span class=line><span class=cl><span class=c>// explicitly specify the method that it wishes to override. This will force
+</span></span></span><span class=line><span class=cl><span class=c>// the generation of a declaration for those methods.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=k>def</span> <span class=nv>OpWithOverrideInferTypeInterfaceOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;...</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nv>DeclareOpInterfaceMethods</span><span class=p>&lt;</span><span class=nv>MyInterface</span><span class=p>,</span> <span class=p>[</span><span class=s>&#34;getNumWithDefault&#34;</span><span class=p>]&gt;]&gt;</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span></code></pre></div><h5 id=interface-inheritance>Interface Inheritance&nbsp;<a class=headline-hash href=#interface-inheritance>¶</a></h5><p>Interfaces also support a limited form of inheritance, which allows for
+building upon pre-existing interfaces in a way similar to that of classes in
+programming languages like C++. This more easily allows for building modular
+interfaces, without suffering from the pain of lots of explicit casting. To
+enable inheritance, an interface simply needs to provide the desired set of
+base classes in its definition. For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyBaseInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;MyBaseInterface&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;MyInterface&#34;</span><span class=p>,</span> <span class=p>[</span><span class=nv>MyBaseInterface</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This will result in <code>MyInterface</code> inheriting various components from
+<code>MyBaseInterface</code>, namely its interface methods and extra class declarations.
+Given that these inherited components are comprised of opaque C++ blobs, we
+cannot properly sandbox the names. As such, it&rsquo;s important to ensure that inherited
+components do not create name overlaps, as these will result in errors during
+interface generation.</p><p><code>MyInterface</code> will also implicitly inherit any base classes defined on
+<code>MyBaseInterface</code> as well. It&rsquo;s important to note, however, that there is only
+ever one instance of each interface for a given attribute, operation, or type.
+Inherited interface methods simplify forward to base interface implementation.
+This produces a simpler system overall, and also removes any potential problems
+surrounding &ldquo;diamond inheritance&rdquo;. The interfaces on an attribute/op/type can be
+thought of as comprising a set, with each interface (including base interfaces)
+uniqued within this set and referenced elsewhere as necessary.</p><p>When adding an interface with inheritance to an attribute, operation, or type,
+all of the base interfaces are also implicitly added as well. The user may still
+manually specify the base interfaces if they desire, such as for use with the
+<code>Declare&lt;Attr|Op|Type>InterfaceMethods</code> helper classes.</p><p>If our interface were to be specified as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyBaseInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;MyBaseInterface&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOtherBaseInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=nv>MyOtherBaseInterface</span><span class=p>,</span> <span class=p>[</span><span class=nv>MyBaseInterface</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyInterface</span> <span class=p>:</span> <span class=nv>OpInterface</span><span class=p>&lt;</span><span class=s>&#34;MyInterface&#34;</span><span class=p>,</span> <span class=p>[</span><span class=nv>MyBaseInterface</span><span class=p>,</span> <span class=nv>MyOtherBaseInterface</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>An operation with <code>MyInterface</code> attached, would have the following interfaces added:</p><ul><li>MyBaseInterface, MyOtherBaseInterface, MyInterface</li></ul><p>The methods from <code>MyBaseInterface</code> in both <code>MyInterface</code> and <code>MyOtherBaseInterface</code> would
+forward to a single unique implementation for the operation.</p><h5 id=generation>Generation&nbsp;<a class=headline-hash href=#generation>¶</a></h5><p>Once the interfaces have been defined, the C++ header and source files can be
+generated using the <code>--gen-&lt;attr|op|type>-interface-decls</code> and
+<code>--gen-&lt;attr|op|type>-interface-defs</code> options with mlir-tblgen. Note that when
+generating interfaces, mlir-tblgen will only generate interfaces defined in
+the top-level input <code>.td</code> file. This means that any interfaces that are
+defined within include files will not be considered for generation.</p><p>Note: Existing operation interfaces defined in C++ can be accessed in the ODS
+framework via the <code>OpInterfaceTrait</code> class.</p><h4 id=operation-interface-list>Operation Interface List&nbsp;<a class=headline-hash href=#operation-interface-list>¶</a></h4><p>MLIR includes standard interfaces providing functionality that is likely to be
+common across many different operations. Below is a list of some key interfaces
+that may be used directly by any dialect. The format of the header for each
+interface section goes as follows:</p><ul><li><code>Interface class name</code><ul><li>(<code>C++ class</code> &ndash; <code>ODS class</code>(if applicable))</li></ul></li></ul><h5 id=callinterfaces>CallInterfaces&nbsp;<a class=headline-hash href=#callinterfaces>¶</a></h5><ul><li><code>CallOpInterface</code> - Used to represent operations like &lsquo;call&rsquo;<ul><li><code>CallInterfaceCallable getCallableForCallee()</code></li><li><code>void setCalleeFromCallable(CallInterfaceCallable)</code></li></ul></li><li><code>CallableOpInterface</code> - Used to represent the target callee of call.<ul><li><code>Region * getCallableRegion()</code></li><li><code>ArrayRef&lt;Type> getArgumentTypes()</code></li><li><code>ArrayRef&lt;Type> getResultsTypes()</code></li><li><code>ArrayAttr getArgAttrsAttr()</code></li><li><code>ArrayAttr getResAttrsAttr()</code></li><li><code>void setArgAttrsAttr(ArrayAttr)</code></li><li><code>void setResAttrsAttr(ArrayAttr)</code></li><li><code>Attribute removeArgAttrsAttr()</code></li><li><code>Attribute removeResAttrsAttr()</code></li></ul></li></ul><h5 id=regionkindinterfaces>RegionKindInterfaces&nbsp;<a class=headline-hash href=#regionkindinterfaces>¶</a></h5><ul><li><code>RegionKindInterface</code> - Used to describe the abstract semantics of regions.<ul><li><code>RegionKind getRegionKind(unsigned index)</code> - Return the kind of the
+region with the given index inside this operation.<ul><li>RegionKind::Graph - represents a graph region without control flow
+semantics</li><li>RegionKind::SSACFG - represents an
+<a href=/docs/LangRef/#control-flow-and-ssacfg-regions>SSA-style control flow</a> region
+with basic blocks and reachability</li></ul></li><li><code>hasSSADominance(unsigned index)</code> - Return true if the region with the
+given index inside this operation requires dominance.</li></ul></li></ul><h5 id=symbolinterfaces>SymbolInterfaces&nbsp;<a class=headline-hash href=#symbolinterfaces>¶</a></h5><ul><li><p><code>SymbolOpInterface</code> - Used to represent
+<a href=/docs/SymbolsAndSymbolTables/#symbol><code>Symbol</code></a> operations which reside
+immediately within a region that defines a
+<a href=/docs/SymbolsAndSymbolTables/#symbol-table><code>SymbolTable</code></a>.</p></li><li><p><code>SymbolUserOpInterface</code> - Used to represent operations that reference
+<a href=/docs/SymbolsAndSymbolTables/#symbol><code>Symbol</code></a> operations. This provides the
+ability to perform safe and efficient verification of symbol uses, as well
+as additional functionality.</p></li></ul><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Dialects/Transform/ title="Transform Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Transform Dialect</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/TargetLLVMIR/ title="LLVM IR Target">Next - LLVM IR Target <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li class=active><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

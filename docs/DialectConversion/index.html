@@ -1,0 +1,354 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Dialect Conversion - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/DialectConversion/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Dialect Conversion</h1><p>This document describes a framework in MLIR in which to perform operation
+conversions between, and within dialects. This framework allows for transforming
+illegal operations to those supported by a provided conversion target, via a set
+of pattern-based operation rewriting patterns.</p><p>The dialect conversion framework consists of the following components:</p><ul><li>A
+<a href=#conversion-target>Conversion Target</a></li><li>A set of
+<a href=#rewrite-pattern-specification>Rewrite Patterns</a></li><li>A
+<a href=#type-conversion>Type Converter</a> (Optional)</li></ul><p><nav id=TableOfContents><ul><li><a href=#modes-of-conversion>Modes of Conversion</a></li><li><a href=#conversion-target>Conversion Target</a><ul><li><a href=#recursive-legality>Recursive Legality</a></li></ul></li><li><a href=#rewrite-pattern-specification>Rewrite Pattern Specification</a><ul><li><a href=#conversion-patterns>Conversion Patterns</a></li></ul></li><li><a href=#type-conversion>Type Conversion</a><ul><li><a href=#type-converter>Type Converter</a></li><li><a href=#region-signature-conversion>Region Signature Conversion</a></li></ul></li><li><a href=#debugging>Debugging</a></li></ul></nav><h2 id=modes-of-conversion>Modes of Conversion&nbsp;<a class=headline-hash href=#modes-of-conversion>¶</a></h2><p>When applying a conversion to a set of operations, there are several different
+conversion modes that may be selected from:</p><ul><li><p>Partial Conversion</p><ul><li>A partial conversion will legalize as many operations to the target as
+possible, but will allow pre-existing operations that were not
+explicitly marked as &ldquo;illegal&rdquo; to remain unconverted. This allows for
+partially lowering parts of the input in the presence of unknown
+operations.</li><li>A partial conversion can be applied via <code>applyPartialConversion</code>.</li></ul></li><li><p>Full Conversion</p><ul><li>A full conversion legalizes all input operations, and is only successful
+if all operations are properly legalized to the given conversion target.
+This ensures that only known operations will exist after the conversion
+process.</li><li>A full conversion can be applied via <code>applyFullConversion</code>.</li></ul></li><li><p>Analysis Conversion</p><ul><li>An analysis conversion will analyze which operations are legalizable to
+the given conversion target if a conversion were to be applied. This is
+done by performing a &lsquo;partial&rsquo; conversion and recording which operations
+would have been successfully converted if successful. Note that no
+rewrites, or transformations, are actually applied to the input
+operations.</li><li>An analysis conversion can be applied via <code>applyAnalysisConversion</code>.</li></ul></li></ul><p>In all cases, the framework walks the operations in preorder, examining an op
+before the ops in any regions it has.</p><h2 id=conversion-target>Conversion Target&nbsp;<a class=headline-hash href=#conversion-target>¶</a></h2><p>The conversion target is a formal definition of what is considered to be legal
+during the conversion process. The final operations generated by the conversion
+framework must be marked as legal on the <code>ConversionTarget</code> for the rewrite to
+be a success. Depending on the conversion mode, existing operations need not
+always be legal. Operations and dialects may be marked with any of the provided
+legality actions below:</p><ul><li><p>Legal</p><ul><li>This action signals that every instance of a given operation is legal,
+i.e. any combination of attributes, operands, types, etc. are valid.</li></ul></li><li><p>Dynamic</p><ul><li>This action signals that only some instances of a given operation are
+legal. This allows for defining fine-tune constraints, e.g. saying that
+<code>arith.addi</code> is only legal when operating on 32-bit integers.</li></ul></li><li><p>Illegal</p><ul><li>This action signals that no instance of a given operation is legal.
+Operations marked as &ldquo;illegal&rdquo; must always be converted for the
+conversion to be successful. This action also allows for selectively
+marking specific operations as illegal in an otherwise legal dialect.</li></ul></li></ul><p>Operations and dialects that are neither explicitly marked legal nor illegal are
+separate from the above (&ldquo;unknown&rdquo; operations) and are treated differently, for
+example, for the purposes of partial conversion as mentioned above.</p><p>An example conversion target is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyTarget</span> <span class=o>:</span> <span class=k>public</span> <span class=n>ConversionTarget</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyTarget</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>&amp;</span><span class=n>ctx</span><span class=p>)</span> <span class=o>:</span> <span class=n>ConversionTarget</span><span class=p>(</span><span class=n>ctx</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//--------------------------------------------------------------------------
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Marking an operation as Legal:
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Mark all operations within the LLVM dialect are legal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addLegalDialect</span><span class=o>&lt;</span><span class=n>LLVMDialect</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Mark `arith.constant` op is always legal on this target.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addLegalOp</span><span class=o>&lt;</span><span class=n>arith</span><span class=o>::</span><span class=n>ConstantOp</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//--------------------------------------------------------------------------
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Marking an operation as dynamically legal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Mark all operations within Affine dialect have dynamic legality
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// constraints.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addDynamicallyLegalDialect</span><span class=o>&lt;</span><span class=n>affine</span><span class=o>::</span><span class=n>AffineDialect</span><span class=o>&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=p>[](</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Mark `func.return` as dynamically legal, but provide a specific legality
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// callback.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addDynamicallyLegalOp</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>ReturnOp</span><span class=o>&gt;</span><span class=p>([](</span><span class=n>func</span><span class=o>::</span><span class=n>ReturnOp</span> <span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Treat unknown operations, i.e. those without a legalization action
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// directly set, as dynamically legal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>markUnknownOpDynamicallyLegal</span><span class=p>([](</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//--------------------------------------------------------------------------
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Marking an operation as illegal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// All operations within the GPU dialect are illegal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addIllegalDialect</span><span class=o>&lt;</span><span class=n>GPUDialect</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Mark `cf.br` and `cf.cond_br` as illegal.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>addIllegalOp</span><span class=o>&lt;</span><span class=n>cf</span><span class=o>::</span><span class=n>BranchOp</span><span class=p>,</span> <span class=n>cf</span><span class=o>::</span><span class=n>CondBranchOp</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Implement the default legalization handler to handle operations marked as
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// dynamically legal that were not provided with an explicit handler.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>bool</span> <span class=nf>isDynamicallyLegal</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=k>override</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h3 id=recursive-legality>Recursive Legality&nbsp;<a class=headline-hash href=#recursive-legality>¶</a></h3><p>In some cases, it may be desirable to mark entire regions as legal. This
+provides an additional granularity of context to the concept of &ldquo;legal&rdquo;. If an
+operation is marked recursively legal, either statically or dynamically, then
+all of the operations nested within are also considered legal even if they would
+otherwise be considered &ldquo;illegal&rdquo;. An operation can be marked via
+<code>markOpRecursivelyLegal&lt;></code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>ConversionTarget</span> <span class=o>&amp;</span><span class=n>target</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// The operation must first be marked as `Legal` or `Dynamic`.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>target</span><span class=p>.</span><span class=n>addLegalOp</span><span class=o>&lt;</span><span class=n>MyOp</span><span class=o>&gt;</span><span class=p>(...);</span>
+</span></span><span class=line><span class=cl><span class=n>target</span><span class=p>.</span><span class=n>addDynamicallyLegalOp</span><span class=o>&lt;</span><span class=n>MySecondOp</span><span class=o>&gt;</span><span class=p>(...);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Mark the operation as always recursively legal.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>target</span><span class=p>.</span><span class=n>markOpRecursivelyLegal</span><span class=o>&lt;</span><span class=n>MyOp</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=c1>/// Mark optionally with a callback to allow selective marking.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>target</span><span class=p>.</span><span class=n>markOpRecursivelyLegal</span><span class=o>&lt;</span><span class=n>MyOp</span><span class=p>,</span> <span class=n>MySecondOp</span><span class=o>&gt;</span><span class=p>([](</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=c1>/// Mark optionally with a callback to allow selective marking.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>target</span><span class=p>.</span><span class=n>markOpRecursivelyLegal</span><span class=o>&lt;</span><span class=n>MyOp</span><span class=o>&gt;</span><span class=p>([](</span><span class=n>MyOp</span> <span class=n>op</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>});</span>
+</span></span></code></pre></div><h2 id=rewrite-pattern-specification>Rewrite Pattern Specification&nbsp;<a class=headline-hash href=#rewrite-pattern-specification>¶</a></h2><p>After the conversion target has been defined, a set of legalization patterns
+must be provided to transform illegal operations into legal ones. The patterns
+supplied here have the same structure and restrictions as those described in the
+main
+<a href=/docs/PatternRewriter/>Pattern</a> documentation. The patterns provided do not
+need to generate operations that are directly legal on the target. The framework
+will automatically build a graph of conversions to convert non-legal operations
+into a set of legal ones.</p><p>As an example, say you define a target that supports one operation: <code>foo.add</code>.
+When providing the following patterns: [<code>bar.add</code> -> <code>baz.add</code>, <code>baz.add</code> ->
+<code>foo.add</code>], the framework will automatically detect that it can legalize
+<code>bar.add</code> -> <code>foo.add</code> even though a direct conversion does not exist. This
+means that you don’t have to define a direct legalization pattern for <code>bar.add</code>
+-> <code>foo.add</code>.</p><h3 id=conversion-patterns>Conversion Patterns&nbsp;<a class=headline-hash href=#conversion-patterns>¶</a></h3><p>Along with the general <code>RewritePattern</code> classes, the conversion framework
+provides a special type of rewrite pattern that can be used when a pattern
+relies on interacting with constructs specific to the conversion process, the
+<code>ConversionPattern</code>. For example, the conversion process does not necessarily
+update operations in-place and instead creates a mapping of events such as
+replacements and erasures, and only applies them when the entire conversion
+process is successful. Certain classes of patterns rely on using the
+updated/remapped operands of an operation, such as when the types of results
+defined by an operation have changed. The general Rewrite Patterns can no longer
+be used in these situations, as the types of the operands of the operation being
+matched will not correspond with those expected by the user. This pattern
+provides, as an additional argument to the <code>matchAndRewrite</code> and <code>rewrite</code>
+methods, the list of operands that the operation should use after conversion. If
+an operand was the result of a non-converted operation, for example if it was
+already legal, the original operand is used. This means that the operands
+provided always have a 1-1 non-null correspondence with the operands on the
+operation. The original operands of the operation are still intact and may be
+inspected as normal. These patterns also utilize a special <code>PatternRewriter</code>,
+<code>ConversionPatternRewriter</code>, that provides special hooks for use with the
+conversion infrastructure.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyConversionPattern</span> <span class=o>:</span> <span class=k>public</span> <span class=n>ConversionPattern</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The `matchAndRewrite` hooks on ConversionPatterns take an additional
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// `operands` parameter, containing the remapped operands of the original
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>virtual</span> <span class=n>LogicalResult</span>
+</span></span><span class=line><span class=cl>  <span class=nf>matchAndRewrite</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span> <span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Value</span><span class=o>&gt;</span> <span class=n>operands</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>ConversionPatternRewriter</span> <span class=o>&amp;</span><span class=n>rewriter</span><span class=p>)</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h4 id=type-safety>Type Safety&nbsp;<a class=headline-hash href=#type-safety>¶</a></h4><p>The types of the remapped operands provided to a conversion pattern must be of a
+type expected by the pattern. The expected types of a pattern are determined by
+a provided
+<a href=#type-converter>TypeConverter</a>. If no type converter is provided,
+the types of the remapped operands are expected to match the types of the
+original operands. If a type converter is provided, the types of the remapped
+operands are expected to be legal as determined by the converter. If the
+remapped operand types are not of an expected type, and a materialization to the
+expected type could not be performed, the pattern fails application before the
+<code>matchAndRewrite</code> hook is invoked. This ensures that patterns do not have to
+explicitly ensure type safety, or sanitize the types of the incoming remapped
+operands. More information on type conversion is detailed in the
+<a href=#type-conversion>dedicated section</a> below.</p><h2 id=type-conversion>Type Conversion&nbsp;<a class=headline-hash href=#type-conversion>¶</a></h2><p>It is sometimes necessary as part of a conversion to convert the set types of
+being operated on. In these cases, a <code>TypeConverter</code> object may be defined that
+details how types should be converted when interfacing with a pattern. A
+<code>TypeConverter</code> may be used to convert the signatures of block arguments and
+regions, to define the expected inputs types of the pattern, and to reconcile
+type differences in general.</p><h3 id=type-converter>Type Converter&nbsp;<a class=headline-hash href=#type-converter>¶</a></h3><p>The <code>TypeConverter</code> contains several hooks for detailing how to convert types,
+and how to materialize conversions between types in various situations. The two
+main aspects of the <code>TypeConverter</code> are conversion and materialization.</p><p>A <code>conversion</code> describes how a given illegal source <code>Type</code> should be converted
+to N target types. If the source type is already &ldquo;legal&rdquo;, it should convert to
+itself. Type conversions are specified via the <code>addConversion</code> method described
+below.</p><p>A <code>materialization</code> describes how a set of values should be converted to a
+single value of a desired type. An important distinction with a <code>conversion</code> is
+that a <code>materialization</code> can produce IR, whereas a <code>conversion</code> cannot. These
+materializations are used by the conversion framework to ensure type safety
+during the conversion process. There are several types of materializations
+depending on the situation.</p><ul><li><p>Argument Materialization</p><ul><li>An argument materialization is used when converting the type of a block
+argument during a
+<a href=#region-signature-conversion>signature conversion</a>.
+The new block argument types are specified in a <code>SignatureConversion</code>
+object. An original block argument can be converted into multiple
+block arguments, which is not supported everywhere in the dialect
+conversion. (E.g., adaptors support only a single replacement value for
+each original value.) Therefore, an argument materialization is used to
+convert potentially multiple new block arguments back into a single SSA
+value.</li></ul></li><li><p>Source Materialization</p><ul><li>A source materialization converts from a value with a &ldquo;legal&rdquo; target
+type, back to a specific source type. This is used when an operation is
+&ldquo;legal&rdquo; during the conversion process, but contains a use of an illegal
+type. This may happen during a conversion where some operations are
+converted to those with different resultant types, but still retain
+users of the original type system.</li><li>This materialization is used in the following situations:<ul><li>When a block argument has been converted to a different type, but
+the original argument still has users that will remain live after
+the conversion process has finished.</li><li>When a block argument has been dropped, but the argument still has
+users that will remain live after the conversion process has
+finished.</li><li>When the result type of an operation has been converted to a
+different type, but the original result still has users that will
+remain live after the conversion process is finished.</li></ul></li></ul></li><li><p>Target Materialization</p><ul><li>A target materialization converts from a value with an &ldquo;illegal&rdquo; source
+type, to a value of a &ldquo;legal&rdquo; type. This is used when a pattern expects
+the remapped operands to be of a certain set of types, but the original
+input operands have not been converted. This may happen during a
+conversion where some operations are converted to those with different
+resultant types, but still retain uses of the original type system.</li><li>This materialization is used in the following situations:<ul><li>When the remapped operands of a
+<a href=#conversion-patterns>conversion pattern</a> are not legal for the
+type conversion provided by the pattern.</li></ul></li></ul></li></ul><p>If a converted value is used by an operation that isn&rsquo;t converted, it needs a
+conversion back to the <code>source</code> type, hence source materialization; if an
+unconverted value is used by an operation that is being converted, it needs
+conversion to the <code>target</code> type, hence target materialization.</p><p>As noted above, the conversion process guarantees that the type contract of the
+IR is preserved during the conversion. This means that the types of value uses
+will not implicitly change during the conversion process. When the type of a
+value definition, either block argument or operation result, is being changed,
+the users of that definition must also be updated during the conversion process.
+If they aren&rsquo;t, a type conversion must be materialized to ensure that a value of
+the expected type is still present within the IR. If a target materialization is
+required, but cannot be performed, the pattern application fails. If a source
+materialization is required, but cannot be performed, the entire conversion
+process fails.</p><p>Several of the available hooks are detailed below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>TypeConverter</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> <span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Register a conversion function. A conversion function defines how a given
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// source type should be converted. A conversion function must be convertible
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// to any of the following forms(where `T` is a class derived from `Type`:
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///   * Optional&lt;Type&gt;(T)
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///     - This form represents a 1-1 type conversion. It should return nullptr
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       or `std::nullopt` to signify failure. If `std::nullopt` is returned, the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       converter is allowed to try another conversion function to perform
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       the conversion.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///   * Optional&lt;LogicalResult&gt;(T, SmallVectorImpl&lt;Type&gt; &amp;)
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///     - This form represents a 1-N type conversion. It should return
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       `failure` or `std::nullopt` to signify a failed conversion. If the new
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       set of types is empty, the type is removed and any usages of the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       existing value are expected to be removed during conversion. If
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       `std::nullopt` is returned, the converter is allowed to try another
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       conversion function to perform the conversion.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///   * Optional&lt;LogicalResult&gt;(T, SmallVectorImpl&lt;Type&gt; &amp;, ArrayRef&lt;Type&gt;)
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///     - This form represents a 1-N type conversion supporting recursive
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       types. The first two arguments and the return value are the same as
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       for the regular 1-N form. The third argument is contains is the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       &#34;call stack&#34; of the recursive conversion: it contains the list of
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       types currently being converted, with the current type being the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       last one. If it is present more than once in the list, the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       conversion concerns a recursive type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// Note: When attempting to convert a type, e.g. via &#39;convertType&#39;, the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///       mostly recently added conversions will be invoked first.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>FnT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>typename</span> <span class=n>T</span> <span class=o>=</span> <span class=k>typename</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_traits</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;::</span><span class=k>template</span> <span class=n>arg_t</span><span class=o>&lt;</span><span class=mi>0</span><span class=o>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=n>addConversion</span><span class=p>(</span><span class=n>FnT</span> <span class=o>&amp;&amp;</span><span class=n>callback</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>registerConversion</span><span class=p>(</span><span class=n>wrapCallback</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>forward</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;</span><span class=p>(</span><span class=n>callback</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// All of the following materializations require function objects that are
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// convertible to the following form:
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>///   `std::optional&lt;Value&gt;(OpBuilder &amp;, T, ValueRange, Location)`,
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// where `T` is any subclass of `Type`. This function is responsible for
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// creating an operation, using the OpBuilder and Location provided, that
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// &#34;casts&#34; a range of values into a single value of the given type `T`. It
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// must return a Value of the converted type on success, an `std::nullopt` if
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// it failed but other materialization can be attempted, and `nullptr` on
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// unrecoverable failure. It will only be called for (sub)types of `T`.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// Materialization functions must be provided when a type conversion may
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// persist after the conversion has finished.
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This method registers a materialization that will be called when
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// converting (potentially multiple) block arguments that were the result of
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// a signature conversion of a single block argument, to a single SSA value
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// with the old argument type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>FnT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>typename</span> <span class=n>T</span> <span class=o>=</span> <span class=k>typename</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_traits</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;::</span><span class=k>template</span> <span class=n>arg_t</span><span class=o>&lt;</span><span class=mi>1</span><span class=o>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=n>addArgumentMaterialization</span><span class=p>(</span><span class=n>FnT</span> <span class=o>&amp;&amp;</span><span class=n>callback</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>argumentMaterializations</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>wrapMaterialization</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>forward</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;</span><span class=p>(</span><span class=n>callback</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This method registers a materialization that will be called when
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// converting a legal replacement value back to an illegal source type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// This is used when some uses of the original, illegal value must persist
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// beyond the main conversion.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>FnT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>typename</span> <span class=n>T</span> <span class=o>=</span> <span class=k>typename</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_traits</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;::</span><span class=k>template</span> <span class=n>arg_t</span><span class=o>&lt;</span><span class=mi>1</span><span class=o>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=n>addSourceMaterialization</span><span class=p>(</span><span class=n>FnT</span> <span class=o>&amp;&amp;</span><span class=n>callback</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>sourceMaterializations</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>wrapMaterialization</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>forward</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;</span><span class=p>(</span><span class=n>callback</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This method registers a materialization that will be called when
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// converting an illegal (source) value to a legal (target) type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>FnT</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>typename</span> <span class=n>T</span> <span class=o>=</span> <span class=k>typename</span> <span class=n>llvm</span><span class=o>::</span><span class=n>function_traits</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;::</span><span class=k>template</span> <span class=n>arg_t</span><span class=o>&lt;</span><span class=mi>1</span><span class=o>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=n>addTargetMaterialization</span><span class=p>(</span><span class=n>FnT</span> <span class=o>&amp;&amp;</span><span class=n>callback</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>targetMaterializations</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>wrapMaterialization</span><span class=o>&lt;</span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>forward</span><span class=o>&lt;</span><span class=n>FnT</span><span class=o>&gt;</span><span class=p>(</span><span class=n>callback</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>Materializations through the type converter are optional. If the
+<code>ConversionConfig::buildMaterializations</code> flag is set to &ldquo;false&rdquo;, the dialect
+conversion driver builds an <code>unrealized_conversion_cast</code> op instead of calling
+the respective type converter callback whenever a materialization is required.</p><h3 id=region-signature-conversion>Region Signature Conversion&nbsp;<a class=headline-hash href=#region-signature-conversion>¶</a></h3><p>From the perspective of type conversion, the types of block arguments are a bit
+special. Throughout the conversion process, blocks may move between regions of
+different operations. Given this, the conversion of the types for blocks must be
+done explicitly via a conversion pattern.</p><p>To convert the types of block arguments within a Region, a custom hook on the
+<code>ConversionPatternRewriter</code> must be invoked; <code>convertRegionTypes</code>. This hook
+uses a provided type converter to apply type conversions to all blocks of a
+given region. As noted above, the conversions performed by this method use the
+argument materialization hook on the <code>TypeConverter</code>. This hook also takes an
+optional <code>TypeConverter::SignatureConversion</code> parameter that applies a custom
+conversion to the entry block of the region. The types of the entry block
+arguments are often tied semantically to the operation, e.g.,
+<code>func::FuncOp</code>, <code>AffineForOp</code>, etc.</p><p>To convert the signature of just one given block, the
+<code>applySignatureConversion</code> hook can be used.</p><p>A signature conversion, <code>TypeConverter::SignatureConversion</code>, can be built
+programmatically:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>SignatureConversion</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Remap an input of the original signature with a new set of types. The
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// new types are appended to the new signature conversion.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>void</span> <span class=n>addInputs</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>origInputNo</span><span class=p>,</span> <span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Type</span><span class=o>&gt;</span> <span class=n>types</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Append new input types to the signature conversion, this should only be
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// used if the new types are not intended to remap an existing input.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>void</span> <span class=nf>addInputs</span><span class=p>(</span><span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Type</span><span class=o>&gt;</span> <span class=n>types</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Remap an input of the original signature with a range of types in the
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// new signature.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>void</span> <span class=nf>remapInput</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>origInputNo</span><span class=p>,</span> <span class=kt>unsigned</span> <span class=n>newInputNo</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=kt>unsigned</span> <span class=n>newInputCount</span> <span class=o>=</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Remap an input of the original signature to another `replacement`
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>/// value. This drops the original argument.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>void</span> <span class=nf>remapInput</span><span class=p>(</span><span class=kt>unsigned</span> <span class=n>origInputNo</span><span class=p>,</span> <span class=n>Value</span> <span class=n>replacement</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>The <code>TypeConverter</code> provides several default utilities for signature conversion
+and legality checking:
+<code>convertSignatureArgs</code>/<code>convertBlockSignature</code>/<code>isLegal(Region *|Type)</code>.</p><h2 id=debugging>Debugging&nbsp;<a class=headline-hash href=#debugging>¶</a></h2><p>To debug the execution of the dialect conversion framework,
+<code>-debug-only=dialect-conversion</code> may be used. This command line flag activates
+LLVM&rsquo;s debug logging infrastructure solely for the conversion framework. The
+output is formatted as a tree structure, mirroring the structure of the
+conversion process. This output contains all of the actions performed by the
+rewriter, how generated operations get legalized, and why they fail.</p><p>Example output is shown below:</p><pre tabindex=0><code>//===-------------------------------------------===//
+Legalizing operation : &#39;func.return&#39;(0x608000002e20) {
+  &#34;func.return&#34;() : () -&gt; ()
+
+  * Fold {
+  } -&gt; FAILURE : unable to fold
+
+  * Pattern : &#39;func.return -&gt; ()&#39; {
+    ** Insert  : &#39;spirv.Return&#39;(0x6070000453e0)
+    ** Replace : &#39;func.return&#39;(0x608000002e20)
+
+    //===-------------------------------------------===//
+    Legalizing operation : &#39;spirv.Return&#39;(0x6070000453e0) {
+      &#34;spirv.Return&#34;() : () -&gt; ()
+
+    } -&gt; SUCCESS : operation marked legal by the target
+    //===-------------------------------------------===//
+  } -&gt; SUCCESS : pattern applied successfully
+} -&gt; SUCCESS
+//===-------------------------------------------===//
+</code></pre><p>This output is describing the legalization of an <code>func.return</code> operation. We
+first try to legalize by folding the operation, but that is unsuccessful for
+<code>func.return</code>. From there, a pattern is applied that replaces the <code>func.return</code>
+with a <code>spirv.Return</code>. The newly generated <code>spirv.Return</code> is then processed for
+legalization, but is found to already legal as per the target.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Diagnostics/ title="Diagnostic Infrastructure"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Diagnostic Infrastructure</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Dialects/ title=Dialects>Next - Dialects <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li class=active><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

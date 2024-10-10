@@ -1,0 +1,196 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Generic DAG Rewriter Infrastructure Rationale - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Generic DAG Rewriter Infrastructure Rationale</h1><p>This document details the rationale behind a general DAG-to-DAG rewrite
+infrastructure for MLIR. For up-to-date documentation on the user facing API,
+please look at the main
+<a href=/docs/PatternRewriter/>Pattern Rewriting document</a>.</p><h2 id=introduction-and-motivation>Introduction and Motivation&nbsp;<a class=headline-hash href=#introduction-and-motivation>¶</a></h2><p>The goal of a compiler IR is to represent code - at various levels of
+abstraction which pose different sets of tradeoffs in terms of representational
+capabilities and ease of transformation. However, the ability to represent code
+is not itself very useful - you also need to be able to implement those
+transformations.</p><p>There are many different types of compiler transformations, but this document
+focuses on a particularly important class of transformation that comes up
+repeatedly at scale, and is important for the goals of MLIR: matching one DAG of
+operations, and replacing with another. This is an integral part of many
+compilers and necessary for peephole optimizations like &ldquo;eliminate identity
+nodes&rdquo; or &ldquo;replace x+0 with x&rdquo;, a generalized canonicalization framework (e.g.
+Instruction Combiner in LLVM), as well as a useful abstraction to implement
+optimization algorithms for optimization algorithms for IR at multiple levels.</p><p>A particular strength of MLIR (and a major difference vs other compiler
+infrastructures like LLVM, GCC, XLA, TensorFlow, etc) is that it uses a single
+compiler IR to represent code at multiple levels of abstraction: an MLIR
+operation can be a &ldquo;TensorFlow operation&rdquo;, an &ldquo;XLA HLO&rdquo;, an Affine Loop Nest, an
+LLVM IR instruction (transitively including X86, Lanai, PTX, and other target
+specific instructions), or anything else that the MLIR operation system can
+reasonably express. Given that MLIR spans such a wide range of different problem
+scopes, a single infrastructure for performing graph-to-graph rewrites can help
+solve many diverse domain challenges.</p><p><a href=https://en.wikipedia.org/wiki/Static_single_assignment_form>Static single assignment</a>
+(SSA) representations like MLIR make it easy to access the operands and &ldquo;users&rdquo;
+of an operation. As such, a natural abstraction for these graph-to-graph
+rewrites is that of DAG pattern matching: clients define DAG tile patterns
+(where a tile is a sequence of operations defining a subgraph of the DAG), and
+each pattern includes a result DAG to produce and the cost of the result (or,
+inversely, the benefit of doing the replacement). A common infrastructure
+efficiently finds and performs the rewrites.</p><p>While this concept is simple, the details are more nuanced. This document
+defines and explores a set of abstractions that can solve a wide range of
+different problems, and be applied to many different sorts of problems that MLIR
+is - and is expected to - face over time. We do this by separating the pattern
+application algorithm from the &ldquo;driver&rdquo; of the computation loop, and make space
+for the patterns to be defined declaratively.</p><h3 id=constant-folding>Constant folding&nbsp;<a class=headline-hash href=#constant-folding>¶</a></h3><p>A degenerate but pervasive case of DAG-to-DAG pattern matching is constant
+folding: an operation whose operands contain constants can often be folded to a
+result constant value.</p><p>MLIR operations may override a
+<a href=/docs/Canonicalization/#canonicalizing-with-the-fold-method><code>fold</code></a> routine, which
+exposes a simpler API compared to a general DAG-to-DAG pattern matcher, and
+allows for it to be applicable in cases that a generic matcher would not. For
+example, a DAG-rewrite can remove arbitrary nodes in the current function, which
+could invalidate iterators. Constant folding as an API does not remove any
+nodes, it just provides a (list of) constant values and allows the clients to
+update their data structures as necessary.</p><h2 id=related-work>Related Work&nbsp;<a class=headline-hash href=#related-work>¶</a></h2><p>There is a huge amount of related work to consider, given that nearly every
+compiler in existence has to solve this problem many times over. One unifying
+problem is that all of these systems are designed to solve one particular, and
+usually, narrow problem: MLIR on the other hand would like to solve many of
+these problems within a single infrastructure. Here are a few related graph
+rewrite systems, along with the pros and cons of their work (The most similar
+design to the infrastructure present in MLIR is the LLVM DAG-to-DAG instruction
+selection algorithm).</p><h3 id=ast-level-pattern-matchers>AST-Level Pattern Matchers&nbsp;<a class=headline-hash href=#ast-level-pattern-matchers>¶</a></h3><p>The literature is full of source-to-source translators which transform
+identities in order to improve performance (e.g. transforming <code>X*0</code> into <code>0</code>).
+One large example is the GCC <code>fold</code> function, which performs
+<a href=https://github.com/gcc-mirror/gcc/blob/master/gcc/fold-const.c>many optimizations</a>
+on ASTs. Clang has
+<a href=https://clang.llvm.org/docs/InternalsManual.html#constant-folding-in-the-clang-ast>similar routines</a>
+for simple constant folding of expressions (as required by the C++ standard) but
+doesn&rsquo;t perform general optimizations on its ASTs.</p><p>The primary downside of AST optimizers is that you can&rsquo;t see across operations
+that have multiple uses. It is
+<a href=https://llvm.org/pubs/2008-06-LCTES-ISelUsingSSAGraphs.pdf>well known in literature</a>
+that DAG pattern matching is more powerful than tree pattern matching, but on
+the other hand, DAG pattern matching can lead to duplication of computation
+which needs to be checked for.</p><h3 id=combiners-and-other-peephole-optimizers>&ldquo;Combiners&rdquo; and other peephole optimizers&nbsp;<a class=headline-hash href=#combiners-and-other-peephole-optimizers>¶</a></h3><p>Compilers end up with a lot of peephole optimizers for various things, e.g. the
+GCC
+<a href=https://github.com/gcc-mirror/gcc/blob/master/gcc/combine.c>&ldquo;combine&rdquo; routines</a>
+(which try to merge two machine instructions into a single one), the LLVM
+<a href=https://github.com/llvm/llvm-project/tree/main/llvm/lib/Transforms/InstCombine>Inst Combine</a>
+<a href=https://llvm.org/docs/Passes.html#instcombine-combine-redundant-instructions>pass</a>,
+LLVM&rsquo;s
+<a href=https://github.com/llvm-mirror/llvm/blob/master/lib/CodeGen/SelectionDAG/DAGCombiner.cpp>DAG Combiner</a>,
+the Swift compiler&rsquo;s
+<a href=https://github.com/apple/swift/tree/main/lib/SILOptimizer/SILCombiner>SIL Combiner</a>,
+etc. These generally match one or more operations and produce zero or more
+operations as a result. The LLVM
+<a href=https://github.com/llvm/llvm-project/tree/main/llvm/lib/CodeGen/SelectionDAG>Legalization</a>
+infrastructure has a different outer loop but otherwise works the same way.</p><p>These passes have a lot of diversity, but also have a unifying structure: they
+mostly have a worklist outer loop which visits operations. They then use a
+visitor pattern (or equivalent) to switch over the class of operation and
+dispatch to a method. That method contains a long list of hand-written C++ code
+that pattern-matches various special cases. LLVM introduced a &ldquo;match&rdquo; function
+that allows writing patterns in a somewhat more declarative style using template
+metaprogramming (MLIR has similar facilities). Here&rsquo;s a simple example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl>  <span class=c1>// Y - (X + 1) --&gt; ~X + Y
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>match</span><span class=p>(</span><span class=n>Op1</span><span class=p>,</span> <span class=n>m_OneUse</span><span class=p>(</span><span class=n>m_Add</span><span class=p>(</span><span class=n>m_Value</span><span class=p>(</span><span class=n>X</span><span class=p>),</span> <span class=n>m_One</span><span class=p>()))))</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>BinaryOperator</span><span class=o>::</span><span class=n>CreateAdd</span><span class=p>(</span><span class=n>Builder</span><span class=p>.</span><span class=n>CreateNot</span><span class=p>(</span><span class=n>X</span><span class=p>),</span> <span class=n>Op0</span><span class=p>);</span>
+</span></span></code></pre></div><p>Here is a somewhat more complicated one (this is not the biggest or most
+complicated :)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl>  <span class=c1>// C2 is ODD
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// LHS = XOR(Y,C1), Y = AND(Z,C2), C1==(C2+1) =&gt; LHS == NEG(OR(Z, ~C2))
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// ADD(LHS, RHS) == SUB(RHS, OR(Z, ~C2))
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>match</span><span class=p>(</span><span class=n>LHS</span><span class=p>,</span> <span class=n>m_Xor</span><span class=p>(</span><span class=n>m_Value</span><span class=p>(</span><span class=n>Y</span><span class=p>),</span> <span class=n>m_APInt</span><span class=p>(</span><span class=n>C1</span><span class=p>))))</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>C1</span><span class=o>-&gt;</span><span class=n>countTrailingZeros</span><span class=p>()</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=p>(</span><span class=n>match</span><span class=p>(</span><span class=n>Y</span><span class=p>,</span> <span class=n>m_And</span><span class=p>(</span><span class=n>m_Value</span><span class=p>(</span><span class=n>Z</span><span class=p>),</span> <span class=n>m_APInt</span><span class=p>(</span><span class=n>C2</span><span class=p>)))</span> <span class=o>&amp;&amp;</span> <span class=o>*</span><span class=n>C1</span> <span class=o>==</span> <span class=p>(</span><span class=o>*</span><span class=n>C2</span> <span class=o>+</span> <span class=mi>1</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Value</span> <span class=n>NewOr</span> <span class=o>=</span> <span class=n>Builder</span><span class=p>.</span><span class=n>CreateOr</span><span class=p>(</span><span class=n>Z</span><span class=p>,</span> <span class=o>~</span><span class=p>(</span><span class=o>*</span><span class=n>C2</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>Builder</span><span class=p>.</span><span class=n>CreateSub</span><span class=p>(</span><span class=n>RHS</span><span class=p>,</span> <span class=n>NewOr</span><span class=p>,</span> <span class=s>&#34;sub&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span></code></pre></div><p>These systems are simple to set up, and pattern matching templates have some
+advantages (they are extensible for new sorts of sub-patterns, look compact at
+point of use). On the other hand, they have lots of well known problems, for
+example:</p><ul><li>These patterns are very error prone to write, and contain lots of
+redundancies.</li><li>The IR being matched often has identities (e.g. when matching commutative
+operators) and the C++ code has to handle it manually - take a look at
+<a href=https://github.com/llvm/llvm-project/blob/c0b5000bd848303320c03f80fbf84d71e74518c9/llvm/lib/Transforms/InstCombine/InstCombineAddSub.cpp#L767>the full code</a>
+for <code>checkForNegativeOperand</code> that defines the second pattern).</li><li>The matching code compiles slowly, both because it generates tons of code
+and because the templates instantiate slowly.</li><li>Adding new patterns (e.g. for count leading zeros in the example above) is
+awkward and doesn&rsquo;t often happen.</li><li>The cost model for these patterns is not really defined - it is emergent
+based on the order the patterns are matched in code.</li><li>They are non-extensible without rebuilding the compiler.</li><li>It isn&rsquo;t practical to apply theorem provers and other tools to these
+patterns - they cannot be reused for other purposes.</li></ul><p>In addition to structured &ldquo;combiners&rdquo; like these, there are lots of ad-hoc
+systems like the
+<a href="http://llvm.org/viewvc/llvm-project/llvm/trunk/lib/CodeGen/PeepholeOptimizer.cpp?view=markup">LLVM Machine code peephole optimizer</a>
+which are related.</p><h3 id=llvms-dag-to-dag-instruction-selection-infrastructure>LLVM&rsquo;s DAG-to-DAG Instruction Selection Infrastructure&nbsp;<a class=headline-hash href=#llvms-dag-to-dag-instruction-selection-infrastructure>¶</a></h3><p>The instruction selection subsystem in LLVM is the result of many years worth of
+iteration and discovery, driven by the need for LLVM to support code generation
+for lots of targets, the complexity of code generators for modern instruction
+sets (e.g. X86), and the fanatical pursuit of reusing code across targets. Eli
+Bendersky wrote a
+<a href=https://eli.thegreenplace.net/2013/02/25/a-deeper-look-into-the-llvm-code-generator-part-1>nice short overview</a>
+of how this works, and the
+<a href=https://llvm.org/docs/CodeGenerator.html#select-instructions-from-dag>LLVM documentation</a>
+describes it in more depth including its advantages and limitations. It allows
+writing patterns like this.</p><pre tabindex=0><code>def : Pat&lt;(or GR64:$src, (not (add GR64:$src, 1))),
+          (BLCI64rr GR64:$src)&gt;;
+</code></pre><p>This example defines a matcher for the
+<a href=https://en.wikipedia.org/wiki/Bit_Manipulation_Instruction_Sets#TBM_%5c%28Trailing_Bit_Manipulation%5c%29>&ldquo;blci&rdquo; instruction</a>
+in the
+<a href=https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/X86/X86InstrInfo.td>X86 target description</a>,
+there are many others in that file (look for <code>Pat&lt;></code> patterns, since they aren&rsquo;t
+entangled in details of the compiler like assembler/disassembler generation
+logic).</p><p>For the purposes of MLIR, there is much to like about this system, for example:</p><ul><li>It is defined in a declarative format.</li><li>It is extensible to target-defined operations.</li><li>It automates matching across identities, like commutative patterns.</li><li>It allows custom abstractions and intense factoring of target-specific
+commonalities.</li><li>It generates compact code - it compiles into a state machine, which is
+interpreted.</li><li>It allows the instruction patterns to be defined and reused for multiple
+purposes.</li><li>The patterns are &ldquo;type checked&rdquo; at compile time, detecting lots of bugs
+early and eliminating redundancy from the pattern specifications.</li><li>It allows the use of general C++ code for weird/complex cases.</li></ul><p>While there is a lot that is good here, there are also a few undesirable bits:</p><ul><li>The representation is specifically designed and only applicable for
+instruction selection, meaning that the directly adjacent problems like the
+DAGCombiner and Legalizer can&rsquo;t use it.</li><li>This isn&rsquo;t extensible at compiler runtime, you have to rebuild the compiler
+to extend it.</li><li>The error messages when failing to match a pattern
+<a href="https://www.google.com/search?q=llvm+cannot+select">are not exactly optimal</a>.</li><li>It has lots of implementation problems and limitations (e.g. can&rsquo;t write a
+pattern for a multi-result operation) as a result of working with the
+awkward SelectionDAG representation and being designed and implemented on
+demand.</li><li>Organic growth over time has left lots of sharp edges.</li></ul><h3 id=summary>Summary&nbsp;<a class=headline-hash href=#summary>¶</a></h3><p>MLIR faces a wide range of pattern matching and graph rewrite problems, and one
+of the major advantages of having a common representation for code at multiple
+levels is that it allows for investing in - and highly leveraging - a single
+infrastructure for doing this sort of work.</p><h2 id=goals>Goals&nbsp;<a class=headline-hash href=#goals>¶</a></h2><p>We&rsquo;d like the to encompass many problems in the MLIR space, including 1-to-N
+expansions (e.g. such as in type legalization during instruction selection when
+an add of one bit width may be split into multiple adds of a smaller bit width),
+M-to-1 patterns (e.g. when converting a multiply+add into a single muladd
+operation), as well as general M-to-N patterns (e.g. instruction selection for
+target instructions). Patterns have a benefit associated with them, and the
+common infrastructure should be responsible for sorting out the highest benefit
+match for a given application.</p><p>We separate the task of picking a particular optimal pattern from a given root
+node, the algorithm used to rewrite an entire graph given a particular set of
+goals, and the definition of the patterns themselves. We do this because DAG
+tile pattern matching is NP complete. Additionally, we would like to support
+iterative rewrite algorithms that progressively transform the input program
+through multiple steps. Furthermore, we would like to support many different
+sorts of clients across the MLIR stack, and they may have different tolerances
+for compile time cost, different demands for optimality, and other algorithmic
+goals or constraints.</p><p>We aim for MLIR transformations to be easy to implement and reduce the
+likelihood for compiler bugs. We expect there to be a very large number of
+patterns that are defined over time, and we believe that these sorts of patterns
+will have a very large number of legality/validity constraints - many of which
+are difficult to reason about in a consistent way, may be target specific, and
+whose implementation may be particularly bug-prone. As such, we aim to design
+the API around pattern definition to be simple, resilient to programmer errors,
+and allow separation of concerns between the legality of the nodes generated
+from the idea of the pattern being defined.</p><p>Finally, error handling is a topmost concern, we want pattern match failures to
+be diagnosable in a reasonable way. This is a difficult problem in general, as
+the space of malfunction is too great to be fully enumerated and handled
+optimally, but MLIR is already designed to represent the provenance of an
+operation well. The aim of the pattern rewriting infrastructure is simply to
+propagate that provenance information precisely, as well as diagnose pattern
+match failures with the rationale for why a set of patterns do not apply.</p><h3 id=non-goals>Non goals&nbsp;<a class=headline-hash href=#non-goals>¶</a></h3><p>The pattern infrastructure does not aim to solve all compiler problems, it is
+simply a DAG-to-DAG pattern matching system. Compiler algorithms that require
+global dataflow analysis (e.g. common subexpression elimination, conditional
+constant propagation, and many many others) will not be directly solved by this
+infrastructure.</p><p>This infrastructure is limited to DAG patterns, which (by definition) prevent
+the patterns from seeing across cycles in a graph. In an SSA-based IR like MLIR,
+this means that these patterns don&rsquo;t see across basic block arguments. We
+consider this acceptable given the set of problems we are trying to solve - we
+don&rsquo;t know of any other system that attempts to do so, and consider the payoff
+of worrying about this to be low.</p><p>This design includes the ability for DAG patterns to have associated benefits,
+but those benefits are defined in terms of magic numbers (typically equal to the
+number of nodes being replaced). For any given application, the units of magic
+numbers will have to be defined.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Rationale/ title=Rationale><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Rationale</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/ title="Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations">Next - Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark opened">-</span></a><ul class=sub-menu><li class=active><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

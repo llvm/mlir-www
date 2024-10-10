@@ -1,0 +1,434 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</h1><p><nav id=TableOfContents><ul><li><a href=#introductiona-nameintroductiona>Introduction<a name=introduction></a></a><ul><li><a href=#positioning>Positioning</a></li><li><a href=#inception>Inception</a></li><li><a href=#evolution>Evolution</a></li></ul></li><li><a href=#prior-art>Prior Art</a><ul><li><a href=#lessons-from-onnxa-namelessonsonnxa>Lessons from ONNX<a name=lessonsonnx></a></a></li><li><a href=#lessons-from-lifta-namelessonslifta>Lessons from LIFT<a name=lessonslift></a></a></li><li><a href=#lessons-from-xlaa-namelessonsxlaa>Lessons from XLA<a name=lessonsxla></a></a></li><li><a href=#lessons-from-halide-and-tvma-namelessonshalidea>Lessons from Halide and TVM<a name=lessonshalide></a></a></li><li><a href=#lessons-from-tensor-comprehensionsa-namelessonstca>Lessons from Tensor Comprehensions<a name=lessonstc></a></a></li><li><a href=#lessons-from-polyhedral-compilersa-namelessonspolyhedrala>Lessons from Polyhedral compilers<a name=lessonspolyhedral></a></a></li><li><a href=#lessons-from-the-affine-dialecta-namelessonsaffinea>Lessons from the Affine dialect<a name=lessonsaffine></a></a></li></ul></li><li><a href=#core-guiding-principlesa-nameguiding_principlesa>Core Guiding Principles<a name=guiding_principles></a></a><ul><li><a href=#transformations-and-simplicity-firsta-nametransformations_firsta>Transformations and Simplicity First<a name=transformations_first></a></a></li><li><a href=#preservation-of-informationa-nameinformation_preservationa>Preservation of Information<a name=information_preservation></a></a></li><li><a href=#composable-and-declarative-transformationsa-namedeclarative_transformationsa>Composable and Declarative Transformations<a name=declarative_transformations></a></a></li><li><a href=#suitability-for-search-and-machine-learninga-namemla>Suitability for Search and Machine Learning<a name=ml></a></a></li><li><a href=#extensibility-and-future-proofnessa-namefuturea>Extensibility and Future-Proofness<a name=future></a></a></li></ul></li><li><a href=#key-observationsa-namekeyobservationa>Key Observations<a name=keyobservation></a></a><ul><li><a href=#algorithms--data-structures--programsa-namedata_and_computea>Algorithms + Data Structures = Programs<a name=data_and_compute></a></a></li><li><a href=#the-dialect-need-not-be-closed-under-transformationsa-namedialect_not_closeda>The Dialect Need not be Closed Under Transformations<a name=dialect_not_closed></a></a></li><li><a href=#summary-of-existing-alternatives-a-picturea-nameobservationssummarya>Summary of Existing Alternatives a Picture<a name=observationssummary></a></a></li></ul></li></ul></nav><h2 id=introductiona-nameintroductiona>Introduction<a name=introduction></a>&nbsp;<a class=headline-hash href=#introductiona-nameintroductiona>¶</a></h2><h3 id=positioning>Positioning&nbsp;<a class=headline-hash href=#positioning>¶</a></h3><img width=180 align=left alt="MLIR Codegen Flow" src=https://user-images.githubusercontent.com/10148468/73613629-c5586580-45c5-11ea-94b7-074aeea94c7b.png><p>This document describes the key design principles
+that led to the existing implementation of Linalg and aims at exposing
+the tradeoffs involved when building higher-level Intermediate
+Representations (IR) and Dialects to facilitate code
+generation. Consider the simplified schema describing codegen in MLIR.
+Linalg is designed to solve the High-level Hierarchical Optimization
+(HHO box) and to interoperate nicely within a
+<em>Mixture Of Expert Compilers</em> environment (i.e. the <em>CGSel</em> box).
+This work is inspired by a wealth of
+<a href=#prior-art>prior art</a> in
+the field, from which it seeks to learn key lessons. This documentation
+and introspection effort also comes in the context of the proposal for a
+working group for discussing the
+<a href=https://llvm.discourse.group/t/development-of-high-level-tensor-compute-primitives-dialect-s-and-transformations/388/3>Development of high-level Tensor Compute
+Primitives dialect(s) and
+transformations</a>.
+We hope that the lessons from prior art, the design principles outlined in
+this doc and the architecture of Linalg can help inform the community on a
+path to defining these High-Level Tensor Compute Primitives.</p><h3 id=inception>Inception&nbsp;<a class=headline-hash href=#inception>¶</a></h3><p>Linalg started as a pragmatic dialect to bootstrap code generation in MLIR, by
+<em>defining away</em> complex code generation problems like precise dependence
+analysis or polyhedral code generation and by introducing the ability to call
+into fast library implementations when available. Linalg <strong>defines ops and
+transformations declaratively</strong> and was originally restricted to ops with
+<em>linear-algebra like</em> semantics (<code>pointwise</code>, <code>matmul</code>, <code>conv</code>&mldr;). This
+approach enables building a high-level productivity-first codegen solution that
+leverages <em>both</em> compiler optimizations <em>and</em> efficient library implementations
+so as not to miss out on simple performance benefits. For example, if
+one&rsquo;s favorite HPC library or ISA has a <code>matmul</code> primitive running at 95% of
+the achievable peak performance, for operands stored in some memory, one should
+be able to <strong>use the primitive</strong> when possible <em>and</em> generate code otherwise.</p><p>However, as the design of Linalg co-evolved with the design of MLIR, it became
+apparent that it could extend to larger application domains than just machine
+learning on dense tensors.</p><p>The design and evolution of Linalg follow a <em>codegen-friendly</em> approach where
+the IR and the transformations evolve hand-in-hand.
+The key idea is that op semantics <em>declare</em> and transport information that is
+traditionally obtained by compiler analyses.
+This information captures the legality and applicability of transformations and
+is <strong>not lost by lowering prematurely to loop or CFG form</strong>. The key
+transformations are designed so as to <strong>preserve this information</strong> as long as
+necessary. For example, <code>linalg.matmul</code> remains <code>linalg.matmul</code> after tiling
+and fusion.</p><p>Furthermore, Linalg decouples transformation validity from profitability
+considerations and voluntarily leaves the latter aside in the first iteration
+(see the
+<a href=#suitability_for_search>suitability for search</a> guiding principle).</p><p>The first incarnation of these ideas was presented as an example at the
+EuroLLVM 2019 developer&rsquo;s meeting as part of the
+<a href=https://llvm.org/devmtg/2019-04/slides/Tutorial-AminiVasilacheZinenko-MLIR.pdf>Linalg section</a>
+of the first
+<a href="https://www.youtube.com/watch?v=cyICUIZ56wQ">MLIR Tutorial</a>.</p><h3 id=evolution>Evolution&nbsp;<a class=headline-hash href=#evolution>¶</a></h3><p>Since the initial implementation, the design has evolved with, and partially
+driven the evolution of the core MLIR infrastructure to use
+<a href=/docs/LangRef/#regions>Regions</a>,
+<a href=/docs/Interfaces/>OpInterfaces</a>,
+<a href=/docs/DefiningDialects/Operations/>ODS</a> and
+<a href=/docs/DeclarativeRewrites/>Declarative Rewrite Rules</a>
+among others. The approach adopted by Linalg was extended to become
+<a href=https://drive.google.com/drive/u/0/folders/1sRAsgsd8Bvpm_IxREmZf2agsGU2KvrK->StructuredOps abstractions</a>,
+with Linalg becoming its incarnation on tensors and buffers.
+It is complemented by the
+<a href=/docs/Dialects/Vector/>Vector dialect</a>,
+which defines structured operations on vectors, following the same rationale and
+design principles as Linalg. (Vector dialect includes the higher-level
+operations on multi-dimensional vectors and abstracts away the lowering to
+single-dimensional vectors).</p><p>The Linalg dialect itself grew beyond linear algebra-like operations to become
+more expressive, in particular by providing an abstraction of a loop nest
+supporting parallelism, reductions and sliding windows around arbitrary MLIR
+<a href=/docs/LangRef/#regions>regions</a>. It also has the
+potential of growing beyond <em>dense</em> linear-algebra to support richer data
+types, such as sparse and ragged tensors and buffers.</p><p>Linalg design remains open to evolution and cross-pollination with other
+dialects and approaches. It has been successfully used as the staging ground
+for code generation-related abstractions, spinning off the generalization of
+the following:</p><ul><li>the <code>!linalg.view</code> type folded into the <em>&ldquo;Strided MemRef&rdquo;</em> type while
+preserving structure to allow calling into external C++ libraries with
+unsurprising ABI conventions;</li><li>the <code>linalg.view</code> and <code>linalg.subview</code> ops evolved into the standard dialect;</li><li>the <code>linalg.for</code>, <code>linalg.load</code> and <code>linalg.store</code> ops evolved into a prelude
+to the <em>structured control flow</em> dialect (named <code>LoopOps</code>).
+More components can be extracted, redesigned and generalized when new uses or
+requirements arise.</li></ul><p>Several
+<a href=/docs/Dialects/Linalg/#open_issues>design questions</a> remain
+open in Linalg, which does not claim to be a general solution to all compilation
+problems. It does aim at driving thinking and implementations of domain-specific
+abstractions where programmer&rsquo;s intent can be captured at a very high level,
+directly in the IR.</p><p>Given the evolution of the scope, it becomes apparent that a better name than
+&ldquo;Linalg&rdquo; could remove some of the confusions related to the dialect (and the
+underlying approach), its goals and limitations.</p><h2 id=prior-art>Prior Art&nbsp;<a class=headline-hash href=#prior-art>¶</a></h2><p>Linalg draws inspiration from decades of prior art to design a modern a
+pragmatic solution. The following non-exhaustive list refers to some of the
+projects that influenced Linalg design:</p><ul><li><a href=https://onnx.ai/>ONNX</a>,</li><li><a href=https://www.lift-project.org/>LIFT</a>,</li><li><a href=https://www.tensorflow.org/xla/architecture>XLA</a>,</li><li><a href=https://halide-lang.org/>Halide</a> and
+<a href=https://tvm.apache.org/>TVM</a>,</li><li><a href=http://tensor-compiler.org/>TACO</a>,</li><li><a href=http://darkroom-lang.org/>Darkroom</a> and
+<a href=http://terralang.org/>Terra</a>,</li><li><a href=http://spiral.ece.cmu.edu:8080/pub-spiral/pubfile/cgo16-preprint_248.pdf>Sigma-LL</a>,</li><li><a href=https://arxiv.org/abs/1802.04730>Tensor Comprehensions</a>,</li><li><a href=https://en.wikipedia.org/wiki/Polytope_model>Polyhedral Compilers</a>,</li><li>the
+<a href=https://mlir.llvm.org/docs/Dialects/Affine/>Affine dialect</a> in MLIR,</li><li>Generic Loop Transformations (see Ken Kennedy&rsquo;s
+<a href=https://www.elsevier.com/books/optimizing-compilers-for-modern-architectures/allen/978-0-08-051324-9>Optimizing Compilers for Modern Architectures</a>)</li><li>Traditional compiler CFGs with SSA forms.</li></ul><p>Additionally, experience with the following tools proved very valuable when
+thinking holistically about how all these components interplay all the way
+up to the user and down to the hardware:</p><ul><li>the
+<a href=http://torch.ch/>Torch</a> machine-learning framework,</li><li>the LLVM compiler, specifically in JIT mode,</li><li>high-performance libraries (MKL, CUBLAS, FBFFT)</li><li>the
+<a href=https://www.cs.utexas.edu/users/flame/BLISRetreat/BLISRetreatTalks/PeachPy.pdf>PeachPy</a> assembler</li><li>current and potentially upcoming hardware ISAs.</li></ul><p>The novelty of MLIR&rsquo;s code base and its unprecedented support for defining and
+mixing abstractions, enabling one to reflect on and integrate the key elements
+of the prior art success as well as avoid the common pitfalls in the area of
+code generation. Thus, instead of diverging into a discussion about the
+implications of adopting any of the existing solutions, Linalg had the
+possibility to build on all of them and learn from their experience while
+leveraging the benefit of hindsight.</p><p>The following reflections on prior art have influenced the design of Linalg.
+The discussion is by no means exhaustive but should capture the key motivations
+behind Linalg.</p><h3 id=lessons-from-onnxa-namelessonsonnxa>Lessons from ONNX<a name=lessonsonnx></a>&nbsp;<a class=headline-hash href=#lessons-from-onnxa-namelessonsonnxa>¶</a></h3><p>ONNX is a specification of operations that appear in Machine Learning
+workloads. As such, it is predominantly driven by the expressiveness requirements
+of ML, and less by the considerations of IR design for HPC code generation.</p><p>Similarly to ONNX, Linalg defines <em>&ldquo;semantically charged&rdquo; named ops</em>.
+But it also considers <em>transformations on these ops</em> as a key component and
+defines the IR to support the transformations, preferring transformations over
+expressiveness if necessary.</p><p>Linalg hopes to additionally address the following:</p><ul><li>facilitate frontend-compiler co-design by taking into account compiler
+transformations and lowerings in op definition;</li><li>minimize the set of available ops by making them non-overlapping with each
+other, thus simplifying the intermediate representation.</li></ul><h3 id=lessons-from-lifta-namelessonslifta>Lessons from LIFT<a name=lessonslift></a>&nbsp;<a class=headline-hash href=#lessons-from-lifta-namelessonslifta>¶</a></h3><p><a href=https://www.lift-project.org/>LIFT</a> is a system to write computational
+kernels based on functional abstractions. Transformations are
+represented by additional nodes in the IR, whose semantics are at the
+level of the algorithm (e.g. <code>partialReduce</code>).
+LIFT applies and composes transformations by using
+<a href=https://www.lift-project.org/presentations/2015/ICFP-2015.pdf>local rewrite
+rules</a> that
+embed these additional nodes directly in the functional abstraction.</p><p>Similarly to LIFT, Linalg uses local rewrite rules implemented with the MLIR
+<a href=/docs/DeclarativeRewrites/>Declarative Rewrite Rules</a>
+mechanisms.</p><p>Linalg builds on, and helps separate concerns in the LIFT approach as follows:</p><ul><li>transformations are either separated from the representation or expressed as
+composable attributes that are independent of the actual computation,
+avoiding intricate effects on performance;</li><li>abstractions are split into smaller components (e.g., control flow and data
+structure abstractions) potentially reusable across different dialects in the
+MLIR&rsquo;s open ecosystem.</li></ul><p>LIFT is expected to further influence the design of Linalg as it evolves. In
+particular, extending the data structure abstractions to support non-dense
+tensors can use the experience of LIFT abstractions for
+<a href=https://www.lift-project.org/publications/2016/harries16sparse.pdf>sparse</a>
+and
+<a href=https://www.lift-project.org/publications/2019/pizzuti19positiondependentarrays.pdf>position-dependent
+arrays</a>.</p><h3 id=lessons-from-xlaa-namelessonsxlaa>Lessons from XLA<a name=lessonsxla></a>&nbsp;<a class=headline-hash href=#lessons-from-xlaa-namelessonsxlaa>¶</a></h3><p><a href=https://www.tensorflow.org/xla/architecture>XLA</a> is one of the first
+post-Theano ML compilers that was introduced as a pragmatic compilation
+solution for TensorFlow. It shines on Google&rsquo;s xPU
+hardware and is an important piece of the puzzle. It is particularly good at
+(1) transforming code back and forth between the scalar and the vector
+worlds, (2) passing function boundaries for handling both host and device
+code, and (3) complying to stringent requirements imposed by energy-efficient
+xPUs.
+XLA followed a pragmatic design process where the compiler is given perfect
+knowledge of each op&rsquo;s semantic, all starting from the mighty <code>conv</code> and
+<code>matmul</code> ops. XLA transformations consist of writing emitters that compose, as C++
+functions. Perfect op semantics knowledge has 2 big benefits: (1) transformations are
+correct by construction (2) very strong performance on difficult xPU targets.</p><p>Similarly, Linalg ops <em>&ldquo;know their semantics&rdquo;</em> and <em>&ldquo;know how to transform and
+lower themselves&rdquo;</em>. The means by which this information is made available and
+how it is used in MLIR are, however, very different.</p><p>Linalg hopes to additionally address the following:</p><ul><li>HLOs are expressive as a whole, but each op has very limited and fixed
+semantics: ops are not configurable. As a consequence, HLOs have evolved into
+a too large set of ops whose semantics intersect.
+This echoes the ops proliferation problem also exhibited by ONNX.</li><li>Reliance on perfect op knowledge leads to situations where transformations and
+ops end up needing to know about each other&rsquo;s semantics (e.g. during fusion).
+Since the transformations themselves are not simple local rewrite patterns
+(unlike LIFT), code complexity grows quickly.</li><li>XLA lacks an independent IR that can be inspected, unit tested and used
+independently. This monolithic design makes the system not portable: xPU passes
+and GPU passes do not share much code.</li></ul><h3 id=lessons-from-halide-and-tvma-namelessonshalidea>Lessons from Halide and TVM<a name=lessonshalide></a>&nbsp;<a class=headline-hash href=#lessons-from-halide-and-tvma-namelessonshalidea>¶</a></h3><p><a href=https://halide-lang.org/>Halide</a> is a DSL embedded in C++ that provides a
+way of metaprogramming the HalideIR and applying transformations declaratively
+to let the expert user transform and optimize the program in tailored ways.
+Halide, initially targeted the SIGGRAPH community but is now more generally
+applicable.
+<a href=https://tvm.apache.org/>TVM</a> is an evolution of Halide into the
+machine learning and deep-neural network space, based on HalideIR.</p><p>The Halide transformation methodology follows similar principles to the
+<a href=http://icps.u-strasbg.fr/~bastoul/research/papers/GVBCPST06-IJPP.pdf>URUK</a>
+and
+<a href=https://pdfs.semanticscholar.org/6a46/20589f63f3385707d2d590f7b7dc8ee4d74f.pdf>CHiLL</a>
+compiler transformation frameworks, but without the strengths (and especially
+complexity) of the polyhedral model.</p><p>Halide particularly shines at making the HPC transformation methodology
+accessible to $\Omega$(10-100) users, at a time when polyhedral tools are
+still only accessible to $\Omega$(1-10) users. Halide makes heavy usage of
+canonicalization rules that are also very prevalent in MLIR.</p><p>Linalg hopes to additionally address the following:</p><ul><li>Halide scheduling is powerful and explores a large swath of possible
+transformations. But it&rsquo;s still too hard for newcomers to use or extend. The
+level of performance you get from Halide is very different depending on
+whether one is a seasoned veteran or a newcomer. This is especially true as
+the number of transformations grows.</li><li>Halide raises rather than lowers in two ways, going counter-current to the
+design goals we set for high-level codegen abstractions in MLIR. First,
+canonical Halide front-end code uses explicit indexing and math on scalar
+values, so to target BLAS/DNN libraries one needs to add pattern matching
+which is similarly brittle as in the affine case. While Halide&rsquo;s performance
+is on par with the libraries on programmable targets (CPU/GPU), that
+approach doesn&rsquo;t work on mobile accelerators or on xPUs, where the framework
+ingests whole-tensor operations.
+Second, reductions and scans are expressed using serial iteration, again
+requiring pattern matching before they can be transformed (e.g. to do a
+reduction using atomics, or hierarchically). The lesson to draw is that we
+should start with higher-level primitives than Halide.</li></ul><h3 id=lessons-from-tensor-comprehensionsa-namelessonstca>Lessons from Tensor Comprehensions<a name=lessonstc></a>&nbsp;<a class=headline-hash href=#lessons-from-tensor-comprehensionsa-namelessonstca>¶</a></h3><p><a href=https://arxiv.org/abs/1802.04730>Tensor Comprehensions</a> is a
+high-level language to express tensor computations with a syntax
+generalizing the Einstein notation, coupled to an end-to-end
+compilation flow capable of lowering to efficient GPU code. It was
+integrated with 2 ML frameworks: Caffe2 and PyTorch.</p><p><img width=600 alt="MLIR Codegen Flow" src=https://user-images.githubusercontent.com/10148468/73613272-df904480-45c1-11ea-88f9-214dee7464cf.png></p><p>The compilation flow combines
+<a href=#lessonshalide>Halide</a> and a Polyhedral Compiler
+derived from
+<a href=https://en.wikipedia.org/wiki/Integer_set_library>ISL</a>
+and uses both HalideIR and the ISL <em>schedule-tree</em> IR.
+The compiler provides a collection of polyhedral compilation
+algorithms to perform fusion and favor multi-level parallelism and
+promotion to deeper levels of the memory hierarchy.
+Tensor Comprehensions showed that, fixing a few predefined strategies
+with parametric transformations and tuning knobs, can already provide
+great results. In that previous work, simple
+genetic search combined with an autotuning framework was sufficient
+to find good implementations in the <em><strong>non-compute bound regime</strong></em>.
+This requires code versions obtainable by the
+various transformations to encompass versions that get close to the
+roofline limit.
+The ultimate goal of Tensor Comprehensions was to concretely mix
+Halide high-level transformations with polyhedral mid-level
+transformations and build a pragmatic system that could take advantage
+of both styles of compilation.</p><p>Linalg hopes to additionally address the following:</p><ul><li>Halide was never properly used in Tensor Comprehensions beyond shape
+inference. Most of the investment went into simplifying polyhedral
+transformations and building a usable end-to-end system. MLIR was
+deemed a better infrastructure to mix these types of compilation.</li><li>The early gains provided by reusing established infrastructures
+(HalideIR and ISL schedule trees) turned into more impedance mismatch
+problems than could be solved with a small tactical investment.</li><li>Tensor Comprehensions emitted CUDA code which was then JIT compiled
+with NVCC from a textual representation. While this was a pragmatic
+short-term solution it made it hard to perform low-level rewrites that
+would have helped with register reuse in the <em><strong>compute-bound regime</strong></em>.</li><li>The same reliance on emitting CUDA code made it difficult to
+create cost models when time came. This made it artificially harder to
+prune out bad solutions than necessary. This resulted in excessive
+runtime evaluation, as reported in the paper
+<a href=https://dl.acm.org/doi/10.1145/3317550.3321441>Machine Learning Systems
+are Stuck in a Rut</a>.</li></ul><p>Many of those issues are naturally addressed by implementing these ideas
+in the MLIR infrastructure.</p><h3 id=lessons-from-polyhedral-compilersa-namelessonspolyhedrala>Lessons from Polyhedral compilers<a name=lessonspolyhedral></a>&nbsp;<a class=headline-hash href=#lessons-from-polyhedral-compilersa-namelessonspolyhedrala>¶</a></h3><p>The polyhedral model has been on the cutting edge of loop-level optimization for
+decades, with several incarnations in production compilers such as
+<a href=https://gcc.gnu.org/wiki/Graphite>GRAPHITE</a> for GCC and
+<a href=https://polly.llvm.org>Polly</a> for LLVM. Although it has proved crucial to
+generate efficient code from domain-specific languages such as
+<a href=http://mcl.csa.iisc.ac.in/polymage.html>PolyMage</a> and
+<a href=https://dl.acm.org/doi/abs/10.1145/3355606>Tensor
+Comprehensions</a>, it has never been
+fully included into mainstream general-purpose optimization pipelines. Detailed
+analysis of the role of polyhedral transformations is provided in the
+<a href=/docs/Rationale/RationaleSimplifiedPolyhedralForm/>simplified polyhedral
+form</a> document
+dating back to the inception of MLIR.</p><p>In particular, polyhedral abstractions have proved challenging to integrate with
+a more conventional compiler due to the following.</p><ul><li>The transformed code (or IR) quickly gets complex and thus hard to analyze and
+understand.</li><li>Code generation from the mathematical form used in the polyhedral model relies
+on non-trivial exponentially complex algorithms.</li><li>The mathematical form is rarely composable with the SSA representation and
+related algorithms, on which most mainstream compilers are built today.</li><li>Expressiveness limitations, although addressed in the scientific literature
+through, e.g., summary functions, often remain present in actual
+implementations.</li></ul><p>The Affine dialect in MLIR was specifically designed to address the integration
+problems mention above. In particular, it maintains the IR in the same form
+(loops with additional constraints on how the bounds are expressed) throughout
+the transformation, decreasing the need for one-shot conversion between
+drastically different representations. It also embeds the polyhedral
+representation into the SSA form by using MLIR regions and thus allows one to
+combine polyhedral and SSA-based transformations.</p><h3 id=lessons-from-the-affine-dialecta-namelessonsaffinea>Lessons from the Affine dialect<a name=lessonsaffine></a>&nbsp;<a class=headline-hash href=#lessons-from-the-affine-dialecta-namelessonsaffinea>¶</a></h3><p>The Affine dialect in MLIR brings the polyhedral abstraction closer to the
+conventional SSA representation. It addresses several long-standing integration
+challenges as described above and is likely to be more suitable when compiling
+from a C language-level abstraction.</p><p>MLIR makes it possible to start from a higher-level abstraction than C, for
+example in machine learning workloads. In such cases, it may be possible to
+avoid complex analyses (data-flow analysis across loop iterations is
+exponentially complex) required for polyhedral transformation by leveraging the
+information available at higher levels of abstractions, similarly to DSL
+compilers. Linalg intends to use this information when available and ensure
+<em>legality of transformations by construction</em>, by integrating legality
+preconditions in the op semantics (for example, loop tiling can be applied to
+the loop nest computing a matrix multiplication, no need to additionally rely on
+affine dependence analysis to check this). This information is not readily
+available in the Affine dialect, and can only be derived using potentially
+expensive pattern-matching algorithms.</p><p>Informed by the practical experience in polyhedral compilation and with the
+Affine dialects in particular, Linalg takes the following decisions.</p><ul><li><strong>Discourage loop skewing</strong>: the loop skewing transformation, that is
+sometimes used to enable parallelization, often has surprising (negative)
+effects on performance. In particular, polyhedral auto-transformation can be
+expressed in a simpler way without loop skewing; skewing often leads to
+complex control flow hampering performance on accelerators such as GPUs.
+Moreover, the problems loop skewing addresses can be better addressed by other
+approaches, e.g., diamond tiling. In the more restricted case of ML workloads,
+multi-for loops with induction variables independent of each other (referred
+to as hyper-rectangular iteration domains in the literature) such as the
+proposed
+<a href=https://llvm.discourse.group/t/rfc-add-affine-parallel/350>affine.parallel</a>
+are sufficient in the majority of cases.</li><li><strong>Declarative Tiling</strong>: the <em>tiling</em> transformation is ubiquitous in HPC code
+generation. It can be seen as a decomposition of either the iteration space or
+the data space into smaller regular parts, referred to as tiles. Polyhedral
+approaches, including the Affine dialect, mostly opt for iteration space
+tiling, which introduces additional control flow and complex address
+expressions. If the tile sizes are not known during the transformation (so
+called parametric tiling), the address expressions and conditions quickly
+become non-affine or require exponentially complex algorithms to reason about
+them. Linalg focuses tiling on the data space instead, creating views into the
+buffers that leverage MLIR&rsquo;s strided <code>memref</code> abstraction. These views compose
+and the complexity of access expressions remains predictable.</li><li><strong>Preserve high-level information</strong>: Linalg maintains the information provided
+by the op semantics as long as necessary for transformations. For example, the
+result of tiling a matrix multiplication is loops around a smaller matrix
+multiplication. Even with pattern-matching on top of the Affine dialect, this
+would have required another step of pattern-matching after the transformation.</li></ul><p>Given these choices, Linalg intends to be a better fit for <strong>high-level
+compilation</strong> were significantly more information is readily available in the
+input representation and should be leveraged before lowering to other
+abstractions. Affine remains a strong abstraction for mid-level transformation
+and is used as a lowering target for Linalg, enabling further transformations
+and combination of semantically-loaded and lower-level inputs. As such, Linalg
+is intended to complement Affine rather than replace it.</p><h2 id=core-guiding-principlesa-nameguiding_principlesa>Core Guiding Principles<a name=guiding_principles></a>&nbsp;<a class=headline-hash href=#core-guiding-principlesa-nameguiding_principlesa>¶</a></h2><h3 id=transformations-and-simplicity-firsta-nametransformations_firsta>Transformations and Simplicity First<a name=transformations_first></a>&nbsp;<a class=headline-hash href=#transformations-and-simplicity-firsta-nametransformations_firsta>¶</a></h3><p>The purpose of the Linalg IR and its operations is primarily to:</p><ul><li>develop a set of key transformations, and</li><li>make them correct by construction by carefully curating the set of
+generic operation properties that drive applicability, and</li><li>make them very simple to implement, apply, verify and especially
+maintain.</li></ul><p>The problem at hand is fundamentally driven by compilation of domain-specific
+workloads for high-performance and parallel hardware architectures: <strong>this is
+an HPC compilation problem</strong>.</p><p>The selection of relevant transformations follows a co-design approach and
+involves considerations related to:</p><ul><li>concrete current and future needs of the application domain,</li><li>concrete current and future hardware properties and ISAs,</li><li>understanding of strengths and limitations of
+<a href=#prior-art>existing approaches</a>,</li><li>taking advantage of the coexistence of multiple levels of IR in MLIR,</li></ul><p>One needs to be methodical to avoid proliferation and redundancy. A given
+transformation could exist at multiple levels of abstraction but <strong>just
+because one can write transformation X at level Y absolutely does not mean
+one should</strong>. This is where evaluation of existing
+systems and acknowledgement of their strengths and weaknesses is crucial:
+simplicity and maintainability aspects must be first-order concerns. Without
+this additional effort of introspection, a design will not stand the test of
+time. At the same time, complexity is very hard to ward off. It seems one needs
+to suffer complexity to be prompted to take a step back and rethink
+abstractions.</p><p>This is not merely a reimplementation of idea X in system Y: simplicity
+<strong>must be the outcome</strong> of this introspection effort.</p><h3 id=preservation-of-informationa-nameinformation_preservationa>Preservation of Information<a name=information_preservation></a>&nbsp;<a class=headline-hash href=#preservation-of-informationa-nameinformation_preservationa>¶</a></h3><p>The last two decades have seen a proliferation of Domain-Specific Languages
+(DSLs) that have been very successful at limited application domains.
+The main commonality between these systems is their use of a significantly
+richer structural information than CFGs or loops.
+Still, another commonality of existing systems is to lower to LLVM very quickly,
+and cross a wide abstraction gap in a single step. This process often drops
+semantic information that later needs to be reconstructed later,
+when it is not irremediably lost.</p><p>These remarks, coupled with MLIR&rsquo;s suitability for defining IR at multiple
+levels of abstraction led to the following 2 principles.</p><h4 id=declarative-specification-avoid-raisinga-namedeclarative_specificationa>Declarative Specification: Avoid Raising<a name=declarative_specification></a>&nbsp;<a class=headline-hash href=#declarative-specification-avoid-raisinga-namedeclarative_specificationa>¶</a></h4><p>Compiler transformations need static structural information (e.g. loop-nests,
+graphs of basic blocks, pure functions, etc). When that structural information
+is lost, it needs to be reconstructed.</p><p>A good illustration of this phenomenon is the notion of <em>raising</em> in polyhedral
+compilers: multiple polyhedral tools start by raising from a simplified C
+form or from SSA IR into a higher-level representation that is more amenable
+to loop transformations.</p><p>In advanced polyhedral compilers, a second type of raising
+may typically exist to detect particular patterns (often variations of
+BLAS). Such patterns may be broken by transformations making their detection
+very fragile or even just impossible (incorrect).</p><p>MLIR makes it easy to define op semantics declaratively thanks to the use of
+regions and attributes. This is an ideal opportunity to define new abstractions
+to convey user-intent directly into the proper abstraction.</p><h4 id=progressive-lowering-dont-lose-information-too-quicklya-nameprogressive_loweringa>Progressive Lowering: Don&rsquo;t Lose Information too Quickly<a name=#progressive_lowering></a>&nbsp;<a class=headline-hash href=#progressive-lowering-dont-lose-information-too-quicklya-nameprogressive_loweringa>¶</a></h4><p>Lowering too quickly to affine, generic loops or CFG form reduces the
+amount of structure available to derive transformations from. While
+manipulating loops is a net gain compared to CFG form for a certain class of
+transformations, important information is still lost (e.g. parallel loops, or
+mapping of a loop nest to an external implementation).</p><p>This creates non-trivial phase ordering issues. For instance, loop fusion may
+easily destroy the ability to detect a BLAS pattern. One possible alternative
+is to perform loop fusion, tiling, intra-tile loop distribution and then hope to
+detect the BLAS pattern. Such a scheme presents difficult phase-ordering
+constraints that will likely interfere with other decisions and passes.
+Instead, certain Linalg ops are designed to maintain high-level information
+across transformations such as tiling and fusion.</p><p>MLIR is designed as an infrastructure for <em><strong>progressive lowering</strong></em>.
+Linalg fully embraces this notion and thinks of codegen in terms of
+<em>reducing a potential function</em>. That potential function is loosely
+defined in terms of number of low-level instructions in a particular
+Linalg ops (i.e. how heavy or lightweight the Linalg op is).
+Linalg-based codegen and transformations start from higher-level IR
+ops and dialects. Then each transformation application reduces the
+potential by introducing lower-level IR ops and <em>smaller</em> Linalg ops.
+This gradually reduces the potential, all the way to Loops + VectorOps
+and LLVMIR.</p><h3 id=composable-and-declarative-transformationsa-namedeclarative_transformationsa>Composable and Declarative Transformations<a name=declarative_transformations></a>&nbsp;<a class=headline-hash href=#composable-and-declarative-transformationsa-namedeclarative_transformationsa>¶</a></h3><p>Complex and impactful transformations need not be hard to manipulate, write or
+maintain. Mixing XLA-style high-level op semantics knowledge with generic
+properties to describe these semantics, directly in MLIR, is a promising way to:</p><ul><li>Design transformations that are correct by construction, easy to
+write, easy to verify and easy to maintain.</li><li>Provide a way to specify transformations and the units of IR they manipulate
+declaratively. In turn this allows using local pattern rewrite rules in MLIR
+(i.e.
+<a href=/docs/DeclarativeRewrites/>DRR</a>).</li><li>Allow creating customizable passes declaratively by simply selecting rewrite
+rules. This allows mixing transformations, canonicalizations, constant folding
+and other enabling rewrites in a single pass. The result is a system where pass
+fusion is very simple to obtain and gives hope for solving certain
+<a href=https://dl.acm.org/doi/10.1145/201059.201061>phase ordering issues</a>.</li></ul><h3 id=suitability-for-search-and-machine-learninga-namemla>Suitability for Search and Machine Learning<a name=ml></a>&nbsp;<a class=headline-hash href=#suitability-for-search-and-machine-learninga-namemla>¶</a></h3><p>Compiler heuristics are hand-crafted human-engineered features: it is
+ripe for disruption by machine-learning techniques.
+To enable search, compiler transformations should be fine-grained,
+<a href=#declarative_transformations>composable</a> and expose tuning parameters that
+can modify their behavior, guided by lessons from previous experience
+with
+<a href=#lessonstc>Tensor Comprehensions</a>.</p><p>Of course, we are not advocating for using ML everywhere in the stack
+immediately: low-level compilation and machine models are still quite performant
+in LLVM. However, for the high-level and mid-level optimization problems,
+models need to be conditioned (probabilistically) on the low-level
+compiler which acts as a blackbox. For these reasons we prioritize the
+design of IR and transformations with search-friendly properties over
+building cost models.
+Still, this does not mean Linalg refuses cost models: instead we
+prefer to invest in infrastructure that will enable
+<a href=http://homepages.inf.ed.ac.uk/hleather/publications/2009_autofeatures_cgo.pdf>ML-based
+techniques to automatically build cost
+models</a>.</p><h3 id=extensibility-and-future-proofnessa-namefuturea>Extensibility and Future-Proofness<a name=future></a>&nbsp;<a class=headline-hash href=#extensibility-and-future-proofnessa-namefuturea>¶</a></h3><p>MLIR allows defining IR for structured control flow and structured
+data types. We choose to take advantage of these properties for the
+reasons described above.
+In particular, the <code>MemRefType</code> represents dense non-contiguous memory regions.
+This structure should extend beyond simple dense data types and generalize to
+ragged, sparse and mixed dense/sparse tensors as well as to trees, hash tables,
+tables of records and maybe even graphs.</p><p>For such more advanced data types, the control-flow required to traverse the
+data structures, termination conditions, etc are much less simple to analyze and
+characterize statically. As a consequence we need to also design solutions that
+stand a chance of evolving into runtime-adaptive computations (e.g.
+inspector-executor in which an <em>inspector</em> runs a cheap runtime
+analysis on the data to configure how the <em>executor</em> should run).
+While there is no concrete solution
+today to solve these problems in MLIR, it is pretty clear that perfect
+static knowledge and analyses will not be serious contenders for these problems.</p><h2 id=key-observationsa-namekeyobservationa>Key Observations<a name=keyobservation></a>&nbsp;<a class=headline-hash href=#key-observationsa-namekeyobservationa>¶</a></h2><p>The following key observations have influenced the design of Linalg and helped
+reconcile
+<a href=#guiding_principles>core guiding principles</a> with real-world
+requirements when producing an implementation based on MLIR.</p><h3 id=algorithms--data-structures--programsa-namedata_and_computea>Algorithms + Data Structures = Programs<a name=data_and_compute></a>&nbsp;<a class=headline-hash href=#algorithms--data-structures--programsa-namedata_and_computea>¶</a></h3><p>This is a twist on Niklaus Wirth&rsquo;s formulation but captures the essence of the
+design of Linalg: control-flow does not exist in a vacuum, independently of
+data. On the contrary, there is a very strong relationship between control-flow
+and data structures: one cannot exist without the other. This has multiple
+implications on the
+<a href=/docs/Dialects/Linalg/#linalg_ops>semantics of Linalg Ops</a> and their
+transformations. In particular, this observation influences whether certain
+transformations are better done: - as control flow or data structure
+manipulation, - on Linalg ops attributes or on loops after some partial lowering
+occurred, - as extensions to the Linalg dialect in terms of new ops or
+attributes.</p><h3 id=the-dialect-need-not-be-closed-under-transformationsa-namedialect_not_closeda>The Dialect Need not be Closed Under Transformations<a name=dialect_not_closed></a>&nbsp;<a class=headline-hash href=#the-dialect-need-not-be-closed-under-transformationsa-namedialect_not_closeda>¶</a></h3><p>This is probably the most surprising and counter-intuitive
+observation. When one designs IR for transformations, closed-ness is
+often a non-negotiable property.
+This is a key design principle of polyhedral IRs such as
+<a href=http://icps.u-strasbg.fr/~bastoul/research/papers/GVBCPST06-IJPP.pdf>URUK</a>
+and
+<a href=https://en.wikipedia.org/wiki/Integer_set_library>ISL-based IRs</a>:
+they are closed under affine transformations.
+In MLIR, multiple dialects coexist and form a coherent whole. After
+experimenting with different alternatives, it became clear that strict
+dialect closed-ness wasn&rsquo;t necessary and could be relaxed. Previous
+systems did not have simple and principled means of building new IR
+and probably suffered from this limitation. We conjecture this is a
+key reason they required the IR to be closed under transformations.</p><p>Despite the fact that Linalg ops only allow perfectly nested
+semantics, once tiling and fusion kick in, imperfectly nested loops
+are gradually introduced.
+In other words, imperfectly nested control flow appears as <em><strong>the result of
+applying key transformations</strong></em>.</p><p>Considering the <em>potential</em> described during the discussion on
+<a href=#progressive_lowering>Progressive Lowering</a>, closed-ness under
+transformation would dictate that the potential remains constant.
+In contrast, Linalg advocates for <em><strong>monotonicity</strong></em> under
+transformations.</p><h3 id=summary-of-existing-alternatives-a-picturea-nameobservationssummarya>Summary of Existing Alternatives a Picture<a name=observationssummary></a>&nbsp;<a class=headline-hash href=#summary-of-existing-alternatives-a-picturea-nameobservationssummarya>¶</a></h3><p>Lastly, we summarize our observations of lessons from
+<a href=#prior-art>Prior
+Art</a>&mdash;when viewed under the lense of our
+<a href=#guiding_principles>Core Guiding
+Principles</a>&mdash;with the following picture.</p><p><img width=1200 alt="MLIR Codegen Flow" src=https://user-images.githubusercontent.com/10148468/73613904-2f720a00-45c8-11ea-8265-1c856c02525b.png></p><p>This figure is not meant to be perfectly accurate but a rough map of how we view
+the distribution of structural information in existing systems, from a
+codegen-friendly angle. Unsurprisingly, the
+<a href=/docs/Dialects/Linalg/>Linalg Dialect</a> and its future evolutions aspire
+to a position in the top-right of this map.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/ title="Generic DAG Rewriter Infrastructure Rationale"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Generic DAG Rewriter Infrastructure Rationale</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Rationale/Rationale/ title="MLIR Rationale">Next - MLIR Rationale <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li class=active><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

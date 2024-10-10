@@ -1,0 +1,1050 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Operation Definition Specification (ODS) - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/DefiningDialects/Operations/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Operation Definition Specification (ODS)</h1><p>In addition to specializing the <code>mlir::Op</code> C++ template, MLIR also supports
+defining operations and data types in a table-driven manner. This is achieved
+via
+<a href=https://llvm.org/docs/TableGen/index.html>TableGen</a>, which is both a generic language and its tooling to
+maintain records of domain-specific information. Facts regarding an operation
+are specified concisely into a TableGen record, which will be expanded into an
+equivalent <code>mlir::Op</code> C++ template specialization at compiler build time.</p><p>This manual explains in detail all the available mechanisms for defining
+operations in such a table-driven manner. It aims to be a specification instead
+of a tutorial. Please refer to
+<a href=/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a>
+for the latter.</p><p>In addition to detailing each mechanism, this manual also tries to capture best
+practices. They are rendered as quoted bullet points.</p><p><nav id=TableOfContents><ul><li><a href=#motivation>Motivation</a></li><li><a href=#benefits>Benefits</a></li><li><a href=#tablegen-syntax>TableGen Syntax</a></li><li><a href=#operation-definition>Operation Definition</a><ul><li><a href=#operation-name>Operation name</a></li><li><a href=#operation-documentation>Operation documentation</a></li><li><a href=#operation-arguments>Operation arguments</a></li><li><a href=#operation-regions>Operation regions</a></li><li><a href=#operation-results>Operation results</a></li><li><a href=#operation-successors>Operation successors</a></li><li><a href=#operation-traits-and-constraints>Operation traits and constraints</a></li><li><a href=#builder-methods>Builder methods</a></li><li><a href=#custom-parser-and-printer-methods>Custom parser and printer methods</a></li><li><a href=#custom-verifier-code>Custom verifier code</a></li><li><a href=#declarative-assembly-format>Declarative Assembly Format</a></li><li><a href=#hascanonicalizer><code>hasCanonicalizer</code></a></li><li><a href=#hascanonicalizemethod><code>hasCanonicalizeMethod</code></a></li><li><a href=#hasfolder><code>hasFolder</code></a></li><li><a href=#extra-declarations>Extra declarations</a></li><li><a href=#extra-definitions>Extra definitions</a></li><li><a href=#generated-c-code>Generated C++ code</a></li></ul></li><li><a href=#constraints>Constraints</a><ul><li><a href=#single-entity-constraint>Single-entity constraint</a></li><li><a href=#multi-entity-constraint>Multi-entity constraint</a></li><li><a href=#trait>Trait</a></li><li><a href=#how-to-specify-new-constraint>How to specify new constraint</a></li></ul></li><li><a href=#attribute-definition>Attribute Definition</a><ul><li><a href=#attribute-decorators>Attribute decorators</a></li><li><a href=#enum-attributes>Enum attributes</a></li></ul></li><li><a href=#debugging-tips>Debugging Tips</a><ul><li><a href=#run-mlir-tblgen-to-see-the-generated-content>Run <code>mlir-tblgen</code> to see the generated content</a></li></ul></li><li><a href=#appendix>Appendix</a><ul><li><a href=#reporting-deprecation-in-tablegen>Reporting deprecation in TableGen</a></li><li><a href=#reporting-deprecation-in-c>Reporting deprecation in C++</a></li><li><a href=#requirements-and-existing-mechanisms-analysis>Requirements and existing mechanisms analysis</a></li></ul></li></ul></nav><h2 id=motivation>Motivation&nbsp;<a class=headline-hash href=#motivation>¶</a></h2><p>MLIR allows pluggable dialects, and dialects contain, among others, a list of
+operations. This open and extensible ecosystem leads to the &ldquo;stringly&rdquo; type IR
+problem, e.g., repetitive string comparisons during optimization and analysis
+passes, unintuitive accessor methods (e.g., generic/error prone <code>getOperand(3)</code>
+vs self-documenting <code>getStride()</code>) with more generic return types, verbose and
+generic constructors without default arguments, verbose textual IR dumps, and so
+on. Furthermore, operation verification is:</p><ol><li>best case: a central string-to-verification-function map,</li><li>middle case: duplication of verification across the code base, or</li><li>worst case: no verification functions.</li></ol><p>The fix is to support defining ops in a table-driven manner. Then for each
+dialect, we can have a central place that contains everything you need to know
+about each op, including its constraints, custom assembly form, etc. This
+description is also used to generate helper functions and classes to allow
+building, verification, parsing, printing, analysis, and many more.</p><h2 id=benefits>Benefits&nbsp;<a class=headline-hash href=#benefits>¶</a></h2><p>Compared to the C++ template, this table-driven approach has several benefits
+including but not limited to:</p><ul><li><strong>Single source of truth</strong>: We strive to encode all facts regarding an
+operation into the record, so that readers don&rsquo;t need to jump among code
+snippets to fully understand an operation.</li><li><strong>Removing boilerplate</strong>: We can automatically generate
+operand/attribute/result getter methods, operation build methods, operation
+verify methods, and many more utilities from the record. This greatly
+reduces the boilerplate needed for defining a new op.</li><li><strong>Facilitating auto-generation</strong>: The usage of these operation information
+records are by no means limited to op definition itself. We can use them to
+drive the auto-generation of many other components, like computation graph
+serialization.</li></ul><h2 id=tablegen-syntax>TableGen Syntax&nbsp;<a class=headline-hash href=#tablegen-syntax>¶</a></h2><p>We use TableGen as the language for specifying operation information. TableGen
+itself just provides syntax for writing records; the syntax and constructs
+allowed in a TableGen file (typically with the filename suffix <code>.td</code>) can be found
+<a href=https://llvm.org/docs/TableGen/ProgRef.html>here</a>.</p><ul><li>TableGen <code>class</code> is similar to C++ class; it can be templated and
+subclassed.</li><li>TableGen <code>def</code> is similar to C++ object; it can be declared by specializing
+a TableGen <code>class</code> (e.g., <code>def MyDef : MyClass&lt;...>;</code>) or completely
+independently (e.g., <code>def MyDef;</code>). It cannot be further templated or
+subclassed.</li><li>TableGen <code>dag</code> is a dedicated type for directed acyclic graph of elements. A
+<code>dag</code> has one operator and zero or more arguments. Its syntax is <code>(operator arg0, arg1, argN)</code>. The operator can be any TableGen <code>def</code>; an argument can
+be anything, including <code>dag</code> itself. We can have names attached to both the
+operator and the arguments like <code>(MyOp:$op_name MyArg:$arg_name)</code>.</li></ul><p>Please see the
+<a href=https://llvm.org/docs/TableGen/ProgRef.html>language reference</a> to learn about all the
+types and expressions supported by TableGen.</p><h2 id=operation-definition>Operation Definition&nbsp;<a class=headline-hash href=#operation-definition>¶</a></h2><p>MLIR defines several common constructs to help operation definition and provide
+their semantics via a special
+<a href=https://llvm.org/docs/TableGen/BackEnds.html#introduction>TableGen backend</a>:
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/tools/mlir-tblgen/OpDefinitionsGen.cpp><code>OpDefinitionsGen</code></a>. These constructs are defined in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a>. The main ones are:</p><ul><li>The <code>Op</code> class: It is the main construct for defining operations. All facts
+regarding the operation are specified when specializing this class, with the
+help of the following constructs.</li><li>The <code>Dialect</code> class: Operations belonging to one logical group are placed in
+the same dialect. The <code>Dialect</code> class contains dialect-level information.</li><li>The <code>OpTrait</code> class hierarchy: They are used to specify special properties
+and constraints of the operation, including whether the operation has side
+effect or whether its output has the same shape as the input.</li><li>The <code>ins</code>/<code>outs</code> marker: These are two special markers builtin to the
+<code>OpDefinitionsGen</code> backend. They lead to the definitions of operands/attributes
+and results respectively.</li><li>The <code>TypeConstraint</code> class hierarchy: They are used to specify the
+constraints over operands or results. A notable subclass hierarchy is
+<code>Type</code>, which stands for constraints for common C++ types.</li><li>The <code>AttrConstraint</code> class hierarchy: They are used to specify the
+constraints over attributes. A notable subclass hierarchy is <code>Attr</code>, which
+stands for constraints for attributes whose values are of common types.</li><li>The <code>Property</code> class hierarchy: They are used to specify non-attribute-backed
+properties that are inherent to operations. This will be expanded to a
+<code>PropertyConstraint</code> class or something similar in the future.</li></ul><p>An operation is defined by specializing the <code>Op</code> class with concrete contents
+for all the fields it requires. For example, <code>tf.AvgPool</code> is defined as</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>TF_AvgPoolOp</span> <span class=p>:</span> <span class=nv>TF_Op</span><span class=p>&lt;</span><span class=s>&#34;AvgPool&#34;</span><span class=p>,</span> <span class=p>[</span><span class=nv>NoMemoryEffect</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;Performs average pooling on the input.&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>Each entry in `output` is the mean of the corresponding size `ksize`
+</span></span></span><span class=line><span class=cl><span class=s>window in `value`.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TF_FpTensor</span><span class=p>:</span><span class=nv>$value</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>ConfinedAttr</span><span class=p>&lt;</span><span class=nv>I64ArrayAttr</span><span class=p>,</span> <span class=p>[</span><span class=nv>ArrayMinCount</span><span class=p>&lt;</span><span class=m>4</span><span class=p>&gt;]&gt;:</span><span class=nv>$ksize</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>ConfinedAttr</span><span class=p>&lt;</span><span class=nv>I64ArrayAttr</span><span class=p>,</span> <span class=p>[</span><span class=nv>ArrayMinCount</span><span class=p>&lt;</span><span class=m>4</span><span class=p>&gt;]&gt;:</span><span class=nv>$strides</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TF_AnyStrAttrOf</span><span class=p>&lt;[</span><span class=s>&#34;SAME&#34;</span><span class=p>,</span> <span class=s>&#34;VALID&#34;</span><span class=p>]&gt;:</span><span class=nv>$padding</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>DefaultValuedAttr</span><span class=p>&lt;</span><span class=nv>TF_ConvertDataFormatAttr</span><span class=p>,</span> <span class=s>&#34;NHWC&#34;</span><span class=p>&gt;:</span><span class=nv>$data_format</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span>
+</span></span><span class=line><span class=cl>    <span class=nv>TF_FpTensor</span><span class=p>:</span><span class=nv>$output</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>TF_DerivedOperandTypeAttr</span> <span class=nv>T</span> <span class=p>=</span> <span class=nv>TF_DerivedOperandTypeAttr</span><span class=p>&lt;</span><span class=m>0</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>In the following we describe all the fields needed. Please see the definition of
+the <code>Op</code> class for the complete list of fields supported.</p><h3 id=operation-name>Operation name&nbsp;<a class=headline-hash href=#operation-name>¶</a></h3><p>The operation name is a unique identifier for the operation within MLIR, e.g.,
+<code>tf.Add</code> for addition operation in the TensorFlow dialect. This is the
+equivalent of the mnemonic in assembly language. It is used for parsing and
+printing in the textual format. It is also used for pattern matching in graph
+rewrites.</p><p>The full operation name is composed of the dialect name and the op name, with
+the former provided via the dialect and the latter provided as the second
+template parameter to the <code>Op</code> class.</p><h3 id=operation-documentation>Operation documentation&nbsp;<a class=headline-hash href=#operation-documentation>¶</a></h3><p>This includes both a one-line <code>summary</code> and a longer human-readable
+<code>description</code>. They will be used to drive automatic generation of dialect
+documentation. They need to be provided in the operation&rsquo;s definition body:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;...&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>...
+</span></span></span><span class=line><span class=cl><span class=s>}]</span><span class=p>;</span>
+</span></span></code></pre></div><p><code>description</code> should be written in Markdown syntax.</p><p>Placing the documentation at the beginning is recommended since it helps in
+understanding the operation.</p><blockquote><ul><li>Place documentation at the beginning of the operation definition.</li><li>The summary should be short and concise. It should be a one-liner
+starting with a capital letter and without trailing punctuation.
+Put expanded explanation in the description.</li></ul></blockquote><h3 id=operation-arguments>Operation arguments&nbsp;<a class=headline-hash href=#operation-arguments>¶</a></h3><p>There are three kinds of arguments: operands, attributes, and properties.
+Operands are runtime values produced by other ops; while attributes and properties
+are compile-time known constant values, including two categories:</p><ol><li><p>Natural attributes: these attributes affect the behavior of the operations
+(e.g., padding for convolution);</p></li><li><p>Derived attributes: these attributes are not needed to define the operation
+but are instead derived from information of the operation. E.g., the output
+shape of type. This is mostly used for convenience interface generation or
+interaction with other frameworks/translation.</p><p>All derived attributes should be materializable as an Attribute. That is,
+even though they are not materialized, it should be possible to store as an
+attribute.</p></li></ol><p>Properties are similar to attributes, except that they are not stored within
+the MLIR context but are stored inline with the operation.</p><p>Operands, attributes, and properties are specified inside the <code>dag</code>-typed
+<code>arguments</code>, led by <code>ins</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>type</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>operand</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>attr</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>attr</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>property</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>property</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></div><p>Here <code>&lt;type-constraint></code> is a TableGen <code>def</code> from the <code>TypeConstraint</code> class
+hierarchy. Similarly, <code>&lt;attr-constraint></code> is a TableGen <code>def</code> from the
+<code>AttrConstraint</code> class hierarchy and <code>&lt;property-constraint></code> is a subclass
+of <code>Property</code> (though a <code>PropertyConstraint</code> hierarchy is planned).
+See
+<a href=#constraints>Constraints</a> for more information.</p><p>There is no requirements on the relative order of operands and attributes; they
+can mix freely. The relative order of operands themselves matters. From each
+named argument a named getter will be generated that returns the argument with
+the return type (in the case of attributes the return type will be constructed
+from the storage type, while for operands it will be <code>Value</code>). Each attribute&rsquo;s
+raw value (e.g., as stored) can also be accessed via generated <code>&lt;name>Attr</code>
+getters for use in transformation passes where the more user-friendly return
+type is less suitable.</p><p>All the arguments should be named to:</p><ul><li>provide documentation,</li><li>drive auto-generation of getter methods, and</li><li>provide a handle to reference for other places like constraints.</li></ul><h4 id=variadic-operands>Variadic operands&nbsp;<a class=headline-hash href=#variadic-operands>¶</a></h4><p>To declare a variadic operand, wrap the <code>TypeConstraint</code> for the operand with
+<code>Variadic&lt;...></code>.</p><p>Normally operations have no variadic operands or just one variadic operand. For
+the latter case, it is easy to deduce which dynamic operands are for the static
+variadic operand definition. However, if an operation has more than one variable
+length operands (either optional or variadic), it would be impossible to
+attribute dynamic operands to the corresponding static variadic operand
+definitions without further information from the operation. Therefore, either
+the <code>SameVariadicOperandSize</code> or <code>AttrSizedOperandSegments</code> trait is needed to
+indicate that all variable length operands have the same number of dynamic
+values.</p><h4 id=variadicofvariadic-operands>VariadicOfVariadic operands&nbsp;<a class=headline-hash href=#variadicofvariadic-operands>¶</a></h4><p>To declare a variadic operand that has a variadic number of sub-ranges, wrap the
+<code>TypeConstraint</code> for the operand with <code>VariadicOfVariadic&lt;..., "&lt;segment-attribute-name>"></code>.</p><p>The second field of the <code>VariadicOfVariadic</code> is the name of an <code>I32ElementsAttr</code>
+argument that contains the sizes of the variadic sub-ranges. This attribute will
+be used when determining the size of sub-ranges, or when updating the size of
+sub-ranges.</p><h4 id=optional-operands>Optional operands&nbsp;<a class=headline-hash href=#optional-operands>¶</a></h4><p>To declare an optional operand, wrap the <code>TypeConstraint</code> for the operand with
+<code>Optional&lt;...></code>.</p><p>Normally operations have no optional operands or just one optional operand. For
+the latter case, it is easy to deduce which dynamic operands are for the static
+operand definition. However, if an operation has more than one variable length
+operands (either optional or variadic), it would be impossible to attribute
+dynamic operands to the corresponding static variadic operand definitions
+without further information from the operation. Therefore, either the
+<code>SameVariadicOperandSize</code> or <code>AttrSizedOperandSegments</code> trait is needed to
+indicate that all variable length operands have the same number of dynamic
+values.</p><h4 id=optional-attributes>Optional attributes&nbsp;<a class=headline-hash href=#optional-attributes>¶</a></h4><p>To declare an optional attribute, wrap the <code>AttrConstraint</code> for the attribute
+with <code>OptionalAttr&lt;...></code>.</p><h4 id=attributes-with-default-values>Attributes with default values&nbsp;<a class=headline-hash href=#attributes-with-default-values>¶</a></h4><p>To declare an attribute with a default value, wrap the <code>AttrConstraint</code> for the
+attribute with <code>DefaultValuedAttr&lt;..., "..."></code>.</p><p>The second parameter to <code>DefaultValuedAttr</code> should be a string containing the
+C++ default value. For example, a float default value should be specified as
+like <code>"0.5f"</code>, and an integer array default value should be specified as like
+<code>"{1, 2, 3}"</code>.</p><p>The generated operation printing function will not print default-valued
+attributes when the attribute value is equal to the default.</p><h4 id=confining-attributes>Confining attributes&nbsp;<a class=headline-hash href=#confining-attributes>¶</a></h4><p><code>ConfinedAttr</code> is provided as a general mechanism to help modelling further
+constraints on attributes beyond the ones brought by value types. You can use
+<code>ConfinedAttr</code> to compose complex constraints out of more primitive ones. For
+example, a 32-bit integer attribute whose minimum value must be 10 can be
+expressed as <code>ConfinedAttr&lt;I32Attr, [IntMinValue&lt;10>]></code>.</p><p>Right now, the following primitive constraints are supported:</p><ul><li><code>IntMinValue&lt;N></code>: Specifying an integer attribute to be greater than or
+equal to <code>N</code></li><li><code>IntMaxValue&lt;N></code>: Specifying an integer attribute to be less than or equal
+to <code>N</code></li><li><code>IntNEQValue&lt;N></code>: Specifying an integer attribute to be not equal
+to <code>N</code></li><li><code>IntPositive</code>: Specifying an integer attribute whose value is positive</li><li><code>IntNonNegative</code>: Specifying an integer attribute whose value is
+non-negative</li><li><code>ArrayMinCount&lt;N></code>: Specifying an array attribute to have at least <code>N</code>
+elements</li><li><code>ArrayMaxCount&lt;N></code>: Specifying an array attribute to have at most <code>N</code>
+elements</li><li><code>ArrayCount&lt;N></code>: Specifying an array attribute to have exactly <code>N</code>
+elements</li><li><code>DenseArrayCount&lt;N></code>: Specifying a dense array attribute to have
+exactly <code>N</code> elements</li><li><code>DenseArrayStrictlyPositive&lt;arrayType></code>: Specifying a dense array attribute
+of type <code>arrayType</code> to have all positive elements</li><li><code>DenseArrayStrictlyNonNegative&lt;arrayType></code>: Specifying a dense array attribute
+of type <code>arrayType</code> to have all non-negative elements</li><li><code>DenseArraySorted&lt;arrayType></code>: Specifying a dense array attribute
+of type <code>arrayType</code> to have elements in non-decreasing order</li><li><code>DenseArrayStrictlySorted&lt;arrayType></code>: Specifying a dense array attribute
+of type <code>arrayType</code> to have elements in increasing order</li><li><code>IntArrayNthElemEq&lt;I, N></code>: Specifying an integer array attribute&rsquo;s <code>I</code>-th
+element to be equal to <code>N</code></li><li><code>IntArrayNthElemMinValue&lt;I, N></code>: Specifying an integer array attribute&rsquo;s
+<code>I</code>-th element to be greater than or equal to <code>N</code></li><li><code>IntArrayNthElemMaxValue&lt;I, N></code>: Specifying an integer array attribute&rsquo;s
+<code>I</code>-th element to be less than or equal to <code>N</code></li><li><code>IntArrayNthElemInRange&lt;I, M, N></code>: Specifying an integer array attribute&rsquo;s
+<code>I</code>-th element to be greater than or equal to <code>M</code> and less than or equal to <code>N</code></li><li><code>IsNullAttr</code>: Specifying an optional attribute which must be empty</li></ul><p>TODO: Design and implement more primitive constraints</p><h4 id=optional-and-default-valued-properties>Optional and default-valued properties&nbsp;<a class=headline-hash href=#optional-and-default-valued-properties>¶</a></h4><p>To declare a property with a default value, use <code>DefaultValuedProperty&lt;..., "..."></code>.
+If the property&rsquo;s storage data type is different from its interface type,
+for example, in the case of array properties (which are stored as <code>SmallVector</code>s
+but use <code>ArrayRef</code> as an interface type), add the storage-type equivalent
+of the default value as the third argument.</p><p>To declare an optional property, use <code>OptionalProperty&lt;...></code>.
+This wraps the underlying property in an <code>std::optional</code> and gives it a
+default value of <code>std::nullopt</code>.</p><h4 id=combining-constraints>Combining constraints&nbsp;<a class=headline-hash href=#combining-constraints>¶</a></h4><p><code>AllAttrOf</code> is provided to allow combination of multiple constraints which
+must all hold.</p><p>For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>OpAllAttrConstraint1</span> <span class=p>:</span> <span class=nv>TEST_Op</span><span class=p>&lt;</span><span class=s>&#34;all_attr_constraint_of1&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>I64ArrayAttr</span><span class=p>:</span><span class=nv>$attr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span> <span class=nv>I32</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>OpAllAttrConstraint2</span> <span class=p>:</span> <span class=nv>TEST_Op</span><span class=p>&lt;</span><span class=s>&#34;all_attr_constraint_of2&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>I64ArrayAttr</span><span class=p>:</span><span class=nv>$attr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span> <span class=nv>I32</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Constraint0</span> <span class=p>:</span> <span class=nv>AttrConstraint</span><span class=p>&lt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;::llvm::cast&lt;::mlir::IntegerAttr&gt;(::llvm::cast&lt;ArrayAttr&gt;($_self)[0]).getInt() == 0&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;[0] == 0&#34;</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Constraint1</span> <span class=p>:</span> <span class=nv>AttrConstraint</span><span class=p>&lt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;::llvm::cast&lt;::mlir::IntegerAttr&gt;(::llvm::cast&lt;ArrayAttr&gt;($_self)[1]).getInt() == 1&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;[1] == 1&#34;</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=p>:</span> <span class=nv>Pat</span><span class=p>&lt;(</span><span class=nv>OpAllAttrConstraint1</span>
+</span></span><span class=line><span class=cl>            <span class=nv>AllAttrOf</span><span class=p>&lt;[</span><span class=nv>Constraint0</span><span class=p>,</span> <span class=nv>Constraint1</span><span class=p>]&gt;:</span><span class=nv>$attr</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>          <span class=p>(</span><span class=nv>OpAllAttrConstraint2</span> <span class=nv>$attr</span><span class=p>)&gt;;</span>
+</span></span></code></pre></div><h3 id=operation-regions>Operation regions&nbsp;<a class=headline-hash href=#operation-regions>¶</a></h3><p>The regions of an operation are specified inside of the <code>dag</code>-typed <code>regions</code>,
+led by <code>region</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>regions</span> <span class=p>=</span> <span class=p>(</span><span class=nv>region</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>region</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>region</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></div><h4 id=variadic-regions>Variadic regions&nbsp;<a class=headline-hash href=#variadic-regions>¶</a></h4><p>Similar to the <code>Variadic</code> class used for variadic operands and results,
+<code>VariadicRegion&lt;...></code> can be used for regions. Variadic regions can currently
+only be specified as the last region in the regions list.</p><h3 id=operation-results>Operation results&nbsp;<a class=headline-hash href=#operation-results>¶</a></h3><p>Similar to operands, results are specified inside the <code>dag</code>-typed <code>results</code>, led
+by <code>outs</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>type</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>result</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></div><h4 id=variadic-results>Variadic results&nbsp;<a class=headline-hash href=#variadic-results>¶</a></h4><p>Similar to variadic operands, <code>Variadic&lt;...></code> can also be used for results. And
+similarly, <code>SameVariadicResultSize</code> for multiple variadic results in the same
+operation.</p><h3 id=operation-successors>Operation successors&nbsp;<a class=headline-hash href=#operation-successors>¶</a></h3><p>For terminator operations, the successors are specified inside of the
+<code>dag</code>-typed <code>successors</code>, led by <code>successor</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>successors</span> <span class=p>=</span> <span class=p>(</span><span class=nv>successor</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nv>successor</span><span class=err>-</span><span class=nv>constraint</span><span class=p>&gt;:</span><span class=err>$</span><span class=p>&lt;</span><span class=nv>successor</span><span class=err>-</span><span class=nv>name</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></div><h4 id=variadic-successors>Variadic successors&nbsp;<a class=headline-hash href=#variadic-successors>¶</a></h4><p>Similar to the <code>Variadic</code> class used for variadic operands and results,
+<code>VariadicSuccessor&lt;...></code> can be used for successors. Variadic successors can
+currently only be specified as the last successor in the successor list.</p><h3 id=operation-traits-and-constraints>Operation traits and constraints&nbsp;<a class=headline-hash href=#operation-traits-and-constraints>¶</a></h3><p>Traits are operation properties that affect syntax or semantics. MLIR C++ models
+various traits in the <code>mlir::OpTrait</code> namespace.</p><p>Both operation traits,
+<a href=/docs/Interfaces/#utilizing-the-ods-framework>interfaces</a>,
+and constraints involving multiple operands/attributes/results are provided as
+the third template parameter to the <code>Op</code> class. They should be deriving from
+the <code>OpTrait</code> class. See
+<a href=#constraints>Constraints</a> for more information.</p><h3 id=builder-methods>Builder methods&nbsp;<a class=headline-hash href=#builder-methods>¶</a></h3><p>For each operation, there are a few builders automatically generated based on
+the arguments and returns types. For example, given the following op definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>    <span class=nv>I32</span><span class=p>:</span><span class=nv>$i32_operand</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>F32</span><span class=p>:</span><span class=nv>$f32_operand</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>...,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nv>I32Attr</span><span class=p>:</span><span class=nv>$i32_attr</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>F32Attr</span><span class=p>:</span><span class=nv>$f32_attr</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>    <span class=nv>I32Property</span><span class=p>:</span><span class=nv>$i32_prop</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span>
+</span></span><span class=line><span class=cl>    <span class=nv>I32</span><span class=p>:</span><span class=nv>$i32_result</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>F32</span><span class=p>:</span><span class=nv>$f32_result</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The following builders are generated:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// All result-types/operands/attributes have one aggregate parameter.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>odsBuilder</span><span class=p>,</span> <span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>odsState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>TypeRange</span> <span class=n>resultTypes</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>ValueRange</span> <span class=n>operands</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>NamedAttribute</span><span class=o>&gt;</span> <span class=n>attributes</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Each result-type/operand/attribute has a separate parameter. The parameters
+</span></span></span><span class=line><span class=cl><span class=c1>// for attributes are of mlir::Attribute types.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>odsBuilder</span><span class=p>,</span> <span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>odsState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>Type</span> <span class=n>i32_result</span><span class=p>,</span> <span class=n>Type</span> <span class=n>f32_result</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>Value</span> <span class=n>i32_operand</span><span class=p>,</span> <span class=n>Value</span> <span class=n>f32_operand</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>IntegerAttr</span> <span class=n>i32_attr</span><span class=p>,</span> <span class=n>FloatAttr</span> <span class=n>f32_attr</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=kt>int32_t</span> <span class=n>i32_prop</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Each result-type/operand/attribute has a separate parameter. The parameters
+</span></span></span><span class=line><span class=cl><span class=c1>// for attributes are raw values unwrapped with mlir::Attribute instances.
+</span></span></span><span class=line><span class=cl><span class=c1>// (Note that this builder will not always be generated. See the following
+</span></span></span><span class=line><span class=cl><span class=c1>// explanation for more details.)
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>odsBuilder</span><span class=p>,</span> <span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>odsState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>Type</span> <span class=n>i32_result</span><span class=p>,</span> <span class=n>Type</span> <span class=n>f32_result</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>Value</span> <span class=n>i32_operand</span><span class=p>,</span> <span class=n>Value</span> <span class=n>f32_operand</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>APInt</span> <span class=n>i32_attr</span><span class=p>,</span> <span class=n>StringRef</span> <span class=n>f32_attr</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=kt>int32_t</span> <span class=n>i32_prop</span><span class=p>,</span> <span class=p>...);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Each operand/attribute has a separate parameter but result type is aggregate.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>odsBuilder</span><span class=p>,</span> <span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>odsState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>TypeRange</span> <span class=n>resultTypes</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>Value</span> <span class=n>i32_operand</span><span class=p>,</span> <span class=n>Value</span> <span class=n>f32_operand</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>IntegerAttr</span> <span class=n>i32_attr</span><span class=p>,</span> <span class=n>FloatAttr</span> <span class=n>f32_attr</span><span class=p>,</span> <span class=p>...,</span>
+</span></span><span class=line><span class=cl>                  <span class=kt>int32_t</span> <span class=n>i32_prop</span><span class=p>,</span> <span class=p>...);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// All operands/attributes have aggregate parameters.
+</span></span></span><span class=line><span class=cl><span class=c1>// Generated if return type can be inferred.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>odsBuilder</span><span class=p>,</span> <span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>odsState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                  <span class=n>ValueRange</span> <span class=n>operands</span><span class=p>,</span> <span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>NamedAttribute</span><span class=o>&gt;</span> <span class=n>attributes</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// (And manually specified builders depending on the specific op.)
+</span></span></span></code></pre></div><p>The first form provides basic uniformity so that we can create ops using the
+same form regardless of the exact op. This is particularly useful for
+implementing declarative pattern rewrites.</p><p>The second and third forms are good for use in manually written code, given that
+they provide better guarantee via signatures.</p><p>The third form will be generated if any of the op&rsquo;s attribute has different
+<code>Attr.returnType</code> from <code>Attr.storageType</code> and we know how to build an attribute
+from an unwrapped value (i.e., <code>Attr.constBuilderCall</code> is defined.)
+Additionally, for the third form, if an attribute appearing later in the
+<code>arguments</code> list has a default value, the default value will be supplied in the
+declaration. This works for <code>BoolAttr</code>, <code>StrAttr</code>, <code>EnumAttr</code> for now and the
+list can grow in the future. So if possible, the default-valued attribute should be
+placed at the end of the <code>arguments</code> list to leverage this feature. (This
+behavior is essentially due to C++ function parameter default value placement
+restrictions.) Otherwise, the builder of the third form will still be generated
+but default values for the attributes not at the end of the <code>arguments</code> list
+will not be supplied in the builder&rsquo;s signature.</p><p>ODS will generate a builder that doesn&rsquo;t require the return type specified if</p><ul><li>Op implements InferTypeOpInterface interface;</li><li>All return types are either buildable types or are the same as a given
+operand (e.g., <code>AllTypesMatch</code> constraint between operand and result);</li></ul><p>And there may potentially exist other builders depending on the specific op;
+please refer to the
+<a href=#run-mlir-tblgen-to-see-the-generated-content>generated C++ file</a> for the
+complete list.</p><h4 id=custom-builder-methods>Custom builder methods&nbsp;<a class=headline-hash href=#custom-builder-methods>¶</a></h4><p>However, if the above cases cannot satisfy all needs, you can define additional
+convenience build methods in the <code>builders</code> field as follows.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;</span><span class=s>&#34;my_op&#34;</span><span class=p>,</span> <span class=p>[]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>F32Attr</span><span class=p>:</span><span class=nv>$attr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;float&#34;</span><span class=p>:</span><span class=nv>$val</span><span class=p>)&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The <code>builders</code> field is a list of custom builders that are added to the Op
+class. In this example, we provide a convenience builder that takes a floating
+point value instead of an attribute. The <code>ins</code> prefix is common to many function
+declarations in ODS, which use a TableGen
+<a href=#tablegen-syntax><code>dag</code></a>. What
+follows is a comma-separated list of types (quoted string) and names prefixed
+with the <code>$</code> sign. This will generate the declaration of a builder method that
+looks like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyOp</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>builder</span><span class=p>,</span> <span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>state</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=kt>float</span> <span class=n>val</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>Note that the method has two additional leading arguments. These arguments are
+useful to construct the operation. In particular, the method must populate
+<code>state</code> with attributes, operands, regions and result types of the operation to
+be constructed. <code>builder</code> can be used to construct any IR objects that belong to
+the Op, such as types or nested operations. Since the type and name are
+generated as is in the C++ code, they should be valid C++ constructs for a type
+(in the namespace of the Op) and an identifier (e.g., <code>class</code> is not a valid
+identifier).</p><p>Implementations of the builder can be provided directly in ODS, using TableGen
+code block as follows.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;</span><span class=s>&#34;my_op&#34;</span><span class=p>,</span> <span class=p>[]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>F32Attr</span><span class=p>:</span><span class=nv>$attr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=s>&#34;float&#34;</span><span class=p>:</span><span class=nv>$val</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      $_state.addAttribute(&#34;attr&#34;, $_builder.getF32FloatAttr(val));
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The equivalents of <code>builder</code> and <code>state</code> arguments are available as <code>$_builder</code>
+and <code>$_state</code> special variables. The named arguments listed in the <code>ins</code> part
+are available directly, e.g. <code>val</code>. The body of the builder will be generated by
+substituting special variables and should otherwise be valid C++. While there is
+no limitation on the code size, we encourage one to define only short builders
+inline in ODS and put definitions of longer builders in C++ files.</p><p>Finally, if some arguments need a default value, they can be defined using
+<code>CArg</code> to wrap the type and this value as follows.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;</span><span class=s>&#34;my_op&#34;</span><span class=p>,</span> <span class=p>[]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>F32Attr</span><span class=p>:</span><span class=nv>$attr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>builders</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpBuilder</span><span class=p>&lt;(</span><span class=nv>ins</span> <span class=nv>CArg</span><span class=p>&lt;</span><span class=s>&#34;float&#34;</span><span class=p>,</span> <span class=s>&#34;0.5f&#34;</span><span class=p>&gt;:</span><span class=nv>$val</span><span class=p>),</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>      $_state.addAttribute(&#34;attr&#34;, $_builder.getF32FloatAttr(val));
+</span></span></span><span class=line><span class=cl><span class=s>    }]</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The generated code will use default value in the declaration, but not in the
+definition, as required by C++.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Header file.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>class</span> <span class=nc>MyOp</span> <span class=o>:</span> <span class=cm>/*...*/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>void</span> <span class=nf>build</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>builder</span><span class=p>,</span> <span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>state</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=kt>float</span> <span class=n>val</span> <span class=o>=</span> <span class=mf>0.5f</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Source file.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>MyOp</span><span class=o>::</span><span class=n>build</span><span class=p>(</span><span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OpBuilder</span> <span class=o>&amp;</span><span class=n>builder</span><span class=p>,</span> <span class=o>::</span><span class=n>mlir</span><span class=o>::</span><span class=n>OperationState</span> <span class=o>&amp;</span><span class=n>state</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=kt>float</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>state</span><span class=p>.</span><span class=n>addAttribute</span><span class=p>(</span><span class=s>&#34;attr&#34;</span><span class=p>,</span> <span class=n>builder</span><span class=p>.</span><span class=n>getF32FloatAttr</span><span class=p>(</span><span class=n>val</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=custom-parser-and-printer-methods>Custom parser and printer methods&nbsp;<a class=headline-hash href=#custom-parser-and-printer-methods>¶</a></h3><p>Functions to parse and print the operation&rsquo;s custom assembly form.</p><h3 id=custom-verifier-code>Custom verifier code&nbsp;<a class=headline-hash href=#custom-verifier-code>¶</a></h3><p>Verification code will be automatically generated for
+<a href=#constraints>constraints</a> specified on various entities of the op. To perform
+<em>additional</em> verification, you can use</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>hasVerifier</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>let</span> <span class=nv>hasRegionVerifier</span> <span class=p>=</span> <span class=m>1</span><span class=p>;</span>
+</span></span></code></pre></div><p>This will generate <code>LogicalResult verify()</code>/<code>LogicalResult verifyRegions()</code>
+method declarations on the op class that can be defined with any additional
+verification constraints. For verificaiton which needs to access the nested
+operations, you should use <code>hasRegionVerifier</code> to ensure that it won&rsquo;t access
+any ill-formed operation. Except that, The other verifications can be
+implemented with <code>hasVerifier</code>. Check the next section for the execution order
+of these verification methods.</p><h4 id=verification-ordering>Verification Ordering&nbsp;<a class=headline-hash href=#verification-ordering>¶</a></h4><p>The verification of an operation involves several steps,</p><ol><li>StructuralOpTrait will be verified first, they can be run independently.</li><li><code>verifyInvariants</code> which is constructed by ODS, it verifies the type,
+attributes, .etc.</li><li>Other Traits/Interfaces that have marked their verifier as <code>verifyTrait</code> or
+<code>verifyWithRegions=0</code>.</li><li>Custom verifier which is defined in the op and has been marked <code>hasVerifier=1</code></li></ol><p>If an operation has regions, then it may have the second phase,</p><ol><li>Traits/Interfaces that have marked their verifier as <code>verifyRegionTrait</code> or
+<code>verifyWithRegions=1</code>. This implies the verifier needs to access the
+operations in its regions.</li><li>Custom verifier which is defined in the op and has been marked
+<code>hasRegionVerifier=1</code></li></ol><p>Note that the second phase will be run after the operations in the region are
+verified. Verifiers further down the order can rely on certain invariants being
+verified by a previous verifier and do not need to re-verify them.</p><h4 id=emitting-diagnostics-in-custom-verifiers>Emitting diagnostics in custom verifiers&nbsp;<a class=headline-hash href=#emitting-diagnostics-in-custom-verifiers>¶</a></h4><p>Custom verifiers should avoid printing operations using custom operation
+printers, because they require the printed operation (and sometimes its parent
+operation) to be verified first. In particular, when emitting diagnostics,
+custom verifiers should use the <code>Error</code> severity level, which prints operations
+in generic form by default, and avoid using lower severity levels (<code>Note</code>,
+<code>Remark</code>, <code>Warning</code>).</p><h3 id=declarative-assembly-format>Declarative Assembly Format&nbsp;<a class=headline-hash href=#declarative-assembly-format>¶</a></h3><p>The custom assembly form of the operation may be specified in a declarative
+string that matches the operations operands, attributes, etc. With the ability
+to express additional information that needs to be parsed to build the
+operation:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>CallOp</span> <span class=p>:</span> <span class=nv>Std_Op</span><span class=p>&lt;</span><span class=s>&#34;call&#34;</span><span class=p>,</span> <span class=p>...&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>FlatSymbolRefAttr</span><span class=p>:</span><span class=nv>$callee</span><span class=p>,</span> <span class=nv>Variadic</span><span class=p>&lt;</span><span class=nv>AnyType</span><span class=p>&gt;:</span><span class=nv>$args</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>results</span> <span class=p>=</span> <span class=p>(</span><span class=nv>outs</span> <span class=nv>Variadic</span><span class=p>&lt;</span><span class=nv>AnyType</span><span class=p>&gt;);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    $callee `(` $args `)` attr-dict `:` functional-type($args, results)
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The format is comprised of three components:</p><h4 id=directives>Directives&nbsp;<a class=headline-hash href=#directives>¶</a></h4><p>A directive is a type of builtin function, with an optional set of arguments.
+The available directives are as follows:</p><ul><li><p><code>attr-dict</code></p><ul><li>Represents the attribute dictionary of the operation.</li><li>Any inherent attributes that are not used elsewhere in the format are
+printed as part of the attribute dictionary unless a <code>prop-dict</code> is
+present.</li><li>Discardable attributes are always part of the <code>attr-dict</code>.</li></ul></li><li><p><code>attr-dict-with-keyword</code></p><ul><li>Represents the attribute dictionary of the operation, but prefixes the
+dictionary with an <code>attributes</code> keyword.</li></ul></li><li><p><code>prop-dict</code></p><ul><li>Represents the properties of the operation converted to a dictionary.</li><li>Any property or inherent attribute that are not used elsewhere in the
+format are parsed and printed as part of this dictionary.</li><li>If present, the <code>attr-dict</code> will not contain any inherent attributes.</li></ul></li><li><p><code>custom &lt; UserDirective > ( Params )</code></p><ul><li>Represents a custom directive implemented by the user in C++.</li><li>See the
+<a href=#custom-directives>Custom Directives</a> section below for more
+details.</li></ul></li><li><p><code>functional-type ( inputs , outputs )</code></p><ul><li>Formats the <code>inputs</code> and <code>outputs</code> arguments as a
+<a href=/docs/Dialects/Builtin/#functiontype>function type</a>.</li><li>The constraints on <code>inputs</code> and <code>outputs</code> are the same as the <code>input</code> of
+the <code>type</code> directive.</li></ul></li><li><p><code>oilist ( `keyword` elements | `otherKeyword` elements ...)</code></p><ul><li>Represents an optional order-independent list of clauses. Each clause
+has a keyword and corresponding assembly format.</li><li>Each clause can appear 0 or 1 time (in any order).</li><li>Only literals, types and variables can be used within an oilist element.</li><li>All the variables must be optional or variadic.</li></ul></li><li><p><code>operands</code></p><ul><li>Represents all of the operands of an operation.</li></ul></li><li><p><code>ref ( input )</code></p><ul><li>Represents a reference to the a variable or directive, that must have
+already been resolved, that may be used as a parameter to a <code>custom</code>
+directive.</li><li>Used to pass previously parsed entities to custom directives.</li><li>The input may be any directive or variable, aside from <code>functional-type</code>
+and <code>custom</code>.</li></ul></li><li><p><code>regions</code></p><ul><li>Represents all of the regions of an operation.</li></ul></li><li><p><code>results</code></p><ul><li>Represents all of the results of an operation.</li></ul></li><li><p><code>successors</code></p><ul><li>Represents all of the successors of an operation.</li></ul></li><li><p><code>type ( input )</code></p><ul><li>Represents the type of the given input.</li><li><code>input</code> must be either an operand or result
+<a href=#variables>variable</a>, the
+<code>operands</code> directive, or the <code>results</code> directive.</li></ul></li><li><p><code>qualified ( type_or_attribute )</code></p><ul><li>Wraps a <code>type</code> directive or an attribute parameter.</li><li>Used to force printing the type or attribute prefixed with its dialect
+and mnemonic. For example the <code>vector.multi_reduction</code> operation has a
+<code>kind</code> attribute ; by default the declarative assembly will print:
+<code>vector.multi_reduction &lt;minf>, ...</code> but using <code>qualified($kind)</code> in the
+declarative assembly format will print it instead as:
+<code>vector.multi_reduction #vector.kind&lt;minf>, ...</code>.</li></ul></li></ul><h4 id=literals>Literals&nbsp;<a class=headline-hash href=#literals>¶</a></h4><p>A literal is either a keyword or punctuation surrounded by ``.</p><p>The following are the set of valid punctuation:</p><p><code>:</code>, <code>,</code>, <code>=</code>, <code>&lt;</code>, <code>></code>, <code>(</code>, <code>)</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>-></code>, <code>?</code>, <code>+</code>, <code>*</code></p><p>The following are valid whitespace punctuation:</p><p><code>\n</code>, <code></code></p><p>The <code>\n</code> literal emits a newline an indents to the start of the operation. An
+example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>  `{` `\n` ` ` ` ` `this_is_on_a_newline` `\n` `}` attr-dict
+</span></span></span><span class=line><span class=cl><span class=s>}]</span><span class=p>;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%results</span> <span class=p>=</span> my<span class=p>.</span>operation <span class=p>{</span>
+</span></span><span class=line><span class=cl>  this_is_on_a_newline
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>An empty literal `` may be used to remove a space that is inserted implicitly
+after certain literal elements, such as <code>)</code>/<code>]</code>/etc. For example, &ldquo;<code>]</code>&rdquo; may
+result in an output of <code>]</code> it is not the last element in the format. &ldquo;<code>]</code> ``&rdquo;
+would trim the trailing space in this situation.</p><h4 id=variables>Variables&nbsp;<a class=headline-hash href=#variables>¶</a></h4><p>A variable is an entity that has been registered on the operation itself, i.e.
+an argument(attribute or operand), region, result, successor, etc. In the
+<code>CallOp</code> example above, the variables would be <code>$callee</code> and <code>$args</code>.</p><p>Attribute variables are printed with their respective value type, unless that
+value type is buildable. In those cases, the type of the attribute is elided.</p><h4 id=custom-directives>Custom Directives&nbsp;<a class=headline-hash href=#custom-directives>¶</a></h4><p>The declarative assembly format specification allows for handling a large
+majority of the common cases when formatting an operation. For the operations
+that require or desire specifying parts of the operation in a form not supported
+by the declarative syntax, custom directives may be specified. A custom
+directive essentially allows for users to use C++ for printing and parsing
+subsections of an otherwise declaratively specified format. Looking at the
+specification of a custom directive above:</p><pre tabindex=0><code>custom-directive ::= `custom` `&lt;` UserDirective `&gt;` `(` Params `)`
+</code></pre><p>A custom directive has two main parts: The <code>UserDirective</code> and the <code>Params</code>. A
+custom directive is transformed into a call to a <code>print*</code> and a <code>parse*</code> method
+when generating the C++ code for the format. The <code>UserDirective</code> is an
+identifier used as a suffix to these two calls, i.e., <code>custom&lt;MyDirective>(...)</code>
+would result in calls to <code>parseMyDirective</code> and <code>printMyDirective</code> within the
+parser and printer respectively. <code>Params</code> may be any combination of variables
+(i.e. Attribute, Operand, Successor, etc.), type directives, <code>attr-dict</code>, and
+strings of C++ code. The type directives must refer to a variable, but that
+variable need not also be a parameter to the custom directive.</p><p>The arguments to the <code>parse&lt;UserDirective></code> method are firstly a reference to
+the <code>OpAsmParser</code>(<code>OpAsmParser &</code>), and secondly a set of output parameters
+corresponding to the parameters specified in the format. The mapping of
+declarative parameter to <code>parse</code> method argument is detailed below:</p><ul><li>Attribute Variables<ul><li>Single: <code>&lt;Attribute-Storage-Type>(e.g. Attribute) &</code></li><li>Optional: <code>&lt;Attribute-Storage-Type>(e.g. Attribute) &</code></li></ul></li><li>Operand Variables<ul><li>Single: <code>OpAsmParser::UnresolvedOperand &</code></li><li>Optional: <code>Optional&lt;OpAsmParser::UnresolvedOperand> &</code></li><li>Variadic: <code>SmallVectorImpl&lt;OpAsmParser::UnresolvedOperand> &</code></li><li>VariadicOfVariadic:
+<code>SmallVectorImpl&lt;SmallVector&lt;OpAsmParser::UnresolvedOperand>> &</code></li></ul></li><li>Ref Directives<ul><li>A reference directive is passed to the parser using the same mapping as
+the input operand. For example, a single region would be passed as a
+<code>Region &</code>.</li></ul></li><li>Region Variables<ul><li>Single: <code>Region &</code></li><li>Variadic: <code>SmallVectorImpl&lt;std::unique_ptr&lt;Region>> &</code></li></ul></li><li>Successor Variables<ul><li>Single: <code>Block *&</code></li><li>Variadic: <code>SmallVectorImpl&lt;Block *> &</code></li></ul></li><li>Type Directives<ul><li>Single: <code>Type &</code></li><li>Optional: <code>Type &</code></li><li>Variadic: <code>SmallVectorImpl&lt;Type> &</code></li><li>VariadicOfVariadic: <code>SmallVectorImpl&lt;SmallVector&lt;Type>> &</code></li></ul></li><li><code>attr-dict</code> Directive: <code>NamedAttrList &</code></li></ul><p>When a variable is optional, the value should only be specified if the variable
+is present. Otherwise, the value should remain <code>None</code> or null.</p><p>The arguments to the <code>print&lt;UserDirective></code> method is firstly a reference to the
+<code>OpAsmPrinter</code>(<code>OpAsmPrinter &</code>), second the op (e.g. <code>FooOp op</code> which can be
+<code>Operation *op</code> alternatively), and finally a set of output parameters
+corresponding to the parameters specified in the format. The mapping of
+declarative parameter to <code>print</code> method argument is detailed below:</p><ul><li>Attribute Variables<ul><li>Single: <code>&lt;Attribute-Storage-Type>(e.g. Attribute)</code></li><li>Optional: <code>&lt;Attribute-Storage-Type>(e.g. Attribute)</code></li></ul></li><li>Operand Variables<ul><li>Single: <code>Value</code></li><li>Optional: <code>Value</code></li><li>Variadic: <code>OperandRange</code></li><li>VariadicOfVariadic: <code>OperandRangeRange</code></li></ul></li><li>Ref Directives<ul><li>A reference directive is passed to the printer using the same mapping as
+the input operand. For example, a single region would be passed as a
+<code>Region &</code>.</li></ul></li><li>Region Variables<ul><li>Single: <code>Region &</code></li><li>Variadic: <code>MutableArrayRef&lt;Region></code></li></ul></li><li>Successor Variables<ul><li>Single: <code>Block *</code></li><li>Variadic: <code>SuccessorRange</code></li></ul></li><li>Type Directives<ul><li>Single: <code>Type</code></li><li>Optional: <code>Type</code></li><li>Variadic: <code>TypeRange</code></li><li>VariadicOfVariadic: <code>TypeRangeRange</code></li></ul></li><li><code>attr-dict</code> Directive: <code>DictionaryAttr</code></li></ul><p>When a variable is optional, the provided value may be null. When a variable is
+referenced in a custom directive parameter using <code>ref</code>, it is passed in by
+value. Referenced variables to <code>print&lt;UserDirective></code> are passed as the same as
+bound variables, but referenced variables to <code>parse&lt;UserDirective></code> are passed
+like to the printer.</p><p>A custom directive can take a string of C++ code as a parameter. The code is
+pasted verbatim in the calls to the custom parser and printers, with the
+substitutions <code>$_builder</code> and <code>$_ctxt</code>. String literals can be used to
+parameterize custom directives.</p><h4 id=optional-groups>Optional Groups&nbsp;<a class=headline-hash href=#optional-groups>¶</a></h4><p>In certain situations operations may have &ldquo;optional&rdquo; information, e.g.
+attributes or an empty set of variadic operands. In these situations a section
+of the assembly format can be marked as <code>optional</code> based on the presence of this
+information. An optional group is defined as follows:</p><pre tabindex=0><code>optional-group: `(` then-elements `)` (`:` `(` else-elements `)`)? `?`
+</code></pre><p>The elements of an optional group have the following requirements:</p><ul><li>The first element of <code>then-elements</code> must either be a attribute, literal,
+operand, property, or region.<ul><li>This is because the first element must be optionally parsable.</li><li>If a property is used, it must have an <code>optionalParser</code> defined and have a
+default value.</li></ul></li><li>Exactly one argument variable or type directive within either
+<code>then-elements</code> or <code>else-elements</code> must be marked as the anchor of the
+group.<ul><li>The anchor is the element whose presence controls which elements
+should be printed/parsed.</li><li>An element is marked as the anchor by adding a trailing <code>^</code>.</li><li>The first element is <em>not</em> required to be the anchor of the group.</li><li>When a non-variadic region anchors a group, the detector for printing
+the group is if the region is empty.</li></ul></li><li>Literals, variables, custom directives, and type directives are the only
+valid elements within the group.<ul><li>Any attribute variable may be used, but only optional or default-valued
+attributes can be marked as the anchor. A default-valued anchor is
+considered present if it holds a value other than the default.</li><li>Only variadic or optional results and operand arguments and can be used.</li><li>All region variables can be used. When a non-variable length region is
+used, if the group is not present the region is empty.</li></ul></li></ul><p>An example of an operation with an optional group is <code>func.return</code>, which has a
+variadic number of operands.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>ReturnOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>Variadic</span><span class=p>&lt;</span><span class=nv>AnyType</span><span class=p>&gt;:</span><span class=nv>$operands</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// We only print the operands and types if there are a non-zero number
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// of operands.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;attr-dict ($operands^ `:` type($operands))?&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h5 id=unit-attributes>Unit Attributes&nbsp;<a class=headline-hash href=#unit-attributes>¶</a></h5><p>In MLIR, the
+<a href=/docs/Dialects/Builtin/#unitattr><code>unit</code> Attribute</a> is special in that it
+only has one possible value, i.e. it derives meaning from its existence. When a
+unit attribute is used to anchor an optional group and is not the first element
+of the group, the presence of the unit attribute can be directly correlated with
+the presence of the optional group itself. As such, in these situations the unit
+attribute will not be printed or present in the output and will be automatically
+inferred when parsing by the presence of the optional group itself.</p><p>For example, the following operation:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>FooOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>UnitAttr</span><span class=p>:</span><span class=nv>$is_read_only</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;attr-dict (`is_read_only` $is_read_only^)?&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>would be formatted as such:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// When the unit attribute is present:
+</span></span></span><span class=line><span class=cl><span class=c></span>foo<span class=p>.</span>op is_read_only
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// When the unit attribute is not present:
+</span></span></span><span class=line><span class=cl><span class=c></span>foo<span class=p>.</span>op
+</span></span></code></pre></div><p>The same logic applies to a <code>UnitProperty</code>.</p><h5 id=optional-else-group>Optional &ldquo;else&rdquo; Group&nbsp;<a class=headline-hash href=#optional-else-group>¶</a></h5><p>Optional groups also have support for an &ldquo;else&rdquo; group of elements. These are
+elements that are parsed/printed if the <code>anchor</code> element of the optional group
+is <em>not</em> present. Unlike the main element group, the &ldquo;else&rdquo; group has no
+restriction on the first element and none of the elements may act as the
+<code>anchor</code> for the optional. An example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>FooOp</span> <span class=p>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span> <span class=nv>UnitAttr</span><span class=p>:</span><span class=nv>$foo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=s>&#34;attr-dict (`foo_is_present` $foo^):(`foo_is_absent`)?&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>would be formatted as such:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// When the `foo` attribute is present:
+</span></span></span><span class=line><span class=cl><span class=c></span>foo<span class=p>.</span>op foo_is_present
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// When the `foo` attribute is not present:
+</span></span></span><span class=line><span class=cl><span class=c></span>foo<span class=p>.</span>op foo_is_absent
+</span></span></code></pre></div><h4 id=requirements>Requirements&nbsp;<a class=headline-hash href=#requirements>¶</a></h4><p>The format specification has a certain set of requirements that must be adhered
+to:</p><ol><li>The output and operation name are never shown as they are fixed and cannot
+be altered.</li><li>All operands within the operation must appear within the format, either
+individually or with the <code>operands</code> directive.</li><li>All regions within the operation must appear within the format, either
+individually or with the <code>regions</code> directive.</li><li>All successors within the operation must appear within the format, either
+individually or with the <code>successors</code> directive.</li><li>All operand and result types must appear within the format using the various
+<code>type</code> directives, either individually or with the <code>operands</code> or <code>results</code>
+directives.</li><li>Unless all non-attribute properties appear in the format, the <code>prop-dict</code>
+directive must be present.</li><li>The <code>attr-dict</code> directive must always be present.</li><li>Must not contain overlapping information; e.g. multiple instances of
+&lsquo;attr-dict&rsquo;, types, operands, etc.<ul><li>Note that <code>attr-dict</code> does not overlap with individual attributes. These
+attributes will simply be elided when printing the attribute dictionary.</li></ul></li></ol><h5 id=type-inference>Type Inference&nbsp;<a class=headline-hash href=#type-inference>¶</a></h5><p>One requirement of the format is that the types of operands and results must
+always be present. In certain instances, the type of a variable may be deduced
+via type constraints or other information available. In these cases, the type of
+that variable may be elided from the format.</p><ul><li>Buildable Types</li></ul><p>Some type constraints may only have one representation, allowing for them to be
+directly buildable; for example the <code>I32</code> or <code>Index</code> types. Types in <code>ODS</code> may
+mark themselves as buildable by setting the <code>builderCall</code> field or inheriting
+from the <code>BuildableType</code> class.</p><ul><li>Trait Equality Constraints</li></ul><p>There are many operations that have known type equality constraints registered
+as traits on the operation; for example the true, false, and result values of a
+<code>select</code> operation often have the same type. The assembly format may inspect
+these equal constraints to discern the types of missing variables. The currently
+supported traits are: <code>AllTypesMatch</code>, <code>TypesMatchWith</code>, <code>SameTypeOperands</code>, and
+<code>SameOperandsAndResultType</code>.</p><ul><li>InferTypeOpInterface</li></ul><p>Operations that implement <code>InferTypeOpInterface</code> can omit their result types in
+their assembly format since the result types can be inferred from the operands.</p><h3 id=hascanonicalizer><code>hasCanonicalizer</code>&nbsp;<a class=headline-hash href=#hascanonicalizer>¶</a></h3><p>This boolean field indicate whether canonicalization patterns have been defined
+for this operation. If it is <code>1</code>, then <code>::getCanonicalizationPatterns()</code> should
+be defined.</p><h3 id=hascanonicalizemethod><code>hasCanonicalizeMethod</code>&nbsp;<a class=headline-hash href=#hascanonicalizemethod>¶</a></h3><p>When this boolean field is set to <code>true</code>, it indicates that the op implements a
+<code>canonicalize</code> method for simple &ldquo;matchAndRewrite&rdquo; style canonicalization
+patterns. If <code>hasCanonicalizer</code> is 0, then an implementation of
+<code>::getCanonicalizationPatterns()</code> is implemented to call this function.</p><h3 id=hasfolder><code>hasFolder</code>&nbsp;<a class=headline-hash href=#hasfolder>¶</a></h3><p>This boolean field indicate whether general folding rules have been defined for
+this operation. If it is <code>1</code>, then <code>::fold()</code> should be defined.</p><h3 id=extra-declarations>Extra declarations&nbsp;<a class=headline-hash href=#extra-declarations>¶</a></h3><p>One of the goals of table-driven op definition is to auto-generate as much logic
+and methods needed for each op as possible. With that said, there will always be
+long-tail cases that won&rsquo;t be covered. For such cases, you can use
+<code>extraClassDeclaration</code>. Code in <code>extraClassDeclaration</code> will be copied
+literally to the generated C++ op class.</p><p>Note that <code>extraClassDeclaration</code> is a mechanism intended for long-tail cases by
+power users; for not-yet-implemented widely-applicable cases, improving the
+infrastructure is preferable.</p><h3 id=extra-definitions>Extra definitions&nbsp;<a class=headline-hash href=#extra-definitions>¶</a></h3><p>When defining base op classes in TableGen that are inherited many times by
+different ops, users may want to provide common definitions of utility and
+interface functions. However, many of these definitions may not be desirable or
+possible in <code>extraClassDeclaration</code>, which append them to the op&rsquo;s C++ class
+declaration. In these cases, users can add an <code>extraClassDefinition</code> to define
+code that is added to the generated source file inside the op&rsquo;s C++ namespace.
+The substitution <code>$cppClass</code> is replaced by the op&rsquo;s C++ class name.</p><h3 id=generated-c-code>Generated C++ code&nbsp;<a class=headline-hash href=#generated-c-code>¶</a></h3><p><a href=https://github.com/llvm/llvm-project/blob/main/mlir/tools/mlir-tblgen/OpDefinitionsGen.cpp>OpDefinitionsGen</a> processes the op definition spec file and
+generates two files containing the corresponding C++ code: one for declarations,
+the other for definitions. The former is generated via the <code>-gen-op-decls</code>
+command-line option, while the latter is via the <code>-gen-op-defs</code> option.</p><p>The definition file contains all the op method definitions, which can be
+included and enabled by defining <code>GET_OP_CLASSES</code>. For each operation,
+OpDefinitionsGen generates an operation class and an
+<a href=#operand-adaptors>operand adaptor</a> class. Besides, it also contains a
+comma-separated list of all defined ops, which can be included and enabled by
+defining <code>GET_OP_LIST</code>.</p><h4 id=class-name-and-namespaces>Class name and namespaces&nbsp;<a class=headline-hash href=#class-name-and-namespaces>¶</a></h4><p>For each operation, its generated C++ class name is the symbol <code>def</code>ed with
+TableGen with dialect prefix removed. The first <code>_</code> serves as the delimiter. For
+example, for <code>def TF_AddOp</code>, the C++ class name would be <code>AddOp</code>. We remove the
+<code>TF</code> prefix because it is for scoping ops; other dialects may as well define
+their own <code>AddOp</code>s.</p><p>The namespaces of the generated C++ class will come from the dialect&rsquo;s
+<code>cppNamespace</code> field. For example, if a dialect&rsquo;s <code>cppNamespace</code> is <code>A::B</code>, then
+an op of that dialect will be placed in <code>namespace A { namespace B { ... } }</code>.
+If a dialect does not specify a <code>cppNamespace</code>, we then use the dialect&rsquo;s name
+as the namespace.</p><p>This means the qualified name of the generated C++ class does not necessarily
+match exactly with the operation name as explained in
+<a href=#operation-name>Operation name</a>. This is to allow flexible naming to satisfy
+coding style requirements.</p><h4 id=operand-adaptors>Operand adaptors&nbsp;<a class=headline-hash href=#operand-adaptors>¶</a></h4><p>For each operation, we automatically generate an <em>operand adaptor</em>. This class
+solves the problem of accessing operands provided as a list of <code>Value</code>s without
+using &ldquo;magic&rdquo; constants. The operand adaptor takes a reference to an array of
+<code>Value</code> and provides methods with the same names as those in the operation class
+to access them. For example, for a binary arithmetic operation, it may provide
+<code>.lhs()</code> to access the first operand and <code>.rhs()</code> to access the second operand.</p><p>The operand adaptor class lives in the same namespace as the operation class,
+and has the name of the operation followed by <code>Adaptor</code> as well as an alias
+<code>Adaptor</code> inside the op class.</p><p>Operand adaptors can be used in function templates that also process operations:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>BinaryOpTy</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>pair</span><span class=o>&lt;</span><span class=n>Value</span><span class=p>,</span> <span class=n>Value</span><span class=o>&gt;</span> <span class=n>zip</span><span class=p>(</span><span class=n>BinaryOpTy</span> <span class=o>&amp;&amp;</span><span class=n>op</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>std</span><span class=o>::</span><span class=n>make_pair</span><span class=p>(</span><span class=n>op</span><span class=p>.</span><span class=n>lhs</span><span class=p>(),</span> <span class=n>op</span><span class=p>.</span><span class=n>rhs</span><span class=p>());;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>process</span><span class=p>(</span><span class=n>AddOp</span> <span class=n>op</span><span class=p>,</span> <span class=n>ArrayRef</span><span class=o>&lt;</span><span class=n>Value</span><span class=o>&gt;</span> <span class=n>newOperands</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>zip</span><span class=p>(</span><span class=n>op</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>zip</span><span class=p>(</span><span class=n>Adaptor</span><span class=o>&lt;</span><span class=n>AddOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>newOperands</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*...*/</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h4 id=sharded-operation-definitions>Sharded Operation Definitions&nbsp;<a class=headline-hash href=#sharded-operation-definitions>¶</a></h4><p>Large dialects with many operations may struggle with C++ compile time of
+generated op definitions, due to large compilation units. <code>mlir-tblgen</code>
+provides the ability to shard op definitions by splitting them up evenly
+by passing <code>-op-shard-count</code> to <code>-gen-op-defs</code> and <code>-gen-op-decls</code>. The tool
+will generate a single include file for the definitions broken up by
+<code>GET_OP_DEFS_${N}</code> where <code>${N}</code> is the shard number. A shard can be compiled in
+a single compilation unit by adding a file like this to your dialect library:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;mlir/IR/Operation.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=c1>// Add any other required includes.
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Utilities shared by generated op definitions: custom directive parsers,
+</span></span></span><span class=line><span class=cl><span class=c1>// printers, etc.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=cp>#include</span> <span class=cpf>&#34;OpUtils.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define GET_OP_DEFS_0
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;MyDialectOps.cpp.inc&#34;</span><span class=cp>
+</span></span></span></code></pre></div><p>Note: this requires restructing shared utility functions within the dialect
+library so they can be shared by multiple compilation units. I.e. instead of
+defining <code>static</code> methods in the same source file, you should declare them in a
+shared header and define them in their own source file.</p><p>The op registration hooks are also sharded, because the template instantiation
+can take a very long time to compile. Operations should be registered in your
+dialect like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyDialect</span><span class=o>::</span><span class=n>initialize</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>registerMyDialectOperations</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>CMake and Bazel functions are included to make sharding dialects easier.
+Assuming you have organized your operation utility functions into their own
+header, define a file that looks like the one above, but without the <code>#define</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// MyDialectOps.cpp
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=cp>#include</span> <span class=cpf>&#34;mlir/IR/Operation.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;OpUtils.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;MyDialectOps.cpp.inc&#34;</span><span class=cp>
+</span></span></span></code></pre></div><p>In CMake, remove the manual <code>mlir_tablegen</code> invocations and replace them with:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmake data-lang=cmake><span class=line><span class=cl><span class=nb>set</span><span class=p>(</span><span class=s>LLVM_TARGET_DEFINITIONS</span> <span class=s>MyDialectOps.td</span><span class=p>)</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_sharded_ops</span><span class=p>(</span><span class=s>MyDialectOps</span> <span class=s>8</span><span class=p>)</span> <span class=c># shard the op definitions by 8
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=nb>add_mlir_library</span><span class=p>(</span><span class=s>MyDialect</span>
+</span></span><span class=line><span class=cl>  <span class=s>MyDialect.cpp</span>
+</span></span><span class=line><span class=cl>  <span class=s>MyDialectOpDefs.cpp</span>
+</span></span><span class=line><span class=cl>  <span class=o>${</span><span class=nv>SHARDED_SRCS</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=s>DEPENDS</span>
+</span></span><span class=line><span class=cl>  <span class=s>MLIRTestOpsShardGen</span>
+</span></span><span class=line><span class=cl><span class=p>)</span><span class=err>
+</span></span></span></code></pre></div><p>This will automatically duplicate the <code>MyDialectOps.cpp</code> source file and add the
+<code>#define</code> up the number of shards indicated.</p><p>It is recommended that any out-of-line op member functions (like verifiers) be
+defined in a separate source file. In this example, it is called
+<code>MyDialectOpDefs.cpp</code>.</p><p>In Bazel, remove the <code>-gen-op-defs</code> and <code>-gen-op-decls</code> invocations, and add</p><pre tabindex=0><code class=language-bazel data-lang=bazel>gentbl_sharded_ops(
+    name = &#34;MyDialectOpSrcs&#34;,
+    hdr_out = &#34;MyDialectOps.h.inc&#34;,
+    shard_count = 8,
+    sharder = &#34;//mlir:mlir-src-sharder&#34;,
+    src_file = &#34;MyDialectOps.cpp&#34;,
+    src_out = &#34;MyDialectOps.cpp.inc&#34;,
+    tblgen = &#34;//mlir:mlir-tblgen&#34;,
+    td_file = &#34;MyDialectOps.td&#34;,
+    deps = [&#34;:MyDialectOpsTdFiles&#34;],
+)
+
+cc_library(
+    name = &#34;MyDialect&#34;,
+    srcs = glob([&#34;MyDialect/*.cpp&#34;]) + [&#34;:MyDialectOpSrcs&#34;]
+)
+</code></pre><h2 id=constraints>Constraints&nbsp;<a class=headline-hash href=#constraints>¶</a></h2><p>Constraint is a core concept in table-driven operation definition: operation
+verification and graph operation matching are all based on satisfying
+constraints. So both the operation definition and rewrite rules specification
+significantly involve writing constraints. We have the <code>Constraint</code> class in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a> as the common base class for all constraints.</p><p>An operation&rsquo;s constraint can cover different range; it may</p><ul><li>Only concern a single attribute (e.g. being a 32-bit integer greater than
+5),</li><li>Multiple operands and results (e.g., the 1st result&rsquo;s shape must be the same
+as the 1st operand), or</li><li>Intrinsic to the operation itself (e.g., having no side effect).</li></ul><p>We call them as single-entity constraint, multi-entity constraint, and traits,
+respectively.</p><h3 id=single-entity-constraint>Single-entity constraint&nbsp;<a class=headline-hash href=#single-entity-constraint>¶</a></h3><p>Constraints scoped to a single operand, attribute, or result are specified at
+the entity&rsquo;s declaration place as described in
+<a href=#operation-arguments>Operation arguments</a> and
+<a href=#operation-results>Operation results</a>.</p><p>To help modelling constraints of common types, a set of <code>TypeConstraint</code>s are
+created; they are the <code>Type</code> subclass hierarchy. It includes <code>F32</code> for the
+constraints of being a float, <code>TensorOf&lt;[F32]></code> for the constraints of being a
+float tensor, and so on.</p><p>Similarly, a set of <code>AttrConstraint</code>s are created for helping modelling
+constraints of common attribute kinds. They are the <code>Attr</code> subclass hierarchy.
+It includes <code>F32Attr</code> for the constraints of being a float attribute,
+<code>F32ArrayAttr</code> for the constraints of being a float array attribute, and so on.</p><h3 id=multi-entity-constraint>Multi-entity constraint&nbsp;<a class=headline-hash href=#multi-entity-constraint>¶</a></h3><p>Constraints involving more than one operand/attribute/result are quite common on
+operations, like the element type and shape relation between operands and
+results. These constraints should be specified as the <code>Op</code> class template
+parameter as described in
+<a href=#operation-traits-and-constraints>Operation traits and constraints</a>.</p><p>Multi-entity constraints are modeled as <code>PredOpTrait</code> (a subclass of <code>OpTrait</code>)
+in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a>.A bunch of constraint primitives are provided to help
+specification. See
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a> for the complete list.</p><h3 id=trait>Trait&nbsp;<a class=headline-hash href=#trait>¶</a></h3><p>Traits are intrinsic properties of the operation like having side effect or not,
+commutative or not, whether is a terminator, etc. These constraints should be
+specified as the <code>Op</code> class template parameter as described in
+<a href=#operation-traits-and-constraints>Operation traits and constraints</a>.</p><p>Traits are modeled as <code>NativeOpTrait</code> (a subclass of <code>OpTrait</code>) in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a>. They are backed and will be translated into the
+corresponding C++ <code>mlir::OpTrait</code> classes.</p><h3 id=how-to-specify-new-constraint>How to specify new constraint&nbsp;<a class=headline-hash href=#how-to-specify-new-constraint>¶</a></h3><p>To write a constraint, you need to provide its predicates and give it a
+descriptive name. Predicates, modeled with the <code>Pred</code> class, are the workhorse
+for composing constraints. The predicate for a constraint is typically built up
+in a nested manner, using the two categories of predicates:</p><ol><li><code>CPred</code>: the primitive leaf predicate.</li><li>Compound predicate: a predicate composed from child predicates using
+predicate combiners (conjunction: <code>And</code>, disjunction: <code>Or</code>, negation: <code>Neg</code>,
+substitution: <code>SubstLeaves</code>, concatenation: <code>Concat</code>).</li></ol><p><code>CPred</code> is the basis for composing more complex predicates. It is the &ldquo;atom&rdquo;
+predicate from the perspective of TableGen and the &ldquo;interface&rdquo; between TableGen
+and C++. What is inside is already C++ code, which will be treated as opaque
+strings with special placeholders to be substituted.</p><p>You can put any C++ code that returns a boolean value inside a <code>CPred</code>,
+including evaluating expressions, calling functions, calling class methods, and
+so on.</p><p>To help interaction with the C++ environment, there are a few special
+placeholders provided to refer to entities in the context where this predicate
+is used. They serve as &ldquo;hooks&rdquo; to the enclosing environment. This includes
+<code>$_builder</code>, <code>$_op</code>, and <code>$_self</code>:</p><ul><li><code>$_builder</code> will be replaced by a <code>mlir::Builder</code> instance so that you can
+access common build methods.</li><li><code>$_op</code> will be replaced by the current operation so that you can access
+information of the current operation.</li><li><code>$_self</code> will be replaced with the entity this predicate is attached to.
+E.g., <code>BoolAttr</code> is an attribute constraint that wraps a
+<code>CPred&lt;"$_self.isa&lt;BoolAttr>()"></code>. Then for <code>BoolAttr:$attr</code>,<code>$_self</code> will be
+replaced by <code>$attr</code>. For type constraints, it&rsquo;s a little bit special since
+we want the constraints on each type definition reads naturally and we want
+to attach type constraints directly to an operand/result, <code>$_self</code> will be
+replaced by the operand/result&rsquo;s type. E.g., for <code>F32</code> in <code>F32:$operand</code>,
+its <code>$_self</code> will be expanded as <code>operand(...).getType()</code>.</li></ul><p>TODO: Reconsider the leading symbol for special placeholders. Eventually we want
+to allow referencing operand/result <code>$-name</code>s; such <code>$-name</code>s can start with
+underscore.</p><p>For example, to write an attribute <code>attr</code> is an <code>IntegerAttr</code>, in C++ you can
+just call <code>attr.isa&lt;IntegerAttr>()</code>. The code can be wrapped in a <code>CPred</code> as
+<code>$_self.isa&lt;IntegerAttr>()</code>, with <code>$_self</code> as the special placeholder to be
+replaced by the current attribute <code>attr</code> at expansion time.</p><p>For more complicated predicates, you can wrap it in a single <code>CPred</code>, or you can
+use predicate combiners to combine them. For example, to write the constraint
+that an attribute <code>attr</code> is a 32-bit or 64-bit integer, you can write it as</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=nv>And</span><span class=p>&lt;[</span>
+</span></span><span class=line><span class=cl>  <span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;$_self.isa&lt;IntegerAttr&gt;()&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=nv>Or</span><span class=p>&lt;[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;$_self.cast&lt;IntegerAttr&gt;().getType().isInteger(32)&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;$_self.cast&lt;IntegerAttr&gt;().getType().isInteger(64)&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>]&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>]&gt;</span>
+</span></span></code></pre></div><p>(Note that the above is just to show with a familiar example how you can use
+<code>CPred</code> and predicate combiners to write complicated predicates. For integer
+attributes specifically,
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/OpBase.td><code>OpBase.td</code></a> already defines <code>I32Attr</code> and
+<code>I64Attr</code>. So you can actually reuse them to write it as <code>Or&lt;[I32Attr.predicate, I64Attr.predicate]></code>.)</p><p>TODO: Build up a library of reusable primitive constraints</p><p>If the predicate is very complex to write with <code>CPred</code> together with predicate
+combiners, you can also write it as a normal C++ function and use the <code>CPred</code> as
+a way to &ldquo;invoke&rdquo; the function. For example, to verify an attribute <code>attr</code> has
+some property, you can write a C++ function like</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>HasSomeProperty</span><span class=p>(</span><span class=n>Attribute</span> <span class=n>attr</span><span class=p>)</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span></code></pre></div><p>and then define the op as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>HasSomeProperty</span> <span class=p>:</span> <span class=nv>AttrConstraint</span><span class=p>&lt;</span><span class=nv>CPred</span><span class=p>&lt;</span><span class=s>&#34;HasSomeProperty($_self)&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>                                     <span class=s>&#34;has some property&#34;</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;...&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>    <span class=nv>HasSomeProperty</span><span class=p>:</span><span class=nv>$attr</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>As to whether we should define the predicate using a single <code>CPred</code> wrapping the
+whole expression, multiple <code>CPred</code>s with predicate combiners, or a single
+<code>CPred</code> &ldquo;invoking&rdquo; a function, there are no clear-cut criteria. Defining using
+<code>CPred</code> and predicate combiners is preferable since it exposes more information
+(instead hiding all the logic behind a C++ function) into the op definition spec
+so that it can potentially drive more auto-generation cases. But it will require
+a nice library of common predicates as the building blocks to avoid the
+duplication, which is being worked on right now.</p><h2 id=attribute-definition>Attribute Definition&nbsp;<a class=headline-hash href=#attribute-definition>¶</a></h2><p>An attribute is a compile-time known constant of an operation.</p><p>ODS provides attribute wrappers over C++ attribute classes. There are a few
+common C++
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/Attributes.h>attribute classes</a> defined in MLIR&rsquo;s core IR library
+and one is free to define dialect-specific attribute classes. ODS allows one to
+use these attributes in TableGen to define operations, potentially with more
+fine-grained constraints. For example, <code>StrAttr</code> directly maps to <code>StringAttr</code>;
+<code>F32Attr</code>/<code>F64Attr</code> requires the <code>FloatAttr</code> to additionally be of a certain
+bitwidth.</p><p>ODS attributes are defined as having a storage type (corresponding to a backing
+<code>mlir::Attribute</code> that <em>stores</em> the attribute), a return type (corresponding to
+the C++ <em>return</em> type of the generated helper getters) as well as a method
+to convert between the internal storage and the helper method.</p><h3 id=attribute-decorators>Attribute decorators&nbsp;<a class=headline-hash href=#attribute-decorators>¶</a></h3><p>There are a few important attribute adapters/decorators/modifiers that can be
+applied to ODS attributes to specify common additional properties like
+optionality, default values, etc.:</p><ul><li><code>DefaultValuedAttr</code>: specifies the
+<a href=#attributes-with-default-values>default value</a> for an attribute.</li><li><code>OptionalAttr</code>: specifies an attribute as
+<a href=#optional-attributes>optional</a>.</li><li><code>ConfinedAttr</code>: adapts an attribute with
+<a href=#confining-attributes>further constraints</a>.</li><li><code>AllAttrOf</code>: adapts an attribute with
+<a href=#combining-constraints>multiple constraints</a>.</li></ul><h3 id=enum-attributes>Enum attributes&nbsp;<a class=headline-hash href=#enum-attributes>¶</a></h3><p>Some attributes can only take values from a predefined enum, e.g., the
+comparison kind of a comparison op. To define such attributes, ODS provides
+several mechanisms: <code>IntEnumAttr</code>, and <code>BitEnumAttr</code>.</p><ul><li><code>IntEnumAttr</code>: each enum case is an integer, the attribute is stored as a
+<a href=/docs/Dialects/Builtin/#integertype><code>IntegerAttr</code></a> in the op.</li><li><code>BitEnumAttr</code>: each enum case is a either the empty case, a single bit,
+or a group of single bits, and the attribute is stored as a
+<a href=/docs/Dialects/Builtin/#integertype><code>IntegerAttr</code></a> in the op.</li></ul><p>All these <code>*EnumAttr</code> attributes require fully specifying all of the allowed
+cases via their corresponding <code>*EnumAttrCase</code>. With this, ODS is able to
+generate additional verification to only accept allowed cases. To facilitate the
+interaction between <code>*EnumAttr</code>s and their C++ consumers, the
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/tools/mlir-tblgen/EnumsGen.cpp><code>EnumsGen</code></a> TableGen backend can generate a few common utilities: a
+C++ enum class, <code>llvm::DenseMapInfo</code> for the enum class, conversion functions
+from/to strings. This is controlled via the <code>-gen-enum-decls</code> and
+<code>-gen-enum-defs</code> command-line options of <code>mlir-tblgen</code>.</p><p>For example, given the following <code>EnumAttr</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>Case15</span><span class=p>:</span> <span class=nv>I32EnumAttrCase</span><span class=p>&lt;</span><span class=s>&#34;Case15&#34;</span><span class=p>,</span> <span class=m>15</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Case20</span><span class=p>:</span> <span class=nv>I32EnumAttrCase</span><span class=p>&lt;</span><span class=s>&#34;Case20&#34;</span><span class=p>,</span> <span class=m>20</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyIntEnum</span><span class=p>:</span> <span class=nv>I32EnumAttr</span><span class=p>&lt;</span><span class=s>&#34;MyIntEnum&#34;</span><span class=p>,</span> <span class=s>&#34;An example int enum&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                           <span class=p>[</span><span class=nv>Case15</span><span class=p>,</span> <span class=nv>Case20</span><span class=p>]&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>cppNamespace</span> <span class=p>=</span> <span class=s>&#34;Outer::Inner&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>stringToSymbolFnName</span> <span class=p>=</span> <span class=s>&#34;ConvertToEnum&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>symbolToStringFnName</span> <span class=p>=</span> <span class=s>&#34;ConvertToString&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The following will be generated via <code>mlir-tblgen -gen-enum-decls</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>namespace</span> <span class=n>Outer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>Inner</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=c1>// An example int enum
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>enum</span> <span class=k>class</span> <span class=nc>MyIntEnum</span> <span class=o>:</span> <span class=kt>uint32_t</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>Case15</span> <span class=o>=</span> <span class=mi>15</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>Case20</span> <span class=o>=</span> <span class=mi>20</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyIntEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyIntEnum</span><span class=p>(</span><span class=kt>uint32_t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span> <span class=n>ConvertToString</span><span class=p>(</span><span class=n>MyIntEnum</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyIntEnum</span><span class=o>&gt;</span> <span class=n>ConvertToEnum</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=kt>unsigned</span> <span class=nf>getMaxEnumValForMyIntEnum</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>20</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=c1>// namespace Inner
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span> <span class=c1>// namespace Outer
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>llvm</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>template</span><span class=o>&lt;&gt;</span> <span class=k>struct</span> <span class=nc>DenseMapInfo</span><span class=o>&lt;</span><span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>using</span> <span class=n>StorageInfo</span> <span class=o>=</span> <span class=n>llvm</span><span class=o>::</span><span class=n>DenseMapInfo</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kr>inline</span> <span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span> <span class=n>getEmptyKey</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>StorageInfo</span><span class=o>::</span><span class=n>getEmptyKey</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kr>inline</span> <span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span> <span class=n>getTombstoneKey</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>StorageInfo</span><span class=o>::</span><span class=n>getTombstoneKey</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>unsigned</span> <span class=nf>getHashValue</span><span class=p>(</span><span class=k>const</span> <span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span> <span class=o>&amp;</span><span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>StorageInfo</span><span class=o>::</span><span class=n>getHashValue</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>val</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>bool</span> <span class=nf>isEqual</span><span class=p>(</span><span class=k>const</span> <span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span> <span class=o>&amp;</span><span class=n>lhs</span><span class=p>,</span> <span class=k>const</span> <span class=n>Outer</span><span class=o>::</span><span class=n>Inner</span><span class=o>::</span><span class=n>MyIntEnum</span> <span class=o>&amp;</span><span class=n>rhs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>lhs</span> <span class=o>==</span> <span class=n>rhs</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The following will be generated via <code>mlir-tblgen -gen-enum-defs</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>namespace</span> <span class=n>Outer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>Inner</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span> <span class=n>ConvertToString</span><span class=p>(</span><span class=n>MyIntEnum</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>switch</span> <span class=p>(</span><span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=nl>Case15</span><span class=p>:</span> <span class=k>return</span> <span class=s>&#34;Case15&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=nl>Case20</span><span class=p>:</span> <span class=k>return</span> <span class=s>&#34;Case20&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=s>&#34;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyIntEnum</span><span class=o>&gt;</span> <span class=n>ConvertToEnum</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span> <span class=n>str</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>llvm</span><span class=o>::</span><span class=n>StringSwitch</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyIntEnum</span><span class=o>&gt;&gt;</span><span class=p>(</span><span class=n>str</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;Case15&#34;</span><span class=p>,</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=n>Case15</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;Case20&#34;</span><span class=p>,</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=n>Case20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Default</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>nullopt</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyIntEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyIntEnum</span><span class=p>(</span><span class=kt>uint32_t</span> <span class=n>value</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>switch</span> <span class=p>(</span><span class=n>value</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=mi>15</span><span class=o>:</span> <span class=k>return</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=n>Case15</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=mi>20</span><span class=o>:</span> <span class=k>return</span> <span class=n>MyIntEnum</span><span class=o>::</span><span class=n>Case20</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>default</span><span class=o>:</span> <span class=k>return</span> <span class=n>std</span><span class=o>::</span><span class=n>nullopt</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=c1>// namespace Inner
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span> <span class=c1>// namespace Outer
+</span></span></span></code></pre></div><p>Similarly for the following <code>BitEnumAttr</code> definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>None</span><span class=p>:</span> <span class=nv>I32BitEnumAttrCaseNone</span><span class=p>&lt;</span><span class=s>&#34;None&#34;</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Bit0</span><span class=p>:</span> <span class=nv>I32BitEnumAttrCaseBit</span><span class=p>&lt;</span><span class=s>&#34;Bit0&#34;</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=s>&#34;tagged&#34;</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Bit1</span><span class=p>:</span> <span class=nv>I32BitEnumAttrCaseBit</span><span class=p>&lt;</span><span class=s>&#34;Bit1&#34;</span><span class=p>,</span> <span class=m>1</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Bit2</span><span class=p>:</span> <span class=nv>I32BitEnumAttrCaseBit</span><span class=p>&lt;</span><span class=s>&#34;Bit2&#34;</span><span class=p>,</span> <span class=m>2</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>Bit3</span><span class=p>:</span> <span class=nv>I32BitEnumAttrCaseBit</span><span class=p>&lt;</span><span class=s>&#34;Bit3&#34;</span><span class=p>,</span> <span class=m>3</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyBitEnum</span><span class=p>:</span> <span class=nv>BitEnumAttr</span><span class=p>&lt;</span><span class=s>&#34;MyBitEnum&#34;</span><span class=p>,</span> <span class=s>&#34;An example bit enum&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                           <span class=p>[</span><span class=nv>None</span><span class=p>,</span> <span class=nv>Bit0</span><span class=p>,</span> <span class=nv>Bit1</span><span class=p>,</span> <span class=nv>Bit2</span><span class=p>,</span> <span class=nv>Bit3</span><span class=p>]&gt;;</span>
+</span></span></code></pre></div><p>We can have:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// An example bit enum
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>enum</span> <span class=k>class</span> <span class=nc>MyBitEnum</span> <span class=o>:</span> <span class=kt>uint32_t</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>None</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>Bit0</span> <span class=o>=</span> <span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>Bit1</span> <span class=o>=</span> <span class=mi>2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>Bit2</span> <span class=o>=</span> <span class=mi>4</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>Bit3</span> <span class=o>=</span> <span class=mi>8</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyBitEnum</span><span class=p>(</span><span class=kt>uint32_t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>string</span> <span class=n>stringifyMyBitEnum</span><span class=p>(</span><span class=n>MyBitEnum</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyBitEnum</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=n>MyBitEnum</span> <span class=k>operator</span><span class=o>|</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>a</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>a</span><span class=p>)</span> <span class=o>|</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>b</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=n>MyBitEnum</span> <span class=k>operator</span><span class=o>&amp;</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>a</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>a</span><span class=p>)</span> <span class=o>&amp;</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>b</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=n>MyBitEnum</span> <span class=k>operator</span><span class=o>^</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>a</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>a</span><span class=p>)</span> <span class=o>^</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>b</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=n>MyBitEnum</span> <span class=k>operator</span><span class=o>~</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>bits</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Ensure only bits that can be present in the enum are set
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=o>~</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>bits</span><span class=p>)</span> <span class=o>&amp;</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=mi>15u</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=kt>bool</span> <span class=nf>bitEnumContainsAll</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>bits</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>bit</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span><span class=n>bits</span> <span class=o>&amp;</span> <span class=n>bit</span><span class=p>)</span> <span class=o>==</span> <span class=n>bit</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=kt>bool</span> <span class=nf>bitEnumContainsAny</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>bits</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>bit</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>bits</span><span class=p>)</span> <span class=o>&amp;</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>bit</span><span class=p>))</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=k>constexpr</span> <span class=n>MyBitEnum</span> <span class=nf>bitEnumClear</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>bits</span><span class=p>,</span> <span class=n>MyBitEnum</span> <span class=n>bit</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>bits</span> <span class=o>&amp;</span> <span class=o>~</span><span class=n>bit</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=n>std</span><span class=o>::</span><span class=n>string</span> <span class=n>stringifyEnum</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>enumValue</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nf>stringifyMyBitEnum</span><span class=p>(</span><span class=n>enumValue</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>template</span> <span class=o>&lt;</span><span class=k>typename</span> <span class=n>EnumType</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl><span class=o>::</span><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>EnumType</span><span class=o>&gt;</span> <span class=n>symbolizeEnum</span><span class=p>(</span><span class=o>::</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>template</span> <span class=o>&lt;&gt;</span>
+</span></span><span class=line><span class=cl><span class=kr>inline</span> <span class=o>::</span><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=n>symbolizeEnum</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=o>::</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span> <span class=n>str</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nf>symbolizeMyBitEnum</span><span class=p>(</span><span class=n>str</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>llvm</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>template</span><span class=o>&lt;&gt;</span> <span class=k>struct</span> <span class=nc>DenseMapInfo</span><span class=o>&lt;::</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>using</span> <span class=n>StorageInfo</span> <span class=o>=</span> <span class=n>llvm</span><span class=o>::</span><span class=n>DenseMapInfo</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kr>inline</span> <span class=o>::</span><span class=n>MyBitEnum</span> <span class=n>getEmptyKey</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;::</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>StorageInfo</span><span class=o>::</span><span class=n>getEmptyKey</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kr>inline</span> <span class=o>::</span><span class=n>MyBitEnum</span> <span class=n>getTombstoneKey</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;::</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>StorageInfo</span><span class=o>::</span><span class=n>getTombstoneKey</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>unsigned</span> <span class=nf>getHashValue</span><span class=p>(</span><span class=k>const</span> <span class=o>::</span><span class=n>MyBitEnum</span> <span class=o>&amp;</span><span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>StorageInfo</span><span class=o>::</span><span class=n>getHashValue</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>val</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>static</span> <span class=kt>bool</span> <span class=nf>isEqual</span><span class=p>(</span><span class=k>const</span> <span class=o>::</span><span class=n>MyBitEnum</span> <span class=o>&amp;</span><span class=n>lhs</span><span class=p>,</span> <span class=k>const</span> <span class=o>::</span><span class=n>MyBitEnum</span> <span class=o>&amp;</span><span class=n>rhs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>lhs</span> <span class=o>==</span> <span class=n>rhs</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>string</span> <span class=n>stringifyMyBitEnum</span><span class=p>(</span><span class=n>MyBitEnum</span> <span class=n>symbol</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>auto</span> <span class=n>val</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>symbol</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>assert</span><span class=p>(</span><span class=mi>15u</span> <span class=o>==</span> <span class=p>(</span><span class=mi>15u</span> <span class=o>|</span> <span class=n>val</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=s>&#34;invalid bits set in bit enum&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Special case for all bits unset.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>val</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=k>return</span> <span class=s>&#34;None&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>llvm</span><span class=o>::</span><span class=n>SmallVector</span><span class=o>&lt;</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>,</span> <span class=mi>2</span><span class=o>&gt;</span> <span class=n>strs</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=mi>1u</span> <span class=o>==</span> <span class=p>(</span><span class=mi>1u</span> <span class=o>&amp;</span> <span class=n>val</span><span class=p>))</span> <span class=p>{</span> <span class=n>strs</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=s>&#34;tagged&#34;</span><span class=p>);</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=mi>2u</span> <span class=o>==</span> <span class=p>(</span><span class=mi>2u</span> <span class=o>&amp;</span> <span class=n>val</span><span class=p>))</span> <span class=p>{</span> <span class=n>strs</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=s>&#34;Bit1&#34;</span><span class=p>);</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=mi>4u</span> <span class=o>==</span> <span class=p>(</span><span class=mi>4u</span> <span class=o>&amp;</span> <span class=n>val</span><span class=p>))</span> <span class=p>{</span> <span class=n>strs</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=s>&#34;Bit2&#34;</span><span class=p>);</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=mi>8u</span> <span class=o>==</span> <span class=p>(</span><span class=mi>8u</span> <span class=o>&amp;</span> <span class=n>val</span><span class=p>))</span> <span class=p>{</span> <span class=n>strs</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=s>&#34;Bit3&#34;</span><span class=p>);</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>llvm</span><span class=o>::</span><span class=n>join</span><span class=p>(</span><span class=n>strs</span><span class=p>,</span> <span class=s>&#34;|&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyBitEnum</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span> <span class=n>str</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Special case for all bits unset.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>str</span> <span class=o>==</span> <span class=s>&#34;None&#34;</span><span class=p>)</span> <span class=k>return</span> <span class=n>MyBitEnum</span><span class=o>::</span><span class=n>None</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>llvm</span><span class=o>::</span><span class=n>SmallVector</span><span class=o>&lt;</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>,</span> <span class=mi>2</span><span class=o>&gt;</span> <span class=n>symbols</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>str</span><span class=p>.</span><span class=n>split</span><span class=p>(</span><span class=n>symbols</span><span class=p>,</span> <span class=s>&#34;|&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>uint32_t</span> <span class=n>val</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=nl>symbol</span> <span class=p>:</span> <span class=n>symbols</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>bit</span> <span class=o>=</span> <span class=n>llvm</span><span class=o>::</span><span class=n>StringSwitch</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;&gt;</span><span class=p>(</span><span class=n>symbol</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;tagged&#34;</span><span class=p>,</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;Bit1&#34;</span><span class=p>,</span> <span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;Bit2&#34;</span><span class=p>,</span> <span class=mi>4</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Case</span><span class=p>(</span><span class=s>&#34;Bit3&#34;</span><span class=p>,</span> <span class=mi>8</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>.</span><span class=n>Default</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>nullopt</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>bit</span><span class=p>)</span> <span class=p>{</span> <span class=n>val</span> <span class=o>|=</span> <span class=o>*</span><span class=n>bit</span><span class=p>;</span> <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=k>return</span> <span class=n>std</span><span class=o>::</span><span class=n>nullopt</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span> <span class=n>symbolizeMyBitEnum</span><span class=p>(</span><span class=kt>uint32_t</span> <span class=n>value</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Special case for all bits unset.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>value</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=k>return</span> <span class=n>MyBitEnum</span><span class=o>::</span><span class=n>None</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>value</span> <span class=o>&amp;</span> <span class=o>~</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=mi>15u</span><span class=p>))</span> <span class=k>return</span> <span class=n>std</span><span class=o>::</span><span class=n>nullopt</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>MyBitEnum</span><span class=o>&gt;</span><span class=p>(</span><span class=n>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=debugging-tips>Debugging Tips&nbsp;<a class=headline-hash href=#debugging-tips>¶</a></h2><h3 id=run-mlir-tblgen-to-see-the-generated-content>Run <code>mlir-tblgen</code> to see the generated content&nbsp;<a class=headline-hash href=#run-mlir-tblgen-to-see-the-generated-content>¶</a></h3><p>TableGen syntax sometimes can be obscure; reading the generated content can be a
+very helpful way to understand and debug issues. To build <code>mlir-tblgen</code>, run
+<code>cmake --build . --target mlir-tblgen</code> in your build directory and find the
+<code>mlir-tblgen</code> binary in the <code>bin/</code> subdirectory. All the supported generators
+can be found via <code>mlir-tblgen --help</code>. For example, <code>--gen-op-decls</code> and
+<code>--gen-op-defs</code> as explained in
+<a href=#generated-c-code>Generated C++ code</a>.</p><p>To see the generated code, invoke <code>mlir-tblgen</code> with a specific generator by
+providing include paths via <code>-I</code>. For example,</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># To see op C++ class declaration</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-op-decls -I /path/to/mlir/include /path/to/input/td/file
+</span></span><span class=line><span class=cl><span class=c1># To see op C++ class definition</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-op-defs -I /path/to/mlir/include /path/to/input/td/file
+</span></span><span class=line><span class=cl><span class=c1># To see op documentation</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-dialect-doc -I /path/to/mlir/include /path/to/input/td/file
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># To see op interface C++ class declaration</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-op-interface-decls -I /path/to/mlir/include /path/to/input/td/file
+</span></span><span class=line><span class=cl><span class=c1># To see op interface C++ class definition</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-op-interface-defs -I /path/to/mlir/include /path/to/input/td/file
+</span></span><span class=line><span class=cl><span class=c1># To see op interface documentation</span>
+</span></span><span class=line><span class=cl>mlir-tblgen --gen-op-interface-doc -I /path/to/mlir/include /path/to/input/td/file
+</span></span></code></pre></div><h2 id=appendix>Appendix&nbsp;<a class=headline-hash href=#appendix>¶</a></h2><h3 id=reporting-deprecation-in-tablegen>Reporting deprecation in TableGen&nbsp;<a class=headline-hash href=#reporting-deprecation-in-tablegen>¶</a></h3><p>Classes/defs can be marked as deprecated by using the <code>Deprecate</code> helper class,
+e.g.,</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>OpTraitA</span> <span class=p>:</span> <span class=nv>NativeOpTrait</span><span class=p>&lt;</span><span class=s>&#34;OpTraitA&#34;</span><span class=p>&gt;,</span> <span class=nv>Deprecated</span><span class=p>&lt;</span><span class=s>&#34;use `bar` instead&#34;</span><span class=p>&gt;;</span>
+</span></span></code></pre></div><p>would result in marking <code>OpTraitA</code> as deprecated and mlir-tblgen can emit a
+warning (default) or error (depending on <code>-on-deprecated</code> flag) to make
+deprecated state known.</p><h3 id=reporting-deprecation-in-c>Reporting deprecation in C++&nbsp;<a class=headline-hash href=#reporting-deprecation-in-c>¶</a></h3><p>TableGen generated C++ entities, such as classes, functions or methods, can be
+marked as deprecated using the <code>CppDeprecated</code> mixin:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyOp</span> <span class=p>:</span> <span class=nv>Op</span><span class=p>&lt;</span><span class=nv>MyDialect</span><span class=p>,</span> <span class=s>&#34;my.op&#34;</span><span class=p>&gt;,</span> <span class=nv>CppDeprecated</span><span class=p>&lt;</span><span class=s>&#34;use &#39;your.op&#39; instead&#34;</span><span class=p>&gt;;</span>
+</span></span></code></pre></div><p>This differs to the deprecation mechanic for TableGen, in that no warning is
+emitted by mlir-tblgen. Rather, a warning with the given reason is emitted by
+the C++ compiler on use of the given entity.</p><p>To allow more convenient syntax, helper classes exist for TableGen classes
+which are commonly used as anonymous definitions. These currently include:</p><ul><li><code>DeprecatedOpBuilder</code>: Can be used in place of <code>OpBuilder</code> with the same
+arguments except taking the reason as first argument, e.g.
+<code>DeprecatedOpBuilder&lt;"use 'build' with foo instead", (ins "int":$bar)></code></li></ul><p>Note: Support for the <code>CppDeprecated</code> mechanism has to be implemented by
+every code generator separately.</p><h3 id=requirements-and-existing-mechanisms-analysis>Requirements and existing mechanisms analysis&nbsp;<a class=headline-hash href=#requirements-and-existing-mechanisms-analysis>¶</a></h3><p>The op description should be as declarative as possible to allow a wide range of
+tools to work with them and query methods generated from them. In particular
+this means specifying traits, constraints and shape inference information in a
+way that is easily analyzable (e.g., avoid opaque calls to C++ functions where
+possible).</p><p>We considered the approaches of several contemporary systems and focused on
+requirements that were desirable:</p><ul><li><p>Ops registered using a registry separate from C++ code.</p><ul><li>Unknown ops are allowed in MLIR, so ops need not be registered. The
+ability of the compiler to optimize those ops or graphs containing those
+ops is constrained but correct.</li><li>The current proposal does not include a runtime op description, but it
+does not preclude such description, it can be added later.</li><li>The op registry is essential for generating C++ classes that make
+manipulating ops, verifying correct construction etc. in C++ easier by
+providing a typed representation and accessors.</li></ul></li><li><p>The op registry will be defined in
+<a href=https://llvm.org/docs/TableGen/index.html>TableGen</a> and be used to
+generate C++ classes and utility functions
+(builder/verifier/parser/printer).</p><ul><li>TableGen is a modelling specification language used by LLVM&rsquo;s backends
+and fits in well with trait-based modelling. This is an implementation
+decision and there are alternative ways of doing this. But the
+specification language is good for the requirements of modelling the
+traits (as seen from usage in LLVM processor backend modelling) and easy
+to extend, so a practical choice. If another good option comes up, we
+will consider it.</li></ul></li><li><p>MLIR allows both defined and undefined ops.</p><ul><li>Defined ops should have fixed semantics and could have a corresponding
+reference implementation defined.</li><li>Dialects are under full control of the dialect owner and normally live
+with the framework of the dialect.</li></ul></li><li><p>The op&rsquo;s traits (e.g., commutative) are modelled along with the op in the
+registry.</p></li><li><p>The op&rsquo;s operand/return type constraints are modelled along with the op in
+the registry (see
+<a href=/docs/ShapeInference/>Shape inference</a> discussion below),
+this allows (e.g.) optimized concise syntax in textual dumps.</p></li><li><p>Behavior of the op is documented along with the op with a summary and a
+description. The description is written in markdown and extracted for
+inclusion in the generated LangRef section of the dialect.</p></li><li><p>The generic assembly form of printing and parsing is available as normal,
+but a custom parser and printer can either be specified or automatically
+generated from an optional string representation showing the mapping of the
+&ldquo;assembly&rdquo; string to operands/type.</p><ul><li>Parser-level remappings (e.g., <code>eq</code> to enum) will be supported as part
+of the parser generation.</li></ul></li><li><p>Matching patterns are specified separately from the op description.</p><ul><li>Contrasted with LLVM there is no &ldquo;base&rdquo; set of ops that every backend
+needs to be aware of. Instead there are many different dialects and the
+transformations/legalizations between these dialects form a graph of
+transformations.</li></ul></li><li><p>Reference implementation may be provided along with the op definition.</p><ul><li>The reference implementation may be in terms of either standard ops or
+other reference implementations.</li></ul><p>TODO: document expectation if the dependent op&rsquo;s definition changes.</p></li></ul><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/ title="Defining Dialect Attributes and Types"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Defining Dialect Attributes and Types</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Diagnostics/ title="Diagnostic Infrastructure">Next - Diagnostic Infrastructure <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li class=active><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

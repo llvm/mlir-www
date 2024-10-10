@@ -1,0 +1,276 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>MLIR: Incremental Application to Graph Algorithms in ML Frameworks - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</h1><p>The existing documentation about MLIR focuses on long term vision, how its
+pieces fit together, and the benefits of modular and composable infrastructure
+in the vast and distant future. While this viewpoint appeals to some, it causes
+concern for others who are more concerned about the &ldquo;here and now&rdquo; - why does it
+make sense to make a &ldquo;revolutionary&rdquo; change when any individual problem can be
+fixed in place?</p><p>This document explains that adoption of MLIR to solve graph based problems
+<em>isn&rsquo;t</em> a revolutionary change: it is an incremental series of steps which build
+on each other, each of which delivers local value. This document also addresses
+some points of confusion that keep coming up.</p><p>One note: even though a major advantage of MLIR is that it can span the full
+spectrum from graph algorithms down to low-level code generation, this document
+focuses on the use of MLIR for <strong>graph-level algorithms</strong>. MLIR will also unlock
+exciting code generation opportunities (particularly given its novel approach to
+integrating state of the art polyhedral techniques), but issues that touch on
+MLIR&rsquo;s relationship to XLA, Eigen, etc, are out of scope for this particular
+doc.</p><p>This document uses TensorFlow as the example given that it is the focus of our
+immediate work, but we believe that the same viewpoint could be useful for
+people working in the context of other ML frameworks that may consider adopting
+MLIR in the future.</p><h3 id=how-is-mlir-relevant>How is MLIR relevant?&nbsp;<a class=headline-hash href=#how-is-mlir-relevant>¶</a></h3><p>MLIR is an overloaded acronym which unpacks as &ldquo;Multi-Level Intermediate
+Representation&rdquo;. Its high-level purpose is to provide mechanics for describing
+and transforming programs and computations in a flexible way. It provides common
+compiler infrastructure for things like constant folding, dead code elimination,
+graph rewriting, and others - which are independent of the representational
+choices picked by a given dialect (e.g. its concurrency semantics). It was built
+with a specific focus on compile time and memory efficiency, accurate
+propagation of source location information (important for reporting high quality
+errors and warnings) and is designed for testability.</p><p>TensorFlow has numerous subsystems (some of which are proprietary, e.g.
+Tensor-RT, nGraph, CoreML, etc) as well as translation layers between these
+different subsystems, and these translation layers face similar challenges. ((As
+an aside, the internals of each of these subsystems could often benefit from
+MLIR infrastructure, but that isn&rsquo;t a focus of this doc.))</p><p>A key observation that MLIR makes is that these subsystems often have two things
+going on: they are both particular data structures and encodings (e.g. HLO
+graphs, TF-Lite&rsquo;s flat buffer format, TensorFlow&rsquo;s Graph format, the ONNX
+abstraction, etc) as well as an abstraction of computation (a specific way of
+modeling a convolution, a set of supported operations etc).</p><p>MLIR uses a standard IR (i.e., a set of data structures) for representing these
+computations - this allows a huge amount of shared infrastructure across these
+problem domains. MLIR then allows the definition of domain-specific &ldquo;dialects&rdquo;
+that describe the set of operations that are legal and supported for a given
+application. This means that the actual translations between data structures are
+kept as simple as possible - and are thus relatively easy to make &ldquo;correct&rdquo;.
+This allows the common compiler infrastructure to handle the mapping problems
+and the other issues within the domain.</p><p>MLIR&rsquo;s design is directly informed by the experience of building (and then
+living with) intermediate representations like the LLVM IR, LLVM SelectionDAG,
+the LLVM machine instruction representation, Swift SIL IR, and learns new
+lessons from TensorFlow and XLA HLO, as well as learning from building countless
+research and production systems on top of them. Our goal is to drag the state of
+the art in compilers forward, not to merely apply a few well-known techniques to
+the machine learning domain.</p><h3 id=what-does-adoption-mean>What does adoption mean?&nbsp;<a class=headline-hash href=#what-does-adoption-mean>¶</a></h3><p>The point of this document is not to advocate for rewriting any particular
+subsystem in TensorFlow - indeed, the burden required to justify a rewrite is
+high, and often very specific to that subsystem. That said, there are several
+subsystems that are about to get rewritten or substantially revised anyway, so
+we use those as examples to concretely describe the benefits that MLIR provides
+in these cases and what it will take. The subsystems discussed are:</p><ol><li>the TF Lite TOCO translator, which we need to improve error
+reporting/reliability issues and generalize it to support more ops, and</li><li>the TF/XLA bridge which needs to improve usability by merging some of its
+usage models, support dynamic shapes and generalize guest subsystem support
+to Tensor-RT and nGraph.</li><li>Grappler is another subsystem that is likely to get substantial revisions in
+the future, and would definitely benefit from the MLIR framework, but there
+are no known plans to do that work at this point, so we don&rsquo;t discuss it
+further.</li></ol><p>Adopting MLIR for these works the same way - and, in fact, the work to support
+TF Lite is mostly a subset of the larger work to support the functionality of
+the TF/XLA bridge. TF Lite and the TF/XLA bridge include several compiler passes
+(things like encapsulate, functionalize control flow, lowering of ops, fusion,
+constant folding, shape inference, etc).</p><p>MLIR supports converting from TensorFlow Graphs to MLIR and back, which means
+that we can start by putting in a no-op translation to MLIR and back into the
+pipeline, and verify that nothing breaks. Then we can work on replacing the
+compiler transformations one by one by reimplementing them (with the improved
+algorithms that we&rsquo;re planning).</p><p>This is a development plan, we wouldn&rsquo;t actually ship a TensorFlow that just
+uses MLIR for a single pass. In practice, we&rsquo;ll have the MLIR flag gated under
+an option, build out a replacement for an entire subsystem (e.g. the TOCO
+translator) and when the time is right, we&rsquo;ll do A/B comparisons and eventually
+make a switch and phase out the old code over time.</p><h2 id=what-benefit-does-mlir-provide>What benefit does MLIR provide?&nbsp;<a class=headline-hash href=#what-benefit-does-mlir-provide>¶</a></h2><p>The adoption plan above might sound like it only makes things worse in the
+immediate term - we have two implementations of the same functionality, we are
+dividing our efforts, etc. In order for this to be worth it, we should have a
+good sense that we are building towards an improved future that will make
+customers and TensorFlow engineers happier when it lands. Here we describe a few
+of the benefits that MLIR provides, in no particular order:</p><h3 id=a-lossless-human-editable-textual-representation>A Lossless Human Editable Textual Representation&nbsp;<a class=headline-hash href=#a-lossless-human-editable-textual-representation>¶</a></h3><p>The MLIR in-memory data structure has a human readable and writable format, as
+well as
+<a href=/docs/LangRef/>a specification</a> for that format - built just like any
+other programming language. Important properties of this format are that it is
+compact, easy to read, and lossless. You can dump an MLIR program out to disk
+and munge around with it, then send it through a few more passes.</p><p>If you haven&rsquo;t worked with a system that works this way, it is hard to overstate
+how big of a deal this in practice: it means that you can call <code>foo->dump()</code> on
+an IR object to see its full contents, it means you can diff the IR before and
+after a change, delta reduce IR files, and many other things.</p><h3 id=a-graph-verification-pass>A Graph Verification Pass&nbsp;<a class=headline-hash href=#a-graph-verification-pass>¶</a></h3><p>Like many other popular compiler infrastructures, MLIR provides infrastructure
+and implementation for a &ldquo;verifier&rdquo; which checks that the IR is well formed. The
+MLIR verifier is a simple framework that makes it easy to provide a single
+source of truth for those correctness properties and is general across all
+Dialects (e.g. TF Graph, TF Lite flat buffer, XLA HLO, etc).</p><p>A verifier pass is sort of like a &lsquo;super assertion&rsquo; that catches mistakes in
+program transformations early, making you as an engineer more productive, making
+the product more reliable, and making it easier to track down bugs when they
+appear - because the verifier can be run at any time, either as a compiler pass
+or with a single function call.</p><p>While MLIR provides a well-considered infrastructure for IR verification, and
+has simple checks for existing TensorFlow operations, there is a lot that should
+be added here and lots of opportunity to get involved!</p><h3 id=designed-for-testability>Designed for Testability&nbsp;<a class=headline-hash href=#designed-for-testability>¶</a></h3><p>There are many aspects of this in MLIR, but we&rsquo;ll focus on compiler
+transformations since they are the easiest to understand. Compiler
+transformations are modeled as subclasses of the <code>Pass</code> C++ class, which are
+driven by an <code>mlir-opt</code> tool. When combined with a lossless textual
+representation, it becomes really easy to write unit tests for compiler
+transformations, for example, this is a simple test that shows &ldquo;x-x&rdquo; is being
+turned into zero:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>  <span class=c>// RUN: mlir-opt %s -canonicalize | FileCheck %s
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@test_subi_zero_cfg</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=k>i32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>i32</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%y</span> <span class=p>=</span> arith<span class=p>.</span>subi <span class=nv>%arg0</span><span class=p>,</span> <span class=nv>%arg0</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>    <span class=kt>return</span> <span class=nv>%y</span><span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c>// CHECK-LABEL: func @test_subi_zero_cfg(%arg0: i32)
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: %c0_i32 = arith.constant 0 : i32
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: return %c0
+</span></span></span></code></pre></div><p>The &ldquo;CHECK&rdquo; comments are interpreted by the
+<a href=https://llvm.org/docs/CommandGuide/FileCheck.html>LLVM FileCheck tool</a>, which
+is sort of like a really advanced grep. This test is fully self-contained: it
+feeds the input into the
+<a href=/docs/Canonicalization/>canonicalize pass</a>, and checks
+that the output matches the CHECK lines. See the <code>test/Transforms</code> directory for
+more examples. In contrast, standard unit testing exposes the API of the
+underlying framework to lots and lots of tests (making it harder to refactor and
+move the API), typically requires a lot more code, and exacerbates issues with
+link time. For examples, see
+<a href=https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/grappler/optimizers/arithmetic_optimizer_test.cc>the TEST_F functions in TensorFlow&rsquo;s testsuite</a>.</p><p>MLIR has been pervasively designed with this sort of design by testability,
+allowing us to put in place a culture that expects every behavior changing
+commit to include a test case, and for these test cases to be stable and
+reliable over time, since they are testing exactly what they are supposed to.
+End to end integration tests are still super useful for some things of course!</p><h3 id=infrastructure-for-warnings-and-error-diagnostics-and-location-tracking>Infrastructure for Warnings and Error Diagnostics and Location Tracking&nbsp;<a class=headline-hash href=#infrastructure-for-warnings-and-error-diagnostics-and-location-tracking>¶</a></h3><p>MLIR benefits from the lessons learned from building other compilers - including
+Clang which
+[
+<a href=http://blog.llvm.org/2010/04/amazing-feats-of-clang-error-recovery.html>set the standard</a>](
+<a href=http://blog.llvm.org/2010/04/amazing-feats-of-clang-error-recovery.html>http://blog.llvm.org/2010/04/amazing-feats-of-clang-error-recovery.html</a>)
+for quality of implementation in C/C++ compiler diagnostics. Drawing from this
+experience (and fixing mistakes in LLVM), MLIR requires that operations and
+functions carry abstract location information, that transformations propagate
+this information, and provides standardized mechanisms to emit errors and
+warnings, as well as for clients to hook into them to capture and report them in
+custom ways.</p><p>Why is this important? In practice, many graph-to-graph translators can fail
+(e.g. TF Lite when an unsupported op is used) and it is important to be able to
+report the error up through to the user in the most precise way possible, in
+order for it to be actionable. This includes tracking rewrites through fusions
+and fissions of ops, mapping back into language / API specific domains, etc.</p><p>More selfishly for infrastructure hackers, this is a huge boon because it means
+that it is easy to write good tests for this: the testing tools for MLIR capture
+the diagnostics produced by passes (using the standard diagnostic hooks) and
+check that they match the expected diagnostics in the testcase. For example, to
+test the dependence analysis infra in the code generator, Andy Davis wrote a
+simple pass that checks dependencies and emits them as &ldquo;notes&rdquo;, allowing him to
+write tests like this:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>  <span class=c>// RUN: mlir-opt %s -memref-dependence-check -verify-diagnostics
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@different_memrefs</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%m.a</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>100x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%m.b</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>alloc<span class=p>()</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>100x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0</span> <span class=p>:</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%c1</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1.0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>    <span class=kt>memref</span><span class=p>.</span>store <span class=nv>%c1</span><span class=p>,</span> <span class=nv>%m.a</span><span class=p>[</span><span class=nv>%c0</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>100x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=c>// expected-note@-1 {{dependence from memref access 0 to access 1 = false}}
+</span></span></span><span class=line><span class=cl><span class=c></span>    <span class=nv>%v0</span> <span class=p>=</span> <span class=kt>memref</span><span class=p>.</span>load <span class=nv>%m.b</span><span class=p>[</span><span class=nv>%c0</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>100x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>return</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></div><p>Note that a major limitation of this is that MLIR suffers from a problem of
+&ldquo;garbage in, garbage out&rdquo;: if the input locations to MLIR are imprecise, then
+there is nothing that it can do to recover them. There is work underway in
+TensorFlow/Python to improve the situation, and Swift for TensorFlow already has
+perfect location tracking due to its design.</p><h3 id=shape-information-captured-in-the-ir>Shape Information Captured in the IR&nbsp;<a class=headline-hash href=#shape-information-captured-in-the-ir>¶</a></h3><p>In TensorFlow Graphs, each op takes and returns values using a very simple type
+system (TF_DataType) in which each value is a tensor of unknown rank and
+dimensions. At the same time, many graphs have static shapes easily knowable for
+wide swaths of the computation, and even dynamically shaped operations often
+have statically knowable dimensions. Many analyses and transformations benefit
+and use this information when available, but because TensorFlow graphs don&rsquo;t
+capture this (e.g. serialize it to proto), passes have to recompute it on demand
+with ShapeRefiner.</p><p>The
+<a href=/docs/Dialects/Builtin/#rankedtensortype>MLIR Tensor Type</a> directly
+captures shape information, so you can have things like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>  <span class=nv>%x</span> <span class=p>=</span> tf<span class=p>.</span>Add <span class=nv>%x</span><span class=p>,</span> <span class=nv>%y</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>128 x</span> <span class=m>8 x</span> <span class=m>? x</span> <span class=k>f32</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>Capturing this in the IR is expected to speed up transformations (avoiding
+recomputing the same info over and over again) which therefore makes it
+practical to apply stronger shape analysis algorithms. It also makes it easier
+to work with the IR, because on-the-side representations can get out of date,
+and the API is easier to work with from an ergonomics perspective.</p><h3 id=unified-graph-rewriting-infrastructure>Unified Graph Rewriting Infrastructure&nbsp;<a class=headline-hash href=#unified-graph-rewriting-infrastructure>¶</a></h3><p>This is still a work in progress, but we have sightlines towards a
+<a href=/docs/Rationale/RationaleGenericDAGRewriter/>general rewriting infrastructure</a> for
+transforming DAG tiles into other DAG tiles, using a declarative pattern format.
+DAG to DAG rewriting is a generalized solution for many common compiler
+optimizations, lowerings, and other rewrites and having an IR enables us to
+invest in building a single high-quality implementation.</p><p>Declarative pattern rules are preferable to imperative C++ code for a number of
+reasons: they are more compact, easier to reason about, can have checkers
+written against them, and new tools can be built that inspect and manipulate the
+declarative patterns in interesting ways - e.g. applying theorem provers to
+them. It will be exciting to see this ecosystem develop as the infrastructure
+matures.</p><h3 id=clarified-semantics-for-tensorflow-operations>Clarified Semantics for TensorFlow Operations&nbsp;<a class=headline-hash href=#clarified-semantics-for-tensorflow-operations>¶</a></h3><p>One of the challenging things about working with TensorFlow is that there are
+many invariants and behaviors that need to be preserved and known about when
+working with Graphs, and these can be difficult to reason about and lead to
+bugs. Things like &lsquo;dead values&rsquo;, Switch and Merge nodes, concurrency semantics,
+nodes that execute even when passed a dead value, multiple device program
+representation - etc&mldr; all add complexities that can make it challenging to
+reason about whether a transformation or analysis is correct in general. Even
+something as simple as constant folding or transforming integer <code>x-x</code> into <code>0</code>
+is non-trivial because you need to consider control dependence edges.</p><p>One of our major goals for the TensorFlow dialect of MLIR is to sort out these
+situations and upgrade existing TensorFlow graphs to semantics that are easier
+to reason about. The solutions to these problems are all still being debated,
+but those discussions have already yielded a lot of potential answers:
+introducing a <code>tf_dead_or&lt;x></code> types for switch/merge, modeling of TF operations
+using futures/async semantics etc. None of these particular battles are critical
+or important for MLIR to succeed (because of its &ldquo;meta&rdquo; nature, the abstraction
+decisions of any given dialect are up for it to decide), but each one that works
+out will make it easier to work with and transform TensorFlow operations. We
+expect these issues to get nailed down in the next couple of months when MLIR
+effort moves beyond TF Lite / TOCO support. The discussions that are happening
+now are super valuable and making progress.</p><h3 id=ergonomics>Ergonomics&nbsp;<a class=headline-hash href=#ergonomics>¶</a></h3><p>A minor-in-theory, but important-in-practice point is that MLIR is designed to
+make it easy, memory efficient, and less error prone to transform code than
+other systems. <code>TensorFlow::Graph</code> has implementation issues where the same
+information is stored redundantly in different places (which must be manually
+kept up to date), has somewhat unusual representation of certain constructs
+(e.g. the function library, which makes it very difficult to add or remove
+functions, e.g. during interprocedural transformations), and stores information
+in the graph that is used by the executor, but isn&rsquo;t necessary for program
+transformation.</p><p>TensorFlow has made a lot of progress in this area over the years, and there are
+lots of ideas about further improvements in the future, we are happy that MLIR
+addresses these needs (making it much easier to implement correct program
+transformations) today, and are committed to pushing hard to make it better.</p><h3 id=compile-time-performance-and-memory-use>Compile Time Performance and Memory Use&nbsp;<a class=headline-hash href=#compile-time-performance-and-memory-use>¶</a></h3><p>MLIR has been designed to be memory and compile-time efficient in its algorithms
+and data structures, using immutable and uniqued structures, low level
+bit-packing, and other well-known techniques to avoid unnecessary heap
+allocations, and allow simple and safe multithreaded optimization of MLIR
+programs. There are other reasons to believe that the MLIR implementations of
+common transformations will be more efficient than the Python and C++
+TensorFlow::Graph implementations of the same things, given the current
+implementation details of TensorFlow.</p><p>That said, this is very much a theory at this point. When the new implementation
+of various subsystems are available, we will see what happens in practice: there
+will be no reason to speculate - we can measure.</p><h2 id=common-questions-and-concerns>Common Questions and Concerns&nbsp;<a class=headline-hash href=#common-questions-and-concerns>¶</a></h2><p>Here we address some frequently asked questions and concerns.</p><h3 id=isnt-mlir-a-big-dependency-to-take-on>Isn&rsquo;t MLIR a big dependency to take on?&nbsp;<a class=headline-hash href=#isnt-mlir-a-big-dependency-to-take-on>¶</a></h3><p>We&rsquo;ve heard that at least some people are concerned that MLIR is a &ldquo;big&rdquo;
+dependency to take on, and could result in large code size. Here are some key
+points MLIR:</p><ol><li>The entire MLIR codebase is a pretty small C++ code base in absolute terms
+compared to what goes into a modern ML framework.</li><li>Like LLVM, MLIR is designed as a set of libraries that clients can link in
+or ignore as they wish. For example, the transformations in MLIR kept
+separate from the core IR abstractions, and dialect specific code (e.g.
+TensorFlow, TF-Lite, XLA, etc) is all independently selectable by the build
+system. Clients that don&rsquo;t care about XLA don&rsquo;t link in that code, whether
+they are a TF-Lite system or a client that is completely unrelated to
+TensorFlow.</li><li>MLIR&rsquo;s only third party dependency is on LLVM, but it doesn&rsquo;t depend on LLVM
+IR or any other heavy dependency - it just depends on LLVM&rsquo;s support library
+which provides efficient hash tables and other
+<a href=http://llvm.org/docs/ProgrammersManual.html#picking-the-right-data-structure-for-a-task>memory efficient data structures that the STL does not</a>.
+There have been discussions about splitting this set of libraries out to its
+own subproject in LLVM that the LLVM IR project depends on. This would be
+great for MLIR as well as other LLVM subprojects.</li><li>TensorFlow and many other frameworks already use LLVM - if so, MLIR would
+not be pulling in an additional dependency at all.</li></ol><h3 id=how-does-mlir-represent-control-flow-concurrency--semantics-in-tensorflow>How does MLIR represent {control flow, concurrency, …} semantics in TensorFlow?&nbsp;<a class=headline-hash href=#how-does-mlir-represent-control-flow-concurrency--semantics-in-tensorflow>¶</a></h3><p>MLIR provides a dialect that is an isomorphic 1-1 mapping between TensorFlow
+graphs and MLIR, as well as a pretty complete translator back and forth (the
+only known gap is that a few TF_DataType enums aren&rsquo;t handled yet). MLIR is a
+&ldquo;Multi-Level IR&rdquo;, which allows it to represent code with different abstraction
+levels, so the ability to faithfully represent TensorFlow code in a completely
+backwards compatible way (even if there are some historical warts!) is critical.</p><p>In <em>addition</em> to the isomorphic mapping, we are actively working on efforts to
+raise the abstraction level for working with TensorFlow graphs in MLIR. Doing so
+would make it even easier to write TensorFlow transformations than it is today,
+and would provide a path to migrating TF 1.x graphs forward into the TF 2.x
+world. For example, because MLIR has an extensible type system, we can directly
+model whether it is impossible for a Tensor value to be a &ldquo;dead&rdquo; value - similar
+to the use of optional types in modern programming languages.</p><p>These discussions occasionally cause confusion because there are several issues
+being mixed up into one:</p><ul><li>What are the current semantics of TensorFlow graphs, and what invariants can
+we rely on?</li><li>What should the semantics be in TensorFlow 2.0?</li><li>What do programs rely on in practice, and if it is unfriendly, can we
+migrate it?</li><li>Can we find a way to make it so transforms don&rsquo;t have to worry about the
+complexities of Switch/Merge, by using higher level control flow
+representations? (tentative answer: yes)</li><li>How should MLIR represent async vs sync operations, what invariants are
+provided, how does this dovetail with control flow?</li><li>When is it safe and beneficial to perform optimizations that might reduce
+parallelism?</li></ul><p>All of these questions have a &ldquo;conservative/safe fallback&rdquo;: we can continue
+providing exactly the same abstractions that TensorFlow always has. That said,
+we are trying hard to level-up the representation (taking advantage of the
+&ldquo;Multi-Level&rdquo; part of MLIR) because doing so will make it much much easier to
+write analyses and transformations than it currently is in TensorFlow.</p><h3 id=non-goals>Non Goals&nbsp;<a class=headline-hash href=#non-goals>¶</a></h3><p>It is important to point out things that MLIR does not aim to do. For example,
+there is no runtime component to MLIR: the TensorFlow executor, the TF Lite
+FlatBuffer interpreter, or other existing runtime should be used as-is.</p><p>Another non-goal is that MLIR currently doesn&rsquo;t support a stable binary
+encoding. We will certainly add this at some point, but existing formats should
+be used for serialization and distribution in the meantime.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Rationale/Rationale/ title="MLIR Rationale"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - MLIR Rationale</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/ title="MLIR: The case for a simplified polyhedral form">Next - MLIR: The case for a simplified polyhedral form <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li class=active><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

@@ -1,0 +1,683 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>MLIR Python Bindings - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Bindings/Python/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>MLIR Python Bindings</h1><p><strong>Current status</strong>: Under development and not enabled by default</p><p><nav id=TableOfContents><ul><li><a href=#building>Building</a><ul><li><a href=#pre-requisites>Pre-requisites</a></li><li><a href=#cmake-variables>CMake variables</a></li><li><a href=#recommended-development-practices>Recommended development practices</a></li></ul></li><li><a href=#design>Design</a><ul><li><a href=#use-cases>Use cases</a></li><li><a href=#composable-modules>Composable modules</a></li><li><a href=#submodules>Submodules</a></li><li><a href=#loader>Loader</a></li><li><a href=#use-the-c-api>Use the C-API</a></li><li><a href=#ownership-in-the-core-ir>Ownership in the Core IR</a></li><li><a href=#optionality-and-argument-ordering-in-the-core-ir>Optionality and argument ordering in the Core IR</a></li></ul></li><li><a href=#user-level-api>User-level API</a><ul><li><a href=#context-management>Context Management</a></li><li><a href=#inspecting-ir-objects>Inspecting IR Objects</a></li><li><a href=#creating-ir-objects>Creating IR Objects</a></li></ul></li><li><a href=#style>Style</a><ul><li><a href=#properties-vs-get-methods>Properties vs get*() methods</a></li><li><a href=#repr-methods><strong>repr</strong> methods</a></li><li><a href=#camelcase-vs-snake_case>CamelCase vs snake_case</a></li><li><a href=#prefer-pseudo-containers>Prefer pseudo-containers</a></li><li><a href=#provide-one-stop-helpers-for-common-things>Provide one stop helpers for common things</a></li></ul></li><li><a href=#testing>Testing</a><ul><li><a href=#sample-filecheck-test>Sample FileCheck test</a></li></ul></li><li><a href=#integration-with-ods>Integration with ODS</a><ul><li><a href=#generating-_dialect_namespace_ops_genpy-wrapper-modules>Generating <code>_{DIALECT_NAMESPACE}_ops_gen.py</code> wrapper modules</a></li><li><a href=#extending-the-search-path-for-wrapper-modules>Extending the search path for wrapper modules</a></li><li><a href=#wrapper-module-code-organization>Wrapper module code organization</a></li></ul></li><li><a href=#providing-python-bindings-for-a-dialect>Providing Python bindings for a dialect</a><ul><li><a href=#operations>Operations</a></li><li><a href=#attributes-and-types-2>Attributes and Types</a></li><li><a href=#passes>Passes</a></li><li><a href=#other-functionality>Other functionality</a></li></ul></li></ul></nav><h2 id=building>Building&nbsp;<a class=headline-hash href=#building>¶</a></h2><h3 id=pre-requisites>Pre-requisites&nbsp;<a class=headline-hash href=#pre-requisites>¶</a></h3><ul><li>A relatively recent Python3 installation</li><li>Installation of python dependencies as specified in
+<code>mlir/python/requirements.txt</code></li></ul><h3 id=cmake-variables>CMake variables&nbsp;<a class=headline-hash href=#cmake-variables>¶</a></h3><ul><li><p><strong><code>MLIR_ENABLE_BINDINGS_PYTHON</code></strong><code>:BOOL</code></p><p>Enables building the Python bindings. Defaults to <code>OFF</code>.</p></li><li><p><strong><code>Python3_EXECUTABLE</code></strong>:<code>STRING</code></p><p>Specifies the <code>python</code> executable used for the LLVM build, including for
+determining header/link flags for the Python bindings. On systems with
+multiple Python implementations, setting this explicitly to the preferred
+<code>python3</code> executable is strongly recommended.</p></li></ul><h3 id=recommended-development-practices>Recommended development practices&nbsp;<a class=headline-hash href=#recommended-development-practices>¶</a></h3><p>It is recommended to use a python virtual environment. Many ways exist for this,
+but the following is the simplest:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># Make sure your &#39;python&#39; is what you expect. Note that on multi-python</span>
+</span></span><span class=line><span class=cl><span class=c1># systems, this may have a version suffix, and on many Linuxes and MacOS where</span>
+</span></span><span class=line><span class=cl><span class=c1># python2 and python3 co-exist, you may also want to use `python3`.</span>
+</span></span><span class=line><span class=cl>which python
+</span></span><span class=line><span class=cl>python -m venv ~/.venv/mlirdev
+</span></span><span class=line><span class=cl><span class=nb>source</span> ~/.venv/mlirdev/bin/activate
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Note that many LTS distros will bundle a version of pip itself that is too</span>
+</span></span><span class=line><span class=cl><span class=c1># old to download all of the latest binaries for certain platforms.</span>
+</span></span><span class=line><span class=cl><span class=c1># The pip version can be obtained with `python -m pip --version`, and for</span>
+</span></span><span class=line><span class=cl><span class=c1># Linux specifically, this should be cross checked with minimum versions</span>
+</span></span><span class=line><span class=cl><span class=c1># here: https://github.com/pypa/manylinux</span>
+</span></span><span class=line><span class=cl><span class=c1># It is recommended to upgrade pip:</span>
+</span></span><span class=line><span class=cl>python -m pip install --upgrade pip
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Now the `python` command will resolve to your virtual environment and</span>
+</span></span><span class=line><span class=cl><span class=c1># packages will be installed there.</span>
+</span></span><span class=line><span class=cl>python -m pip install -r mlir/python/requirements.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Now run `cmake`, `ninja`, et al.</span>
+</span></span></code></pre></div><p>For interactive use, it is sufficient to add the
+<code>tools/mlir/python_packages/mlir_core/</code> directory in your <code>build/</code> directory to
+the <code>PYTHONPATH</code>. Typically:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=nb>export</span> <span class=nv>PYTHONPATH</span><span class=o>=</span><span class=k>$(</span><span class=nb>cd</span> build <span class=o>&amp;&amp;</span> <span class=nb>pwd</span><span class=k>)</span>/tools/mlir/python_packages/mlir_core
+</span></span></code></pre></div><p>Note that if you have installed (i.e. via <code>ninja install</code>, et al), then python
+packages for all enabled projects will be in your install tree under
+<code>python_packages/</code> (i.e. <code>python_packages/mlir_core</code>). Official distributions
+are built with a more specialized setup.</p><h2 id=design>Design&nbsp;<a class=headline-hash href=#design>¶</a></h2><h3 id=use-cases>Use cases&nbsp;<a class=headline-hash href=#use-cases>¶</a></h3><p>There are likely two primary use cases for the MLIR python bindings:</p><ol><li><p>Support users who expect that an installed version of LLVM/MLIR will yield
+the ability to <code>import mlir</code> and use the API in a pure way out of the box.</p></li><li><p>Downstream integrations will likely want to include parts of the API in
+their private namespace or specially built libraries, probably mixing it
+with other python native bits.</p></li></ol><h3 id=composable-modules>Composable modules&nbsp;<a class=headline-hash href=#composable-modules>¶</a></h3><p>In order to support use case #2, the Python bindings are organized into
+composable modules that downstream integrators can include and re-export into
+their own namespace if desired. This forces several design points:</p><ul><li><p>Separate the construction/populating of a <code>py::module</code> from
+<code>PYBIND11_MODULE</code> global constructor.</p></li><li><p>Introduce headers for C++-only wrapper classes as other related C++ modules
+will need to interop with it.</p></li><li><p>Separate any initialization routines that depend on optional components into
+its own module/dependency (currently, things like <code>registerAllDialects</code> fall
+into this category).</p></li></ul><p>There are a lot of co-related issues of shared library linkage, distribution
+concerns, etc that affect such things. Organizing the code into composable
+modules (versus a monolithic <code>cpp</code> file) allows the flexibility to address many
+of these as needed over time. Also, compilation time for all of the template
+meta-programming in pybind scales with the number of things you define in a
+translation unit. Breaking into multiple translation units can significantly aid
+compile times for APIs with a large surface area.</p><h3 id=submodules>Submodules&nbsp;<a class=headline-hash href=#submodules>¶</a></h3><p>Generally, the C++ codebase namespaces most things into the <code>mlir</code> namespace.
+However, in order to modularize and make the Python bindings easier to
+understand, sub-packages are defined that map roughly to the directory structure
+of functional units in MLIR.</p><p>Examples:</p><ul><li><code>mlir.ir</code></li><li><code>mlir.passes</code> (<code>pass</code> is a reserved word :( )</li><li><code>mlir.dialect</code></li><li><code>mlir.execution_engine</code> (aside from namespacing, it is important that
+&ldquo;bulky&rdquo;/optional parts like this are isolated)</li></ul><p>In addition, initialization functions that imply optional dependencies should be
+in underscored (notionally private) modules such as <code>_init</code> and linked
+separately. This allows downstream integrators to completely customize what is
+included &ldquo;in the box&rdquo; and covers things like dialect registration, pass
+registration, etc.</p><h3 id=loader>Loader&nbsp;<a class=headline-hash href=#loader>¶</a></h3><p>LLVM/MLIR is a non-trivial python-native project that is likely to co-exist with
+other non-trivial native extensions. As such, the native extension (i.e. the
+<code>.so</code>/<code>.pyd</code>/<code>.dylib</code>) is exported as a notionally private top-level symbol
+(<code>_mlir</code>), while a small set of Python code is provided in
+<code>mlir/_cext_loader.py</code> and siblings which loads and re-exports it. This split
+provides a place to stage code that needs to prepare the environment <em>before</em>
+the shared library is loaded into the Python runtime, and also provides a place
+that one-time initialization code can be invoked apart from module constructors.</p><p>It is recommended to avoid using <code>__init__.py</code> files to the extent possible,
+until reaching a leaf package that represents a discrete component. The rule to
+keep in mind is that the presence of an <code>__init__.py</code> file prevents the ability
+to split anything at that level or below in the namespace into different
+directories, deployment packages, wheels, etc.</p><p>See the documentation for more information and advice:
+<a href=https://packaging.python.org/guides/packaging-namespace-packages/>https://packaging.python.org/guides/packaging-namespace-packages/</a></p><h3 id=use-the-c-api>Use the C-API&nbsp;<a class=headline-hash href=#use-the-c-api>¶</a></h3><p>The Python APIs should seek to layer on top of the C-API to the degree possible.
+Especially for the core, dialect-independent parts, such a binding enables
+packaging decisions that would be difficult or impossible if spanning a C++ ABI
+boundary. In addition, factoring in this way side-steps some very difficult
+issues that arise when combining RTTI-based modules (which pybind derived things
+are) with non-RTTI polymorphic C++ code (the default compilation mode of LLVM).</p><h3 id=ownership-in-the-core-ir>Ownership in the Core IR&nbsp;<a class=headline-hash href=#ownership-in-the-core-ir>¶</a></h3><p>There are several top-level types in the core IR that are strongly owned by
+their python-side reference:</p><ul><li><code>PyContext</code> (<code>mlir.ir.Context</code>)</li><li><code>PyModule</code> (<code>mlir.ir.Module</code>)</li><li><code>PyOperation</code> (<code>mlir.ir.Operation</code>) - but with caveats</li></ul><p>All other objects are dependent. All objects maintain a back-reference
+(keep-alive) to their closest containing top-level object. Further, dependent
+objects fall into two categories: a) uniqued (which live for the life-time of
+the context) and b) mutable. Mutable objects need additional machinery for
+keeping track of when the C++ instance that backs their Python object is no
+longer valid (typically due to some specific mutation of the IR, deletion, or
+bulk operation).</p><h3 id=optionality-and-argument-ordering-in-the-core-ir>Optionality and argument ordering in the Core IR&nbsp;<a class=headline-hash href=#optionality-and-argument-ordering-in-the-core-ir>¶</a></h3><p>The following types support being bound to the current thread as a context
+manager:</p><ul><li><code>PyLocation</code> (<code>loc: mlir.ir.Location = None</code>)</li><li><code>PyInsertionPoint</code> (<code>ip: mlir.ir.InsertionPoint = None</code>)</li><li><code>PyMlirContext</code> (<code>context: mlir.ir.Context = None</code>)</li></ul><p>In order to support composability of function arguments, when these types appear
+as arguments, they should always be the last and appear in the above order and
+with the given names (which is generally the order in which they are expected to
+need to be expressed explicitly in special cases) as necessary. Each should
+carry a default value of <code>py::none()</code> and use either a manual or automatic
+conversion for resolving either with the explicit value or a value from the
+thread context manager (i.e. <code>DefaultingPyMlirContext</code> or
+<code>DefaultingPyLocation</code>).</p><p>The rationale for this is that in Python, trailing keyword arguments to the
+<em>right</em> are the most composable, enabling a variety of strategies such as kwarg
+passthrough, default values, etc. Keeping function signatures composable
+increases the chances that interesting DSLs and higher level APIs can be
+constructed without a lot of exotic boilerplate.</p><p>Used consistently, this enables a style of IR construction that rarely needs to
+use explicit contexts, locations, or insertion points but is free to do so when
+extra control is needed.</p><h4 id=operation-hierarchy>Operation hierarchy&nbsp;<a class=headline-hash href=#operation-hierarchy>¶</a></h4><p>As mentioned above, <code>PyOperation</code> is special because it can exist in either a
+top-level or dependent state. The life-cycle is unidirectional: operations can
+be created detached (top-level) and once added to another operation, they are
+then dependent for the remainder of their lifetime. The situation is more
+complicated when considering construction scenarios where an operation is added
+to a transitive parent that is still detached, necessitating further accounting
+at such transition points (i.e. all such added children are initially added to
+the IR with a parent of their outer-most detached operation, but then once it is
+added to an attached operation, they need to be re-parented to the containing
+module).</p><p>Due to the validity and parenting accounting needs, <code>PyOperation</code> is the owner
+for regions and blocks and needs to be a top-level type that we can count on not
+aliasing. This let&rsquo;s us do things like selectively invalidating instances when
+mutations occur without worrying that there is some alias to the same operation
+in the hierarchy. Operations are also the only entity that are allowed to be in
+a detached state, and they are interned at the context level so that there is
+never more than one Python <code>mlir.ir.Operation</code> object for a unique
+<code>MlirOperation</code>, regardless of how it is obtained.</p><p>The C/C++ API allows for Region/Block to also be detached, but it simplifies the
+ownership model a lot to eliminate that possibility in this API, allowing the
+Region/Block to be completely dependent on its owning operation for accounting.
+The aliasing of Python <code>Region</code>/<code>Block</code> instances to underlying
+<code>MlirRegion</code>/<code>MlirBlock</code> is considered benign and these objects are not interned
+in the context (unlike operations).</p><p>If we ever want to re-introduce detached regions/blocks, we could do so with new
+&ldquo;DetachedRegion&rdquo; class or similar and also avoid the complexity of accounting.
+With the way it is now, we can avoid having a global live list for regions and
+blocks. We may end up needing an op-local one at some point TBD, depending on
+how hard it is to guarantee how mutations interact with their Python peer
+objects. We can cross that bridge easily when we get there.</p><p>Module, when used purely from the Python API, can&rsquo;t alias anyway, so we can use
+it as a top-level ref type without a live-list for interning. If the API ever
+changes such that this cannot be guaranteed (i.e. by letting you marshal a
+native-defined Module in), then there would need to be a live table for it too.</p><h2 id=user-level-api>User-level API&nbsp;<a class=headline-hash href=#user-level-api>¶</a></h2><h3 id=context-management>Context Management&nbsp;<a class=headline-hash href=#context-management>¶</a></h3><p>The bindings rely on Python
+<a href=https://docs.python.org/3/reference/datamodel.html#context-managers>context managers</a>
+(<code>with</code> statements) to simplify creation and handling of IR objects by omitting
+repeated arguments such as MLIR contexts, operation insertion points and
+locations. A context manager sets up the default object to be used by all
+binding calls within the following context and in the same thread. This default
+can be overridden by specific calls through the dedicated keyword arguments.</p><h4 id=mlir-context>MLIR Context&nbsp;<a class=headline-hash href=#mlir-context>¶</a></h4><p>An MLIR context is a top-level entity that owns attributes and types and is
+referenced from virtually all IR constructs. Contexts also provide thread safety
+at the C++ level. In Python bindings, the MLIR context is also a Python context
+manager, one can write:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Module</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>()</span> <span class=k>as</span> <span class=n>ctx</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1># IR construction using `ctx` as context.</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># For example, parsing an MLIR module from string requires the context.</span>
+</span></span><span class=line><span class=cl>  <span class=n>Module</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=s2>&#34;builtin.module </span><span class=si>{}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span></code></pre></div><p>IR objects referencing a context usually provide access to it through the
+<code>.context</code> property. Most IR-constructing functions expect the context to be
+provided in some form. In case of attributes and types, the context may be
+extracted from the contained attribute or type. In case of operations, the
+context is systematically extracted from Locations (see below). When the context
+cannot be extracted from any argument, the bindings API expects the (keyword)
+argument <code>context</code>. If it is not provided or set to <code>None</code> (default), it will be
+looked up from an implicit stack of contexts maintained by the bindings in the
+current thread and updated by context managers. If there is no surrounding
+context, an error will be raised.</p><p>Note that it is possible to manually specify the MLIR context both inside and
+outside of the <code>with</code> statement:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Module</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>standalone_ctx</span> <span class=o>=</span> <span class=n>Context</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>()</span> <span class=k>as</span> <span class=n>managed_ctx</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1># Parse a module in managed_ctx.</span>
+</span></span><span class=line><span class=cl>  <span class=n>Module</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=s2>&#34;...&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Parse a module in standalone_ctx (override the context manager).</span>
+</span></span><span class=line><span class=cl>  <span class=n>Module</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=s2>&#34;...&#34;</span><span class=p>,</span> <span class=n>context</span><span class=o>=</span><span class=n>standalone_ctx</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Parse a module without using context managers.</span>
+</span></span><span class=line><span class=cl><span class=n>Module</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=s2>&#34;...&#34;</span><span class=p>,</span> <span class=n>context</span><span class=o>=</span><span class=n>standalone_ctx</span><span class=p>)</span>
+</span></span></code></pre></div><p>The context object remains live as long as there are IR objects referencing it.</p><h4 id=insertion-points-and-locations>Insertion Points and Locations&nbsp;<a class=headline-hash href=#insertion-points-and-locations>¶</a></h4><p>When constructing an MLIR operation, two pieces of information are required:</p><ul><li>an <em>insertion point</em> that indicates where the operation is to be created in
+the IR region/block/operation structure (usually before or after another
+operation, or at the end of some block); it may be missing, at which point
+the operation is created in the <em>detached</em> state;</li><li>a <em>location</em> that contains user-understandable information about the source
+of the operation (for example, file/line/column information), which must
+always be provided as it carries a reference to the MLIR context.</li></ul><p>Both can be provided using context managers or explicitly as keyword arguments
+in the operation constructor. They can be also provided as keyword arguments
+<code>ip</code> and <code>loc</code> both within and outside of the context manager.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>InsertionPoint</span><span class=p>,</span> <span class=n>Location</span><span class=p>,</span> <span class=n>Module</span><span class=p>,</span> <span class=n>Operation</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>()</span> <span class=k>as</span> <span class=n>ctx</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>module</span> <span class=o>=</span> <span class=n>Module</span><span class=o>.</span><span class=n>create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Prepare for inserting operations into the body of the module and indicate</span>
+</span></span><span class=line><span class=cl>  <span class=c1># that these operations originate in the &#34;f.mlir&#34; file at the given line and</span>
+</span></span><span class=line><span class=cl>  <span class=c1># column.</span>
+</span></span><span class=line><span class=cl>  <span class=k>with</span> <span class=n>InsertionPoint</span><span class=p>(</span><span class=n>module</span><span class=o>.</span><span class=n>body</span><span class=p>),</span> <span class=n>Location</span><span class=o>.</span><span class=n>file</span><span class=p>(</span><span class=s2>&#34;f.mlir&#34;</span><span class=p>,</span> <span class=n>line</span><span class=o>=</span><span class=mi>42</span><span class=p>,</span> <span class=n>col</span><span class=o>=</span><span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># This operation will be inserted at the end of the module body and will</span>
+</span></span><span class=line><span class=cl>    <span class=c1># have the location set up by the context manager.</span>
+</span></span><span class=line><span class=cl>    <span class=n>Operation</span><span class=p>(</span><span class=o>&lt;...&gt;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># This operation will be inserted at the end of the module (and after the</span>
+</span></span><span class=line><span class=cl>    <span class=c1># previously constructed operation) and will have the location provided as</span>
+</span></span><span class=line><span class=cl>    <span class=c1># the keyword argument.</span>
+</span></span><span class=line><span class=cl>    <span class=n>Operation</span><span class=p>(</span><span class=o>&lt;...&gt;</span><span class=p>,</span> <span class=n>loc</span><span class=o>=</span><span class=n>Location</span><span class=o>.</span><span class=n>file</span><span class=p>(</span><span class=s2>&#34;g.mlir&#34;</span><span class=p>,</span> <span class=n>line</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span> <span class=n>col</span><span class=o>=</span><span class=mi>10</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># This operation will be inserted at the *beginning* of the block rather</span>
+</span></span><span class=line><span class=cl>    <span class=c1># than at its end.</span>
+</span></span><span class=line><span class=cl>    <span class=n>Operation</span><span class=p>(</span><span class=o>&lt;...&gt;</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=n>InsertionPoint</span><span class=o>.</span><span class=n>at_block_begin</span><span class=p>(</span><span class=n>module</span><span class=o>.</span><span class=n>body</span><span class=p>))</span>
+</span></span></code></pre></div><p>Note that <code>Location</code> needs an MLIR context to be constructed. It can take the
+context set up in the current thread by some surrounding context manager, or
+accept it as an explicit argument:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Location</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Create a context and a location in this context in the same `with` statement.</span>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>()</span> <span class=k>as</span> <span class=n>ctx</span><span class=p>,</span> <span class=n>Location</span><span class=o>.</span><span class=n>file</span><span class=p>(</span><span class=s2>&#34;f.mlir&#34;</span><span class=p>,</span> <span class=n>line</span><span class=o>=</span><span class=mi>42</span><span class=p>,</span> <span class=n>col</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span> <span class=n>context</span><span class=o>=</span><span class=n>ctx</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span></code></pre></div><p>Locations are owned by the context and live as long as they are (transitively)
+referenced from somewhere in Python code.</p><p>Unlike locations, the insertion point may be left unspecified (or, equivalently,
+set to <code>None</code> or <code>False</code>) during operation construction. In this case, the
+operation is created in the <em>detached</em> state, that is, it is not added into the
+region of another operation and is owned by the caller. This is usually the case
+for top-level operations that contain the IR, such as modules. Regions, blocks
+and values contained in an operation point back to it and maintain it live.</p><h3 id=inspecting-ir-objects>Inspecting IR Objects&nbsp;<a class=headline-hash href=#inspecting-ir-objects>¶</a></h3><p>Inspecting the IR is one of the primary tasks the Python bindings are designed
+for. One can traverse the IR operation/region/block structure and inspect their
+aspects such as operation attributes and value types.</p><h4 id=operations-regions-and-blocks>Operations, Regions and Blocks&nbsp;<a class=headline-hash href=#operations-regions-and-blocks>¶</a></h4><p>Operations are represented as either:</p><ul><li>the generic <code>Operation</code> class, useful in particular for generic processing
+of unregistered operations; or</li><li>a specific subclass of <code>OpView</code> that provides more semantically-loaded
+accessors to operation properties.</li></ul><p>Given an <code>OpView</code> subclass, one can obtain an <code>Operation</code> using its <code>.operation</code>
+property. Given an <code>Operation</code>, one can obtain the corresponding <code>OpView</code> using
+its <code>.opview</code> property <em>as long as</em> the corresponding class has been set up.
+This typically means that the Python module of its dialect has been loaded. By
+default, the <code>OpView</code> version is produced when navigating the IR tree.</p><p>One can check if an operation has a specific type by means of Python&rsquo;s
+<code>isinstance</code> function:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>operation</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=n>opview</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>operation</span><span class=o>.</span><span class=n>opview</span><span class=p>,</span> <span class=n>mydialect</span><span class=o>.</span><span class=n>MyOp</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>opview</span><span class=p>,</span> <span class=n>mydialect</span><span class=o>.</span><span class=n>MyOp</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span></code></pre></div><p>The components of an operation can be inspected using its properties.</p><ul><li><code>attributes</code> is a collection of operation attributes . It can be subscripted
+as both dictionary and sequence, e.g., both <code>operation.attributes["value"]</code>
+and <code>operation.attributes[0]</code> will work. There is no guarantee on the order
+in which the attributes are traversed when iterating over the <code>attributes</code>
+property as sequence.</li><li><code>operands</code> is a sequence collection of operation operands.</li><li><code>results</code> is a sequence collection of operation results.</li><li><code>regions</code> is a sequence collection of regions attached to the operation.</li></ul><p>The objects produced by <code>operands</code> and <code>results</code> have a <code>.types</code> property that
+contains a sequence collection of types of the corresponding values.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Operation</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>operation1</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=n>operation2</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=n>operation1</span><span class=o>.</span><span class=n>results</span><span class=o>.</span><span class=n>types</span> <span class=o>==</span> <span class=n>operation2</span><span class=o>.</span><span class=n>operand</span><span class=o>.</span><span class=n>types</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span></code></pre></div><p><code>OpView</code> subclasses for specific operations may provide leaner accessors to
+properties of an operation. For example, named attributes, operand and results
+are usually accessible as properties of the <code>OpView</code> subclass with the same
+name, such as <code>operation.const_value</code> instead of
+<code>operation.attributes["const_value"]</code>. If this name is a reserved Python
+keyword, it is suffixed with an underscore.</p><p>The operation itself is iterable, which provides access to the attached regions
+in order:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Operation</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>operation</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>region</span> <span class=ow>in</span> <span class=n>operation</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>do_something_with_region</span><span class=p>(</span><span class=n>region</span><span class=p>)</span>
+</span></span></code></pre></div><p>A region is conceptually a sequence of blocks. Objects of the <code>Region</code> class are
+thus iterable, which provides access to the blocks. One can also use the
+<code>.blocks</code> property.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Regions are directly iterable and give access to blocks.</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>block1</span><span class=p>,</span> <span class=n>block2</span> <span class=ow>in</span> <span class=nb>zip</span><span class=p>(</span><span class=n>operation</span><span class=o>.</span><span class=n>regions</span><span class=p>[</span><span class=mi>0</span><span class=p>],</span> <span class=n>operation</span><span class=o>.</span><span class=n>regions</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>blocks</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>assert</span> <span class=n>block1</span> <span class=o>==</span> <span class=n>block2</span>
+</span></span></code></pre></div><p>A block contains a sequence of operations, and has several additional
+properties. Objects of the <code>Block</code> class are iterable and provide access to the
+operations contained in the block. So does the <code>.operations</code> property. Blocks
+also have a list of arguments available as a sequence collection using the
+<code>.arguments</code> property.</p><p>Block and region belong to the parent operation in Python bindings and keep it
+alive. This operation can be accessed using the <code>.owner</code> property.</p><h4 id=attributes-and-types>Attributes and Types&nbsp;<a class=headline-hash href=#attributes-and-types>¶</a></h4><p>Attributes and types are (mostly) immutable context-owned objects. They are
+represented as either:</p><ul><li>an opaque <code>Attribute</code> or <code>Type</code> object supporting printing and comparison;
+or</li><li>a concrete subclass thereof with access to properties of the attribute or
+type.</li></ul><p>Given an <code>Attribute</code> or <code>Type</code> object, one can obtain a concrete subclass using
+the constructor of the subclass. This may raise a <code>ValueError</code> if the attribute
+or type is not of the expected subclass:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Attribute</span><span class=p>,</span> <span class=n>Type</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.</span><span class=o>&lt;</span><span class=n>dialect</span><span class=o>&gt;</span> <span class=kn>import</span> <span class=nn>ConcreteAttr</span><span class=o>,</span> <span class=nn>ConcreteType</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>attribute</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete_attr</span> <span class=o>=</span> <span class=n>ConcreteAttr</span><span class=p>(</span><span class=n>attribute</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete_type</span> <span class=o>=</span> <span class=n>ConcreteType</span><span class=p>(</span><span class=nb>type</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>except</span> <span class=ne>ValueError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1># Handle incorrect subclass.</span>
+</span></span></code></pre></div><p>In addition, concrete attribute and type classes provide a static <code>isinstance</code>
+method to check whether an object of the opaque <code>Attribute</code> or <code>Type</code> type can
+be downcasted:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Attribute</span><span class=p>,</span> <span class=n>Type</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.</span><span class=o>&lt;</span><span class=n>dialect</span><span class=o>&gt;</span> <span class=kn>import</span> <span class=nn>ConcreteAttr</span><span class=o>,</span> <span class=nn>ConcreteType</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>attribute</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># No need to handle errors here.</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=n>ConcreteAttr</span><span class=o>.</span><span class=n>isinstance</span><span class=p>(</span><span class=n>attribute</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete_attr</span> <span class=o>=</span> <span class=n>ConcreteAttr</span><span class=p>(</span><span class=n>attribute</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=n>ConcreteType</span><span class=o>.</span><span class=n>isinstance</span><span class=p>(</span><span class=nb>type</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete_type</span> <span class=o>=</span> <span class=n>ConcreteType</span><span class=p>(</span><span class=nb>type</span><span class=p>)</span>
+</span></span></code></pre></div><p>By default, and unlike operations, attributes and types are returned from IR
+traversals using the opaque <code>Attribute</code> or <code>Type</code> that needs to be downcasted.</p><p>Concrete attribute and type classes usually expose their properties as Python
+readonly properties. For example, the elemental type of a tensor type can be
+accessed using the <code>.element_type</code> property.</p><h4 id=values>Values&nbsp;<a class=headline-hash href=#values>¶</a></h4><p>MLIR has two kinds of values based on their defining object: block arguments and
+operation results. Values are handled similarly to attributes and types. They
+are represented as either:</p><ul><li>a generic <code>Value</code> object; or</li><li>a concrete <code>BlockArgument</code> or <code>OpResult</code> object.</li></ul><p>The former provides all the generic functionality such as comparison, type
+access and printing. The latter provide access to the defining block or
+operation and the position of the value within it. By default, the generic
+<code>Value</code> objects are returned from IR traversals. Downcasting is implemented
+through concrete subclass constructors, similarly to attribtues and types:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>BlockArgument</span><span class=p>,</span> <span class=n>OpResult</span><span class=p>,</span> <span class=n>Value</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>value</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Set `concrete` to the specific value subclass.</span>
+</span></span><span class=line><span class=cl><span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete</span> <span class=o>=</span> <span class=n>BlockArgument</span><span class=p>(</span><span class=n>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>except</span> <span class=ne>ValueError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1># This must not raise another ValueError as values are either block arguments</span>
+</span></span><span class=line><span class=cl>  <span class=c1># or op results.</span>
+</span></span><span class=line><span class=cl>  <span class=n>concrete</span> <span class=o>=</span> <span class=n>OpResult</span><span class=p>(</span><span class=n>value</span><span class=p>)</span>
+</span></span></code></pre></div><h4 id=interfaces>Interfaces&nbsp;<a class=headline-hash href=#interfaces>¶</a></h4><p>MLIR interfaces are a mechanism to interact with the IR without needing to know
+specific types of operations but only some of their aspects. Operation
+interfaces are available as Python classes with the same name as their C++
+counterparts. Objects of these classes can be constructed from either:</p><ul><li>an object of the <code>Operation</code> class or of any <code>OpView</code> subclass; in this
+case, all interface methods are available;</li><li>a subclass of <code>OpView</code> and a context; in this case, only the <em>static</em>
+interface methods are available as there is no associated operation.</li></ul><p>In both cases, construction of the interface raises a <code>ValueError</code> if the
+operation class does not implement the interface in the given context (or, for
+operations, in the context that the operation is defined in). Similarly to
+attributes and types, the MLIR context may be set up by a surrounding context
+manager.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>InferTypeOpInterface</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>op</span> <span class=o>=</span> <span class=o>&lt;...&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Attempt to cast the operation into an interface.</span>
+</span></span><span class=line><span class=cl>  <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>iface</span> <span class=o>=</span> <span class=n>InferTypeOpInterface</span><span class=p>(</span><span class=n>op</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>except</span> <span class=ne>ValueError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Operation does not implement InferTypeOpInterface.&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>raise</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># All methods are available on interface objects constructed from an Operation</span>
+</span></span><span class=line><span class=cl>  <span class=c1># or an OpView.</span>
+</span></span><span class=line><span class=cl>  <span class=n>iface</span><span class=o>.</span><span class=n>someInstanceMethod</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># An interface object can also be constructed given an OpView subclass. It</span>
+</span></span><span class=line><span class=cl>  <span class=c1># also needs a context in which the interface will be looked up. The context</span>
+</span></span><span class=line><span class=cl>  <span class=c1># can be provided explicitly or set up by the surrounding context manager.</span>
+</span></span><span class=line><span class=cl>  <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>iface</span> <span class=o>=</span> <span class=n>InferTypeOpInterface</span><span class=p>(</span><span class=n>some_dialect</span><span class=o>.</span><span class=n>SomeOp</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>except</span> <span class=ne>ValueError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;SomeOp does not implement InferTypeOpInterface.&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>raise</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Calling an instance method on an interface object constructed from a class</span>
+</span></span><span class=line><span class=cl>  <span class=c1># will raise TypeError.</span>
+</span></span><span class=line><span class=cl>  <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>iface</span><span class=o>.</span><span class=n>someInstanceMethod</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>except</span> <span class=ne>TypeError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># One can still call static interface methods though.</span>
+</span></span><span class=line><span class=cl>  <span class=n>iface</span><span class=o>.</span><span class=n>inferOpReturnTypes</span><span class=p>(</span><span class=o>&lt;...&gt;</span><span class=p>)</span>
+</span></span></code></pre></div><p>If an interface object was constructed from an <code>Operation</code> or an <code>OpView</code>, they
+are available as <code>.operation</code> and <code>.opview</code> properties of the interface object,
+respectively.</p><p>Only a subset of operation interfaces are currently provided in Python bindings.
+Attribute and type interfaces are not yet available in Python bindings.</p><h3 id=creating-ir-objects>Creating IR Objects&nbsp;<a class=headline-hash href=#creating-ir-objects>¶</a></h3><p>Python bindings also support IR creation and manipulation.</p><h4 id=operations-regions-and-blocks-1>Operations, Regions and Blocks&nbsp;<a class=headline-hash href=#operations-regions-and-blocks-1>¶</a></h4><p>Operations can be created given a <code>Location</code> and an optional <code>InsertionPoint</code>.
+It is often easier to user context managers to specify locations and insertion
+points for several operations created in a row as described above.</p><p>Concrete operations can be created by using constructors of the corresponding
+<code>OpView</code> subclasses. The generic, default form of the constructor accepts:</p><ul><li>an optional sequence of types for operation results (<code>results</code>);</li><li>an optional sequence of values for operation operands, or another operation
+producing those values (<code>operands</code>);</li><li>an optional dictionary of operation attributes (<code>attributes</code>);</li><li>an optional sequence of successor blocks (<code>successors</code>);</li><li>the number of regions to attach to the operation (<code>regions</code>, default <code>0</code>);</li><li>the <code>loc</code> keyword argument containing the <code>Location</code> of this operation; if
+<code>None</code>, the location created by the closest context manager is used or an
+exception will be raised if there is no context manager;</li><li>the <code>ip</code> keyword argument indicating where the operation will be inserted in
+the IR; if <code>None</code>, the insertion point created by the closest context
+manager is used; if there is no surrounding context manager, the operation
+is created in the detached state.</li></ul><p>Most operations will customize the constructor to accept a reduced list of
+arguments that are relevant for the operation. For example, zero-result
+operations may omit the <code>results</code> argument, so can the operations where the
+result types can be derived from operand types unambiguously. As a concrete
+example, built-in function operations can be constructed by providing a function
+name as string and its argument and result types as a tuple of sequences:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Module</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects</span> <span class=kn>import</span> <span class=n>builtin</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>module</span> <span class=o>=</span> <span class=n>Module</span><span class=o>.</span><span class=n>create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>with</span> <span class=n>InsertionPoint</span><span class=p>(</span><span class=n>module</span><span class=o>.</span><span class=n>body</span><span class=p>),</span> <span class=n>Location</span><span class=o>.</span><span class=n>unknown</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>func</span> <span class=o>=</span> <span class=n>func</span><span class=o>.</span><span class=n>FuncOp</span><span class=p>(</span><span class=s2>&#34;main&#34;</span><span class=p>,</span> <span class=p>([],</span> <span class=p>[]))</span>
+</span></span></code></pre></div><p>Also see below for constructors generated from ODS.</p><p>Operations can also be constructed using the generic class and based on the
+canonical string name of the operation using <code>Operation.create</code>. It accepts the
+operation name as string, which must exactly match the canonical name of the
+operation in C++ or ODS, followed by the same argument list as the default
+constructor for <code>OpView</code>. <em>This form is discouraged</em> from use and is intended
+for generic operation processing.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Module</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects</span> <span class=kn>import</span> <span class=n>builtin</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>module</span> <span class=o>=</span> <span class=n>Module</span><span class=o>.</span><span class=n>create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>with</span> <span class=n>InsertionPoint</span><span class=p>(</span><span class=n>module</span><span class=o>.</span><span class=n>body</span><span class=p>),</span> <span class=n>Location</span><span class=o>.</span><span class=n>unknown</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=c1># Operations can be created in a generic way.</span>
+</span></span><span class=line><span class=cl>    <span class=n>func</span> <span class=o>=</span> <span class=n>Operation</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;func.func&#34;</span><span class=p>,</span> <span class=n>results</span><span class=o>=</span><span class=p>[],</span> <span class=n>operands</span><span class=o>=</span><span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=n>attributes</span><span class=o>=</span><span class=p>{</span><span class=s2>&#34;function_type&#34;</span><span class=p>:</span><span class=n>TypeAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>FunctionType</span><span class=o>.</span><span class=n>get</span><span class=p>([],</span> <span class=p>[]))},</span>
+</span></span><span class=line><span class=cl>        <span class=n>successors</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>regions</span><span class=o>=</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=c1># The result will be downcasted to the concrete `OpView` subclass if</span>
+</span></span><span class=line><span class=cl>    <span class=c1># available.</span>
+</span></span><span class=line><span class=cl>    <span class=k>assert</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>func</span><span class=p>,</span> <span class=n>func</span><span class=o>.</span><span class=n>FuncOp</span><span class=p>)</span>
+</span></span></code></pre></div><p>Regions are created for an operation when constructing it on the C++ side. They
+are not constructible in Python and are not expected to exist outside of
+operations (unlike in C++ that supports detached regions).</p><p>Blocks can be created within a given region and inserted before or after another
+block of the same region using <code>create_before()</code>, <code>create_after()</code> methods of
+the <code>Block</code> class, or the <code>create_at_start()</code> static method of the same class.
+They are not expected to exist outside of regions (unlike in C++ that supports
+detached blocks).</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Block</span><span class=p>,</span> <span class=n>Context</span><span class=p>,</span> <span class=n>Operation</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>op</span> <span class=o>=</span> <span class=n>Operation</span><span class=o>.</span><span class=n>create</span><span class=p>(</span><span class=s2>&#34;generic.op&#34;</span><span class=p>,</span> <span class=n>regions</span><span class=o>=</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Create the first block in the region.</span>
+</span></span><span class=line><span class=cl>  <span class=n>entry_block</span> <span class=o>=</span> <span class=n>Block</span><span class=o>.</span><span class=n>create_at_start</span><span class=p>(</span><span class=n>op</span><span class=o>.</span><span class=n>regions</span><span class=p>[</span><span class=mi>0</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1># Create further blocks.</span>
+</span></span><span class=line><span class=cl>  <span class=n>other_block</span> <span class=o>=</span> <span class=n>entry_block</span><span class=o>.</span><span class=n>create_after</span><span class=p>()</span>
+</span></span></code></pre></div><p>Blocks can be used to create <code>InsertionPoint</code>s, which can point to the beginning
+or the end of the block, or just before its terminator. It is common for
+<code>OpView</code> subclasses to provide a <code>.body</code> property that can be used to construct
+an <code>InsertionPoint</code>. For example, builtin <code>Module</code> and <code>FuncOp</code> provide a
+<code>.body</code> and <code>.add_entry_blocK()</code>, respectively.</p><h4 id=attributes-and-types-1>Attributes and Types&nbsp;<a class=headline-hash href=#attributes-and-types-1>¶</a></h4><p>Attributes and types can be created given a <code>Context</code> or another attribute or
+type object that already references the context. To indicate that they are owned
+by the context, they are obtained by calling the static <code>get</code> method on the
+concrete attribute or type class. These method take as arguments the data
+necessary to construct the attribute or type and a the keyword <code>context</code>
+argument when the context cannot be derived from other arguments.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>F32Type</span><span class=p>,</span> <span class=n>FloatAttr</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Attribute and types require access to an MLIR context, either directly or</span>
+</span></span><span class=line><span class=cl><span class=c1># through another context-owned object.</span>
+</span></span><span class=line><span class=cl><span class=n>ctx</span> <span class=o>=</span> <span class=n>Context</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>f32</span> <span class=o>=</span> <span class=n>F32Type</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>context</span><span class=o>=</span><span class=n>ctx</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>pi</span> <span class=o>=</span> <span class=n>FloatAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>f32</span><span class=p>,</span> <span class=mf>3.14</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># They may use the context defined by the surrounding context manager.</span>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>f32</span> <span class=o>=</span> <span class=n>F32Type</span><span class=o>.</span><span class=n>get</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=n>pi</span> <span class=o>=</span> <span class=n>FloatAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>f32</span><span class=p>,</span> <span class=mf>3.14</span><span class=p>)</span>
+</span></span></code></pre></div><p>Some attributes provide additional construction methods for clarity.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Context</span><span class=p>,</span> <span class=n>IntegerAttr</span><span class=p>,</span> <span class=n>IntegerType</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>i8</span> <span class=o>=</span> <span class=n>IntegerType</span><span class=o>.</span><span class=n>get_signless</span><span class=p>(</span><span class=mi>8</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>IntegerAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>i8</span><span class=p>,</span> <span class=mi>42</span><span class=p>)</span>
+</span></span></code></pre></div><p>Builtin attribute can often be constructed from Python types with similar
+structure. For example, <code>ArrayAttr</code> can be constructed from a sequence
+collection of attributes, and a <code>DictAttr</code> can be constructed from a dictionary:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>ArrayAttr</span><span class=p>,</span> <span class=n>Context</span><span class=p>,</span> <span class=n>DictAttr</span><span class=p>,</span> <span class=n>UnitAttr</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>Context</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>array</span> <span class=o>=</span> <span class=n>ArrayAttr</span><span class=o>.</span><span class=n>get</span><span class=p>([</span><span class=n>UnitAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(),</span> <span class=n>UnitAttr</span><span class=o>.</span><span class=n>get</span><span class=p>()])</span>
+</span></span><span class=line><span class=cl>  <span class=n>dictionary</span> <span class=o>=</span> <span class=n>DictAttr</span><span class=o>.</span><span class=n>get</span><span class=p>({</span><span class=s2>&#34;array&#34;</span><span class=p>:</span> <span class=n>array</span><span class=p>,</span> <span class=s2>&#34;unit&#34;</span><span class=p>:</span> <span class=n>UnitAttr</span><span class=o>.</span><span class=n>get</span><span class=p>()})</span>
+</span></span></code></pre></div><p>Custom builders for Attributes to be used during Operation creation can be
+registered by way of the <code>register_attribute_builder</code>. In particular the
+following is how a custom builder is registered for <code>I32Attr</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=nd>@register_attribute_builder</span><span class=p>(</span><span class=s2>&#34;I32Attr&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>_i32Attr</span><span class=p>(</span><span class=n>x</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>context</span><span class=p>:</span> <span class=n>Context</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>IntegerAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>IntegerType</span><span class=o>.</span><span class=n>get_signless</span><span class=p>(</span><span class=mi>32</span><span class=p>,</span> <span class=n>context</span><span class=o>=</span><span class=n>context</span><span class=p>),</span> <span class=n>x</span><span class=p>)</span>
+</span></span></code></pre></div><p>This allows to invoke op creation of an op with a <code>I32Attr</code> with</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>foo</span><span class=o>.</span><span class=n>Op</span><span class=p>(</span><span class=mi>30</span><span class=p>)</span>
+</span></span></code></pre></div><p>The registration is based on the ODS name but registry is via pure python
+method. Only single custom builder is allowed to be registered per ODS attribute
+type (e.g., I32Attr can have only one, which can correspond to multiple of the
+underlying IntegerAttr type).</p><p>instead of</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>foo</span><span class=o>.</span><span class=n>Op</span><span class=p>(</span><span class=n>IntegerAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>IndexType</span><span class=o>.</span><span class=n>get_signless</span><span class=p>(</span><span class=mi>32</span><span class=p>,</span> <span class=n>context</span><span class=o>=</span><span class=n>context</span><span class=p>),</span> <span class=mi>30</span><span class=p>))</span>
+</span></span></code></pre></div><h2 id=style>Style&nbsp;<a class=headline-hash href=#style>¶</a></h2><p>In general, for the core parts of MLIR, the Python bindings should be largely
+isomorphic with the underlying C++ structures. However, concessions are made
+either for practicality or to give the resulting library an appropriately
+&ldquo;Pythonic&rdquo; flavor.</p><h3 id=properties-vs-get-methods>Properties vs get*() methods&nbsp;<a class=headline-hash href=#properties-vs-get-methods>¶</a></h3><p>Generally favor converting trivial methods like <code>getContext()</code>, <code>getName()</code>,
+<code>isEntryBlock()</code>, etc to read-only Python properties (i.e. <code>context</code>). It is
+primarily a matter of calling <code>def_property_readonly</code> vs <code>def</code> in binding code,
+and makes things feel much nicer to the Python side.</p><p>For example, prefer:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>m</span><span class=p>.</span><span class=n>def_property_readonly</span><span class=p>(</span><span class=s>&#34;context&#34;</span><span class=p>,</span> <span class=p>...)</span>
+</span></span></code></pre></div><p>Over:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>m</span><span class=p>.</span><span class=n>def</span><span class=p>(</span><span class=s>&#34;getContext&#34;</span><span class=p>,</span> <span class=p>...)</span>
+</span></span></code></pre></div><h3 id=repr-methods><strong>repr</strong> methods&nbsp;<a class=headline-hash href=#repr-methods>¶</a></h3><p>Things that have nice printed representations are really great :) If there is a
+reasonable printed form, it can be a significant productivity boost to wire that
+to the <code>__repr__</code> method (and verify it with a
+<a href=#sample-doctest>doctest</a>).</p><h3 id=camelcase-vs-snake_case>CamelCase vs snake_case&nbsp;<a class=headline-hash href=#camelcase-vs-snake_case>¶</a></h3><p>Name functions/methods/properties in <code>snake_case</code> and classes in <code>CamelCase</code>. As
+a mechanical concession to Python style, this can go a long way to making the
+API feel like it fits in with its peers in the Python landscape.</p><p>If in doubt, choose names that will flow properly with other
+<a href=https://pep8.org/#descriptive-naming-styles>PEP 8 style names</a>.</p><h3 id=prefer-pseudo-containers>Prefer pseudo-containers&nbsp;<a class=headline-hash href=#prefer-pseudo-containers>¶</a></h3><p>Many core IR constructs provide methods directly on the instance to query count
+and begin/end iterators. Prefer hoisting these to dedicated pseudo containers.</p><p>For example, a direct mapping of blocks within regions could be done this way:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>region</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>block</span> <span class=ow>in</span> <span class=n>region</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span></code></pre></div><p>However, this way is preferred:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>region</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>block</span> <span class=ow>in</span> <span class=n>region</span><span class=o>.</span><span class=n>blocks</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>region</span><span class=o>.</span><span class=n>blocks</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>region</span><span class=o>.</span><span class=n>blocks</span><span class=p>[</span><span class=mi>0</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>region</span><span class=o>.</span><span class=n>blocks</span><span class=p>[</span><span class=o>-</span><span class=mi>1</span><span class=p>])</span>
+</span></span></code></pre></div><p>Instead of leaking STL-derived identifiers (<code>front</code>, <code>back</code>, etc), translate
+them to appropriate <code>__dunder__</code> methods and iterator wrappers in the bindings.</p><p>Note that this can be taken too far, so use good judgment. For example, block
+arguments may appear container-like but have defined methods for lookup and
+mutation that would be hard to model properly without making semantics
+complicated. If running into these, just mirror the C/C++ API.</p><h3 id=provide-one-stop-helpers-for-common-things>Provide one stop helpers for common things&nbsp;<a class=headline-hash href=#provide-one-stop-helpers-for-common-things>¶</a></h3><p>One stop helpers that aggregate over multiple low level entities can be
+incredibly helpful and are encouraged within reason. For example, making
+<code>Context</code> have a <code>parse_asm</code> or equivalent that avoids needing to explicitly
+construct a SourceMgr can be quite nice. One stop helpers do not have to be
+mutually exclusive with a more complete mapping of the backing constructs.</p><h2 id=testing>Testing&nbsp;<a class=headline-hash href=#testing>¶</a></h2><p>Tests should be added in the <code>test/Bindings/Python</code> directory and should
+typically be <code>.py</code> files that have a lit run line.</p><p>We use <code>lit</code> and <code>FileCheck</code> based tests:</p><ul><li>For generative tests (those that produce IR), define a Python module that
+constructs/prints the IR and pipe it through <code>FileCheck</code>.</li><li>Parsing should be kept self-contained within the module under test by use of
+raw constants and an appropriate <code>parse_asm</code> call.</li><li>Any file I/O code should be staged through a tempfile vs relying on file
+artifacts/paths outside of the test module.</li><li>For convenience, we also test non-generative API interactions with the same
+mechanisms, printing and <code>CHECK</code>ing as needed.</li></ul><h3 id=sample-filecheck-test>Sample FileCheck test&nbsp;<a class=headline-hash href=#sample-filecheck-test>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># RUN: %PYTHON %s | mlir-opt -split-input-file | FileCheck</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># TODO: Move to a test utility class once any of this actually exists.</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>print_module</span><span class=p>(</span><span class=n>f</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=n>m</span> <span class=o>=</span> <span class=n>f</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;// -----&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;// TEST_FUNCTION:&#34;</span><span class=p>,</span> <span class=n>f</span><span class=o>.</span><span class=vm>__name__</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=nb>print</span><span class=p>(</span><span class=n>m</span><span class=o>.</span><span class=n>to_asm</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>f</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># CHECK-LABEL: TEST_FUNCTION: create_my_op</span>
+</span></span><span class=line><span class=cl><span class=nd>@print_module</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>create_my_op</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>m</span> <span class=o>=</span> <span class=n>mlir</span><span class=o>.</span><span class=n>ir</span><span class=o>.</span><span class=n>Module</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=n>builder</span> <span class=o>=</span> <span class=n>m</span><span class=o>.</span><span class=n>new_op_builder</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=c1># CHECK: mydialect.my_operation ...</span>
+</span></span><span class=line><span class=cl>  <span class=n>builder</span><span class=o>.</span><span class=n>my_op</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>m</span>
+</span></span></code></pre></div><h2 id=integration-with-ods>Integration with ODS&nbsp;<a class=headline-hash href=#integration-with-ods>¶</a></h2><p>The MLIR Python bindings integrate with the tablegen-based ODS system for
+providing user-friendly wrappers around MLIR dialects and operations. There are
+multiple parts to this integration, outlined below. Most details have been
+elided: refer to the build rules and python sources under <code>mlir.dialects</code> for
+the canonical way to use this facility.</p><p>Users are responsible for providing a <code>{DIALECT_NAMESPACE}.py</code> (or an equivalent
+directory with <code>__init__.py</code> file) as the entrypoint.</p><h3 id=generating-_dialect_namespace_ops_genpy-wrapper-modules>Generating <code>_{DIALECT_NAMESPACE}_ops_gen.py</code> wrapper modules&nbsp;<a class=headline-hash href=#generating-_dialect_namespace_ops_genpy-wrapper-modules>¶</a></h3><p>Each dialect with a mapping to python requires that an appropriate
+<code>_{DIALECT_NAMESPACE}_ops_gen.py</code> wrapper module is created. This is done by
+invoking <code>mlir-tblgen</code> on a python-bindings specific tablegen wrapper that
+includes the boilerplate and actual dialect specific <code>td</code> file. An example, for
+the <code>Func</code> (which is assigned the namespace <code>func</code> as a special case):</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=cp>#ifndef PYTHON_BINDINGS_FUNC_OPS</span>
+</span></span><span class=line><span class=cl><span class=cp>#define PYTHON_BINDINGS_FUNC_OPS</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>include</span> <span class=s>&#34;mlir/Dialect/Func/IR/FuncOps.td&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#endif</span> <span class=c>// PYTHON_BINDINGS_FUNC_OPS
+</span></span></span></code></pre></div><p>In the main repository, building the wrapper is done via the CMake function
+<code>declare_mlir_dialect_python_bindings</code>, which invokes:</p><pre tabindex=0><code>mlir-tblgen -gen-python-op-bindings -bind-dialect={DIALECT_NAMESPACE} \
+    {PYTHON_BINDING_TD_FILE}
+</code></pre><p>The generates op classes must be included in the <code>{DIALECT_NAMESPACE}.py</code> file
+in a similar way that generated headers are included for C++ generated code:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>._my_dialect_ops_gen</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span></code></pre></div><h3 id=extending-the-search-path-for-wrapper-modules>Extending the search path for wrapper modules&nbsp;<a class=headline-hash href=#extending-the-search-path-for-wrapper-modules>¶</a></h3><p>When the python bindings need to locate a wrapper module, they consult the
+<code>dialect_search_path</code> and use it to find an appropriately named module. For the
+main repository, this search path is hard-coded to include the <code>mlir.dialects</code>
+module, which is where wrappers are emitted by the above build rule. Out of tree
+dialects can add their modules to the search path by calling:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects._ods_common</span> <span class=kn>import</span> <span class=n>_cext</span>
+</span></span><span class=line><span class=cl><span class=n>_cext</span><span class=o>.</span><span class=n>globals</span><span class=o>.</span><span class=n>append_dialect_search_prefix</span><span class=p>(</span><span class=s2>&#34;myproject.mlir.dialects&#34;</span><span class=p>)</span>
+</span></span></code></pre></div><h3 id=wrapper-module-code-organization>Wrapper module code organization&nbsp;<a class=headline-hash href=#wrapper-module-code-organization>¶</a></h3><p>The wrapper module tablegen emitter outputs:</p><ul><li>A <code>_Dialect</code> class (extending <code>mlir.ir.Dialect</code>) with a <code>DIALECT_NAMESPACE</code>
+attribute.</li><li>An <code>{OpName}</code> class for each operation (extending <code>mlir.ir.OpView</code>).</li><li>Decorators for each of the above to register with the system.</li></ul><p>Note: In order to avoid naming conflicts, all internal names used by the wrapper
+module are prefixed by <code>_ods_</code>.</p><p>Each concrete <code>OpView</code> subclass further defines several public-intended
+attributes:</p><ul><li><code>OPERATION_NAME</code> attribute with the <code>str</code> fully qualified operation name
+(i.e. <code>math.absf</code>).</li><li>An <code>__init__</code> method for the <em>default builder</em> if one is defined or inferred
+for the operation.</li><li><code>@property</code> getter for each operand or result (using an auto-generated name
+for unnamed of each).</li><li><code>@property</code> getter, setter and deleter for each declared attribute.</li></ul><p>It further emits additional private-intended attributes meant for subclassing
+and customization (default cases omit these attributes in favor of the defaults
+on <code>OpView</code>):</p><ul><li><code>_ODS_REGIONS</code>: A specification on the number and types of regions.
+Currently a tuple of (min_region_count, has_no_variadic_regions). Note that
+the API does some light validation on this but the primary purpose is to
+capture sufficient information to perform other default building and region
+accessor generation.</li><li><code>_ODS_OPERAND_SEGMENTS</code> and <code>_ODS_RESULT_SEGMENTS</code>: Black-box value which
+indicates the structure of either the operand or results with respect to
+variadics. Used by <code>OpView._ods_build_default</code> to decode operand and result
+lists that contain lists.</li></ul><h4 id=default-builder>Default Builder&nbsp;<a class=headline-hash href=#default-builder>¶</a></h4><p>Presently, only a single, default builder is mapped to the <code>__init__</code> method.
+The intent is that this <code>__init__</code> method represents the <em>most specific</em> of the
+builders typically generated for C++; however currently it is just the generic
+form below.</p><ul><li>One argument for each declared result:<ul><li>For single-valued results: Each will accept an <code>mlir.ir.Type</code>.</li><li>For variadic results: Each will accept a <code>List[mlir.ir.Type]</code>.</li></ul></li><li>One argument for each declared operand or attribute:<ul><li>For single-valued operands: Each will accept an <code>mlir.ir.Value</code>.</li><li>For variadic operands: Each will accept a <code>List[mlir.ir.Value]</code>.</li><li>For attributes, it will accept an <code>mlir.ir.Attribute</code>.</li></ul></li><li>Trailing usage-specific, optional keyword arguments:<ul><li><code>loc</code>: An explicit <code>mlir.ir.Location</code> to use. Defaults to the location
+bound to the thread (i.e. <code>with Location.unknown():</code>) or an error if
+none is bound nor specified.</li><li><code>ip</code>: An explicit <code>mlir.ir.InsertionPoint</code> to use. Default to the
+insertion point bound to the thread (i.e. <code>with InsertionPoint(...):</code>).</li></ul></li></ul><p>In addition, each <code>OpView</code> inherits a <code>build_generic</code> method which allows
+construction via a (nested in the case of variadic) sequence of <code>results</code> and
+<code>operands</code>. This can be used to get some default construction semantics for
+operations that are otherwise unsupported in Python, at the expense of having a
+very generic signature.</p><h4 id=extending-generated-op-classes>Extending Generated Op Classes&nbsp;<a class=headline-hash href=#extending-generated-op-classes>¶</a></h4><p>As mentioned above, the build system generates Python sources like
+<code>_{DIALECT_NAMESPACE}_ops_gen.py</code> for each dialect with Python bindings. It is
+often desirable to use these generated classes as a starting point for
+further customization, so an extension mechanism is provided to make this easy.
+This mechanism uses conventional inheritance combined with <code>OpView</code> registration.
+For example, the default builder for <code>arith.constant</code></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>class</span> <span class=nc>ConstantOp</span><span class=p>(</span><span class=n>_ods_ir</span><span class=o>.</span><span class=n>OpView</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=n>OPERATION_NAME</span> <span class=o>=</span> <span class=s2>&#34;arith.constant&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>_ODS_REGIONS</span> <span class=o>=</span> <span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>value</span><span class=p>,</span> <span class=o>*</span><span class=p>,</span> <span class=n>loc</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=kc>None</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=o>...</span>
+</span></span></code></pre></div><p>expects <code>value</code> to be a <code>TypedAttr</code> (e.g., <code>IntegerAttr</code> or <code>FloatAttr</code>).
+Thus, a natural extension is a builder that accepts a MLIR type and a Python value and instantiates the appropriate <code>TypedAttr</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>Union</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>Type</span><span class=p>,</span> <span class=n>IntegerAttr</span><span class=p>,</span> <span class=n>FloatAttr</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects._arith_ops_gen</span> <span class=kn>import</span> <span class=n>_Dialect</span><span class=p>,</span> <span class=n>ConstantOp</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects._ods_common</span> <span class=kn>import</span> <span class=n>_cext</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@_cext.register_operation</span><span class=p>(</span><span class=n>_Dialect</span><span class=p>,</span> <span class=n>replace</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>ConstantOpExt</span><span class=p>(</span><span class=n>ConstantOp</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=p>,</span> <span class=n>result</span><span class=p>:</span> <span class=n>Type</span><span class=p>,</span> <span class=n>value</span><span class=p>:</span> <span class=n>Union</span><span class=p>[</span><span class=nb>int</span><span class=p>,</span> <span class=nb>float</span><span class=p>],</span> <span class=o>*</span><span class=p>,</span> <span class=n>loc</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=kc>None</span>
+</span></span><span class=line><span class=cl>    <span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>value</span><span class=p>,</span> <span class=nb>int</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=nb>super</span><span class=p>()</span><span class=o>.</span><span class=fm>__init__</span><span class=p>(</span><span class=n>IntegerAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>result</span><span class=p>,</span> <span class=n>value</span><span class=p>),</span> <span class=n>loc</span><span class=o>=</span><span class=n>loc</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=n>ip</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>elif</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>value</span><span class=p>,</span> <span class=nb>float</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=nb>super</span><span class=p>()</span><span class=o>.</span><span class=fm>__init__</span><span class=p>(</span><span class=n>FloatAttr</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>result</span><span class=p>,</span> <span class=n>value</span><span class=p>),</span> <span class=n>loc</span><span class=o>=</span><span class=n>loc</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=n>ip</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>raise</span> <span class=ne>NotImplementedError</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;Building `arith.constant` not supported for </span><span class=si>{</span><span class=n>result</span><span class=si>=}</span><span class=s2> </span><span class=si>{</span><span class=n>value</span><span class=si>=}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span></code></pre></div><p>which enables building an instance of <code>arith.constant</code> like so:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.ir</span> <span class=kn>import</span> <span class=n>F32Type</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>a</span> <span class=o>=</span> <span class=n>ConstantOpExt</span><span class=p>(</span><span class=n>F32Type</span><span class=o>.</span><span class=n>get</span><span class=p>(),</span> <span class=mf>42.42</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>b</span> <span class=o>=</span> <span class=n>ConstantOpExt</span><span class=p>(</span><span class=n>IntegerType</span><span class=o>.</span><span class=n>get_signless</span><span class=p>(</span><span class=mi>32</span><span class=p>),</span> <span class=mi>42</span><span class=p>)</span>
+</span></span></code></pre></div><p>Note, three key aspects of the extension mechanism in this example:</p><ol><li><code>ConstantOpExt</code> directly inherits from the generated <code>ConstantOp</code>;</li><li>in this, simplest, case all that&rsquo;s required is a call to the super class&rsquo; initializer, i.e., <code>super().__init__(...)</code>;</li><li>in order to register <code>ConstantOpExt</code> as the preferred <code>OpView</code> that is returned by <code>mlir.ir.Operation.opview</code> (see
+<a href=#operations-regions-and-blocks>Operations, Regions and Blocks</a>)
+we decorate the class with <code>@_cext.register_operation(_Dialect, replace=True)</code>, <strong>where the <code>replace=True</code> must be used</strong>.</li></ol><p>In some more complex cases it might be necessary to explicitly build the <code>OpView</code> through <code>OpView.build_generic</code> (see
+<a href=#default-builder>Default Builder</a>), just as is performed by the generated builders.
+I.e., we must call <code>OpView.build_generic</code> <strong>and pass the result to <code>OpView.__init__</code></strong>, where the small issue becomes that the latter is already overridden by the generated builder.
+Thus, we must call a method of a super class&rsquo; super class (the &ldquo;grandparent&rdquo;); for example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects._scf_ops_gen</span> <span class=kn>import</span> <span class=n>_Dialect</span><span class=p>,</span> <span class=n>ForOp</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>mlir.dialects._ods_common</span> <span class=kn>import</span> <span class=n>_cext</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@_cext.register_operation</span><span class=p>(</span><span class=n>_Dialect</span><span class=p>,</span> <span class=n>replace</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>ForOpExt</span><span class=p>(</span><span class=n>ForOp</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>lower_bound</span><span class=p>,</span> <span class=n>upper_bound</span><span class=p>,</span> <span class=n>step</span><span class=p>,</span> <span class=n>iter_args</span><span class=p>,</span> <span class=o>*</span><span class=p>,</span> <span class=n>loc</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>ip</span><span class=o>=</span><span class=kc>None</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=o>...</span>
+</span></span><span class=line><span class=cl>        <span class=nb>super</span><span class=p>(</span><span class=n>ForOp</span><span class=p>,</span> <span class=bp>self</span><span class=p>)</span><span class=o>.</span><span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>build_generic</span><span class=p>(</span><span class=o>...</span><span class=p>))</span>
+</span></span></code></pre></div><p>where <code>OpView.__init__</code> is called via <code>super(ForOp, self).__init__</code>.
+Note, there are alternatives ways to implement this (e.g., explicitly writing <code>OpView.__init__</code>); see any discussion on Python inheritance.</p><h2 id=providing-python-bindings-for-a-dialect>Providing Python bindings for a dialect&nbsp;<a class=headline-hash href=#providing-python-bindings-for-a-dialect>¶</a></h2><p>Python bindings are designed to support MLIR’s open dialect ecosystem. A dialect
+can be exposed to Python as a submodule of <code>mlir.dialects</code> and interoperate with
+the rest of the bindings. For dialects containing only operations, it is
+sufficient to provide Python APIs for those operations. Note that the majority
+of boilerplate APIs can be generated from ODS. For dialects containing
+attributes and types, it is necessary to thread those through the C API since
+there is no generic mechanism to create attributes and types. Passes need to be
+registered with the context in order to be usable in a text-specified pass
+manager, which may be done at Python module load time. Other functionality can
+be provided, similar to attributes and types, by exposing the relevant C API and
+building Python API on top.</p><h3 id=operations>Operations&nbsp;<a class=headline-hash href=#operations>¶</a></h3><p>Dialect operations are provided in Python by wrapping the generic
+<code>mlir.ir.Operation</code> class with operation-specific builder functions and
+properties. Therefore, there is no need to implement a separate C API for them.
+For operations defined in ODS, <code>mlir-tblgen -gen-python-op-bindings -bind-dialect=&lt;dialect-namespace></code> generates the Python API from the declarative
+description.
+It is sufficient to create a new <code>.td</code> file that includes the original ODS
+definition and use it as source for the <code>mlir-tblgen</code> call.
+Such <code>.td</code> files reside in
+<a href=https://github.com/llvm/llvm-project/tree/main/mlir/python/mlir/dialects><code>python/mlir/dialects/</code></a>.
+The results of <code>mlir-tblgen</code> are expected to produce a file named
+<code>_&lt;dialect-namespace>_ops_gen.py</code> by convention. The generated operation classes
+can be extended as described above. MLIR provides
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/cmake/modules/AddMLIRPython.cmake>CMake
+functions</a>
+to automate the production of such files. Finally, a
+<code>python/mlir/dialects/&lt;dialect-namespace>.py</code> or a
+<code>python/mlir/dialects/&lt;dialect-namespace>/__init__.py</code> file must be created and
+filled with <code>import</code>s from the generated files to enable <code>import mlir.dialects.&lt;dialect-namespace></code> in Python.</p><h3 id=attributes-and-types-2>Attributes and Types&nbsp;<a class=headline-hash href=#attributes-and-types-2>¶</a></h3><p>Dialect attributes and types are provided in Python as subclasses of the
+<code>mlir.ir.Attribute</code> and <code>mlir.ir.Type</code> classes, respectively. Python APIs for
+attributes and types must connect to the relevant C APIs for building and
+inspection, which must be provided first. Bindings for <code>Attribute</code> and <code>Type</code>
+subclasses can be defined using
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Bindings/Python/PybindAdaptors.h><code>include/mlir/Bindings/Python/PybindAdaptors.h</code></a>
+utilities that mimic pybind11 API for defining functions and properties. These
+bindings are to be included in a separate pybind11 module. The utilities also
+provide automatic casting between C API handles <code>MlirAttribute</code> and <code>MlirType</code>
+and their Python counterparts so that the C API handles can be used directly in
+binding implementations. The methods and properties provided by the bindings
+should follow the principles discussed above.</p><p>The attribute and type bindings for a dialect can be located in
+<code>lib/Bindings/Python/Dialect&lt;Name>.cpp</code> and should be compiled into a separate
+“Python extension” library placed in <code>python/mlir/_mlir_libs</code> that will be
+loaded by Python at runtime. MLIR provides
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/cmake/modules/AddMLIRPython.cmake>CMake
+functions</a>
+to automate the production of such libraries. This library should be <code>import</code>ed
+from the main dialect file, i.e. <code>python/mlir/dialects/&lt;dialect-namespace>.py</code>
+or <code>python/mlir/dialects/&lt;dialect-namespace>/__init__.py</code>, to ensure the types
+are available when the dialect is loaded from Python.</p><h3 id=passes>Passes&nbsp;<a class=headline-hash href=#passes>¶</a></h3><p>Dialect-specific passes can be made available to the pass manager in Python by
+registering them with the context and relying on the API for pass pipeline
+parsing from string descriptions. This can be achieved by creating a new
+pybind11 module, defined in <code>lib/Bindings/Python/&lt;Dialect>Passes.cpp</code>, that
+calls the registration C API, which must be provided first. For passes defined
+declaratively using Tablegen, <code>mlir-tblgen -gen-pass-capi-header</code> and
+<code>-mlir-tblgen -gen-pass-capi-impl</code> automate the generation of C API. The
+pybind11 module must be compiled into a separate “Python extension” library,
+which can be <code>import</code>ed from the main dialect file, i.e.
+<code>python/mlir/dialects/&lt;dialect-namespace>.py</code> or
+<code>python/mlir/dialects/&lt;dialect-namespace>/__init__.py</code>, or from a separate
+<code>passes</code> submodule to be put in
+<code>python/mlir/dialects/&lt;dialect-namespace>/passes.py</code> if it is undesirable to
+make the passes available along with the dialect.</p><h3 id=other-functionality>Other functionality&nbsp;<a class=headline-hash href=#other-functionality>¶</a></h3><p>Dialect functionality other than IR objects or passes, such as helper functions,
+can be exposed to Python similarly to attributes and types. C API is expected to
+exist for this functionality, which can then be wrapped using pybind11 and
+<code>[include/mlir/Bindings/Python/PybindAdaptors.h](https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Bindings/Python/PybindAdaptors.h)</code>
+utilities to connect to the rest of Python API. The bindings can be located in a
+separate pybind11 module or in the same module as attributes and types, and
+loaded along with the dialect.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Bindings/ title=Bindings><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Bindings</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Tools/ title=Tools>Next - Tools <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark opened">-</span></a><ul class=sub-menu><li class=active><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

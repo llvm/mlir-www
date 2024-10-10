@@ -1,0 +1,540 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Chapter H: Reproducing Halide Schedule - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Chapter H: Reproducing Halide Schedule</h1><p>This chapter demonstrates how a schedule from the
+<a href=http://halide-lang.org>Halide
+DSL</a> can be implemented using Transform dialect for
+structured ops.</p><p>Note that the IR below is pseudo-code with types removed for brevity. It may
+also get out of sync with the current syntax. Always refer to the source code in
+<a href=https://github.com/llvm/llvm-project/tree/main/mlir/test/Examples/transform/ChH>mlir/examples/transform/ChH</a>
+as the source of truth.</p><h2 id=channeled-convolution>Channeled Convolution&nbsp;<a class=headline-hash href=#channeled-convolution>¶</a></h2><p>The Transform dialect provides a substrate for implementing “transformation
+directive” domain-specific languages (DSLs) in MLIR. Such a DSL, at least in its
+scheduling part, can target the operations in the Transform dialect that are
+later applied by the compiler. Sets of transform operations, or even new
+dialects leveraging the same interfaces and infrastructure, can be added to
+support a specific DSL for a particular scheduling model. In this chapter, we
+will revisit the Halide DSL that has (re)popularized separate specification of
+schedules originally for image processing programs.</p><p>Two approaches Halide to the Transform dialect are possible:</p><ul><li>Create a new dialect that corresponds to the computational part of Halide
+DSL, and define a set of transformations wrapped into Transform dialect
+operations, that correspond to the scheduling part of the DSL.</li><li>Map the Halide abstractions to the existing MLIR abstractions, for both
+parts of the DSL.</li></ul><p>We will consider the latter approach as the computational part of the DSL easily
+maps to the structured ops in the Linalg dialect. This also gives us the
+opportunity to discuss how Linalg transformations on the so-called structured
+operations are similar to or different from the existing transformations.</p><p>We will consider the 2D channeled convolution example extracted from Halide
+<a href=https://github.com/halide/Halide/tree/294f80c49bf3bb8582446613c25fcce03b82bcd8/apps/conv_layer>application
+examples</a>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>// Sizes of the problem.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>const</span> <span class=kt>int</span> <span class=n>N</span> <span class=o>=</span> <span class=mi>5</span><span class=p>,</span> <span class=n>CI</span> <span class=o>=</span> <span class=mi>128</span><span class=p>,</span> <span class=n>CO</span> <span class=o>=</span> <span class=mi>128</span><span class=p>,</span> <span class=n>W</span> <span class=o>=</span> <span class=mi>100</span><span class=p>,</span> <span class=n>H</span> <span class=o>=</span> <span class=mi>80</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Sized inputs. Note that the order of dimensions is
+</span></span></span><span class=line><span class=cl><span class=c1>// inverted in Halide with respect to C++, so the last dimension
+</span></span></span><span class=line><span class=cl><span class=c1>// in the list (N for input, CI for filter) is the least
+</span></span></span><span class=line><span class=cl><span class=c1>// frequently varying. The C++ equivalent is input[N][H+2][W+2][CI].
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>Buffer</span><span class=o>&lt;</span><span class=kt>float</span><span class=p>,</span> <span class=mi>4</span><span class=o>&gt;</span> <span class=n>input</span><span class=p>({</span><span class=n>CI</span><span class=p>,</span> <span class=n>W</span><span class=o>+</span><span class=mi>2</span><span class=p>,</span> <span class=n>H</span><span class=o>+</span><span class=mi>2</span><span class=p>,</span> <span class=n>N</span><span class=p>},</span> <span class=s>&#34;input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>Buffer</span><span class=o>&lt;</span><span class=kt>float</span><span class=p>,</span> <span class=mi>4</span><span class=o>&gt;</span> <span class=n>filter</span><span class=p>({</span><span class=n>CO</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>CI</span><span class=p>},</span> <span class=s>&#34;filter&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>Buffer</span><span class=o>&lt;</span><span class=kt>float</span><span class=p>,</span> <span class=mi>1</span><span class=o>&gt;</span> <span class=n>bias</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span><span class=p>{</span><span class=n>CO</span><span class=p>},</span> <span class=s>&#34;bias&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// ... data initialization happens here ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Declarations of &#34;mathematical functions&#34; for convolution and relu.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>Func</span> <span class=nf>conv</span><span class=p>(</span><span class=s>&#34;conv&#34;</span><span class=p>),</span> <span class=n>relu</span><span class=p>(</span><span class=s>&#34;relu&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Iterators/subscripts.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>Var</span> <span class=nf>x</span><span class=p>(</span><span class=s>&#34;x&#34;</span><span class=p>),</span> <span class=n>y</span><span class=p>(</span><span class=s>&#34;y&#34;</span><span class=p>),</span> <span class=n>c</span><span class=p>(</span><span class=s>&#34;c&#34;</span><span class=p>),</span> <span class=n>n</span><span class=p>(</span><span class=s>&#34;n&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 3D reduction domain (channels and 2 window dimensions),
+</span></span></span><span class=line><span class=cl><span class=c1>// dimensions are later referred to as r.x, r.y, r.z.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>RDom</span> <span class=nf>r</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>CI</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>3</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Core convolution with the result initialized to the bias value.
+</span></span></span><span class=line><span class=cl><span class=c1>// Note that the order of iterators is inverted in Halide DSL,
+</span></span></span><span class=line><span class=cl><span class=c1>// i.e. `n` corresponds to the lest frequently-varying (outermost) dimension
+</span></span></span><span class=line><span class=cl><span class=c1>// here and below.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>conv</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span> <span class=o>=</span> <span class=n>bias</span><span class=p>(</span><span class=n>c</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>conv</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span> <span class=o>+=</span> <span class=n>filter</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>y</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>z</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>x</span><span class=p>)</span> <span class=o>*</span> <span class=n>input</span><span class=p>(</span><span class=n>r</span><span class=p>.</span><span class=n>x</span><span class=p>,</span> <span class=n>x</span> <span class=o>+</span> <span class=n>r</span><span class=p>.</span><span class=n>y</span><span class=p>,</span> <span class=n>y</span> <span class=o>+</span> <span class=n>r</span><span class=p>.</span><span class=n>z</span><span class=p>,</span> <span class=n>n</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// ReLU rectification, an elementwise operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>relu</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span> <span class=o>=</span> <span class=n>max</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>conv</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>n</span><span class=p>));</span>
+</span></span></code></pre></div><p>This can be almost directly converted to Linalg dialect operating on tensors,
+which is conceptually closer to the “mathematical function” abstraction and is
+where the majority of transformations are available.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// Bias. Using a named Linalg operation for brevity.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>%bias_init</span> <span class=p>=</span> <span class=kt>tensor</span><span class=p>.</span>empty<span class=p>()</span> <span class=p>:</span> <span class=p>!</span>toutput
+</span></span><span class=line><span class=cl><span class=nv>%biased</span> <span class=p>=</span> linalg<span class=p>.</span>broadcast ins<span class=p>(</span><span class=nv>%bias</span> <span class=p>:</span> <span class=p>!</span>tbias<span class=p>)</span>
+</span></span><span class=line><span class=cl>                          outs<span class=p>(</span><span class=nv>%bias_init</span> <span class=p>:</span> <span class=p>!</span>toutput<span class=p>)</span> <span class=nl>dimensions =</span> <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>2</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Convolution proper. While Linalg has named operations for 2D convolutions,
+</span></span></span><span class=line><span class=cl><span class=c>// the one in the Halide example has an uncommon order of filter dimensions
+</span></span></span><span class=line><span class=cl><span class=c>// and is not supported. It also takes the filter as first argument. This
+</span></span></span><span class=line><span class=cl><span class=c>// code recreates it faithfully using the generic form.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>%convolved</span> <span class=p>=</span> linalg<span class=p>.</span>generic <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nl>iterator_types =</span> <span class=p>[</span><span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s>&#34;reduction&#34;</span><span class=p>,</span> <span class=s>&#34;reduction&#34;</span><span class=p>,</span> <span class=s>&#34;reduction&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nl>indexing_maps =</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>n<span class=p>,</span> y<span class=p>,</span> <span class=p>x,</span> c<span class=p>,</span> rz<span class=p>,</span> ry<span class=p>,</span> rx<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>rx<span class=p>,</span> rz<span class=p>,</span> ry<span class=p>,</span> c<span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>n<span class=p>,</span> y<span class=p>,</span> <span class=p>x,</span> c<span class=p>,</span> rz<span class=p>,</span> ry<span class=p>,</span> rx<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>n<span class=p>,</span> y<span class=err>+</span>rz<span class=p>,</span> <span class=p>x</span><span class=err>+</span>ry<span class=p>,</span> rx<span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>n<span class=p>,</span> y<span class=p>,</span> <span class=p>x,</span> c<span class=p>,</span> rz<span class=p>,</span> ry<span class=p>,</span> rx<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>n<span class=p>,</span> y<span class=p>,</span> <span class=p>x,</span> c<span class=p>)&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> ins<span class=p>(</span><span class=nv>%filter</span><span class=p>,</span> <span class=nv>%input</span><span class=p>:</span> <span class=p>!</span>tfilter<span class=p>,</span> <span class=p>!</span>tinput<span class=p>)</span>
+</span></span><span class=line><span class=cl>  outs<span class=p>(</span><span class=nv>%biased</span> <span class=p>:</span> <span class=p>!</span>toutput<span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%in</span><span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%f</span><span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%b</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=c>// Note the fastmath attributes that allow operations to be recombined into
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>//   %0 = math.fma %in, %f, %b : f32
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// later on and to reorder reductions.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%m1</span> <span class=p>=</span> arith<span class=p>.</span>mulf <span class=nv>%in</span><span class=p>,</span> <span class=nv>%f</span>  <span class=p>{</span><span class=nl>fastmath =</span> <span class=nv>#arith.fastmath</span><span class=p>&lt;</span>fast<span class=p>&gt;}</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> arith<span class=p>.</span>addf <span class=nv>%b</span><span class=p>,</span> <span class=nv>%m1</span>  <span class=p>{</span><span class=nl>fastmath =</span> <span class=nv>#arith.fastmath</span><span class=p>&lt;</span>fast<span class=p>&gt;}</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  linalg<span class=p>.</span>yield <span class=nv>%0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>-&gt;</span> <span class=p>!</span>toutput
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// ReLU is just a max(0, x).
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0.0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl><span class=nv>%relued</span> <span class=p>=</span> linalg<span class=p>.</span>generic <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nl>iterator_types =</span> <span class=p>[</span><span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>,</span> <span class=s>&#34;parallel&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nl>indexing_maps =</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>()&gt;,</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)&gt;,</span>
+</span></span><span class=line><span class=cl>    affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> ins<span class=p>(</span><span class=nv>%c0</span><span class=p>,</span> <span class=nv>%convolved</span> <span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=p>!</span>toutput<span class=p>)</span>
+</span></span><span class=line><span class=cl>  outs<span class=p>(</span><span class=nv>%output</span> <span class=p>:</span> <span class=p>!</span>toutput<span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%cst</span><span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%in</span><span class=p>:</span> <span class=k>f32</span><span class=p>,</span> <span class=nv>%out</span><span class=p>:</span> <span class=k>f32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> llvm<span class=p>.</span>intr<span class=p>.</span>maxnum<span class=p>(</span><span class=nv>%cst</span><span class=p>,</span> <span class=nv>%in</span><span class=p>)</span> <span class=p>:</span> <span class=p>(</span><span class=k>f32</span><span class=p>,</span> <span class=k>f32</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  linalg<span class=p>.</span>yield <span class=nv>%0</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>-&gt;</span> <span class=p>!</span>toutput
+</span></span></code></pre></div><p>In Halide, a function such as <code>conv</code> may consist of two parts: a “functional”
+initialization computation and an in-place update for reductions. This is
+expressed as two C++ statements in the embedded DSL, but internally is
+represented in a single object. Linalg doesn’t have such a capability to the
+initialization and the update are represented as two distinct Linalg operations
+that are not connected to each other. Furthermore, the <code>x</code>, <code>y</code>, <code>c</code>, <code>n</code>
+variables in Halide DSL correspond to implicit loops iterating over the
+corresponding objects, which implies that functions sharing these variables in
+their definitions also share the corresponding loops. In other words, the loop
+equivalent of the Halide definition starts in a fully-fused form. The Linalg
+model is the opposite with each structured operation corresponding to its own
+loop nest, resulting in a fully-distributed form. This will affect how the
+schedule is constructed later on.</p><p>The loop structure for Halide computation resembles the following (adapted from
+debug dump with <code>HL_DEBUG_CODEGEN=1</code>)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>x</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>=</span> <span class=n>bias</span><span class=p>[</span><span class=n>c</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>rz</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ry</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>rx</span>
+</span></span><span class=line><span class=cl>              <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>+=</span> <span class=nb>filter</span><span class=p>[</span><span class=n>rx</span><span class=p>,</span> <span class=n>rz</span><span class=p>,</span> <span class=n>ry</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>*</span> <span class=nb>input</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=o>+</span><span class=n>rz</span><span class=p>,</span> <span class=n>x</span><span class=o>+</span><span class=n>ry</span><span class=p>,</span> <span class=n>rx</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>relu</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>=</span> <span class=nb>max</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>])</span>
+</span></span></code></pre></div><p>The loop structure for the Linalg computation is as follows (obtained by
+<code>mlir-opt --linalg-generalize-named-ops --empty-tensor-to-alloc-tensor --one-shot-bufferize --convert-linalg-to-loops</code>)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>x</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=n>init</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>=</span> <span class=n>bias</span><span class=p>[</span><span class=n>c</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>x</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>rz</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ry</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>rx</span>
+</span></span><span class=line><span class=cl>              <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>+=</span> <span class=nb>filter</span><span class=p>[</span><span class=n>rx</span><span class=p>,</span> <span class=n>rz</span><span class=p>,</span> <span class=n>ry</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>*</span> <span class=nb>input</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=o>+</span><span class=n>rz</span><span class=p>,</span> <span class=n>x</span><span class=o>+</span><span class=n>ry</span><span class=p>,</span> <span class=n>rx</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>x</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=n>relu</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>]</span> <span class=o>=</span> <span class=nb>max</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>c</span><span class=p>])</span>
+</span></span></code></pre></div><h2 id=mapping-halide-scheduling-primitives-to-linalg-structured-transforms>Mapping Halide Scheduling Primitives to Linalg Structured Transforms&nbsp;<a class=headline-hash href=#mapping-halide-scheduling-primitives-to-linalg-structured-transforms>¶</a></h2><p>The complete Halide schedule listed in the example is as follows</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>Var</span> <span class=n>co</span><span class=p>,</span> <span class=n>ci</span><span class=p>,</span> <span class=n>xo</span><span class=p>,</span> <span class=n>xi</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>relu</span><span class=p>.</span><span class=n>split</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>co</span><span class=p>,</span> <span class=n>ci</span><span class=p>,</span> <span class=n>vec</span> <span class=o>*</span> <span class=n>tile_w</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>split</span><span class=p>(</span><span class=n>x</span><span class=p>,</span> <span class=n>xo</span><span class=p>,</span> <span class=n>xi</span><span class=p>,</span> <span class=n>tile_h</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>reorder</span><span class=p>(</span><span class=n>ci</span><span class=p>,</span> <span class=n>xi</span><span class=p>,</span> <span class=n>xo</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>n</span><span class=p>,</span> <span class=n>co</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>vectorize</span><span class=p>(</span><span class=n>ci</span><span class=p>,</span> <span class=n>vec</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>ci</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>xi</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>parallel</span><span class=p>(</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>parallel</span><span class=p>(</span><span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>parallel</span><span class=p>(</span><span class=n>co</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>conv</span><span class=p>.</span><span class=n>compute_at</span><span class=p>(</span><span class=n>relu</span><span class=p>,</span> <span class=n>xo</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>vectorize</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>vec</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>c</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>update</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>reorder</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>x</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>y</span><span class=p>,</span> <span class=n>r</span><span class=p>.</span><span class=n>z</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>vectorize</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>vec</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>c</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>.</span><span class=n>unroll</span><span class=p>(</span><span class=n>r</span><span class=p>.</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span></code></pre></div><p>We will consider only the case without parallelization to avoid the difference
+in parallel runtimes generated by Halide and used by MLIR. This schedule
+corresponds to a sequence of loop manipulations, unrolling and vectorization.
+The following directives are present and can be mapped to transformations on
+Linalg as described below.</p><ul><li><code>split</code> decomposes a loop dimension into two immediately nested loops with
+the inner loop having at most the given number of iterations. This can be
+understood as loop <em>strip-mining</em> or a degenerate case of tiling a single
+dimension using any of <code>linalg.tile_</code> transform ops. We will be using
+<code>transform.structured.tile_using_forall</code> as this kind of loop is best
+supported by bufferization and can also be turned into a parallel loop later
+on. Unlike Halide, this doesn’t add new dimensions to the original
+operation, but rather creates a loop around it and rewrites the operation
+itself to operate on a subset of the original data.</li><li><code>reorder</code> rearranges the loops arbitrarily. In Linalg representation, loops
+are implicit and are intended to remain so as long as possible to target
+microkernels. The order of implicit loops in a <code>linalg.generic</code> operation
+can be changed by using <code>transform.structured.interchange</code>, but this does
+not apply to named operations that need to be “generalized” first by calling
+<code>transform.structured.generalize</code>. However, this can only reorder implicit
+dimensions and not the explicit loops materialized by tiling operations that
+can no longer be “folded” into the original operation. Instead, we can
+leverage this behavior by materializing loops directly in the desired order
+by “tiling” to size 1.</li><li><code>vectorize</code> indicates that the given dimension should be vectorized with the
+given factor; if the loop extent is larger than the factor, the loop is
+effectively split into two parts and the inner one is vectorized. On the
+contrary, structured Linalg op vectorization applies as a global
+transformation to all suitable operations at, e.g., a function scope via
+<code>transform.structured.vectorize_children_and_apply_patterns</code>. It relies on
+MLIR’s support for multidimensional vectors to directly map multidimensional
+tensors, which are later decomposed into operations on smaller
+hardware-compatible vectors during lowering.</li><li><code>unroll</code> performs loop unrolling, fully or up to the given factor. It is
+equivalent to <code>transform.loop.unroll</code>.</li><li><code>compute_at</code> indicates that the value of the function must be computed
+within the given loop that will be produced for another function; depending
+on the relation between loops surrounding functions, this corresponds to
+either a loop distribution or a producer/consumer fusion. Given that the
+Linalg representation starts in the fully distributed form, it can be
+represented as a sequence of <code>transform.structured.fuse_into_containing_op</code>
+that operates on <code>forall</code> loops materialized by tiling beforehand.</li></ul><h2 id=recreating-the-loop-structure>Recreating the Loop Structure&nbsp;<a class=headline-hash href=#recreating-the-loop-structure>¶</a></h2><p>The three first transformation directives for <code>relu</code> in the Halide schedule aim
+at producing the following loop structure.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>for</span> <span class=n>co</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>xo</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>xi</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ci</span>
+</span></span><span class=line><span class=cl>            <span class=n>relu</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>xo</span><span class=o>*</span><span class=n>tile_h</span> <span class=o>+</span> <span class=n>xi</span><span class=p>,</span> <span class=n>co</span><span class=o>*</span><span class=n>tile_w</span><span class=o>*</span><span class=n>vec</span> <span class=o>+</span> <span class=n>ci</span><span class=p>]</span> <span class=o>=</span> <span class=o>...</span>
+</span></span></code></pre></div><p>Note that the outer part of the <code>c</code> gets hoisted from all of the surrounding
+loops. The implicit loop order for the operation is <code>n, y, x, c</code>, so the <code>co</code>
+loop needs to be materialized first in order to achieve the desired reordering.
+The remaining dimensions can be materialized as loops in one transformation.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>    <span class=c>//                                                             [n  y  x  c]
+</span></span></span><span class=line><span class=cl><span class=c></span>    <span class=nv>%co</span><span class=p>,</span> <span class=nv>%relu2</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%relu</span>
+</span></span><span class=line><span class=cl>                                                        tile_sizes <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>64</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%n_y_xo</span><span class=p>,</span> <span class=nv>%relu3</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%relu2</span>
+</span></span><span class=line><span class=cl>                                                        tile_sizes <span class=p>[</span><span class=m>1</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>5</span><span class=p>,</span> <span class=m>0</span><span class=p>]</span>
+</span></span></code></pre></div><p>This will result in the following loops being created in the IR with the nested
+elementwise operation operating on a smaller subset of original data via
+implicit loops.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>scf<span class=p>.</span>forall <span class=p>(</span><span class=nv>%co</span><span class=p>)</span> in <span class=p>(</span><span class=m>2</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  scf<span class=p>.</span>forall <span class=p>(</span><span class=nv>%n</span><span class=p>,</span> <span class=nv>%y</span><span class=p>,</span> <span class=nv>%xo</span><span class=p>)</span> in <span class=p>(</span><span class=m>5</span><span class=p>,</span> <span class=m>80</span><span class=p>,</span> <span class=m>20</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>tensor</span><span class=p>.</span>extract_slice
+</span></span><span class=line><span class=cl>    <span class=c>// Implicit dimensions [ni=0:1, y=0:1, xi=0:5, ci=0:64]
+</span></span></span><span class=line><span class=cl><span class=c></span>    <span class=nv>%relued</span> <span class=p>=</span> linalg<span class=p>.</span>elemwise_binary <span class=p>{</span> <span class=nl>fun =</span> <span class=nv>#linalg.binary_fn</span><span class=p>&lt;</span>max_signed<span class=p>&gt;</span> <span class=p>}</span> <span class=c>// ...
+</span></span></span><span class=line><span class=cl><span class=c></span>    scf<span class=p>.</span>forall<span class=p>.</span>in_parallel <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kt>tensor</span><span class=p>.</span>parallel_insert_slice <span class=c>// ...
+</span></span></span><span class=line><span class=cl><span class=c></span>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The following loop restructuring transformations are <code>compute_at</code> and <code>reorder</code>
+on the <code>conv</code> function that need to happen before loops are destroyed by
+unrolling and vectorization. They intend to produce the final desired loop
+structure.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>for</span> <span class=n>co</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>y</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span> <span class=n>xo</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>xi</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ci</span>
+</span></span><span class=line><span class=cl>            <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=o>*</span><span class=n>tile_h</span> <span class=o>+</span> <span class=n>xi</span><span class=p>,</span> <span class=n>co</span><span class=o>*</span><span class=n>tile_w</span><span class=o>*</span><span class=n>vec</span> <span class=o>+</span> <span class=n>ci</span><span class=p>]</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>rz</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ry</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>rx</span>
+</span></span><span class=line><span class=cl>              <span class=k>for</span> <span class=n>xi</span>
+</span></span><span class=line><span class=cl>                <span class=k>for</span> <span class=n>ci</span>
+</span></span><span class=line><span class=cl>                  <span class=n>conv</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>x</span><span class=o>*</span><span class=n>tile_h</span> <span class=o>+</span> <span class=n>xi</span><span class=p>,</span> <span class=n>co</span><span class=o>*</span><span class=n>tile_w</span><span class=o>*</span><span class=n>vec</span> <span class=o>+</span> <span class=n>ci</span><span class=p>]</span> <span class=o>+=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>xi</span>
+</span></span><span class=line><span class=cl>          <span class=k>for</span> <span class=n>ci</span>
+</span></span><span class=line><span class=cl>            <span class=n>relu</span><span class=p>[</span><span class=n>n</span><span class=p>,</span> <span class=n>y</span><span class=p>,</span> <span class=n>xo</span><span class=o>*</span><span class=n>tile_h</span> <span class=o>+</span> <span class=n>xi</span><span class=p>,</span> <span class=n>co</span><span class=o>*</span><span class=n>tile_w</span><span class=o>*</span><span class=n>vec</span> <span class=o>+</span> <span class=n>ci</span><span class=p>]</span> <span class=o>=</span> <span class=o>...</span>
+</span></span></code></pre></div><p>Practically, this corresponds to fusing the convolution initialization and
+update into the <code>co, n, y, xo</code> loops materialized by tiling earlier. Structured
+op transformation set supports fusing the producer of a value into its consumer,
+so fusion happens in two stages:</p><ul><li>first the main convolution update is fused into ReLU that uses it and has
+loops materialized;</li><li>then the bias initialization is fused into the convolution+relu loop nest.</li></ul><p>Each stage consists of two transformations fusing the computational operation
+into the outer loop, then the inner loop.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%conv2</span><span class=p>,</span> <span class=nv>%co2</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>fuse_into_containing_op <span class=nv>%conv</span> into <span class=nv>%co</span>
+</span></span><span class=line><span class=cl><span class=nv>%conv3</span><span class=p>,</span> <span class=nv>%n_y_xo2</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>fuse_into_containing_op <span class=nv>%conv2</span>
+</span></span><span class=line><span class=cl>  into <span class=nv>%n_y_xo</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>%bias2</span><span class=p>,</span> <span class=nv>%co3</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>fuse_into_containing_op <span class=nv>%bias</span> into <span class=nv>%co2</span>
+</span></span><span class=line><span class=cl><span class=nv>%bias3</span><span class=p>,</span> <span class=nv>%n_y_xo3</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>fuse_into_containing_op <span class=nv>%bias2</span>
+</span></span><span class=line><span class=cl>  into <span class=nv>%n_y_xo2</span>
+</span></span></code></pre></div><p>To complete the structure, we need to put the <code>rz, ry, rx</code> loops outside the
+“tile” loops <code>xi, ci</code>. This can be achieved materializing the corresponding
+loops from the convolution operation. However, these are reduction loops and it
+wouldn’t be valid to materialize them as intrinsically parallel “forall” loops.
+Instead, we use the dedicated “reduction tiling” transformation and produce
+sequential <code>scf.for</code> loops. (<code>scf.forall</code> loops can also express parallel
+reductions, but the corresponding transformation doesn’t handle reductions along
+more than one dimension at the moment of writing.)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%rz_ry_rx</span><span class=p>,</span> <span class=nv>%red_fill</span><span class=p>,</span> <span class=nv>%conv4</span><span class=p>,</span> <span class=nv>%comb</span>
+</span></span><span class=line><span class=cl>  <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_reduction_using_for <span class=nv>%conv3</span>
+</span></span><span class=line><span class=cl><span class=c>//               n  y  x  c  rz ry rx
+</span></span></span><span class=line><span class=cl><span class=c></span>  by <span class=nl>tile_sizes=</span><span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>1</span><span class=p>]</span>
+</span></span></code></pre></div><p>This transformation materializes the desired loops around the convolution
+operation. It is also more capable than merely producing (reduction) loops: the
+transformed code performs <code>tile_size</code> partial reductions of <code>N / tile_size</code>
+elements, potentially in parallel by changing the dimension kind of the
+structured operation inside the loop, and then performs a final reduction of
+these partial results by producing a new “combiner” structured operation after
+the loops. In our case, <code>tile_size = 1</code> along all dimensions, so the reduction
+is entirely performed by the generated loops. The combiner structured operation
+is still produced and adds up the reduction result with the initial value. This
+changes the order of floating point operations (so would reduction tiling with
+non-unit size) and may affect the final result due to non-commutativity of these
+operations, but is explicitly allowed by <code>fastmath</code> flags. Halide also emits
+LLVM IR with full <code>fastmath</code> flags.</p><p>Finally, we need to produce innermost loops <code>xi</code> and <code>ci</code> that are still not
+explicit. As our next step is going to be vectorization along <code>ci</code>, we need to
+take into account the way it operates on MLIR structured operations: rather than
+selecting a specific vector size and loop/dimension to vectorize, it directly
+substitutes multidimensional vector types for tensor types and updates the
+operations accordingly. Therefore, our tensor type should not become trivial,
+i.e. size-1, and retain a <code>vector_size</code> sized dimension along the desired axis,
+<code>ci</code>. This can be achieved by tiling with <code>vector_size</code> as tile size in that
+dimension:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>//                                                                  n  y  xi ci
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>%1</span><span class=p>,</span> <span class=nv>%c5</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%conv4</span> tile_sizes <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>16</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nv>%2</span><span class=p>,</span> <span class=nv>%b4</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%bias3</span> tile_sizes <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>16</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nv>%3</span><span class=p>,</span> <span class=nv>%r4</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%relu3</span> tile_sizes <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>16</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nv>%4</span><span class=p>,</span> <span class=nv>%c2</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>tile_using_forall <span class=nv>%comb</span>  tile_sizes <span class=p>[</span><span class=m>0</span><span class=p>,</span> <span class=m>0</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>16</span><span class=p>]</span>
+</span></span></code></pre></div><p>Note that the combiner operation produced by reduction tiling is also tiled here.</p><h2 id=explicit-loop-unrolling>Explicit Loop Unrolling&nbsp;<a class=headline-hash href=#explicit-loop-unrolling>¶</a></h2><p>The remaining unhandled loop transformation is unrolling. Specifically,
+unrolling is requested for the innermost loops that form the 4x5 tile of
+16-element vector operations to ensure a contiguous sequence of <code>vfma</code>
+instructions using 20 512-bit vector registers as accumulators. Unrolling
+additional loops,, <code>unroll(y)</code> and <code>unroll(r.x, 2)</code>, is requested in the
+schedule but <em>has no practical effect</em>. That is, the code, and all intermediate
+representations, produced by Halide with these directives removed is <em>strictly
+identical</em> to the code with the full schedule. Therefore, we will only unroll
+the corresponding loops corresponding to <code>xi</code> and <code>ci</code> dimensions that actually
+get unrolled by Halide.</p><p>As tiling in the Transform dialect produces handles to the loops materialized by
+tiling, unrolling those loops is just a matter of chaining the corresponding
+transformation. Note that the inner loop must be unrolled first as unrolling the
+outer loop will invalidate the handles to the inner loop.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%bias_ci</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>4</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%bias_xi</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>5</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%conv_ci</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>4</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%conv_xi</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>5</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%relu_ci</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>4</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%relu_xi</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>5</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%comb_ci</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>4</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>loop<span class=p>.</span>unroll <span class=nv>%comb_xi</span> <span class=p>{</span><span class=nl>factor =</span> <span class=m>5</span><span class=p>}</span>
+</span></span></code></pre></div><h2 id=vectorization>Vectorization&nbsp;<a class=headline-hash href=#vectorization>¶</a></h2><p>These transformations produced the desired loop structure and we are now ready
+to vectorize. Before proceeding it is desirable to simplify the code as tiling
+and fusion may have produced a lot of operations computing tensor subsets and
+loop ranges, some of which may be duplicated or excessively complex.
+Simplification involving canonicalization, common subexpression elimination,
+loop invariant code motion and various rewrite patterns can be applied directly
+from the transform dialect. Furthermore, an arbitrary combination of rewrite
+patterns can be applied <em>in one sweep</em> to a given scope, a functionality that
+<em>cannot be achieved with conventional compiler passes</em> that apply each group of
+patterns separately (at least without creating a new pass for each combination
+of pattern groups).</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%f00</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>match ops<span class=p>{[</span><span class=s>&#34;func.func&#34;</span><span class=p>]}</span> in <span class=nv>%arg0</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_patterns to <span class=nv>%f00</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>canonicalization
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>linalg<span class=p>.</span>tiling_canonicalization
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_cse to <span class=nv>%f00</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>%all_loops</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>match interface<span class=p>{</span>LoopLikeInterface<span class=p>}</span> in <span class=nv>%arg0</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_licm to <span class=nv>%all_loops</span>
+</span></span></code></pre></div><p>One final simplification is necessary to produce good vectorized code.
+Tiling-by-one as a way of materializing loops produced structured (<code>linalg</code>)
+operations processing 4D types where only one dimension isn’t unit-sized, e.g.,
+<code>tensor&lt;1x1x1x16xf32></code> where 16 is the vector size corresponding to AVX512,
+as structured tiling doesn’t modify the rank of the operation in order to
+preserve the original structure. Even though the core computation is the same,
+the produced code may end up more complicated than necessary, in particular when
+decomposing multidimensional vectors into single-dimensional vectors supported
+by hardware. Such unit dimensions can be explicitly folded away using the
+corresponding pattern set before vectorization.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>transform<span class=p>.</span>apply_patterns to <span class=nv>%f00</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>linalg<span class=p>.</span>fold_unit_extent_dims_via_reshapes
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>%fv</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span><span class=kt>vector</span>ize_children_and_apply_patterns <span class=nv>%f00</span>
+</span></span></code></pre></div><p>This produces the desired code performing arithmetic operations on
+<code>vector&lt;16xf32></code> types that can be easily lowered to AVX512 instructions by the
+downstream compiler. Vectorization may have created new opportunities for code
+simplification, in particular combining tensor subsetting and vector slicing
+operations. Another round of simplification can be applied post vectorization.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>transform<span class=p>.</span>apply_patterns to <span class=nv>%fv</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>canonicalization
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>tensor</span><span class=p>.</span>fold_tensor_subset_ops_into_vector_transfers
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_cse to <span class=nv>%fv</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>structured<span class=p>.</span>hoist_redundant_vector_transfers <span class=nv>%fv</span>
+</span></span></code></pre></div><h2 id=lowering-to-llvm-and-the-bufferization-hurdle>Lowering to LLVM and The Bufferization Hurdle&nbsp;<a class=headline-hash href=#lowering-to-llvm-and-the-bufferization-hurdle>¶</a></h2><p>With the loop restructuring done, the program now needs to be converted to the
+executable form. The first step in doing so is <em>bufferization</em>, the process that
+associates a memory buffer with every tensor in the payload IR. MLIR’s one-shot
+bufferization is directly available as a transform operation.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%arg1</span> <span class=p>=</span> transform<span class=p>.</span>bufferization<span class=p>.</span>one_shot_bufferize <span class=nv>%arg0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nl>bufferize_function_boundaries =</span> true<span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nl>function_boundary_type_conversion =</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span> <span class=p>}</span>
+</span></span></code></pre></div><p>One-shot bufferization itself does not produce buffer deallocations, which may
+lead to leaks. So we have to run the buffer deallocation pass pipeline to avoid
+them. Note that the Transform dialect seamlessly runs named passes and pass
+pipelines: if desired, one could replace complex <code>--pass-pipeline expressions</code>
+with operations. Note that we apply the pipeline to functions rather than entire
+module to avoid running it on the transform IR that is contained in the module.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%f</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>match ops<span class=p>{[</span><span class=s>&#34;func.func&#34;</span><span class=p>]}</span> in <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl>  <span class=p>:</span> <span class=p>(!</span>transform<span class=p>.</span>any_op<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>transform<span class=p>.</span>any_op
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_registered_pass <span class=s>&#34;buffer-deallocation-pipeline&#34;</span> to <span class=nv>%f</span>
+</span></span><span class=line><span class=cl>  <span class=p>:</span> <span class=p>(!</span>transform<span class=p>.</span>any_op<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>!</span>transform<span class=p>.</span>any_op
+</span></span></code></pre></div><p>In this particular case, the transformed IR could be directly bufferized. This
+is not always the case in general as some operations, in particular
+<code>tensor.empty</code> may not be bufferizable. Such operations need to be removed
+before running the bufferization, which can often be achieved by sufficient
+fusion (as in our case), or by running dedicated transformations
+<code>transform.bufferization.eliminate_empty_tensors</code> that removes the
+<code>tensor.empty</code> operations only serving for defining the size of a computation or
+<code>transform.bufferization.empty_tensor_to_alloc_tensor</code> that materializes a new
+temporary buffer for empty tensors to be used as local caches.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// Apply general canonicalization and CSE to each function after
+</span></span></span><span class=line><span class=cl><span class=c>// bufferization as new simplification opportunities may have appeared.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=nv>%fb</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>match ops<span class=p>{[</span><span class=s>&#34;func.func&#34;</span><span class=p>]}</span> in <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_patterns to <span class=nv>%fb</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>canonicalization
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_cse to <span class=nv>%fb</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// Lower complex, multidimensional vector operations into simpler
+</span></span></span><span class=line><span class=cl><span class=c>// primitives. This particular selection of the pattern groups corresponds
+</span></span></span><span class=line><span class=cl><span class=c>// to vector dialect operations present in the payload IR at this stage.
+</span></span></span><span class=line><span class=cl><span class=c>// Many of these groups can be parameterized to use different strategies or
+</span></span></span><span class=line><span class=cl><span class=c>// lower-level primitives offering performance trade-offs. In this case, we
+</span></span></span><span class=line><span class=cl><span class=c>// are selecting the simplest strategies.
+</span></span></span><span class=line><span class=cl><span class=c></span>transform<span class=p>.</span>apply_patterns to <span class=nv>%fb</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>vector</span><span class=p>.</span>lower_contraction
+</span></span><span class=line><span class=cl>    <span class=nl>lowering_strategy =</span> parallelarith
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>vector</span><span class=p>.</span>lower_transfer
+</span></span><span class=line><span class=cl>    <span class=nl>max_transfer_rank =</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>vector</span><span class=p>.</span>lower_transpose
+</span></span><span class=line><span class=cl>    <span class=nl>lowering_strategy =</span> eltwise
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>vector</span><span class=p>.</span>lower_shape_cast
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// These patterns apply in a separate sweep to avoid transfer-to-scf
+</span></span></span><span class=line><span class=cl><span class=c>// patterns overlap with lower-transfer patterns as they apply to the same
+</span></span></span><span class=line><span class=cl><span class=c>// kind of operations. These patterns may produce local allocations to act
+</span></span></span><span class=line><span class=cl><span class=c>// as temporary caches deep inside loops, which could lead to catastrophic
+</span></span></span><span class=line><span class=cl><span class=c>// performance. Such allocations are moved onto the stack and hoisted from
+</span></span></span><span class=line><span class=cl><span class=c>// all the surrounding loops.
+</span></span></span><span class=line><span class=cl><span class=c></span>transform<span class=p>.</span>apply_patterns to <span class=nv>%fb</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>vector</span><span class=p>.</span>transfer_to_scf
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>memref</span><span class=p>.</span>alloc_to_alloca
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>bufferization<span class=p>.</span>buffer_loop_hoisting <span class=nv>%fb</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// A final round of cleanups additionally includes patterns to simplify
+</span></span></span><span class=line><span class=cl><span class=c>// buffer aliasing operations that may have been introduced during
+</span></span></span><span class=line><span class=cl><span class=c>// bufferization and could result in excessively complex address
+</span></span></span><span class=line><span class=cl><span class=c>// computation.
+</span></span></span><span class=line><span class=cl><span class=c></span>transform<span class=p>.</span>apply_patterns to <span class=nv>%fb</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span><span class=kt>memref</span><span class=p>.</span>fold_memref_alias_ops
+</span></span><span class=line><span class=cl>  transform<span class=p>.</span>apply_patterns<span class=p>.</span>canonicalization
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>transform<span class=p>.</span>apply_cse to <span class=nv>%fb</span>
+</span></span></code></pre></div><p>Due to its inter-procedural nature, one-bufferization processes the entire
+payload module and thus invalidates all previously created handles. Therefore,
+it is typically a late step in the transformation sequence where precise
+targeting of transformation is no longer required. The following transformations
+are typically module- or function-wide rewrites that are often pattern-based
+lowerings. This part of the sequence can be seen as a pass pipeline specified
+directly in the transform dialect, with pattern-based lowering passes
+constructed <em>on-the-fly</em> from named groups of patterns.</p><p>The resulting IR can be further completely lowered to the LLVM dialect, then to
+LLVM IR and processed by the LLVM compiler to produce an executable or JITted.</p><p>The generated code runs in ~420ms on an Intel processor with Skylake
+microarchitecture clocked at 2.0GHz. Given that the computation performs
+$<code>5 \cdot 80 \cdot 100 \cdot 128 \cdot (2 \cdot 3 \cdot 3 \cdot 128 + 2) \approx 5.9 * 10^9</code>$
+floating point operations, it reaches ~14 GFlops. With 1 FMA unit available,
+the single-core performance of the test processor is 64 GFlops
+($<code>16 \cdot 2 \cdot 2 \cdot 10^9</code>$, where 16 is the vector width), so only
+22% of the theoretical peak is achieved.</p><p>The code produced by Halide runs in ~120ms on the same processor, a 3.5x
+improvement and 77% of peak. Let us analyze the generated assembly to understand
+the source of the difference. The main computational effort is expected to
+happen around floating point multiplications and additions in the convolution.
+In both cases, the assembly features AVX512 <code>vfma231ps</code> instructions operating
+on <code>%zmm</code> 512-bit vector registers. In the MLIR-generated code, they are
+interspersed with memory accesses loading _two _of the <code>fma</code> operands before
+each operation and leading to increased latency.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-asm data-lang=asm><span class=line><span class=cl><span class=nf>vmovups</span>       <span class=p>-</span><span class=mi>192</span><span class=p>(</span><span class=nv>%r10</span><span class=p>),</span> <span class=nv>%zmm0</span>
+</span></span><span class=line><span class=cl><span class=nf>vbroadcastss</span>  <span class=p>-</span><span class=mi>1536</span><span class=p>(</span><span class=nv>%rdi</span><span class=p>,</span><span class=nv>%r9</span><span class=p>),</span> <span class=nv>%zmm1</span>
+</span></span><span class=line><span class=cl><span class=nf>vmovups</span>       <span class=mi>112</span><span class=p>(</span><span class=nv>%rsp</span><span class=p>),</span> <span class=nv>%zmm2</span>
+</span></span><span class=line><span class=cl><span class=nf>vfmadd231ps</span>   <span class=nv>%zmm1</span><span class=p>,</span> <span class=nv>%zmm0</span><span class=p>,</span> <span class=nv>%zmm2</span>     <span class=c1># zmm2 = (zmm0 * zmm1) + zmm2
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vmovups</span>       <span class=nv>%ymm2</span><span class=p>,</span> <span class=mi>112</span><span class=p>(</span><span class=nv>%rsp</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nf>vextractf64x4</span> <span class=no>$1</span><span class=p>,</span> <span class=nv>%zmm2</span><span class=p>,</span> <span class=mi>144</span><span class=p>(</span><span class=nv>%rsp</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// 19 more blocks of either
+</span></span></span><span class=line><span class=cl><span class=c1>//  (a) vmovups,vbroadcast,vfma(z,z),vextract,
+</span></span></span><span class=line><span class=cl><span class=c1>//  (b) vbroadcast,vfma(z,mem),vextract
+</span></span></span></code></pre></div><p>The Halide-generated code however features compact blocks of <code>vfma231ps</code> and
+<code>vbroadcastss</code> loading one of the operands while the other two are resident in
+registers and loaded before <code>fma</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-asm data-lang=asm><span class=line><span class=cl><span class=nf>vbroadcastss</span>    <span class=p>-</span><span class=mi>1536</span><span class=p>(</span><span class=nv>%rsi</span><span class=p>,</span><span class=nv>%rbx</span><span class=p>),</span> <span class=nv>%zmm25</span>
+</span></span><span class=line><span class=cl><span class=nf>vmovups</span>         <span class=p>-</span><span class=mi>192</span><span class=p>(</span><span class=nv>%rdi</span><span class=p>),</span> <span class=nv>%zmm26</span>
+</span></span><span class=line><span class=cl><span class=nf>vmovups</span>         <span class=p>-</span><span class=mi>128</span><span class=p>(</span><span class=nv>%rdi</span><span class=p>),</span> <span class=nv>%zmm27</span>
+</span></span><span class=line><span class=cl><span class=nf>vmovups</span>         <span class=p>-</span><span class=mi>64</span><span class=p>(</span><span class=nv>%rdi</span><span class=p>),</span> <span class=nv>%zmm28</span>
+</span></span><span class=line><span class=cl><span class=nf>vmovups</span>         <span class=p>(</span><span class=nv>%rdi</span><span class=p>),</span> <span class=nv>%zmm29</span>
+</span></span><span class=line><span class=cl><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm26</span><span class=p>,</span> <span class=nv>%zmm24</span>  <span class=c1># zmm24 = (zmm26 * zmm25) + zmm24
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm27</span><span class=p>,</span> <span class=nv>%zmm23</span>  <span class=c1># zmm23 = (zmm27 * zmm25) + zmm23
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm28</span><span class=p>,</span> <span class=nv>%zmm22</span>  <span class=c1># zmm22 = (zmm28 * zmm25) + zmm22
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm29</span><span class=p>,</span> <span class=nv>%zmm21</span>  <span class=c1># zmm21 = (zmm29 * zmm25) + zmm21
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vbroadcastss</span>    <span class=p>-</span><span class=mi>1024</span><span class=p>(</span><span class=nv>%rsi</span><span class=p>,</span><span class=nv>%rbx</span><span class=p>),</span> <span class=nv>%zmm25</span>
+</span></span><span class=line><span class=cl><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm26</span><span class=p>,</span> <span class=nv>%zmm20</span>  <span class=c1># zmm20 = (zmm26 * zmm25) + zmm20
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm27</span><span class=p>,</span> <span class=nv>%zmm19</span>  <span class=c1># zmm19 = (zmm27 * zmm25) + zmm19
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm28</span><span class=p>,</span> <span class=nv>%zmm18</span>  <span class=c1># zmm18 = (zmm28 * zmm25) + zmm18
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vfmadd231ps</span>     <span class=nv>%zmm25</span><span class=p>,</span> <span class=nv>%zmm29</span><span class=p>,</span> <span class=nv>%zmm17</span>  <span class=c1># zmm17 = (zmm29 * zmm25) + zmm17
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>vbroadcastss</span>    <span class=p>-</span><span class=mi>512</span><span class=p>(</span><span class=nv>%rsi</span><span class=p>,</span><span class=nv>%rbx</span><span class=p>),</span> <span class=nv>%zmm25</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 3 more blocks of 4 vfmadd231 followed by a vbroadcast
+</span></span></span></code></pre></div><p>Inspecting the progressive intermediate representations produced by MLIR, one
+can observe the load(transfer)/fma interspersing at all levels starting after
+schedule application. The repeated tensor subsetting operations, that are later
+transformed into vector transfer operations, and vector memory loads, are
+produced by loop unrolling that was explicitly requested in the schedule! The
+issue is the single-assignment model of tensors (and vectors) that results in
+long and complex chains of access and update operations that become so long that
+the lower-level transformations and the downstream compiler can no longer
+simplify them. In fact, unrolling loops early in the transformation sequence can
+lead to all sorts of compiler-performance related problems (including the
+compiler failing to perform some optimizations due to excessive code length) in
+the process.</p><p>It is therefore desirable to perform loop unrolling at a later stage,
+specifically after bufferization and relevant simplification. However,
+bufferization invalidates all loop handles including to loops that we are
+willing to unroll. This hurdle can be overcome by matching the payload IR
+operations after bufferization to produce new handles. We will first change the
+kind of loops produced in the schedule from <code>scf.for</code> to <code>scf.forall</code> to have
+less operations to match by using <code>transform.structured.tile_using_forall</code>
+instead of <code>transform.structured.tile</code> when tiling with sizes <code>[0, 0, 1, 16]</code>.
+Then we can match all <code>scf.forall</code> operations in the payload IR and transform
+them into single-iterator <code>scf.for</code> loops <em>after bufferization</em>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=nv>%foralls</span> <span class=p>=</span> transform<span class=p>.</span>structured<span class=p>.</span>match ops<span class=p>{[</span><span class=s>&#34;scf.forall&#34;</span><span class=p>]}</span> in <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl><span class=nv>%xi_bias</span><span class=p>,</span> <span class=nv>%ci_bias</span> <span class=p>=</span> transform<span class=p>.</span>loop<span class=p>.</span>forall_to_for <span class=nv>%xi_ci_bias</span>
+</span></span><span class=line><span class=cl><span class=nv>%xi_conv</span><span class=p>,</span> <span class=nv>%ci_conv</span> <span class=p>=</span> transform<span class=p>.</span>loop<span class=p>.</span>forall_to_for <span class=nv>%xi_ci_conv</span>
+</span></span><span class=line><span class=cl><span class=nv>%xi_relu</span><span class=p>,</span> <span class=nv>%ci_relu</span> <span class=p>=</span> transform<span class=p>.</span>loop<span class=p>.</span>forall_to_for <span class=nv>%xi_ci_relu</span>
+</span></span><span class=line><span class=cl><span class=nv>%xi_comb</span><span class=p>,</span> <span class=nv>%ci_comb</span> <span class=p>=</span> transform<span class=p>.</span>loop<span class=p>.</span>forall_to_for <span class=nv>%xi_ci_comb</span>
+</span></span></code></pre></div><p>We can then move our loop unrolling transformations later in the transformation
+sequence as desired. Compiling this new version to assembly produces exactly the
+same core computation around <code>vfmadd231ps</code> as Halide’s version, which only
+differs slightly in allocated registers. Unsurprisingly, this version runs
+roughly in 120ms on the same machine.</p><h2 id=multi-dimensional-vectors-to-the-rescue>Multi-Dimensional Vectors to the Rescue&nbsp;<a class=headline-hash href=#multi-dimensional-vectors-to-the-rescue>¶</a></h2><p>While we managed to produce similar code to Halide in the previous section, we
+did so by rematching generated loops after bufferization, which partially defies
+the purpose of using handles to chain transformations in the Transform dialect.
+Luckily, this step is not really necessary. It only served as an exercise in
+producing the desired loop structure.</p><p>Multidimensional structured operations on vectors are lowered to target-specific
+vectors by unrolling and splitting. For example, an elementwise arithmetic
+operation on <code>vector&lt;5x64xf32></code> is replaced with 5 operations on
+<code>vector&lt;64xf32></code> and additional vector value manipulations to recreate the
+required type at the MLIR level. Each of these operations is then split into 4
+operations on <code>vector&lt;16xf32></code> at the LLVM level where the information about
+the target vector width becomes available. Collectively, this has exactly the
+same effect as first materializing the 5x4 loop nest, and then fully unrolling
+these loops. Therefore, the last stage of tiling, re-matching and unrolling can
+be removed from the schedule.</p><p>The resulting assembly has all <code>vbroadcast</code> grouped together before <code>vfmadd231</code>
+but otherwise has a similar structure. This grouping is due to each
+multi-dimensional vector operation being “unrolled” separately. When executed,
+it runs in ~110ms, a slight improvement of 8% over both the previous version and
+Halide, and reaches ~53.7 GFlop/s or 84% of peak single-core performance. The
+improvement is largely due to the intermediate representation being shorter and
+simpler in presence of large-vector operations, which allowed for more
+aggressive address computation and load placement optimization.</p><p>The final transformation strategy is checked into the repository at
+<a href=https://github.com/llvm/llvm-project/tree/main/mlir/test/Examples/transform/ChH/full.mlir>mlir/examples/transform/ChH/full.mlir</a>.</p><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/ title="Chapter 4: Matching Payload with Transform Operations"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Chapter 4: Matching Payload with Transform Operations</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/ title="Understanding the IR Structure">Next - Understanding the IR Structure <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li class=active><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

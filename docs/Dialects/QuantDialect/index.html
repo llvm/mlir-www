@@ -1,0 +1,222 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>'quant' Dialect - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/QuantDialect/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>'quant' Dialect</h1><p>The <code>quant</code> dialect offers a framework for defining and manipulating
+quantized values. Central to this framework is the <code>!quant.uniform</code> data
+type, used to represent quantized values. This dialect also provides a
+suite of operations to handle and convert quantized values between their
+original floating-point representations and the optimized, lower bit-width
+integer representations. The <code>quant</code> dialect is instrumented with
+transformation passes to lower these operations into other core MLIR
+dialects, while also flattening all occurrences of quantized types into
+their integer counterparts.</p><h2 id=the-quantuniform-type>The <code>!quant.uniform</code> type&nbsp;<a class=headline-hash href=#the-quantuniform-type>¶</a></h2><p>The quantization process establishes a relationship between two types of
+values: an <em>expressed value</em> and a <em>stored value</em>. The former refers to the
+floating-point representation used in an original machine learning model,
+capturing the precise numerical characteristics needed for accurate
+calculations. The latter is the simplified integer representation that
+resides in memory after quantization. The <code>!quant.uniform</code> data type
+encodes the necessary information for (lossy) round-trip conversion between
+an expressed and a stored value.</p><p>The <code>quant.uniform</code> type has two variants: per-layer quantization and
+per-channel (or per-axis) quantization. In per-layer quantization, the
+quantization information affects an entire tensor uniformly. Conversely, in
+per-channel quantization, the data type encodes the specific tensor axis
+that serves as the channel and includes quantization information for each
+individual channel within the tensor. Below are the specific syntactic and
+semantic considerations for each modality.</p><h3 id=per-layer-quantization>Per-layer quantization&nbsp;<a class=headline-hash href=#per-layer-quantization>¶</a></h3><p>This is the general syntax of the <code>!quant.uniform</code> type representing
+per-layer quantization:</p><pre tabindex=0><code>`!quant.uniform` `&lt;`
+  storedType (`&lt;` storageMin `:` storageMax `&gt;`)? `:`
+  expressedType `,`
+  scale (`:` zeroPoint)?
+`&gt;`
+</code></pre><p>The type contains the following parameters:</p><ul><li><p><code>storedType</code>: Integer type of the value stored in memory. This type
+conveys the bit width and signedness of the quantized stored value.
+Signed integer types are represented as <code>'i' bitWidth</code> (e.g., <code>i8</code>),
+while unsigned integer types are represented as <code>'u' bitWidth</code> (e.g.,
+<code>u8</code>).</p></li><li><p><code>storageMin</code>, <code>storageMax</code>: Optional bounds for the stored value. If
+given, they must be within the range of <code>storedType</code>. If omitted, the
+entire range of <code>storedType</code> is allowed (e.g., <code>-128...127</code> for <code>i8</code> or
+<code>0...255</code> for <code>u8</code>).</p></li><li><p><code>expressedType</code>: Floating-point type of the value expressed by this
+quantized type (e.g., <code>f32</code>, <code>f80</code>, <code>bf16</code>, or <code>tf32</code>).</p></li><li><p><code>scale</code>: Floating-point value of type <code>expressedType</code> used in the
+conversion between stored and expressed values.</p></li><li><p><code>zeroPoint</code>: Optional integer value of type <code>storageType</code> used in the
+conversion between stored and expressed values. If omitted, the default
+is 0.</p></li></ul><p>Type conversions, rounding methods, and clamping actions aside, the
+relationship between the expressed and stored values as encoded in a
+quantized type is denoted by the following formula:</p><p>$$
+expressedValue = (storedValue ~-~ zeroPoint) ~\times~ scale
+$$</p><p>Operations <code>quant.qcast</code> (quantize cast) and <code>quant.dcast</code> (dequantize
+cast) can be used to quantize a floating-point value and dequantize a
+stored value, respectively. See the documentation for these operations for
+details on how the quantization and dequantization processes are influenced
+by the <code>!quant.uniform</code> type parameters.</p><p>Here are some examples of the use of <code>!quant.uniform</code> with per-layer
+quantization:</p><pre tabindex=0><code>// An 8-bit signed integer type is used to represent a 32-bit float. No
+// clamping information is provided, so the full [-128, 127] range is
+// available. The scale is set to 3.0, and the zero point takes its default
+// 0 value.
+!quant.uniform&lt;i8:f32, 3.0&gt;
+
+// A 16-bit unsigned integer type is used to represent a 32-bit float. Out
+// of the 16 bits, only 10 are used, acoording to the 0..1023 clamping
+// range. The type sets the scale to 1.23 and the zero point to 512.
+!quant.uniform&lt;u16&lt;0:1023&gt;:f32, 1.23:512&gt;
+</code></pre><h3 id=per-channel-quantization>Per-channel quantization&nbsp;<a class=headline-hash href=#per-channel-quantization>¶</a></h3><p>The general syntax of the <code>!quant.uniform</code> type representing per-channel
+quantization is as follows:</p><pre tabindex=0><code>`!quant.uniform` `&lt;`
+  storedType (`&lt;` storageMin `:` storageMax `&gt;`)? `:`
+  expressedType `:`
+  channelAxis `,`
+  `{`
+    scale0 (`:` zeroPoint0)? `,`
+    scale1 (`:` zeroPoint1)? ...
+  &#39;}&#39;
+`&gt;`
+</code></pre><p>In this data type, there are multiple pairs of <code>scale</code> and <code>zeroPoint</code>
+values. The <code>channelAxis</code> field represents the dimension of the containing
+tensor acting as the channel. The size of the tensor along this dimension
+is expected to match the number of provided <code>scale</code>-<code>zeroPoint</code> pairs, and
+a given pair <em>i</em> applies to all elements in the tensor whose index along
+dimension <code>channelAxis</code> is <em>i</em>. A quantized data type using per-channel
+quantization is always expected to be contained within a tensor type.</p><p>Here are some examples:</p><pre tabindex=0><code>// A 2x3x4 tensor contains 8-bit signed integers representing 32-bit
+// floats. Dimension 1 of the tensor acts as the channel dimension. Its
+// size 3 matches the number of provided scale values. Tensor elemenets at
+// positions [*][0][*], [*][1][*], and [*][2][*] use scales 3.0, 4.0, and
+// 5.0, respectively.
+tensor&lt;2x3x4x!quant.uniform&lt;i8:f32:1, {3.0, 4.0, 5.0}&gt;&gt;
+
+// A 2D dynamically sized tensor contains 16-bit unsigned integers
+// representing 32-bit floats. Dimension 0 of the tensor acts as the
+// channel dimension. Since 2 scale and zero-point values are provided, the
+// size of dimension 0 is expected to be 2 at runtime. Tensor elements
+// [0][*] use scale 2.0 and zero point 10, while elements [1][*] use scale
+// 3.0 and zero point 20.
+tensor&lt;?x?x!quant.uniform&lt;u16:f32:0, {2.0:10, 3.0:20}&gt;&gt;
+</code></pre><h2 id=per-axis-quantization-integrity>Per-axis quantization integrity&nbsp;<a class=headline-hash href=#per-axis-quantization-integrity>¶</a></h2><p>When type <code>!quant.uniform</code> contains per-axis quantization information, the
+rules below are enforced. These rules guarantee that the quantization
+information encoded in the data type is applicable to the context in which
+the quantized type is used. For efficiency, these rules are actively
+enforced by the verifiers of <code>quant</code> dialect ops, but they must be
+respected in any context in which the <code>!quant.uniform</code> data type is used,
+such as the header of a <code>func.func</code> op, or the input of an arithmetic
+operation.</p><ul><li>A quantized type with per-channel quantization information must be the
+element type of a tensor container type, and may not occur directly as
+the data type of a scalar value.</li></ul><pre tabindex=0><code>// Incorrect. Type !quant.uniform specifies per-channel quantization for a
+// scalar type.
+%result = quant.qcast %input : f32 to !quant.uniform&lt;i8:f32:0, {1.0, 2.0}&gt;
+
+// Correct. Type `!quant.uniform` with per-channel quantization is wrapped
+// in a `tensor` type.
+%result = quant.qcast %input : tensor&lt;2xf32&gt; to tensor&lt;2x!quant.uniform&lt;i8:f32:0, {1.0, 2.0}&gt;&gt;
+</code></pre><ul><li>If the tensor containing the <code>!quant.uniform</code> type is ranked, its rank
+must be greater than the channel axis specified in the quantized type.</li></ul><pre tabindex=0><code>// Incorrect. The tensor rank (2) is not greater than the channel axis in
+// the quantized type (3).
+%result = quant.qcast %input : tensor&lt;1x2xf32&gt; to tensor&lt;1x2x!quant.uniform&lt;i8:f32:3, {1.0, 2.0}&gt;&gt;
+
+// Correct. The tensor rank (2) is now greater than the channel axis (1):
+%result = quant.qcast %input : tensor&lt;1x2xf32&gt; to tensor&lt;1x2x!quant.uniform&lt;i8:f32:1, {1.0, 2.0}&gt;&gt;
+</code></pre><ul><li>If the axis dimension in the containing tensor is static, its size must
+be equal to the number of scales present in the quantized type.</li></ul><pre tabindex=0><code>// Incorrect. The channel axis is 1, and the size of dimension 1 in the
+// containing tensor is 3. However, there are 4 scale values present in the
+// quantized type.
+%result = quant.qcast %input : tensor&lt;?x3xf32&gt; to tensor&lt;?x3x!quant.uniform&lt;i8:f32:1, {1.0, 2.0, 3.0, 4.0}&gt;&gt;
+
+// Correct. The quantized type now includes 3 scale values, matching the
+// size of dimension 1 of the result tensor.
+%result = quant.qcast %input : tensor&lt;?x3xf32&gt; to tensor&lt;?x3x!quant.uniform&lt;i8:f32:1, {2.0, 3.0, 4.0}&gt;&gt;
+</code></pre><p><nav id=TableOfContents><ul><li><a href=#the-quantuniform-type>The <code>!quant.uniform</code> type</a><ul><li><a href=#per-layer-quantization>Per-layer quantization</a></li><li><a href=#per-channel-quantization>Per-channel quantization</a></li></ul></li><li><a href=#per-axis-quantization-integrity>Per-axis quantization integrity</a></li><li><a href=#operations>Operations</a><ul><li><a href=#quantdcast-quantdequantizecastop><code>quant.dcast</code> (quant::DequantizeCastOp)</a></li><li><a href=#quantqcast-quantquantizecastop><code>quant.qcast</code> (quant::QuantizeCastOp)</a></li><li><a href=#quantscast-quantstoragecastop><code>quant.scast</code> (quant::StorageCastOp)</a></li></ul></li></ul></nav><h2 id=operations>Operations&nbsp;<a class=headline-hash href=#operations>¶</a></h2><p><a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/Quant/IR/QuantOps.td>source</a></p><h3 id=quantdcast-quantdequantizecastop><code>quant.dcast</code> (quant::DequantizeCastOp)&nbsp;<a class=headline-hash href=#quantdcast-quantdequantizecastop>¶</a></h3><p><em>Dequantize cast operation</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `quant.dcast` $input attr-dict `:` type($input) `to` type($result)
+</code></pre><p>Convert an input quantized value into its expressed floating-point value.
+The dequantization process consists of the following steps:</p><pre tabindex=0><code>def dequantize(quantizedValue: quantizedType) -&gt; expressedType:
+    storedValue = reinterpretCast(quantizedValue, storageType)
+    storedValueFloat = convertIntToFloat(storedValue, expressedType)
+    zeroPointFloat = convertIntToFloat(zeroPoint, expressedType)
+    expressedValue = (storedValueFloat - zeroPointFloat) * scale
+    return expressedValue
+</code></pre><p>Here, <code>storageType</code>, <code>expressedType</code>, <code>scale</code>, and <code>zeroPoint</code> are obtained
+from the corresponding parameters encoded in <code>quantizedType</code>. For
+per-channel quantization, the appropriate <code>scale</code> and <code>zeroPoint</code> values
+are used for each tensor element computation according to the channel the
+element belongs to.</p><p>The numerical results produced by the algorithm above may vary depending on
+the rounding methods used by <code>convertIntToFloat()</code>, subtraction (<code>-</code>), and
+multiplication (<code>*</code>). This operation does not define specific rounding
+methods; instead, it is the responsibility of a transform pipeline to
+determine which rounding method to apply when this operation is broken down
+into lower-level dialects.</p><p>The operation must satisfy the following syntactic constraints:</p><ul><li><p>Operand <code>input</code> must be a scalar or tensor of type <code>!quant.uniform</code>.</p></li><li><p>The result type must be a floating-point scalar or tensor.</p></li><li><p>The <code>expressedType</code> parameter of the <code>!quant.uniform</code> type of the input
+must match the floating-point type of the result.</p></li><li><p>The operand and result types must be both scalars or both tensors. If
+tensors, they must be both ranked or both unranked. If ranked, both must
+have the same shape, including matching static and dynamic dimensions.</p></li><li><p>If the operand uses per-channel quantization, its <code>!quant.uniform</code> type
+must adhere to the
+<a href=#per-axis-quantization-integrity>Per-axis quantization
+integrity</a> guidelines.</p></li></ul><p>Examples:</p><pre tabindex=0><code>// Dequantize a scalar quantized value
+%result = quant.dcast %input : !quant.uniform&lt;i8:f32, 2.0&gt; to f32
+
+// Dequantize a dynamically shaped tensor of quantized values
+%result = quant.dcast %input : tensor&lt;?x!quant.uniform&lt;i8:f32, 2.0&gt;&gt; to tensor&lt;?xf32&gt;
+
+// Dequantize an unranked tensor using per-axis quantization information
+%result = quant.dcast %input : tensor&lt;*x!quant.uniform&lt;i8:f32:1, {2.0, 3.0}&gt;&gt; to tensor&lt;*xf32&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=operands>Operands:&nbsp;<a class=headline-hash href=#operands>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>scalar or tensor of quantized type</td></tr></tbody></table><h4 id=results>Results:&nbsp;<a class=headline-hash href=#results>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>scalar or tensor of floating-point</td></tr></tbody></table><h3 id=quantqcast-quantquantizecastop><code>quant.qcast</code> (quant::QuantizeCastOp)&nbsp;<a class=headline-hash href=#quantqcast-quantquantizecastop>¶</a></h3><p><em>Quantize cast operation</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `quant.qcast` $input attr-dict `:` type($input) `to` type($result)
+</code></pre><p>Convert a floating-point value to a quantized type. The quantization
+process consists of the following steps:</p><pre tabindex=0><code>def quantize(expressedValue: expressedType) -&gt; quantizedType:
+    zeroPointFloat = convertIntToFloat(zeroPoint, expressedType)
+    scaledValue = expressedValue / scale
+    storedValueFloat = scaledValue + zeroPointFloat
+    storedValue = convertFloatToInt(storedValueFloat, storageType)
+    storedValueClamped = clamp(storedValue, storageMin, storageMax)
+    quantizedValue = reinterpretCast(storedValueClamped, quantizedType)
+    return quantizedValue
+</code></pre><p>Here, <code>storageType</code>, <code>storageMin</code>, <code>storageMax</code>, <code>expressedType</code>, <code>scale</code>,
+and <code>zeroPoint</code> are obtained from the corresponding parameters encoded in
+<code>quantizedType</code>. For per-channel quantization, the appropriate <code>scale</code> and
+<code>zeroPoint</code> values are used for each tensor element computation according
+to the channel the element belongs to.</p><p>The numerical results produced by the algorithm above may vary depending on
+the rounding methods used by <code>convertIntToFloat()</code>, <code>convertFloatToInt()</code>,
+<code>clamp()</code>, division (<code>/</code>), and addition (<code>+</code>). This operation does not
+define specific rounding methods; instead, it is the responsibility of a
+transform pipeline to determine which rounding method to apply when this
+operation is broken down into lower-level dialects.</p><p>The operation must satisfy the following syntactic constraints:</p><ul><li><p>Operand <code>input</code> must be a floating-point scalar or tensor.</p></li><li><p>The result type must be a scalar or tensor of type <code>!quant.uniform</code>.</p></li><li><p>The <code>expressedType</code> parameter in the <code>!quant.uniform</code> type of the result
+must match the floating-point type of the input.</p></li><li><p>The operand and result types must be both scalars or both tensors. If
+tensors, they must be both ranked or both unranked. If ranked, both must
+have the same shape, including matching static and dynamic dimensions.</p></li><li><p>If the result uses per-channel quantization, its <code>!quant.uniform</code> type
+must adhere to the
+<a href=#per-axis-quantization-integrity>Per-axis quantization
+integrity</a> guidelines.</p></li></ul><p>Examples:</p><pre tabindex=0><code>// Quantize a scalar floating-point value
+%result = quant.qcast %input : f32 to !quant.uniform&lt;i8:f32, 2.0&gt;
+
+// Quantize a dynamically shaped tensor of quantized values
+%result = quant.qcast %input : tensor&lt;?xf32&gt; to tensor&lt;?x!quant.uniform&lt;i8:f32, 2.0&gt;&gt;
+
+// Quantize an unranked tensor using per-axis quantization information
+%result = quant.qcast %input : tensor&lt;*xf32&gt; to tensor&lt;*x!quant.uniform&lt;i8:f32:1, {2.0, 3.0}&gt;&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=operands-1>Operands:&nbsp;<a class=headline-hash href=#operands-1>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>scalar or tensor of floating-point</td></tr></tbody></table><h4 id=results-1>Results:&nbsp;<a class=headline-hash href=#results-1>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>scalar or tensor of quantized type</td></tr></tbody></table><h3 id=quantscast-quantstoragecastop><code>quant.scast</code> (quant::StorageCastOp)&nbsp;<a class=headline-hash href=#quantscast-quantstoragecastop>¶</a></h3><p><em>Storage cast operation</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `quant.scast` $input attr-dict `:` type($input) `to` type($result)
+</code></pre><p>Convert a value from a quantized type to the corresponding signless integer
+storage type, or vice versa. This conversion simply involves a
+reinterpretation of the input bits and does not involve any data
+manipulation.</p><p>The following syntactic restrictions must be met:</p><ul><li><p>Operand <code>input</code> must be a scalar or tensor of a signless integer or
+<code>!quant.uniform</code> type.</p></li><li><p>The result must be a scalar or tensor of a signless integer or
+<code>!quant.uniform</code> type.</p></li><li><p>If the operand is a scalar or tensor of type integer, the result must be
+a scalar or tensor of type <code>!quant.uniform</code>, and vice versa.</p></li><li><p>The operand and result must be both scalars or both tensors. If tensors,
+they must be both ranked or both unranked. If ranked, both must have the
+same shape, including matching static and dynamic dimensions.</p></li><li><p>The width of the <code>storageType</code> parameter of the quantized type of the
+operand or result must match the width of the signless integer type of
+the operand or result.</p></li><li><p>If the operand or result uses per-channel quantization, its
+<code>!quant.uniform</code> type must adhere to the
+<a href=#per-axis-quantization-integrity>Per-axis quantization
+integrity</a> guidelines.</p></li></ul><p>Examples:</p><pre tabindex=0><code>// Cast a scalar quantized value into its storage type
+%result = quant.scast %input : !quant.uniform&lt;i8:f32, 2.0&gt; to i8
+
+// Cast a dynamically shaped tensor of quantized values into their storage type
+%result = quant.scast %input : tensor&lt;?x!quant.uniform&lt;i8:f32, 2.0&gt;&gt; to tensor&lt;?xi8&gt;
+
+// Cast an unranked tensor of signless integers into a quantized type using
+// per-channel quantization
+%result = quant.scast %input : tensor&lt;*xi8&gt; to tensor&lt;*x!quant.uniform&lt;i8:f32:1, {2.0, 3.0}&gt;&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=operands-2>Operands:&nbsp;<a class=headline-hash href=#operands-2>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>scalar or tensor of signless integer or quantized type</td></tr></tbody></table><h4 id=results-2>Results:&nbsp;<a class=headline-hash href=#results-2>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>scalar or tensor of signless integer or quantized type</td></tr></tbody></table><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Dialects/PtrOps/ title="'ptr' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - 'ptr' Dialect</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/ title="'rocdl' Dialect">Next - 'rocdl' Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li class=active><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

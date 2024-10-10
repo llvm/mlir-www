@@ -1,0 +1,974 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pass Infrastructure - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/PassManagement/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Pass Infrastructure</h1><p><nav id=TableOfContents><ul><li><a href=#operation-pass>Operation Pass</a><ul><li><a href=#op-agnostic-operation-passes>Op-Agnostic Operation Passes</a></li><li><a href=#filtered-operation-pass>Filtered Operation Pass</a></li><li><a href=#operation-pass-static-schedule-filtering>Operation Pass: Static Schedule Filtering</a></li><li><a href=#dependent-dialects>Dependent Dialects</a></li><li><a href=#initialization>Initialization</a></li></ul></li><li><a href=#analysis-management>Analysis Management</a><ul><li><a href=#querying-analyses>Querying Analyses</a></li><li><a href=#preserving-analyses>Preserving Analyses</a></li></ul></li><li><a href=#pass-failure>Pass Failure</a></li><li><a href=#pass-manager>Pass Manager</a><ul><li><a href=#oppassmanager>OpPassManager</a></li></ul></li><li><a href=#dynamic-pass-pipelines>Dynamic Pass Pipelines</a></li><li><a href=#instance-specific-pass-options>Instance Specific Pass Options</a></li><li><a href=#pass-statistics>Pass Statistics</a></li><li><a href=#pass-registration>Pass Registration</a><ul><li><a href=#pass-pipeline-registration>Pass Pipeline Registration</a></li><li><a href=#textual-pass-pipeline-specification>Textual Pass Pipeline Specification</a></li></ul></li><li><a href=#declarative-pass-specification>Declarative Pass Specification</a><ul><li><a href=#tablegen-specification>Tablegen Specification</a></li></ul></li><li><a href=#pass-instrumentation>Pass Instrumentation</a><ul><li><a href=#standard-instrumentations>Standard Instrumentations</a></li></ul></li><li><a href=#crash-and-failure-reproduction>Crash and Failure Reproduction</a><ul><li><a href=#local-reproducer-generation>Local Reproducer Generation</a></li></ul></li></ul></nav><p>Passes represent the basic infrastructure for transformation and optimization.
+This document provides an overview of the pass infrastructure in MLIR and how to
+use it.</p><p>See
+<a href=/docs/LangRef/>MLIR specification</a> for more information about MLIR and its
+core aspects, such as the IR structure and operations.</p><p>See
+<a href=/docs/Tutorials/QuickstartRewrites/>MLIR Rewrites</a> for a quick start on graph
+rewriting in MLIR. If a transformation involves pattern matching operation DAGs,
+this is a great place to start.</p><h2 id=operation-pass>Operation Pass&nbsp;<a class=headline-hash href=#operation-pass>¶</a></h2><p>In MLIR, the main unit of abstraction and transformation is an
+<a href=/docs/LangRef/#operations>operation</a>. As such, the pass manager is designed to
+work on instances of operations at different levels of nesting. In the following
+paragraphs, we refer to the operation that a pass operates on as the &ldquo;current
+operation&rdquo;.</p><p>The structure of the
+<a href=#pass-manager>pass manager</a>, and the concept of nesting,
+is detailed further below. All passes in MLIR derive from <code>OperationPass</code> and
+adhere to the following restrictions; any noncompliance will lead to problematic
+behavior in multithreaded and other advanced scenarios:</p><ul><li>Must not inspect the state of operations that are siblings of the current
+operation. Must neither access operations nested under those siblings.<ul><li>Other threads may be modifying these operations in parallel.</li><li>Inspecting the state of ancestor/parent operations is permitted.</li></ul></li><li>Must not modify the state of operations other than the operations that are
+nested under the current operation. This includes adding, modifying or
+removing other operations from an ancestor/parent block.<ul><li>Other threads may be operating on these operations simultaneously.</li><li>As an exception, the attributes of the current operation may be modified
+freely. This is the only way that the current operation may be modified.
+(I.e., modifying operands, etc. is not allowed.)</li></ul></li><li>Must not maintain mutable pass state across invocations of <code>runOnOperation</code>.
+A pass may be run on many different operations with no guarantee of
+execution order.<ul><li>When multithreading, a specific pass instance may not even execute on
+all operations within the IR. As such, a pass should not rely on running
+on all operations.</li></ul></li><li>Must not maintain any global mutable state, e.g. static variables within the
+source file. All mutable state should be maintained by an instance of the
+pass.</li><li>Must be copy-constructible<ul><li>Multiple instances of the pass may be created by the pass manager to
+process operations in parallel.</li></ul></li></ul><h3 id=op-agnostic-operation-passes>Op-Agnostic Operation Passes&nbsp;<a class=headline-hash href=#op-agnostic-operation-passes>¶</a></h3><p>By default, an operation pass is <code>op-agnostic</code>, meaning that it operates on the
+operation type of the pass manager that it is added to. This means a pass may operate
+on many different types of operations. Agnostic passes should be written such that
+they do not make assumptions on the operation they run on. Examples of this type of pass are
+<a href=/docs/Passes/#-canonicalize>Canonicalization</a> and
+<a href=/docs/Passes/#-cse>Common Sub-Expression Elimination</a>.</p><p>To create an agnostic operation pass, a derived class must adhere to the following:</p><ul><li>Inherit from the CRTP class <code>OperationPass</code>.</li><li>Override the virtual <code>void runOnOperation()</code> method.</li></ul><p>A simple pass may look like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Here we utilize the CRTP `PassWrapper` utility class to provide some
+</span></span></span><span class=line><span class=cl><span class=c1>/// necessary utility hooks. This is only necessary for passes defined directly
+</span></span></span><span class=line><span class=cl><span class=c1>/// in C++. Passes defined declaratively use a cleaner mechanism for providing
+</span></span></span><span class=line><span class=cl><span class=c1>/// these utilities.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>MyOperationPass</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PassWrapper</span><span class=o>&lt;</span><span class=n>MyOperationPass</span><span class=p>,</span> <span class=n>OperationPass</span><span class=o>&lt;&gt;&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runOnOperation</span><span class=p>()</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Get the current operation being operated on.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Operation</span> <span class=o>*</span><span class=n>op</span> <span class=o>=</span> <span class=n>getOperation</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h3 id=filtered-operation-pass>Filtered Operation Pass&nbsp;<a class=headline-hash href=#filtered-operation-pass>¶</a></h3><p>If a pass needs to constrain its execution to specific types or classes of operations,
+additional filtering may be applied on top. This transforms a once <code>agnostic</code> pass into
+one more specific to a certain context. There are various ways in which to filter the
+execution of a pass, and different contexts in which filtering may apply:</p><h3 id=operation-pass-static-schedule-filtering>Operation Pass: Static Schedule Filtering&nbsp;<a class=headline-hash href=#operation-pass-static-schedule-filtering>¶</a></h3><p>Static filtering allows for applying additional constraints on the operation types a
+pass may be scheduled on. This type of filtering generally allows for building more
+constrained passes that can only be scheduled on operations that satisfy the necessary
+constraints. For example, this allows for specifying passes that only run on operations
+of a certain, those that provide a certain interface, trait, or some other constraint that
+applies to all instances of that operation type. Below is an example of a pass that only
+permits scheduling on operations that implement <code>FunctionOpInterface</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyFunctionPass</span> <span class=o>:</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This method is used to provide additional static filtering, and returns if the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// pass may be scheduled on the given operation type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>bool</span> <span class=nf>canScheduleOn</span><span class=p>(</span><span class=n>RegisteredOperationName</span> <span class=n>opInfo</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>opInfo</span><span class=p>.</span><span class=n>hasInterface</span><span class=o>&lt;</span><span class=n>FunctionOpInterface</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Here we can freely cast to FunctionOpInterface, because our `canScheduleOn` ensures
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// that our pass is only executed on operations implementing that interface.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>FunctionOpInterface</span> <span class=n>op</span> <span class=o>=</span> <span class=n>cast</span><span class=o>&lt;</span><span class=n>FunctionOpInterface</span><span class=o>&gt;</span><span class=p>(</span><span class=n>getOperation</span><span class=p>());</span> 
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>When a pass with static filtering is added to an
+<a href=#oppassmanager><code>op-specific</code> pass manager</a>,
+it asserts that the operation type of the pass manager satisfies the static constraints of the
+pass. When added to an
+<a href=#oppassmanager><code>op-agnostic</code> pass manager</a>, that pass manager, and all
+passes contained within, inherits the static constraints of the pass. For example, if the pass
+filters on <code>FunctionOpInterface</code>, as in the <code>MyFunctionPass</code> example above, only operations that
+implement <code>FunctionOpInterface</code> will be considered when executing <strong>any</strong> passes within the pass
+manager. This invariant is important to keep in mind, as each pass added to an <code>op-agnostic</code> pass
+manager further constrains the operations that may be scheduled on it. Consider the following example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// ...
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>module <span class=nf>@someModule</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// ...
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span></code></pre></div><p>If we were to apply the op-agnostic pipeline, <code>any(cse,my-function-pass)</code>, to the above MLIR snippet
+it would only run on the <code>foo</code> function operation. This is because the <code>my-function-pass</code> has a
+static filtering constraint to only schedule on operations implementing <code>FunctionOpInterface</code>. Remember
+that this constraint is inherited by the entire pass manager, so we never consider <code>someModule</code> for
+any of the passes, including <code>cse</code> which normally can be scheduled on any operation.</p><h4 id=operation-pass-static-filtering-by-op-type>Operation Pass: Static Filtering By Op Type&nbsp;<a class=headline-hash href=#operation-pass-static-filtering-by-op-type>¶</a></h4><p>In the above section, we detailed a general mechanism for statically filtering the types of operations
+that a pass may be scheduled on. Sugar is provided on top of that mechanism to simplify the definition
+of passes that are restricted to scheduling on a single operation type. In these cases, a pass simply
+needs to provide the type of operation to the <code>OperationPass</code> base class. This will automatically
+instill filtering on that operation type:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Here we utilize the CRTP `PassWrapper` utility class to provide some
+</span></span></span><span class=line><span class=cl><span class=c1>/// necessary utility hooks. This is only necessary for passes defined directly
+</span></span></span><span class=line><span class=cl><span class=c1>/// in C++. Passes defined declaratively use a cleaner mechanism for providing
+</span></span></span><span class=line><span class=cl><span class=c1>/// these utilities.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>MyFunctionPass</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PassWrapper</span><span class=o>&lt;</span><span class=n>MyOperationPass</span><span class=p>,</span> <span class=n>OperationPass</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Get the current operation being operated on.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span> <span class=n>op</span> <span class=o>=</span> <span class=n>getOperation</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h4 id=operation-pass-static-filtering-by-interface>Operation Pass: Static Filtering By Interface&nbsp;<a class=headline-hash href=#operation-pass-static-filtering-by-interface>¶</a></h4><p>In the above section, we detailed a general mechanism for statically filtering the types of operations
+that a pass may be scheduled on. Sugar is provided on top of that mechanism to simplify the definition
+of passes that are restricted to scheduling on a specific operation interface. In these cases, a pass
+simply needs to inherit from the <code>InterfacePass</code> base class. This class is similar to <code>OperationPass</code>,
+but expects the type of interface to operate on. This will automatically instill filtering on that
+interface type:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// Here we utilize the CRTP `PassWrapper` utility class to provide some
+</span></span></span><span class=line><span class=cl><span class=c1>/// necessary utility hooks. This is only necessary for passes defined directly
+</span></span></span><span class=line><span class=cl><span class=c1>/// in C++. Passes defined declaratively use a cleaner mechanism for providing
+</span></span></span><span class=line><span class=cl><span class=c1>/// these utilities.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>MyFunctionPass</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PassWrapper</span><span class=o>&lt;</span><span class=n>MyOperationPass</span><span class=p>,</span> <span class=n>InterfacePass</span><span class=o>&lt;</span><span class=n>FunctionOpInterface</span><span class=o>&gt;&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Get the current operation being operated on.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>FunctionOpInterface</span> <span class=n>op</span> <span class=o>=</span> <span class=n>getOperation</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h3 id=dependent-dialects>Dependent Dialects&nbsp;<a class=headline-hash href=#dependent-dialects>¶</a></h3><p>Dialects must be loaded in the MLIRContext before entities from these dialects
+(operations, types, attributes, &mldr;) can be created. Dialects must also be
+loaded before starting the execution of a multi-threaded pass pipeline. To this
+end, a pass that may create an entity from a dialect that isn&rsquo;t guaranteed to
+already be loaded must express this by overriding the <code>getDependentDialects()</code>
+method and declare this list of Dialects explicitly.
+See also the <code>dependentDialects</code> field in the
+<a href=#tablegen-specification>TableGen Specification</a>.</p><h3 id=initialization>Initialization&nbsp;<a class=headline-hash href=#initialization>¶</a></h3><p>In certain situations, a Pass may contain state that is constructed dynamically,
+but is potentially expensive to recompute in successive runs of the Pass. One
+such example is when using
+<a href=/docs/Dialects/PDLOps/><code>PDL</code>-based</a>
+<a href=/docs/PatternRewriter/>patterns</a>, which are compiled into a bytecode during
+runtime. In these situations, a pass may override the following hook to
+initialize this heavy state:</p><ul><li><code>LogicalResult initialize(MLIRContext *context)</code></li></ul><p>This hook is executed once per run of a full pass pipeline, meaning that it does
+not have access to the state available during a <code>runOnOperation</code> call. More
+concretely, all necessary accesses to an <code>MLIRContext</code> should be driven via the
+provided <code>context</code> parameter, and methods that utilize &ldquo;per-run&rdquo; state such as
+<code>getContext</code>/<code>getOperation</code>/<code>getAnalysis</code>/etc. must not be used.
+In case of an error during initialization, the pass is expected to emit an error
+diagnostic and return a <code>failure()</code> which will abort the pass pipeline execution.</p><h2 id=analysis-management>Analysis Management&nbsp;<a class=headline-hash href=#analysis-management>¶</a></h2><p>An important concept, along with transformation passes, are analyses. These are
+conceptually similar to transformation passes, except that they compute
+information on a specific operation without modifying it. In MLIR, analyses are
+not passes but free-standing classes that are computed lazily on-demand and
+cached to avoid unnecessary recomputation. An analysis in MLIR must adhere to
+the following:</p><ul><li>Provide a valid constructor taking either an <code>Operation*</code> or <code>Operation*</code>
+and <code>AnalysisManager &</code>.<ul><li>The provided <code>AnalysisManager &</code> should be used to query any necessary
+analysis dependencies.</li></ul></li><li>Must not modify the given operation.</li></ul><p>An analysis may provide additional hooks to control various behavior:</p><ul><li><code>bool isInvalidated(const AnalysisManager::PreservedAnalyses &)</code></li></ul><p>Given a preserved analysis set, the analysis returns true if it should truly be
+invalidated. This allows for more fine-tuned invalidation in cases where an
+analysis wasn&rsquo;t explicitly marked preserved, but may be preserved (or
+invalidated) based upon other properties such as analyses sets. If the analysis
+uses any other analysis as a dependency, it must also check if the dependency
+was invalidated.</p><h3 id=querying-analyses>Querying Analyses&nbsp;<a class=headline-hash href=#querying-analyses>¶</a></h3><p>The base <code>OperationPass</code> class provides utilities for querying and preserving
+analyses for the current operation being processed.</p><ul><li>OperationPass automatically provides the following utilities for querying
+analyses:<ul><li><code>getAnalysis&lt;></code><ul><li>Get an analysis for the current operation, constructing it if
+necessary.</li></ul></li><li><code>getCachedAnalysis&lt;></code><ul><li>Get an analysis for the current operation, if it already exists.</li></ul></li><li><code>getCachedParentAnalysis&lt;></code><ul><li>Get an analysis for a given parent operation, if it exists.</li></ul></li><li><code>getCachedChildAnalysis&lt;></code><ul><li>Get an analysis for a given child operation, if it exists.</li></ul></li><li><code>getChildAnalysis&lt;></code><ul><li>Get an analysis for a given child operation, constructing it if
+necessary.</li></ul></li></ul></li></ul><p>Using the example passes defined above, let&rsquo;s see some examples:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>/// An interesting analysis.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>MyOperationAnalysis</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Compute this analysis with the provided operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyOperationAnalysis</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyOperationAnalysisWithDependency</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyOperationAnalysisWithDependency</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span> <span class=n>AnalysisManager</span> <span class=o>&amp;</span><span class=n>am</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Request other analysis as dependency
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>MyOperationAnalysis</span> <span class=o>&amp;</span><span class=n>otherAnalysis</span> <span class=o>=</span> <span class=n>am</span><span class=p>.</span><span class=n>getAnalysis</span><span class=o>&lt;</span><span class=n>MyOperationAnalysis</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>bool</span> <span class=nf>isInvalidated</span><span class=p>(</span><span class=k>const</span> <span class=n>AnalysisManager</span><span class=o>::</span><span class=n>PreservedAnalyses</span> <span class=o>&amp;</span><span class=n>pa</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Check if analysis or its dependency were invalidated
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=o>!</span><span class=n>pa</span><span class=p>.</span><span class=n>isPreserved</span><span class=o>&lt;</span><span class=n>MyOperationAnalysisWithDependency</span><span class=o>&gt;</span><span class=p>()</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>           <span class=o>!</span><span class=n>pa</span><span class=p>.</span><span class=n>isPreserved</span><span class=o>&lt;</span><span class=n>MyOperationAnalysis</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyOperationPass</span><span class=o>::</span><span class=n>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Query MyOperationAnalysis for the current operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyOperationAnalysis</span> <span class=o>&amp;</span><span class=n>myAnalysis</span> <span class=o>=</span> <span class=n>getAnalysis</span><span class=o>&lt;</span><span class=n>MyOperationAnalysis</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Query a cached instance of MyOperationAnalysis for the current operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// It will not be computed if it doesn&#39;t exist.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>auto</span> <span class=n>optionalAnalysis</span> <span class=o>=</span> <span class=n>getCachedAnalysis</span><span class=o>&lt;</span><span class=n>MyOperationAnalysis</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>optionalAnalysis</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Query a cached instance of MyOperationAnalysis for the parent operation of
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// the current operation. It will not be computed if it doesn&#39;t exist.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>auto</span> <span class=n>optionalAnalysis</span> <span class=o>=</span> <span class=n>getCachedParentAnalysis</span><span class=o>&lt;</span><span class=n>MyOperationAnalysis</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>optionalAnalysis</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=preserving-analyses>Preserving Analyses&nbsp;<a class=headline-hash href=#preserving-analyses>¶</a></h3><p>Analyses that are constructed after being queried by a pass are cached to avoid
+unnecessary computation if they are requested again later. To avoid stale
+analyses, all analyses are assumed to be invalidated by a pass. To avoid
+invalidation, a pass must specifically mark analyses that are known to be
+preserved.</p><ul><li>All Pass classes automatically provide the following utilities for
+preserving analyses:<ul><li><code>markAllAnalysesPreserved</code></li><li><code>markAnalysesPreserved&lt;></code></li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyOperationPass</span><span class=o>::</span><span class=n>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Mark all analyses as preserved. This is useful if a pass can guarantee
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// that no transformation was performed.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>markAllAnalysesPreserved</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Mark specific analyses as preserved. This is used if some transformation
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// was performed, but some analyses were either unaffected or explicitly
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// preserved.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>markAnalysesPreserved</span><span class=o>&lt;</span><span class=n>MyAnalysis</span><span class=p>,</span> <span class=n>MyAnalyses</span><span class=p>...</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=pass-failure>Pass Failure&nbsp;<a class=headline-hash href=#pass-failure>¶</a></h2><p>Passes in MLIR are allowed to gracefully fail. This may happen if some invariant
+of the pass was broken, potentially leaving the IR in some invalid state. If
+such a situation occurs, the pass can directly signal a failure to the pass
+manager via the <code>signalPassFailure</code> method. If a pass signaled a failure when
+executing, no other passes in the pipeline will execute and the top-level call
+to <code>PassManager::run</code> will return <code>failure</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyOperationPass</span><span class=o>::</span><span class=n>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Signal failure on a broken invariant.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>if</span> <span class=p>(</span><span class=n>some_broken_invariant</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>signalPassFailure</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=pass-manager>Pass Manager&nbsp;<a class=headline-hash href=#pass-manager>¶</a></h2><p>The above sections introduced the different types of passes and their
+invariants. This section introduces the concept of a PassManager, and how it can
+be used to configure and schedule a pass pipeline. There are two main classes
+related to pass management, the <code>PassManager</code> and the <code>OpPassManager</code>. The
+<code>PassManager</code> class acts as the top-level entry point, and contains various
+configurations used for the entire pass pipeline. The <code>OpPassManager</code> class is
+used to schedule passes to run at a specific level of nesting. The top-level
+<code>PassManager</code> also functions as an <code>OpPassManager</code>.</p><h3 id=oppassmanager>OpPassManager&nbsp;<a class=headline-hash href=#oppassmanager>¶</a></h3><p>An <code>OpPassManager</code> is essentially a collection of passes anchored to execute on
+operations at a given level of nesting. A pass manager may be <code>op-specific</code>
+(anchored on a specific operation type), or <code>op-agnostic</code> (not restricted to any
+specific operation, and executed on any viable operation type). Operation types that
+anchor pass managers must adhere to the following requirement:</p><ul><li><p>Must be registered and marked
+<a href=/docs/Traits/#isolatedfromabove><code>IsolatedFromAbove</code></a>.</p><ul><li>Passes are expected not to modify operations at or above the current
+operation being processed. If the operation is not isolated, it may
+inadvertently modify or traverse the SSA use-list of an operation it is
+not supposed to.</li></ul></li></ul><p>Passes can be added to a pass manager via <code>addPass</code>.</p><p>An <code>OpPassManager</code> is generally created by explicitly nesting a pipeline within
+another existing <code>OpPassManager</code> via the <code>nest&lt;OpT></code> or <code>nestAny</code> methods. The
+former method takes the operation type that the nested pass manager will operate on.
+The latter method nests an <code>op-agnostic</code> pass manager, that may run on any viable
+operation type. Nesting in this sense, corresponds to the
+<a href=/docs/Tutorials/UnderstandingTheIRStructure/>structural</a> nesting within
+<a href=/docs/LangRef/#regions>Regions</a> of the IR.</p><p>For example, the following <code>.mlir</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>module <span class=p>{</span>
+</span></span><span class=line><span class=cl>  spirv<span class=p>.</span>module <span class=s>&#34;Logical&#34;</span> <span class=s>&#34;GLSL450&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>func</span> <span class=nf>@foo</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Has the nesting structure of:</p><pre tabindex=0><code>`builtin.module`
+  `spirv.module`
+    `spirv.func`
+</code></pre><p>Below is an example of constructing a pipeline that operates on the above
+structure:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// Create a top-level `PassManager` class.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>auto</span> <span class=n>pm</span> <span class=o>=</span> <span class=n>PassManager</span><span class=o>::</span><span class=n>on</span><span class=o>&lt;</span><span class=n>ModuleOp</span><span class=o>&gt;</span><span class=p>(</span><span class=n>ctx</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Add a pass on the top-level module operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyModulePass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Nest a pass manager that operates on `spirv.module` operations nested
+</span></span></span><span class=line><span class=cl><span class=c1>// directly under the top-level module.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>nestedModulePM</span> <span class=o>=</span> <span class=n>pm</span><span class=p>.</span><span class=n>nest</span><span class=o>&lt;</span><span class=n>spirv</span><span class=o>::</span><span class=n>ModuleOp</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=n>nestedModulePM</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MySPIRVModulePass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Nest a pass manager that operates on functions within the nested SPIRV
+</span></span></span><span class=line><span class=cl><span class=c1>// module.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>nestedFunctionPM</span> <span class=o>=</span> <span class=n>nestedModulePM</span><span class=p>.</span><span class=n>nest</span><span class=o>&lt;</span><span class=n>func</span><span class=o>::</span><span class=n>FuncOp</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=n>nestedFunctionPM</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyFunctionPass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Nest an op-agnostic pass manager. This will operate on any viable
+</span></span></span><span class=line><span class=cl><span class=c1>// operation, e.g. func.func, spirv.func, spirv.module, builtin.module, etc.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>nestedAnyPM</span> <span class=o>=</span> <span class=n>nestedModulePM</span><span class=p>.</span><span class=n>nestAny</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=n>nestedAnyPM</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createCanonicalizePass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl><span class=n>nestedAnyPM</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>createCSEPass</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Run the pass manager on the top-level module.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>ModuleOp</span> <span class=n>m</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>failed</span><span class=p>(</span><span class=n>pm</span><span class=p>.</span><span class=n>run</span><span class=p>(</span><span class=n>m</span><span class=p>)))</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span> <span class=c1>// One of the passes signaled a failure.
+</span></span></span></code></pre></div><p>The above pass manager contains the following pipeline structure:</p><pre tabindex=0><code>OpPassManager&lt;ModuleOp&gt;
+  MyModulePass
+  OpPassManager&lt;spirv::ModuleOp&gt;
+    MySPIRVModulePass
+    OpPassManager&lt;func::FuncOp&gt;
+      MyFunctionPass
+    OpPassManager&lt;&gt;
+      Canonicalizer
+      CSE
+</code></pre><p>These pipelines are then run over a single operation at a time. This means that,
+for example, given a series of consecutive passes on func::FuncOp, it will execute all
+on the first function, then all on the second function, etc. until the entire
+program has been run through the passes. This provides several benefits:</p><ul><li>This improves the cache behavior of the compiler, because it is only
+touching a single function at a time, instead of traversing the entire
+program.</li><li>This improves multi-threading performance by reducing the number of jobs
+that need to be scheduled, as well as increasing the efficiency of each job.
+An entire function pipeline can be run on each function asynchronously.</li></ul><h2 id=dynamic-pass-pipelines>Dynamic Pass Pipelines&nbsp;<a class=headline-hash href=#dynamic-pass-pipelines>¶</a></h2><p>In some situations it may be useful to run a pass pipeline within another pass,
+to allow configuring or filtering based on some invariants of the current
+operation being operated on. For example, the
+<a href=/docs/Passes/#-inline>Inliner Pass</a> may want to run
+intraprocedural simplification passes while it is inlining to produce a better
+cost model, and provide more optimal inlining. To enable this, passes may run an
+arbitrary <code>OpPassManager</code> on the current operation being operated on or any
+operation nested within the current operation via the <code>LogicalResult Pass::runPipeline(OpPassManager &, Operation *)</code> method. This method returns
+whether the dynamic pipeline succeeded or failed, similarly to the result of the
+top-level <code>PassManager::run</code> method. A simple example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyModulePass</span><span class=o>::</span><span class=n>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>ModuleOp</span> <span class=n>module</span> <span class=o>=</span> <span class=n>getOperation</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>hasSomeSpecificProperty</span><span class=p>(</span><span class=n>module</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>OpPassManager</span> <span class=nf>dynamicPM</span><span class=p>(</span><span class=s>&#34;builtin.module&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>...;</span> <span class=c1>// Build the dynamic pipeline.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>failed</span><span class=p>(</span><span class=n>runPipeline</span><span class=p>(</span><span class=n>dynamicPM</span><span class=p>,</span> <span class=n>module</span><span class=p>)))</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>signalPassFailure</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Note: though above the dynamic pipeline was constructed within the
+<code>runOnOperation</code> method, this is not necessary and pipelines should be cached
+when possible as the <code>OpPassManager</code> class can be safely copy constructed.</p><p>The mechanism described in this section should be used whenever a pass pipeline
+should run in a nested fashion, i.e. when the nested pipeline cannot be
+scheduled statically along with the rest of the main pass pipeline. More
+specifically, a <code>PassManager</code> should generally never need to be constructed
+within a <code>Pass</code>. Using <code>runPipeline</code> also ensures that all analyses,
+<a href=#pass-instrumentation>instrumentations</a>, and other pass manager related
+components are integrated with the dynamic pipeline being executed.</p><h2 id=instance-specific-pass-options>Instance Specific Pass Options&nbsp;<a class=headline-hash href=#instance-specific-pass-options>¶</a></h2><p>MLIR provides a builtin mechanism for passes to specify options that configure
+its behavior. These options are parsed at pass construction time independently
+for each instance of the pass. Options are defined using the <code>Option&lt;></code> and
+<code>ListOption&lt;></code> classes, and generally follow the
+<a href=https://llvm.org/docs/CommandLine.html>LLVM command line</a> flag definition
+rules. One major distinction from the LLVM command line functionality is that
+all <code>ListOption</code>s are comma-separated, and delimited sub-ranges within individual
+elements of the list may contain commas that are not treated as separators for the
+top-level list.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyPass</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Make sure that we have a valid default constructor and copy constructor to
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// ensure that the options are initialized properly.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyPass</span><span class=p>()</span> <span class=o>=</span> <span class=k>default</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPass</span><span class=p>(</span><span class=k>const</span> <span class=n>MyPass</span><span class=o>&amp;</span> <span class=n>pass</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Any parameters after the description are forwarded to llvm::cl::list and
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// llvm::cl::opt respectively.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Option</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>exampleOption</span><span class=p>{</span><span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;flag-name&#34;</span><span class=p>,</span> <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;...&#34;</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl>  <span class=n>ListOption</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>exampleListOption</span><span class=p>{</span><span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;list-flag-name&#34;</span><span class=p>,</span> <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;...&#34;</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>For pass pipelines, the <code>PassPipelineRegistration</code> templates take an additional
+template parameter for an optional <code>Option</code> struct definition. This struct
+should inherit from <code>mlir::PassPipelineOptions</code> and contain the desired pipeline
+options. When using <code>PassPipelineRegistration</code>, the constructor now takes a
+function with the signature <code>void (OpPassManager &amp;pm, const MyPipelineOptions&)</code>
+which should construct the passes from the options and pass them to the pm:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyPipelineOptions</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PassPipelineOptions</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// The structure of these options is the same as those for pass options.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Option</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>exampleOption</span><span class=p>{</span><span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;flag-name&#34;</span><span class=p>,</span> <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;...&#34;</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl>  <span class=n>ListOption</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>exampleListOption</span><span class=p>{</span><span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;list-flag-name&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;...&#34;</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>registerMyPasses</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>PassPipelineRegistration</span><span class=o>&lt;</span><span class=n>MyPipelineOptions</span><span class=o>&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;example-pipeline&#34;</span><span class=p>,</span> <span class=s>&#34;Run an example pipeline.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>[](</span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>pm</span><span class=p>,</span> <span class=k>const</span> <span class=n>MyPipelineOptions</span> <span class=o>&amp;</span><span class=n>pipelineOptions</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// Initialize the pass manager.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=pass-statistics>Pass Statistics&nbsp;<a class=headline-hash href=#pass-statistics>¶</a></h2><p>Statistics are a way to keep track of what the compiler is doing and how
+effective various transformations are. It is often useful to see what effect
+specific transformations have on a particular input, and how often they trigger.
+Pass statistics are specific to each pass instance, which allow for seeing the
+effect of placing a particular transformation at specific places within the pass
+pipeline. For example, they help answer questions like &ldquo;What happens if I run
+CSE again here?&rdquo;.</p><p>Statistics can be added to a pass by using the &lsquo;Pass::Statistic&rsquo; class. This
+class takes as a constructor arguments: the parent pass, a name, and a
+description. This class acts like an atomic unsigned integer, and may be
+incremented and updated accordingly. These statistics rely on the same
+infrastructure as
+<a href=http://llvm.org/docs/ProgrammersManual.html#the-statistic-class-stats-option><code>llvm::Statistic</code></a>
+and thus have similar usage constraints. Collected statistics can be dumped by
+the
+<a href=#pass-manager>pass manager</a> programmatically via
+<code>PassManager::enableStatistics</code>; or via <code>-mlir-pass-statistics</code> and
+<code>-mlir-pass-statistics-display</code> on the command line.</p><p>An example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyPass</span> <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Make sure that we have a valid default constructor and copy constructor to
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// ensure that the options are initialized properly.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyPass</span><span class=p>()</span> <span class=o>=</span> <span class=k>default</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPass</span><span class=p>(</span><span class=k>const</span> <span class=n>MyPass</span><span class=o>&amp;</span> <span class=n>pass</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>  <span class=n>StringRef</span> <span class=nf>getArgument</span><span class=p>()</span> <span class=k>const</span> <span class=k>final</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// This is the argument used to refer to the pass in
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// the textual format (on the commandline for example).
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=s>&#34;argument&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>StringRef</span> <span class=nf>getDescription</span><span class=p>()</span> <span class=k>const</span> <span class=k>final</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// This is a brief description of the pass.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span>  <span class=s>&#34;description&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Define the statistic to track during the execution of MyPass.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Statistic</span> <span class=n>exampleStat</span><span class=p>{</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;exampleStat&#34;</span><span class=p>,</span> <span class=s>&#34;An example statistic&#34;</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runOnOperation</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Update the statistic after some invariant was hit.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>++</span><span class=n>exampleStat</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>The collected statistics may be aggregated in two types of views:</p><p>A pipeline view that models the structure of the pass manager, this is the
+default view:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt -pass-pipeline<span class=o>=</span><span class=s1>&#39;any(func.func(my-pass,my-pass))&#39;</span> foo.mlir -mlir-pass-statistics
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>                         ... Pass statistics report ...
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;func.func&#39;</span> Pipeline
+</span></span><span class=line><span class=cl>  MyPass
+</span></span><span class=line><span class=cl>    <span class=o>(</span>S<span class=o>)</span> <span class=m>15</span> exampleStat - An example statistic
+</span></span><span class=line><span class=cl>  VerifierPass
+</span></span><span class=line><span class=cl>  MyPass
+</span></span><span class=line><span class=cl>    <span class=o>(</span>S<span class=o>)</span>  <span class=m>6</span> exampleStat - An example statistic
+</span></span><span class=line><span class=cl>  VerifierPass
+</span></span><span class=line><span class=cl>VerifierPass
+</span></span></code></pre></div><p>A list view that aggregates the statistics of all instances of a specific pass
+together:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt -pass-pipeline<span class=o>=</span><span class=s1>&#39;any(func.func(my-pass,my-pass))&#39;</span> foo.mlir -mlir-pass-statistics -mlir-pass-statistics-display<span class=o>=</span><span class=nv>list</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>                         ... Pass statistics report ...
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>MyPass
+</span></span><span class=line><span class=cl>  <span class=o>(</span>S<span class=o>)</span> <span class=m>21</span> exampleStat - An example statistic
+</span></span></code></pre></div><h2 id=pass-registration>Pass Registration&nbsp;<a class=headline-hash href=#pass-registration>¶</a></h2><p>Briefly shown in the example definitions of the various pass types is the
+<code>PassRegistration</code> class. This mechanism allows for registering pass classes so
+that they may be created within a
+<a href=#textual-pass-pipeline-specification>textual pass pipeline description</a>. An
+example registration is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>registerMyPass</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>PassRegistration</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><ul><li><code>MyPass</code> is the name of the derived pass class.</li><li>The pass <code>getArgument()</code> method is used to get the identifier that will be
+used to refer to the pass.</li><li>The pass <code>getDescription()</code> method provides a short summary describing the
+pass.</li></ul><p>For passes that cannot be default-constructed, <code>PassRegistration</code> accepts an
+optional argument that takes a callback to create the pass:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>registerMyPass</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>PassRegistration</span><span class=o>&lt;</span><span class=n>MyParametricPass</span><span class=o>&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>[]()</span> <span class=o>-&gt;</span> <span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;</span><span class=n>Pass</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;</span><span class=n>Pass</span><span class=o>&gt;</span> <span class=n>p</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyParametricPass</span><span class=o>&gt;</span><span class=p>(</span><span class=cm>/*options*/</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=cm>/*... non-trivial-logic to configure the pass ...*/</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This variant of registration can be used, for example, to accept the
+configuration of a pass from command-line arguments and pass it to the pass
+constructor.</p><p>Note: Make sure that the pass is copy-constructible in a way that does not share
+data as the
+<a href=#pass-manager>pass manager</a> may create copies of the pass to run
+in parallel.</p><h3 id=pass-pipeline-registration>Pass Pipeline Registration&nbsp;<a class=headline-hash href=#pass-pipeline-registration>¶</a></h3><p>Described above is the mechanism used for registering a specific derived pass
+class. On top of that, MLIR allows for registering custom pass pipelines in a
+similar fashion. This allows for custom pipelines to be available to tools like
+mlir-opt in the same way that passes are, which is useful for encapsulating
+common pipelines like the &ldquo;-O1&rdquo; series of passes. Pipelines are registered via a
+similar mechanism to passes in the form of <code>PassPipelineRegistration</code>. Compared
+to <code>PassRegistration</code>, this class takes an additional parameter in the form of a
+pipeline builder that modifies a provided <code>OpPassManager</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>pipelineBuilder</span><span class=p>(</span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>pm</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>  <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyOtherPass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>registerMyPasses</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Register an existing pipeline builder function.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>PassPipelineRegistration</span><span class=o>&lt;&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;argument&#34;</span><span class=p>,</span> <span class=s>&#34;description&#34;</span><span class=p>,</span> <span class=n>pipelineBuilder</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Register an inline pipeline builder.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>PassPipelineRegistration</span><span class=o>&lt;&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;argument&#34;</span><span class=p>,</span> <span class=s>&#34;description&#34;</span><span class=p>,</span> <span class=p>[](</span><span class=n>OpPassManager</span> <span class=o>&amp;</span><span class=n>pm</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>      <span class=n>pm</span><span class=p>.</span><span class=n>addPass</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyOtherPass</span><span class=o>&gt;</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=textual-pass-pipeline-specification>Textual Pass Pipeline Specification&nbsp;<a class=headline-hash href=#textual-pass-pipeline-specification>¶</a></h3><p>The previous sections detailed how to register passes and pass pipelines with a
+specific argument and description. Once registered, these can be used to
+configure a pass manager from a string description. This is especially useful
+for tools like <code>mlir-opt</code>, that configure pass managers from the command line,
+or as options to passes that utilize
+<a href=#dynamic-pass-pipelines>dynamic pass pipelines</a>.</p><p>To support the ability to describe the full structure of pass pipelines, MLIR
+supports a custom textual description of pass pipelines. The textual description
+includes the nesting structure, the arguments of the passes and pass pipelines
+to run, and any options for those passes and pipelines. A textual pipeline is
+defined as a series of names, each of which may in itself recursively contain a
+nested pipeline description. The syntax for this specification is as follows:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-ebnf data-lang=ebnf><span class=line><span class=cl><span class=k>pipeline          </span><span class=err>::</span><span class=o>=</span> <span class=k>op-anchor </span><span class=err>`</span><span class=p>(</span><span class=err>`</span> <span class=k>pipeline-element </span><span class=p>(</span><span class=err>`</span><span class=p>,</span><span class=err>`</span> <span class=k>pipeline-element</span><span class=p>)</span><span class=err>*</span> <span class=err>`</span><span class=p>)</span><span class=err>`</span>
+</span></span><span class=line><span class=cl><span class=k>pipeline-element  </span><span class=err>::=</span> <span class=k>pipeline </span><span class=p>|</span> <span class=p>(</span><span class=k>pass-name </span><span class=p>|</span> <span class=k>pass-pipeline-name</span><span class=p>)</span> <span class=k>options</span><span class=ni>?
+</span></span></span><span class=line><span class=cl><span class=ni>options           ::= &#39;{&#39; (key (&#39;=&#39; value)?</span><span class=p>)</span><span class=err>+</span> <span class=s1>&#39;}&#39;</span>
+</span></span></code></pre></div><ul><li><code>op-anchor</code><ul><li>This corresponds to the mnemonic name that anchors the execution of the
+pass manager. This is either the name of an operation to run passes on,
+e.g. <code>func.func</code> or <code>builtin.module</code>, or <code>any</code>, for op-agnostic pass
+managers that execute on any viable operation (i.e. any operation that
+can be used to anchor a pass manager).</li></ul></li><li><code>pass-name</code> | <code>pass-pipeline-name</code><ul><li>This corresponds to the argument of a registered pass or pass pipeline,
+e.g. <code>cse</code> or <code>canonicalize</code>.</li></ul></li><li><code>options</code><ul><li>Options are specific key value pairs representing options defined by a
+pass or pass pipeline, as described in the
+<a href=#instance-specific-pass-options>&ldquo;Instance Specific Pass Options&rdquo;</a>
+section. See this section for an example usage in a textual pipeline.</li></ul></li></ul><p>For example, the following pipeline:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -cse -canonicalize -convert-func-to-llvm<span class=o>=</span><span class=s1>&#39;use-bare-ptr-memref-call-conv=1&#39;</span>
+</span></span></code></pre></div><p>Can also be specified as (via the <code>-pass-pipeline</code> flag):</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># Anchor the cse and canonicalize passes on the `func.func` operation.</span>
+</span></span><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm{use-bare-ptr-memref-call-conv=1})&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Anchor the cse and canonicalize passes on &#34;any&#34; viable root operation.</span>
+</span></span><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(any(cse,canonicalize),convert-func-to-llvm{use-bare-ptr-memref-call-conv=1})&#39;</span>
+</span></span></code></pre></div><p>In order to support round-tripping a pass to the textual representation using
+<code>OpPassManager::printAsTextualPipeline(raw_ostream&)</code>, override <code>StringRef Pass::getArgument()</code> to specify the argument used when registering a pass.</p><h2 id=declarative-pass-specification>Declarative Pass Specification&nbsp;<a class=headline-hash href=#declarative-pass-specification>¶</a></h2><p>Some aspects of a Pass may be specified declaratively, in a form similar to
+<a href=/docs/DefiningDialects/Operations/>operations</a>. This specification simplifies several mechanisms
+used when defining passes. It can be used for generating pass registration
+calls, defining boilerplate pass utilities, and generating pass documentation.</p><p>Consider the following pass specified in C++:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyPass</span> <span class=o>:</span> <span class=n>PassWrapper</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=p>,</span> <span class=n>OperationPass</span><span class=o>&lt;</span><span class=n>ModuleOp</span><span class=o>&gt;&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPass</span><span class=p>()</span> <span class=o>=</span> <span class=k>default</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPass</span><span class=p>(</span><span class=k>const</span> <span class=n>MyPass</span> <span class=o>&amp;</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Specify any options.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Option</span><span class=o>&lt;</span><span class=kt>bool</span><span class=o>&gt;</span> <span class=n>option</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;example-option&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;An example option&#34;</span><span class=p>),</span> <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>init</span><span class=p>(</span><span class=nb>true</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl>  <span class=n>ListOption</span><span class=o>&lt;</span><span class=kt>int64_t</span><span class=o>&gt;</span> <span class=n>listOption</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;example-list&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=n>llvm</span><span class=o>::</span><span class=n>cl</span><span class=o>::</span><span class=n>desc</span><span class=p>(</span><span class=s>&#34;An example list option&#34;</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Specify any statistics.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>Statistic</span> <span class=n>statistic</span><span class=p>{</span><span class=k>this</span><span class=p>,</span> <span class=s>&#34;example-statistic&#34;</span><span class=p>,</span> <span class=s>&#34;An example statistic&#34;</span><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Expose this pass to the outside world.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;</span><span class=n>Pass</span><span class=o>&gt;</span> <span class=n>foo</span><span class=o>::</span><span class=n>createMyPass</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Register this pass.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=n>foo</span><span class=o>::</span><span class=n>registerMyPass</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>PassRegistration</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This pass may be specified declaratively as so:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyPass</span> <span class=p>:</span> <span class=nv>Pass</span><span class=p>&lt;</span><span class=s>&#34;my-pass&#34;</span><span class=p>,</span> <span class=s>&#34;ModuleOp&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;My Pass Summary&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    Here we can now give a much larger description of `MyPass`, including all of
+</span></span></span><span class=line><span class=cl><span class=s>    its various constraints and behavior.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// A constructor must be provided to specify how to create a default instance
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// of MyPass. It can be skipped for this specific example, because both the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// constructor and the registration methods live in the same namespace.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>constructor</span> <span class=p>=</span> <span class=s>&#34;foo::createMyPass()&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Specify any options.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>options</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>Option</span><span class=p>&lt;</span><span class=s>&#34;option&#34;</span><span class=p>,</span> <span class=s>&#34;example-option&#34;</span><span class=p>,</span> <span class=s>&#34;bool&#34;</span><span class=p>,</span> <span class=err>/</span><span class=p>*</span><span class=nv>default</span><span class=p>=*</span><span class=err>/</span><span class=s>&#34;true&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;An example option&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>ListOption</span><span class=p>&lt;</span><span class=s>&#34;listOption&#34;</span><span class=p>,</span> <span class=s>&#34;example-list&#34;</span><span class=p>,</span> <span class=s>&#34;int64_t&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>               <span class=s>&#34;An example list option&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Specify any statistics.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>statistics</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>Statistic</span><span class=p>&lt;</span><span class=s>&#34;statistic&#34;</span><span class=p>,</span> <span class=s>&#34;example-statistic&#34;</span><span class=p>,</span> <span class=s>&#34;An example statistic&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Using the <code>gen-pass-decls</code> generator, we can generate most of the boilerplate
+above automatically. This generator takes as an input a <code>-name</code> parameter, that
+provides a tag for the group of passes that are being generated. This generator
+produces code with multiple purposes:</p><p>The first is to register the declared passes with the global registry. For
+each pass, the generator produces a <code>registerPassName</code> where
+<code>PassName</code> is the name of the definition specified in tablegen. It also
+generates a <code>registerGroupPasses</code>, where <code>Group</code> is the tag provided via the
+<code>-name</code> input parameter, that registers all of the passes present.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// Tablegen options: -gen-pass-decls -name=&#34;Example&#34;
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Passes.h
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=n>foo</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=cp>#define GEN_PASS_REGISTRATION
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;Passes.h.inc&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=p>}</span> <span class=c1>// namespace foo
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>registerMyPasses</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Register all of the passes.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>foo</span><span class=o>::</span><span class=n>registerExamplePasses</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>  <span class=c1>// Or
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Register `MyPass` specifically.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>foo</span><span class=o>::</span><span class=n>registerMyPass</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The second is to provide a way to configure the pass options. These classes are
+named in the form of <code>MyPassOptions</code>, where <code>MyPass</code> is the name of the pass
+definition in tablegen. The configurable parameters reflect the options declared
+in the tablegen file. These declarations can be enabled for the whole group of
+passes by defining the <code>GEN_PASS_DECL</code> macro, or on a per-pass basis by defining
+<code>GEN_PASS_DECL_PASSNAME</code> where <code>PASSNAME</code> is the uppercase version of the name
+specified in tablegen.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// .h.inc
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef GEN_PASS_DECL_MYPASS
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=nc>MyPassOptions</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>option</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>::</span><span class=n>llvm</span><span class=o>::</span><span class=n>ArrayRef</span><span class=o>&lt;</span><span class=kt>int64_t</span><span class=o>&gt;</span> <span class=n>listOption</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#undef GEN_PASS_DECL_MYPASS
+</span></span></span><span class=line><span class=cl><span class=cp>#endif </span><span class=c1>// GEN_PASS_DECL_MYPASS
+</span></span></span></code></pre></div><p>If the <code>constructor</code> field has not been specified in the tablegen declaration,
+then autogenerated file will also contain the declarations of the default
+constructors.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// .h.inc
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef GEN_PASS_DECL_MYPASS
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;::</span><span class=n>mlir</span><span class=o>::</span><span class=n>Pass</span><span class=o>&gt;</span> <span class=n>createMyPass</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;::</span><span class=n>mlir</span><span class=o>::</span><span class=n>Pass</span><span class=o>&gt;</span> <span class=n>createMyPass</span><span class=p>(</span><span class=k>const</span> <span class=n>MyPassOptions</span> <span class=o>&amp;</span><span class=n>options</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#undef GEN_PASS_DECL_MYPASS
+</span></span></span><span class=line><span class=cl><span class=cp>#endif </span><span class=c1>// GEN_PASS_DECL_MYPASS
+</span></span></span></code></pre></div><p>The last purpose of this generator is to emit a base class for each of the
+passes, containing most of the boiler plate related to pass definitions. These
+classes are named in the form of <code>MyPassBase</code> and are declared inside the
+<code>impl</code> namespace, where <code>MyPass</code> is the name of the pass definition in
+tablegen. We can update the original C++ pass definition as so:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=c1>// MyPass.cpp
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>/// Include the generated base pass class definitions.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>namespace</span> <span class=n>foo</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=cp>#define GEN_PASS_DEF_MYPASS
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;Passes.h.inc&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Define the main class as deriving from the generated base class.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>struct</span> <span class=nc>MyPass</span> <span class=o>:</span> <span class=n>foo</span><span class=o>::</span><span class=n>impl</span><span class=o>::</span><span class=n>MyPassBase</span><span class=o>&lt;</span><span class=n>MyPass</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>using</span> <span class=n>MyPassBase</span><span class=o>::</span><span class=n>MyPassBase</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The definitions of the options and statistics are now generated within
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// the base class, but are accessible in the same way.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>};</span>
+</span></span></code></pre></div><p>These definitions can be enabled on a per-pass basis by defining the appropriate
+preprocessor <code>GEN_PASS_DEF_PASSNAME</code> macro, with <code>PASSNAME</code> equal to the
+uppercase version of the name of the pass definition in tablegen.
+If the <code>constructor</code> field has not been specified in tablegen, then the default
+constructors are also defined and expect the name of the actual pass class to
+be equal to the name defined in tablegen.</p><p>Using the <code>gen-pass-doc</code> generator, markdown documentation for each of the
+passes can be generated. See
+<a href=/docs/Passes/>Passes.md</a> for example output of real
+MLIR passes.</p><h3 id=tablegen-specification>Tablegen Specification&nbsp;<a class=headline-hash href=#tablegen-specification>¶</a></h3><p>The <code>Pass</code> class is used to begin a new pass definition. This class takes as an
+argument the registry argument to attribute to the pass, as well as an optional
+string corresponding to the operation type that the pass operates on. The class
+contains the following fields:</p><ul><li><code>summary</code><ul><li>A short one-line summary of the pass, used as the description when
+registering the pass.</li></ul></li><li><code>description</code><ul><li>A longer, more detailed description of the pass. This is used when
+generating pass documentation.</li></ul></li><li><code>dependentDialects</code><ul><li>A list of strings representing the <code>Dialect</code> classes this pass may
+introduce entities, Attributes/Operations/Types/etc., of.</li></ul></li><li><code>constructor</code><ul><li>A code block used to create a default instance of the pass.</li></ul></li><li><code>options</code><ul><li>A list of pass options used by the pass.</li></ul></li><li><code>statistics</code><ul><li>A list of pass statistics used by the pass.</li></ul></li></ul><h4 id=options>Options&nbsp;<a class=headline-hash href=#options>¶</a></h4><p>Options may be specified via the <code>Option</code> and <code>ListOption</code> classes. The <code>Option</code>
+class takes the following template parameters:</p><ul><li>C++ variable name<ul><li>A name to use for the generated option variable.</li></ul></li><li>argument<ul><li>The argument name of the option.</li></ul></li><li>type<ul><li>The C++ type of the option.</li></ul></li><li>default value<ul><li>The default option value.</li></ul></li><li>description<ul><li>A one-line description of the option.</li></ul></li><li>additional option flags<ul><li>A string containing any additional options necessary to construct the
+option.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyPass</span> <span class=p>:</span> <span class=nv>Pass</span><span class=p>&lt;</span><span class=s>&#34;my-pass&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>options</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>Option</span><span class=p>&lt;</span><span class=s>&#34;option&#34;</span><span class=p>,</span> <span class=s>&#34;example-option&#34;</span><span class=p>,</span> <span class=s>&#34;bool&#34;</span><span class=p>,</span> <span class=err>/</span><span class=p>*</span><span class=nv>default</span><span class=p>=*</span><span class=err>/</span><span class=s>&#34;true&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;An example option&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The <code>ListOption</code> class takes the following fields:</p><ul><li>C++ variable name<ul><li>A name to use for the generated option variable.</li></ul></li><li>argument<ul><li>The argument name of the option.</li></ul></li><li>element type<ul><li>The C++ type of the list element.</li></ul></li><li>description<ul><li>A one-line description of the option.</li></ul></li><li>additional option flags<ul><li>A string containing any additional options necessary to construct the
+option.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyPass</span> <span class=p>:</span> <span class=nv>Pass</span><span class=p>&lt;</span><span class=s>&#34;my-pass&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>options</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>ListOption</span><span class=p>&lt;</span><span class=s>&#34;listOption&#34;</span><span class=p>,</span> <span class=s>&#34;example-list&#34;</span><span class=p>,</span> <span class=s>&#34;int64_t&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>               <span class=s>&#34;An example list option&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h4 id=statistic>Statistic&nbsp;<a class=headline-hash href=#statistic>¶</a></h4><p>Statistics may be specified via the <code>Statistic</code>, which takes the following
+template parameters:</p><ul><li>C++ variable name<ul><li>A name to use for the generated statistic variable.</li></ul></li><li>display name<ul><li>The name used when displaying the statistic.</li></ul></li><li>description<ul><li>A one-line description of the statistic.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyPass</span> <span class=p>:</span> <span class=nv>Pass</span><span class=p>&lt;</span><span class=s>&#34;my-pass&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>statistics</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>Statistic</span><span class=p>&lt;</span><span class=s>&#34;statistic&#34;</span><span class=p>,</span> <span class=s>&#34;example-statistic&#34;</span><span class=p>,</span> <span class=s>&#34;An example statistic&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=pass-instrumentation>Pass Instrumentation&nbsp;<a class=headline-hash href=#pass-instrumentation>¶</a></h2><p>MLIR provides a customizable framework to instrument pass execution and analysis
+computation, via the <code>PassInstrumentation</code> class. This class provides hooks into
+the PassManager that observe various events:</p><ul><li><code>runBeforePipeline</code><ul><li>This callback is run just before a pass pipeline, i.e. pass manager, is
+executed.</li></ul></li><li><code>runAfterPipeline</code><ul><li>This callback is run right after a pass pipeline has been executed,
+successfully or not.</li></ul></li><li><code>runBeforePass</code><ul><li>This callback is run just before a pass is executed.</li></ul></li><li><code>runAfterPass</code><ul><li>This callback is run right after a pass has been successfully executed.
+If this hook is executed, <code>runAfterPassFailed</code> will <em>not</em> be.</li></ul></li><li><code>runAfterPassFailed</code><ul><li>This callback is run right after a pass execution fails. If this hook is
+executed, <code>runAfterPass</code> will <em>not</em> be.</li></ul></li><li><code>runBeforeAnalysis</code><ul><li>This callback is run just before an analysis is computed.</li><li>If the analysis requested another analysis as a dependency, the
+<code>runBeforeAnalysis</code>/<code>runAfterAnalysis</code> pair for the dependency can be
+called from inside of the current <code>runBeforeAnalysis</code>/<code>runAfterAnalysis</code>
+pair.</li></ul></li><li><code>runAfterAnalysis</code><ul><li>This callback is run right after an analysis is computed.</li></ul></li></ul><p>PassInstrumentation instances may be registered directly with a
+<a href=#pass-manager>PassManager</a> instance via the <code>addInstrumentation</code> method.
+Instrumentations added to the PassManager are run in a stack like fashion, i.e.
+the last instrumentation to execute a <code>runBefore*</code> hook will be the first to
+execute the respective <code>runAfter*</code> hook. The hooks of a <code>PassInstrumentation</code>
+class are guaranteed to be executed in a thread-safe fashion, so additional
+synchronization is not necessary. Below in an example instrumentation that
+counts the number of times the <code>DominanceInfo</code> analysis is computed:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>struct</span> <span class=nc>DominanceCounterInstrumentation</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PassInstrumentation</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// The cumulative count of how many times dominance has been calculated.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>unsigned</span> <span class=o>&amp;</span><span class=n>count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>DominanceCounterInstrumentation</span><span class=p>(</span><span class=kt>unsigned</span> <span class=o>&amp;</span><span class=n>count</span><span class=p>)</span> <span class=o>:</span> <span class=n>count</span><span class=p>(</span><span class=n>count</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>runAfterAnalysis</span><span class=p>(</span><span class=n>llvm</span><span class=o>::</span><span class=n>StringRef</span><span class=p>,</span> <span class=n>TypeID</span> <span class=n>id</span><span class=p>,</span> <span class=n>Operation</span> <span class=o>*</span><span class=p>)</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>id</span> <span class=o>==</span> <span class=n>TypeID</span><span class=o>::</span><span class=n>get</span><span class=o>&lt;</span><span class=n>DominanceInfo</span><span class=o>&gt;</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>      <span class=o>++</span><span class=n>count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=n>PassManager</span> <span class=nf>pm</span><span class=p>(</span><span class=n>ctx</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Add the instrumentation to the pass manager.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>unsigned</span> <span class=n>domInfoCount</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>pm</span><span class=p>.</span><span class=n>addInstrumentation</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>DominanceCounterInstrumentation</span><span class=o>&gt;</span><span class=p>(</span><span class=n>domInfoCount</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Run the pass manager on a module operation.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>ModuleOp</span> <span class=n>m</span> <span class=o>=</span> <span class=p>...;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>failed</span><span class=p>(</span><span class=n>pm</span><span class=p>.</span><span class=n>run</span><span class=p>(</span><span class=n>m</span><span class=p>)))</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>llvm</span><span class=o>::</span><span class=n>errs</span><span class=p>()</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;DominanceInfo was computed &#34;</span> <span class=o>&lt;&lt;</span> <span class=n>domInfoCount</span> <span class=o>&lt;&lt;</span> <span class=s>&#34; times!</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>;</span>
+</span></span></code></pre></div><h3 id=standard-instrumentations>Standard Instrumentations&nbsp;<a class=headline-hash href=#standard-instrumentations>¶</a></h3><p>MLIR utilizes the pass instrumentation framework to provide a few useful
+developer tools and utilities. Each of these instrumentations are directly
+available to all users of the MLIR pass framework.</p><h4 id=pass-timing>Pass Timing&nbsp;<a class=headline-hash href=#pass-timing>¶</a></h4><p>The PassTiming instrumentation provides timing information about the execution
+of passes and computation of analyses. This provides a quick glimpse into what
+passes are taking the most time to execute, as well as how much of an effect a
+pass has on the total execution time of the pipeline. Users can enable this
+instrumentation directly on the PassManager via <code>enableTiming</code>. This
+instrumentation is also made available in mlir-opt via the <code>-mlir-timing</code> flag.
+The PassTiming instrumentation provides several different display modes for the
+timing results, each of which is described below:</p><h5 id=list-display-mode>List Display Mode&nbsp;<a class=headline-hash href=#list-display-mode>¶</a></h5><p>In this mode, the results are displayed in a list sorted by total time with each
+pass/analysis instance aggregated into one unique result. This view is useful
+for getting an overview of what analyses/passes are taking the most time in a
+pipeline. This display mode is available in mlir-opt via
+<code>-mlir-timing-display=list</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -mlir-disable-threading -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm)&#39;</span> -mlir-timing -mlir-timing-display<span class=o>=</span><span class=nv>list</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>                         ... Execution <span class=nb>time</span> report ...
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>  Total Execution Time: 0.0135 seconds
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  ----Wall Time----  ----Name----
+</span></span><span class=line><span class=cl>    0.0135 <span class=o>(</span>100.0%<span class=o>)</span>  root
+</span></span><span class=line><span class=cl>    0.0041 <span class=o>(</span> 30.1%<span class=o>)</span>  Parser
+</span></span><span class=line><span class=cl>    0.0018 <span class=o>(</span> 13.3%<span class=o>)</span>  ConvertFuncToLLVMPass
+</span></span><span class=line><span class=cl>    0.0011 <span class=o>(</span>  8.2%<span class=o>)</span>  Output
+</span></span><span class=line><span class=cl>    0.0007 <span class=o>(</span>  5.2%<span class=o>)</span>  Pipeline Collection : <span class=o>[</span><span class=s1>&#39;func.func&#39;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>    0.0006 <span class=o>(</span>  4.6%<span class=o>)</span>  <span class=s1>&#39;func.func&#39;</span> Pipeline
+</span></span><span class=line><span class=cl>    0.0005 <span class=o>(</span>  3.5%<span class=o>)</span>  Canonicalizer
+</span></span><span class=line><span class=cl>    0.0001 <span class=o>(</span>  0.9%<span class=o>)</span>  CSE
+</span></span><span class=line><span class=cl>    0.0001 <span class=o>(</span>  0.5%<span class=o>)</span>  <span class=o>(</span>A<span class=o>)</span> DataLayoutAnalysis
+</span></span><span class=line><span class=cl>    0.0000 <span class=o>(</span>  0.1%<span class=o>)</span>  <span class=o>(</span>A<span class=o>)</span> DominanceInfo
+</span></span><span class=line><span class=cl>    0.0058 <span class=o>(</span> 43.2%<span class=o>)</span>  Rest
+</span></span><span class=line><span class=cl>    0.0135 <span class=o>(</span>100.0%<span class=o>)</span>  Total
+</span></span></code></pre></div><p>The results can be displayed in JSON format via <code>-mlir-output-format=json</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -mlir-disable-threading -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm)&#39;</span> -mlir-timing -mlir-timing-display<span class=o>=</span>list -mlir-output-format<span class=o>=</span>json
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0135, <span class=s2>&#34;percentage&#34;</span>: 100.0<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;root&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0041, <span class=s2>&#34;percentage&#34;</span>:  30.1<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Parser&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0018, <span class=s2>&#34;percentage&#34;</span>:  13.3<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;ConvertFuncToLLVMPass&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0011, <span class=s2>&#34;percentage&#34;</span>:   8.2<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Output&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0007, <span class=s2>&#34;percentage&#34;</span>:   5.2<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Pipeline Collection : [&#39;func.func&#39;]&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0006, <span class=s2>&#34;percentage&#34;</span>:   4.6<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;&#39;func.func&#39; Pipeline&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0005, <span class=s2>&#34;percentage&#34;</span>:   3.5<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Canonicalizer&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0001, <span class=s2>&#34;percentage&#34;</span>:   0.9<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;CSE&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0001, <span class=s2>&#34;percentage&#34;</span>:   0.5<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;(A) DataLayoutAnalysis&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0000, <span class=s2>&#34;percentage&#34;</span>:   0.1<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;(A) DominanceInfo&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0058, <span class=s2>&#34;percentage&#34;</span>:  43.2<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Rest&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0135, <span class=s2>&#34;percentage&#34;</span>: 100.0<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Total&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>]</span>
+</span></span></code></pre></div><h5 id=tree-display-mode>Tree Display Mode&nbsp;<a class=headline-hash href=#tree-display-mode>¶</a></h5><p>In this mode, the results are displayed in a nested pipeline view that mirrors
+the internal pass pipeline that is being executed in the pass manager. This view
+is useful for understanding specifically which parts of the pipeline are taking
+the most time, and can also be used to identify when analyses are being
+invalidated and recomputed. This is the default display mode.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -mlir-disable-threading -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm)&#39;</span> -mlir-timing
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>                         ... Execution <span class=nb>time</span> report ...
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>  Total Execution Time: 0.0127 seconds
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  ----Wall Time----  ----Name----
+</span></span><span class=line><span class=cl>    0.0038 <span class=o>(</span> 30.2%<span class=o>)</span>  Parser
+</span></span><span class=line><span class=cl>    0.0006 <span class=o>(</span>  4.8%<span class=o>)</span>  <span class=s1>&#39;func.func&#39;</span> Pipeline
+</span></span><span class=line><span class=cl>    0.0001 <span class=o>(</span>  0.9%<span class=o>)</span>    CSE
+</span></span><span class=line><span class=cl>    0.0000 <span class=o>(</span>  0.1%<span class=o>)</span>      <span class=o>(</span>A<span class=o>)</span> DominanceInfo
+</span></span><span class=line><span class=cl>    0.0005 <span class=o>(</span>  3.7%<span class=o>)</span>    Canonicalizer
+</span></span><span class=line><span class=cl>    0.0017 <span class=o>(</span> 13.7%<span class=o>)</span>  ConvertFuncToLLVMPass
+</span></span><span class=line><span class=cl>    0.0001 <span class=o>(</span>  0.6%<span class=o>)</span>    <span class=o>(</span>A<span class=o>)</span> DataLayoutAnalysis
+</span></span><span class=line><span class=cl>    0.0010 <span class=o>(</span>  8.2%<span class=o>)</span>  Output
+</span></span><span class=line><span class=cl>    0.0054 <span class=o>(</span> 42.5%<span class=o>)</span>  Rest
+</span></span><span class=line><span class=cl>    0.0127 <span class=o>(</span>100.0%<span class=o>)</span>  Total
+</span></span></code></pre></div><p>The results can be displayed in JSON format via <code>-mlir-output-format=json</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -mlir-disable-threading -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm)&#39;</span> -mlir-timing -mlir-output-format<span class=o>=</span>json
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0038, <span class=s2>&#34;percentage&#34;</span>:  30.2<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Parser&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl><span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0006, <span class=s2>&#34;percentage&#34;</span>:   4.8<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;&#39;func.func&#39; Pipeline&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>  <span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0001, <span class=s2>&#34;percentage&#34;</span>:   0.9<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;CSE&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>    <span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0000, <span class=s2>&#34;percentage&#34;</span>:   0.1<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;(A) DominanceInfo&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>    <span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl>  <span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl>  <span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0005, <span class=s2>&#34;percentage&#34;</span>:   3.7<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Canonicalizer&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>  <span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0017, <span class=s2>&#34;percentage&#34;</span>:  13.7<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;ConvertFuncToLLVMPass&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>  <span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0001, <span class=s2>&#34;percentage&#34;</span>:   0.6<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;(A) DataLayoutAnalysis&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>  <span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0010, <span class=s2>&#34;percentage&#34;</span>:   8.2<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Output&#34;</span>, <span class=s2>&#34;passes&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl><span class=o>{}]}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0054, <span class=s2>&#34;percentage&#34;</span>:  42.5<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Rest&#34;</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;wall&#34;</span>: <span class=o>{</span><span class=s2>&#34;duration&#34;</span>:   0.0127, <span class=s2>&#34;percentage&#34;</span>: 100.0<span class=o>}</span>, <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;Total&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>]</span>
+</span></span></code></pre></div><h5 id=multi-threaded-pass-timing>Multi-threaded Pass Timing&nbsp;<a class=headline-hash href=#multi-threaded-pass-timing>¶</a></h5><p>When multi-threading is enabled in the pass manager the meaning of the display
+slightly changes. First, a new timing column is added, <code>User Time</code>, that
+displays the total time spent across all threads. Secondly, the <code>Wall Time</code>
+column displays the longest individual time spent amongst all of the threads.
+This means that the <code>Wall Time</code> column will continue to give an indicator on the
+perceived time, or clock time, whereas the <code>User Time</code> will display the total
+cpu time.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;builtin.module(func.func(cse,canonicalize),convert-func-to-llvm)&#39;</span>  -mlir-timing
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>                      ... Pass execution timing report ...
+</span></span><span class=line><span class=cl><span class=o>===</span>-------------------------------------------------------------------------<span class=o>===</span>
+</span></span><span class=line><span class=cl>  Total Execution Time: 0.0078 seconds
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   ---User Time---   ---Wall Time---  --- Name ---
+</span></span><span class=line><span class=cl>   0.0177 <span class=o>(</span> 88.5%<span class=o>)</span>     0.0057 <span class=o>(</span> 71.3%<span class=o>)</span>  <span class=s1>&#39;func.func&#39;</span> Pipeline
+</span></span><span class=line><span class=cl>   0.0044 <span class=o>(</span> 22.0%<span class=o>)</span>     0.0015 <span class=o>(</span> 18.9%<span class=o>)</span>    CSE
+</span></span><span class=line><span class=cl>   0.0029 <span class=o>(</span> 14.5%<span class=o>)</span>     0.0012 <span class=o>(</span> 15.2%<span class=o>)</span>      <span class=o>(</span>A<span class=o>)</span> DominanceInfo
+</span></span><span class=line><span class=cl>   0.0038 <span class=o>(</span> 18.9%<span class=o>)</span>     0.0015 <span class=o>(</span> 18.7%<span class=o>)</span>    VerifierPass
+</span></span><span class=line><span class=cl>   0.0089 <span class=o>(</span> 44.6%<span class=o>)</span>     0.0025 <span class=o>(</span> 31.1%<span class=o>)</span>    Canonicalizer
+</span></span><span class=line><span class=cl>   0.0006 <span class=o>(</span>  3.0%<span class=o>)</span>     0.0002 <span class=o>(</span>  2.6%<span class=o>)</span>    VerifierPass
+</span></span><span class=line><span class=cl>   0.0004 <span class=o>(</span>  2.2%<span class=o>)</span>     0.0004 <span class=o>(</span>  5.4%<span class=o>)</span>  VerifierPass
+</span></span><span class=line><span class=cl>   0.0013 <span class=o>(</span>  6.5%<span class=o>)</span>     0.0013 <span class=o>(</span> 16.3%<span class=o>)</span>  LLVMLoweringPass
+</span></span><span class=line><span class=cl>   0.0006 <span class=o>(</span>  2.8%<span class=o>)</span>     0.0006 <span class=o>(</span>  7.0%<span class=o>)</span>  VerifierPass
+</span></span><span class=line><span class=cl>   0.0200 <span class=o>(</span>100.0%<span class=o>)</span>     0.0081 <span class=o>(</span>100.0%<span class=o>)</span>  Total
+</span></span></code></pre></div><h4 id=ir-printing>IR Printing&nbsp;<a class=headline-hash href=#ir-printing>¶</a></h4><p>When debugging it is often useful to dump the IR at various stages of a pass
+pipeline. This is where the IR printing instrumentation comes into play. This
+instrumentation allows for conditionally printing the IR before and after pass
+execution by optionally filtering on the pass being executed. This
+instrumentation can be added directly to the PassManager via the
+<code>enableIRPrinting</code> method. <code>mlir-opt</code> provides a few useful flags for utilizing
+this instrumentation:</p><ul><li><code>mlir-print-ir-before=(comma-separated-pass-list)</code><ul><li>Print the IR before each of the passes provided within the pass list.</li></ul></li><li><code>mlir-print-ir-before-all</code><ul><li>Print the IR before every pass in the pipeline.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;func.func(cse)&#39;</span> -mlir-print-ir-before<span class=o>=</span>cse
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump Before CSE ***
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  %c1_i32_0 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32_0 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ul><li><code>mlir-print-ir-after=(comma-separated-pass-list)</code><ul><li>Print the IR after each of the passes provided within the pass list.</li></ul></li><li><code>mlir-print-ir-after-all</code><ul><li>Print the IR after every pass in the pipeline.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;func.func(cse)&#39;</span> -mlir-print-ir-after<span class=o>=</span>cse
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump After CSE ***
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ul><li><code>mlir-print-ir-after-change</code><ul><li>Only print the IR after a pass if the pass mutated the IR. This helps to
+reduce the number of IR dumps for &ldquo;uninteresting&rdquo; passes.</li><li>Note: Changes are detected by comparing a hash of the operation before
+and after the pass. This adds additional run-time to compute the hash of
+the IR, and in some rare cases may result in false-positives depending
+on the collision rate of the hash algorithm used.</li><li>Note: This option should be used in unison with one of the other
+&lsquo;mlir-print-ir-after&rsquo; options above, as this option alone does not enable
+printing.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;func.func(cse,cse)&#39;</span> -mlir-print-ir-after<span class=o>=</span>cse -mlir-print-ir-after-change
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump After CSE ***
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ul><li><code>mlir-print-ir-after-failure</code><ul><li>Only print IR after a pass failure.</li><li>This option should <em>not</em> be used with the other <code>mlir-print-ir-after</code> flags
+above.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -pass-pipeline<span class=o>=</span><span class=s1>&#39;func.func(cse,bad-pass)&#39;</span> -mlir-print-ir-after-failure
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump After BadPass Failed ***
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ul><li><code>mlir-print-ir-module-scope</code><ul><li>Always print the top-level module operation, regardless of pass type or
+operation nesting level.</li><li>Note: Printing at module scope should only be used when multi-threading
+is disabled(<code>-mlir-disable-threading</code>)</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mlir-opt foo.mlir -mlir-disable-threading -pass-pipeline<span class=o>=</span><span class=s1>&#39;func.func(cse)&#39;</span> -mlir-print-ir-after<span class=o>=</span>cse -mlir-print-ir-module-scope
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump After CSE ***  <span class=o>(</span><span class=s1>&#39;func.func&#39;</span> operation: @bar<span class=o>)</span>
+</span></span><span class=line><span class=cl>func.func @bar<span class=o>(</span>%arg0: f32, %arg1: f32<span class=o>)</span> -&gt; f32 <span class=o>{</span>
+</span></span><span class=line><span class=cl>  ...
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  %c1_i32_0 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32_0 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>*** IR Dump After CSE ***  <span class=o>(</span><span class=s1>&#39;func.func&#39;</span> operation: @simple_constant<span class=o>)</span>
+</span></span><span class=line><span class=cl>func.func @bar<span class=o>(</span>%arg0: f32, %arg1: f32<span class=o>)</span> -&gt; f32 <span class=o>{</span>
+</span></span><span class=line><span class=cl>  ...
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>func.func @simple_constant<span class=o>()</span> -&gt; <span class=o>(</span>i32, i32<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  %c1_i32 <span class=o>=</span> arith.constant <span class=m>1</span> : i32
+</span></span><span class=line><span class=cl>  <span class=k>return</span> %c1_i32, %c1_i32 : i32, i32
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ul><li><code>mlir-print-ir-tree-dir=(directory path)</code><ul><li>Without setting this option, the IR printed by the instrumentation will
+be printed to <code>stderr</code>. If you provide a directory using this option,
+the output corresponding to each pass will be printed to a file in the
+directory tree rooted at <code>(directory path)</code>. The path created for each
+pass reflects the nesting structure of the IR and the pass pipeline.</li><li>The below example illustrates the file tree created by running a pass
+pipeline on IR that has two <code>func.func</code> located within two nested
+<code>builtin.module</code> ops.</li><li>The subdirectories are given names that reflect the parent op names and
+the symbol names for those ops (if present).</li><li>The printer keeps a counter associated with ops that are targeted by
+passes and their isolated-from-above parents. Each filename is given a
+numeric prefix using the counter value for the op that the pass is
+targeting. The counter values for each parent are then prepended. This
+gives a naming where it is easy to distinguish which passes may have run
+concurrently versus which have a clear ordering. In the below example,for
+both <code>1_1_pass4.mlir</code> files, the first 1 refers to the counter for the
+parent op, and the second refers to the counter for the respective
+function.</li></ul></li></ul><pre tabindex=0><code>$ pipeline=&#34;builtin.module(pass1,pass2,func.func(pass3,pass4),pass5)&#34;
+$ mlir-opt foo.mlir -pass-pipeline=&#34;$pipeline&#34; -mlir-print-ir-tree-dir=/tmp/pipeline_output
+$ tree /tmp/pipeline_output
+
+/tmp/pass_output
+├── builtin_module_the_symbol_name
+│   ├── 0_pass1.mlir
+│   ├── 1_pass2.mlir
+│   ├── 2_pass5.mlir
+│   ├── func_func_my_func_name
+│   │   ├── 1_0_pass3.mlir
+│   │   ├── 1_1_pass4.mlir
+│   ├── func_func_my_other_func_name
+│   │   ├── 1_0_pass3.mlir
+│   │   ├── 1_1_pass4.mlir
+</code></pre><h2 id=crash-and-failure-reproduction>Crash and Failure Reproduction&nbsp;<a class=headline-hash href=#crash-and-failure-reproduction>¶</a></h2><p>The
+<a href=#pass-manager>pass manager</a> in MLIR contains a builtin mechanism to
+generate reproducibles in the event of a crash, or a
+<a href=#pass-failure>pass failure</a>. This functionality can be enabled via
+<code>PassManager::enableCrashReproducerGeneration</code> or via the command line flag
+<code>mlir-pass-pipeline-crash-reproducer</code>. In either case, an argument is provided that
+corresponds to the output <code>.mlir</code> file name that the reproducible should be
+written to. The reproducible contains the configuration of the pass manager that
+was executing, as well as the initial IR before any passes were run. The reproducer
+is stored within the assembly format as an external resource. A potential reproducible
+may have the form:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>module <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>{</span><span class=err>-#</span>
+</span></span><span class=line><span class=cl>  external_resources<span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    mlir_reproducer<span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      pipeline<span class=p>:</span> <span class=s>&#34;builtin.module(func.func(cse,canonicalize),inline)&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      disable_threading<span class=p>:</span> true<span class=p>,</span>
+</span></span><span class=line><span class=cl>      verify_each<span class=p>:</span> true
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=err>#-</span><span class=p>}</span>
+</span></span></code></pre></div><p>The configuration dumped can be passed to <code>mlir-opt</code> by specifying
+<code>-run-reproducer</code> flag. This will result in parsing the configuration of the reproducer
+and adjusting the necessary opt state, e.g. configuring the pass manager, context, etc.</p><p>Beyond specifying a filename, one can also register a <code>ReproducerStreamFactory</code>
+function that would be invoked in the case of a crash and the reproducer written
+to its stream.</p><h3 id=local-reproducer-generation>Local Reproducer Generation&nbsp;<a class=headline-hash href=#local-reproducer-generation>¶</a></h3><p>An additional flag may be passed to
+<code>PassManager::enableCrashReproducerGeneration</code>, and specified via
+<code>mlir-pass-pipeline-local-reproducer</code> on the command line, that signals that the pass
+manager should attempt to generate a &ldquo;local&rdquo; reproducer. This will attempt to
+generate a reproducer containing IR right before the pass that fails. This is
+useful for situations where the crash is known to be within a specific pass, or
+when the original input relies on components (like dialects or passes) that may
+not always be available.</p><p>Note: Local reproducer generation requires that multi-threading is
+disabled(<code>-mlir-disable-threading</code>)</p><p>For example, if the failure in the previous example came from the <code>canonicalize</code> pass,
+the following reproducer would be generated:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>module <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>{</span><span class=err>-#</span>
+</span></span><span class=line><span class=cl>  external_resources<span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    mlir_reproducer<span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      pipeline<span class=p>:</span> <span class=s>&#34;builtin.module(func.func(canonicalize))&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      disable_threading<span class=p>:</span> true<span class=p>,</span>
+</span></span><span class=line><span class=cl>      verify_each<span class=p>:</span> true
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=err>#-</span><span class=p>}</span>
+</span></span></code></pre></div><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/ title="Ownership-based Buffer Deallocation"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Ownership-based Buffer Deallocation</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Passes/ title=Passes>Next - Passes <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li class=active><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

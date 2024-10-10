@@ -1,0 +1,323 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pattern Rewriting : Generic DAG-to-DAG Rewriting - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/PatternRewriter/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Pattern Rewriting : Generic DAG-to-DAG Rewriting</h1><p><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#defining-patterns>Defining Patterns</a><ul><li><a href=#benefit>Benefit</a></li><li><a href=#root-operation-name-optional>Root Operation Name (Optional)</a></li><li><a href=#match-and-rewrite-implementation><code>match</code> and <code>rewrite</code> implementation</a></li><li><a href=#application-recursion>Application Recursion</a></li><li><a href=#debug-names-and-labels>Debug Names and Labels</a></li><li><a href=#initialization>Initialization</a></li><li><a href=#construction>Construction</a></li></ul></li><li><a href=#pattern-rewriter>Pattern Rewriter</a></li><li><a href=#pattern-application>Pattern Application</a></li><li><a href=#common-pattern-drivers>Common Pattern Drivers</a><ul><li><a href=#dialect-conversion-driver>Dialect Conversion Driver</a></li><li><a href=#greedy-pattern-rewrite-driver>Greedy Pattern Rewrite Driver</a></li><li><a href=#debugging>Debugging</a></li></ul></li><li><a href=#debugging-1>Debugging</a><ul><li><a href=#pattern-filtering>Pattern Filtering</a></li><li><a href=#common-pass-utilities>Common Pass Utilities</a></li></ul></li></ul></nav><p>This document details the design and API of the pattern rewriting infrastructure
+present in MLIR, a general DAG-to-DAG transformation framework. This framework
+is widely used throughout MLIR for canonicalization, conversion, and general
+transformation.</p><p>For an introduction to DAG-to-DAG transformation, and the rationale behind this
+framework please take a look at the
+<a href=/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Rationale</a>.</p><h2 id=introduction>Introduction&nbsp;<a class=headline-hash href=#introduction>¶</a></h2><p>The pattern rewriting framework can largely be decomposed into two parts:
+Pattern Definition and Pattern Application.</p><h2 id=defining-patterns>Defining Patterns&nbsp;<a class=headline-hash href=#defining-patterns>¶</a></h2><p>Patterns are defined by inheriting from the <code>RewritePattern</code> class. This class
+represents the base class of all rewrite patterns within MLIR, and is comprised
+of the following components:</p><h3 id=benefit>Benefit&nbsp;<a class=headline-hash href=#benefit>¶</a></h3><p>This is the expected benefit of applying a given pattern. This benefit is static
+upon construction of the pattern, but may be computed dynamically at pattern
+initialization time, e.g. allowing the benefit to be derived from domain
+specific information (like the target architecture). This limitation allows for
+performing pattern fusion and compiling patterns into an efficient state
+machine, and
+<a href="https://dl.acm.org/citation.cfm?id=3179501">Thier, Ertl, and Krall</a> have shown
+that match predicates eliminate the need for dynamically computed costs in
+almost all cases: you can simply instantiate the same pattern one time for each
+possible cost and use the predicate to guard the match.</p><h3 id=root-operation-name-optional>Root Operation Name (Optional)&nbsp;<a class=headline-hash href=#root-operation-name-optional>¶</a></h3><p>The name of the root operation that this pattern matches against. If specified,
+only operations with the given root name will be provided to the <code>match</code> and
+<code>rewrite</code> implementation. If not specified, any operation type may be provided.
+The root operation name should be provided whenever possible, because it
+simplifies the analysis of patterns when applying a cost model. To match any
+operation type, a special tag must be provided to make the intent explicit:
+<code>MatchAnyOpTypeTag</code>.</p><h3 id=match-and-rewrite-implementation><code>match</code> and <code>rewrite</code> implementation&nbsp;<a class=headline-hash href=#match-and-rewrite-implementation>¶</a></h3><p>This is the chunk of code that matches a given root <code>Operation</code> and performs a
+rewrite of the IR. A <code>RewritePattern</code> can specify this implementation either via
+separate <code>match</code> and <code>rewrite</code> methods, or via a combined <code>matchAndRewrite</code>
+method. When using the combined <code>matchAndRewrite</code> method, no IR mutation should
+take place before the match is deemed successful. The combined <code>matchAndRewrite</code>
+is useful when non-trivially recomputable information is required by the
+matching and rewriting phase. See below for examples:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyPattern</span> <span class=o>:</span> <span class=k>public</span> <span class=n>RewritePattern</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This overload constructs a pattern that only matches operations with the
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// root name of `MyOp`.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyPattern</span><span class=p>(</span><span class=n>PatternBenefit</span> <span class=n>benefit</span><span class=p>,</span> <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>RewritePattern</span><span class=p>(</span><span class=n>MyOp</span><span class=o>::</span><span class=n>getOperationName</span><span class=p>(),</span> <span class=n>benefit</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// This overload constructs a pattern that matches any operation type.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyPattern</span><span class=p>(</span><span class=n>PatternBenefit</span> <span class=n>benefit</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>RewritePattern</span><span class=p>(</span><span class=n>benefit</span><span class=p>,</span> <span class=n>MatchAnyOpTypeTag</span><span class=p>())</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// In this section, the `match` and `rewrite` implementation is specified
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// using the separate hooks.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>LogicalResult</span> <span class=nf>match</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// The `match` method returns `success()` if the pattern is a match, failure
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// otherwise.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>rewrite</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span> <span class=n>PatternRewriter</span> <span class=o>&amp;</span><span class=n>rewriter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// The `rewrite` method performs mutations on the IR rooted at `op` using
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// the provided rewriter. All mutations must go through the provided
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// rewriter.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// In this section, the `match` and `rewrite` implementation is specified
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>/// using a single hook.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>LogicalResult</span> <span class=nf>matchAndRewrite</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span> <span class=n>PatternRewriter</span> <span class=o>&amp;</span><span class=n>rewriter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// The `matchAndRewrite` method performs both the matching and the mutation.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Note that the match must reach a successful point before IR mutation may
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// take place.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><h4 id=restrictions>Restrictions&nbsp;<a class=headline-hash href=#restrictions>¶</a></h4><p>Within the <code>match</code> section of a pattern, the following constraints apply:</p><ul><li>No mutation of the IR is allowed.</li></ul><p>Within the <code>rewrite</code> section of a pattern, the following constraints apply:</p><ul><li>All IR mutations, including creation, <em>must</em> be performed by the given
+<code>PatternRewriter</code>. This class provides hooks for performing all of the
+possible mutations that may take place within a pattern. For example, this
+means that an operation should not be erased via its <code>erase</code> method. To
+erase an operation, the appropriate <code>PatternRewriter</code> hook (in this case
+<code>eraseOp</code>) should be used instead.</li><li>The root operation is required to either be: updated in-place, replaced, or
+erased.</li></ul><h3 id=application-recursion>Application Recursion&nbsp;<a class=headline-hash href=#application-recursion>¶</a></h3><p>Recursion is an important topic in the context of pattern rewrites, as a pattern
+may often be applicable to its own result. For example, imagine a pattern that
+peels a single iteration from a loop operation. If the loop has multiple
+peelable iterations, this pattern may apply multiple times during the
+application process. By looking at the implementation of this pattern, the bound
+for recursive application may be obvious, e.g. there are no peelable iterations
+within the loop, but from the perspective of the pattern driver this recursion
+is potentially dangerous. Often times the recursive application of a pattern
+indicates a bug in the matching logic. These types of bugs generally do not
+cause crashes, but create infinite loops within the application process. Given
+this, the pattern rewriting infrastructure conservatively assumes that no
+patterns have a proper bounded recursion, and will fail if recursion is
+detected. A pattern that is known to have proper support for handling recursion
+can signal this by calling <code>setHasBoundedRewriteRecursion</code> when initializing the
+pattern. This will signal to the pattern driver that recursive application of
+this pattern may happen, and the pattern is equipped to safely handle it.</p><h3 id=debug-names-and-labels>Debug Names and Labels&nbsp;<a class=headline-hash href=#debug-names-and-labels>¶</a></h3><p>To aid in debugging, patterns may specify: a debug name (via <code>setDebugName</code>),
+which should correspond to an identifier that uniquely identifies the specific
+pattern; and a set of debug labels (via <code>addDebugLabels</code>), which correspond to
+identifiers that uniquely identify groups of patterns. This information is used
+by various utilities to aid in the debugging of pattern rewrites, e.g. in debug
+logs, to provide pattern filtering, etc. A simple code example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyPattern</span> <span class=o>:</span> <span class=k>public</span> <span class=n>RewritePattern</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Inherit constructors from RewritePattern.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>RewritePattern</span><span class=o>::</span><span class=n>RewritePattern</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>initialize</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>setDebugName</span><span class=p>(</span><span class=s>&#34;MyPattern&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>addDebugLabels</span><span class=p>(</span><span class=s>&#34;MyRewritePass&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>populateMyPatterns</span><span class=p>(</span><span class=n>RewritePatternSet</span> <span class=o>&amp;</span><span class=n>patterns</span><span class=p>,</span> <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Debug labels may also be attached to patterns during insertion. This allows
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// for easily attaching common labels to groups of patterns.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>patterns</span><span class=p>.</span><span class=n>addWithLabel</span><span class=o>&lt;</span><span class=n>MyPattern</span><span class=p>,</span> <span class=p>...</span><span class=o>&gt;</span><span class=p>(</span><span class=s>&#34;MyRewritePatterns&#34;</span><span class=p>,</span> <span class=n>ctx</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=initialization>Initialization&nbsp;<a class=headline-hash href=#initialization>¶</a></h3><p>Several pieces of pattern state require explicit initialization by the pattern,
+for example setting <code>setHasBoundedRewriteRecursion</code> if a pattern safely handles
+recursive application. This pattern state can be initialized either in the
+constructor of the pattern or via the utility <code>initialize</code> hook. Using the
+<code>initialize</code> hook removes the need to redefine pattern constructors just to
+inject additional pattern state initialization. An example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyPattern</span> <span class=o>:</span> <span class=k>public</span> <span class=n>RewritePattern</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Inherit the constructors from RewritePattern.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>using</span> <span class=n>RewritePattern</span><span class=o>::</span><span class=n>RewritePattern</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Initialize the pattern.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kt>void</span> <span class=nf>initialize</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>/// Signal that this pattern safely handles recursive application.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>setHasBoundedRewriteRecursion</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>};</span>
+</span></span></code></pre></div><h3 id=construction>Construction&nbsp;<a class=headline-hash href=#construction>¶</a></h3><p>Constructing a RewritePattern should be performed by using the static
+<code>RewritePattern::create&lt;T></code> utility method. This method ensures that the pattern
+is properly initialized and prepared for insertion into a <code>RewritePatternSet</code>.</p><h2 id=pattern-rewriter>Pattern Rewriter&nbsp;<a class=headline-hash href=#pattern-rewriter>¶</a></h2><p>A <code>PatternRewriter</code> is a special class that allows for a pattern to communicate
+with the driver of pattern application. As noted above, <em>all</em> IR mutations,
+including creations, are required to be performed via the <code>PatternRewriter</code>
+class. This is required because the underlying pattern driver may have state
+that would be invalidated when a mutation takes place. Examples of some of the
+more prevalent <code>PatternRewriter</code> API is shown below, please refer to the
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/IR/PatternMatch.h#L235>class documentation</a>
+for a more up-to-date listing of the available API:</p><ul><li>Erase an Operation : <code>eraseOp</code></li></ul><p>This method erases an operation that either has no results, or whose results are
+all known to have no uses.</p><ul><li>Notify why a <code>match</code> failed : <code>notifyMatchFailure</code></li></ul><p>This method allows for providing a diagnostic message within a <code>matchAndRewrite</code>
+as to why a pattern failed to match. How this message is displayed back to the
+user is determined by the specific pattern driver.</p><ul><li>Replace an Operation : <code>replaceOp</code>/<code>replaceOpWithNewOp</code></li></ul><p>This method replaces an operation&rsquo;s results with a set of provided values, and
+erases the operation.</p><ul><li>Update an Operation in-place : <code>(start|cancel|finalize)OpModification</code></li></ul><p>This is a collection of methods that provide a transaction-like API for updating
+the attributes, location, operands, or successors of an operation in-place
+within a pattern. An in-place update transaction is started with
+<code>startOpModification</code>, and may either be canceled or finalized with
+<code>cancelOpModification</code> and <code>finalizeOpModification</code> respectively. A convenience
+wrapper, <code>modifyOpInPlace</code>, is provided that wraps a <code>start</code> and <code>finalize</code>
+around a callback.</p><ul><li>OpBuilder API</li></ul><p>The <code>PatternRewriter</code> inherits from the <code>OpBuilder</code> class, and thus provides all
+of the same functionality present within an <code>OpBuilder</code>. This includes operation
+creation, as well as many useful attribute and type construction methods.</p><h2 id=pattern-application>Pattern Application&nbsp;<a class=headline-hash href=#pattern-application>¶</a></h2><p>After a set of patterns have been defined, they are collected and provided to a
+specific driver for application. A driver consists of several high level parts:</p><ul><li>Input <code>RewritePatternSet</code></li></ul><p>The input patterns to a driver are provided in the form of an
+<code>RewritePatternSet</code>. This class provides a simplified API for building a
+list of patterns.</p><ul><li>Driver-specific <code>PatternRewriter</code></li></ul><p>To ensure that the driver state does not become invalidated by IR mutations
+within the pattern rewriters, a driver must provide a <code>PatternRewriter</code> instance
+with the necessary hooks overridden. If a driver does not need to hook into
+certain mutations, a default implementation is provided that will perform the
+mutation directly.</p><ul><li>Pattern Application and Cost Model</li></ul><p>Each driver is responsible for defining its own operation visitation order as
+well as pattern cost model, but the final application is performed via a
+<code>PatternApplicator</code> class. This class takes as input the
+<code>RewritePatternSet</code> and transforms the patterns based upon a provided
+cost model. This cost model computes a final benefit for a given pattern, using
+whatever driver specific information necessary. After a cost model has been
+computed, the driver may begin to match patterns against operations using
+<code>PatternApplicator::matchAndRewrite</code>.</p><p>An example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>MyPattern</span> <span class=o>:</span> <span class=k>public</span> <span class=n>RewritePattern</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPattern</span><span class=p>(</span><span class=n>PatternBenefit</span> <span class=n>benefit</span><span class=p>,</span> <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>RewritePattern</span><span class=p>(</span><span class=n>MyOp</span><span class=o>::</span><span class=n>getOperationName</span><span class=p>(),</span> <span class=n>benefit</span><span class=p>,</span> <span class=n>context</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Populate the pattern list.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>collectMyPatterns</span><span class=p>(</span><span class=n>RewritePatternSet</span> <span class=o>&amp;</span><span class=n>patterns</span><span class=p>,</span> <span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>patterns</span><span class=p>.</span><span class=n>add</span><span class=o>&lt;</span><span class=n>MyPattern</span><span class=o>&gt;</span><span class=p>(</span><span class=cm>/*benefit=*/</span><span class=mi>1</span><span class=p>,</span> <span class=n>ctx</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Define a custom PatternRewriter for use by the driver.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>class</span> <span class=nc>MyPatternRewriter</span> <span class=o>:</span> <span class=k>public</span> <span class=n>PatternRewriter</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>MyPatternRewriter</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>ctx</span><span class=p>)</span> <span class=o>:</span> <span class=n>PatternRewriter</span><span class=p>(</span><span class=n>ctx</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>/// Override the necessary PatternRewriter hooks here.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>/// Apply the custom driver to `op`.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>applyMyPatternDriver</span><span class=p>(</span><span class=n>Operation</span> <span class=o>*</span><span class=n>op</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=k>const</span> <span class=n>FrozenRewritePatternSet</span> <span class=o>&amp;</span><span class=n>patterns</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Initialize the custom PatternRewriter.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>MyPatternRewriter</span> <span class=n>rewriter</span><span class=p>(</span><span class=n>op</span><span class=o>-&gt;</span><span class=n>getContext</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Create the applicator and apply our cost model.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>PatternApplicator</span> <span class=n>applicator</span><span class=p>(</span><span class=n>patterns</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>applicator</span><span class=p>.</span><span class=n>applyCostModel</span><span class=p>([](</span><span class=k>const</span> <span class=n>Pattern</span> <span class=o>&amp;</span><span class=n>pattern</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Apply a default cost model.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Note: This is just for demonstration, if the default cost model is truly
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>//       desired `applicator.applyDefaultCostModel()` should be used
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>//       instead.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=n>pattern</span><span class=p>.</span><span class=n>getBenefit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Try to match and apply a pattern.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>LogicalResult</span> <span class=n>result</span> <span class=o>=</span> <span class=n>applicator</span><span class=p>.</span><span class=n>matchAndRewrite</span><span class=p>(</span><span class=n>op</span><span class=p>,</span> <span class=n>rewriter</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>failed</span><span class=p>(</span><span class=n>result</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// ... No patterns were applied.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// ... A pattern was successfully applied.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></div><h2 id=common-pattern-drivers>Common Pattern Drivers&nbsp;<a class=headline-hash href=#common-pattern-drivers>¶</a></h2><p>MLIR provides several common pattern drivers that serve a variety of different
+use cases.</p><h3 id=dialect-conversion-driver>Dialect Conversion Driver&nbsp;<a class=headline-hash href=#dialect-conversion-driver>¶</a></h3><p>This driver provides a framework in which to perform operation conversions
+between, and within dialects using a concept of &ldquo;legality&rdquo;. This framework
+allows for transforming illegal operations to those supported by a provided
+conversion target, via a set of pattern-based operation rewriting patterns. This
+framework also provides support for type conversions. More information on this
+driver can be found
+<a href=/docs/DialectConversion/>here</a>.</p><h3 id=greedy-pattern-rewrite-driver>Greedy Pattern Rewrite Driver&nbsp;<a class=headline-hash href=#greedy-pattern-rewrite-driver>¶</a></h3><p>This driver processes ops in a worklist-driven fashion and greedily applies the
+patterns that locally have the most benefit. The benefit of a pattern is decided
+solely by the benefit specified on the pattern, and the relative order of the
+pattern within the pattern list (when two patterns have the same local benefit).
+Patterns are iteratively applied to operations until a fixed point is reached or
+until the configurable maximum number of iterations exhausted, at which point
+the driver finishes.</p><p>This driver comes in two fashions:</p><ul><li><code>applyPatternsAndFoldGreedily</code> (&ldquo;region-based driver&rdquo;) applies patterns to
+all ops in a given region or a given container op (but not the container op
+itself). I.e., the worklist is initialized with all containing ops.</li><li><code>applyOpPatternsAndFold</code> (&ldquo;op-based driver&rdquo;) applies patterns to the
+provided list of operations. I.e., the worklist is initialized with the
+specified list of ops.</li></ul><p>The driver is configurable via <code>GreedyRewriteConfig</code>. The region-based driver
+supports two modes for populating the initial worklist:</p><ul><li>Top-down traversal: Traverse the container op/region top down and in
+pre-order. This is generally more efficient in compile time.</li><li>Bottom-up traversal: This is the default setting. It builds the initial
+worklist with a postorder traversal and then reverses the worklist. This may
+match larger patterns with ambiguous pattern sets.</li></ul><p>By default, ops that were modified in-place and newly created are added back to
+the worklist. Ops that are outside of the configurable &ldquo;scope&rdquo; of the driver are
+not added to the worklist. Furthermore, &ldquo;strict mode&rdquo; can exclude certain ops
+from being added to the worklist throughout the rewrite process:</p><ul><li><code>GreedyRewriteStrictness::AnyOp</code>: No ops are excluded (apart from the ones
+that are out of scope).</li><li><code>GreedyRewriteStrictness::ExistingAndNewOps</code>: Only pre-existing ops (with
+which the worklist was initialized) and newly created ops are added to the
+worklist.</li><li><code>GreedyRewriteStrictness::ExistingOps</code>: Only pre-existing ops (with which
+the worklist was initialized) are added to the worklist.</li></ul><p>Note: This driver listens for IR changes via the callbacks provided by
+<code>RewriterBase</code>. It is important that patterns announce all IR changes to the
+rewriter and do not bypass the rewriter API by modifying ops directly.</p><p>Note: This driver is the one used by the
+<a href=/docs/Canonicalization/>canonicalization</a>
+<a href=/docs/Passes/#-canonicalize>pass</a> in MLIR.</p><h3 id=debugging>Debugging&nbsp;<a class=headline-hash href=#debugging>¶</a></h3><p>To debug the execution of the greedy pattern rewrite driver,
+<code>-debug-only=greedy-rewriter</code> may be used. This command line flag activates
+LLVM&rsquo;s debug logging infrastructure solely for the greedy pattern rewriter. The
+output is formatted as a tree structure, mirroring the structure of the pattern
+application process. This output contains all of the actions performed by the
+rewriter, how operations get processed and patterns are applied, and why they
+fail.</p><p>Example output is shown below:</p><pre tabindex=0><code>//===-------------------------------------------===//
+Processing operation : &#39;cf.cond_br&#39;(0x60f000001120) {
+  &#34;cf.cond_br&#34;(%arg0)[^bb2, ^bb2] {operandSegmentSizes = array&lt;i32: 1, 0, 0&gt;} : (i1) -&gt; ()
+
+  * Pattern SimplifyConstCondBranchPred : &#39;cf.cond_br -&gt; ()&#39; {
+  } -&gt; failure : pattern failed to match
+
+  * Pattern SimplifyCondBranchIdenticalSuccessors : &#39;cf.cond_br -&gt; ()&#39; {
+    ** Insert  : &#39;cf.br&#39;(0x60b000003690)
+    ** Replace : &#39;cf.cond_br&#39;(0x60f000001120)
+  } -&gt; success : pattern applied successfully
+} -&gt; success : pattern matched
+//===-------------------------------------------===//
+</code></pre><p>This output is describing the processing of a <code>cf.cond_br</code> operation. We first
+try to apply the <code>SimplifyConstCondBranchPred</code>, which fails. From there, another
+pattern (<code>SimplifyCondBranchIdenticalSuccessors</code>) is applied that matches the
+<code>cf.cond_br</code> and replaces it with a <code>cf.br</code>.</p><h2 id=debugging-1>Debugging&nbsp;<a class=headline-hash href=#debugging-1>¶</a></h2><h3 id=pattern-filtering>Pattern Filtering&nbsp;<a class=headline-hash href=#pattern-filtering>¶</a></h3><p>To simplify test case definition and reduction, the <code>FrozenRewritePatternSet</code>
+class provides built-in support for filtering which patterns should be provided
+to the pattern driver for application. Filtering behavior is specified by
+providing a <code>disabledPatterns</code> and <code>enabledPatterns</code> list when constructing the
+<code>FrozenRewritePatternSet</code>. The <code>disabledPatterns</code> list should contain a set of
+debug names or labels for patterns that are disabled during pattern application,
+i.e. which patterns should be filtered out. The <code>enabledPatterns</code> list should
+contain a set of debug names or labels for patterns that are enabled during
+pattern application, patterns that do not satisfy this constraint are filtered
+out. Note that patterns specified by the <code>disabledPatterns</code> list will be
+filtered out even if they match criteria in the <code>enabledPatterns</code> list. An
+example is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyPass</span><span class=o>::</span><span class=n>initialize</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// No patterns are explicitly disabled.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>SmallVector</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>string</span><span class=o>&gt;</span> <span class=n>disabledPatterns</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Enable only patterns with a debug name or label of `MyRewritePatterns`.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>SmallVector</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>string</span><span class=o>&gt;</span> <span class=n>enabledPatterns</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=s>&#34;MyRewritePatterns&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>RewritePatternSet</span> <span class=nf>rewritePatterns</span><span class=p>(</span><span class=n>context</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>frozenPatterns</span> <span class=o>=</span> <span class=n>FrozenRewritePatternSet</span><span class=p>(</span><span class=n>rewritePatterns</span><span class=p>,</span> <span class=n>disabledPatterns</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                           <span class=n>enabledPatterns</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=common-pass-utilities>Common Pass Utilities&nbsp;<a class=headline-hash href=#common-pass-utilities>¶</a></h3><p>Passes that utilize rewrite patterns should aim to provide a common set of
+options and toggles to simplify the debugging experience when switching between
+different passes/projects/etc. To aid in this endeavor, MLIR provides a common
+set of utilities that can be easily included when defining a custom pass. These
+are defined in <code>mlir/RewritePassUtil.td</code>; an example usage is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>MyRewritePass</span> <span class=p>:</span> <span class=nv>Pass</span><span class=p>&lt;</span><span class=s>&#34;...&#34;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;...&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>constructor</span> <span class=p>=</span> <span class=s>&#34;createMyRewritePass()&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Inherit the common pattern rewrite options from `RewritePassUtils`.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>options</span> <span class=p>=</span> <span class=nv>RewritePassUtils</span><span class=p>.</span><span class=nv>options</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h4 id=rewrite-pass-options>Rewrite Pass Options&nbsp;<a class=headline-hash href=#rewrite-pass-options>¶</a></h4><p>This section documents common pass options that are useful for controlling the
+behavior of rewrite pattern application.</p><h5 id=pattern-filtering-1>Pattern Filtering&nbsp;<a class=headline-hash href=#pattern-filtering-1>¶</a></h5><p>Two common pattern filtering options are exposed, <code>disable-patterns</code> and
+<code>enable-patterns</code>, matching the behavior of the <code>disabledPatterns</code> and
+<code>enabledPatterns</code> lists described in the
+<a href=#pattern-filtering>Pattern Filtering</a>
+section above. A snippet of the tablegen definition of these options is shown
+below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=nv>ListOption</span><span class=p>&lt;</span><span class=s>&#34;disabledPatterns&#34;</span><span class=p>,</span> <span class=s>&#34;disable-patterns&#34;</span><span class=p>,</span> <span class=s>&#34;std::string&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;Labels of patterns that should be filtered out during application&#34;</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl><span class=nv>ListOption</span><span class=p>&lt;</span><span class=s>&#34;enabledPatterns&#34;</span><span class=p>,</span> <span class=s>&#34;enable-patterns&#34;</span><span class=p>,</span> <span class=s>&#34;std::string&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;Labels of patterns that should be used during application, all &#34;</span>
+</span></span><span class=line><span class=cl>           <span class=s>&#34;other patterns are filtered out&#34;</span><span class=p>&gt;,</span>
+</span></span></code></pre></div><p>These options may be used to provide filtering behavior when constructing any
+<code>FrozenRewritePatternSet</code>s within the pass:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=n>MyRewritePass</span><span class=o>::</span><span class=n>initialize</span><span class=p>(</span><span class=n>MLIRContext</span> <span class=o>*</span><span class=n>context</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>RewritePatternSet</span> <span class=nf>rewritePatterns</span><span class=p>(</span><span class=n>context</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=c1>// When constructing the `FrozenRewritePatternSet`, we provide the filter
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// list options.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>frozenPatterns</span> <span class=o>=</span> <span class=n>FrozenRewritePatternSet</span><span class=p>(</span><span class=n>rewritePatterns</span><span class=p>,</span> <span class=n>disabledPatterns</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                           <span class=n>enabledPatterns</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Passes/ title=Passes><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Passes</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/PDLL/ title="PDLL - PDL Language">Next - PDLL - PDL Language <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li class=active><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

@@ -1,0 +1,974 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>ODS Documentation - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>ODS Documentation</h1><p><nav id=TableOfContents><ul><li><a href=#operations>Operations</a><ul><li><a href=#ompatomiccapture-ompatomiccaptureop><code>omp.atomic.capture</code> (omp::AtomicCaptureOp)</a></li><li><a href=#ompatomicread-ompatomicreadop><code>omp.atomic.read</code> (omp::AtomicReadOp)</a></li><li><a href=#ompatomicupdate-ompatomicupdateop><code>omp.atomic.update</code> (omp::AtomicUpdateOp)</a></li><li><a href=#ompatomicwrite-ompatomicwriteop><code>omp.atomic.write</code> (omp::AtomicWriteOp)</a></li><li><a href=#ompbarrier-ompbarrierop><code>omp.barrier</code> (omp::BarrierOp)</a></li><li><a href=#ompcancel-ompcancelop><code>omp.cancel</code> (omp::CancelOp)</a></li><li><a href=#ompcancellation_point-ompcancellationpointop><code>omp.cancellation_point</code> (omp::CancellationPointOp)</a></li><li><a href=#ompcritical-ompcriticalop><code>omp.critical</code> (omp::CriticalOp)</a></li><li><a href=#ompcriticaldeclare-ompcriticaldeclareop><code>omp.critical.declare</code> (omp::CriticalDeclareOp)</a></li><li><a href=#ompdeclare_reduction-ompdeclarereductionop><code>omp.declare_reduction</code> (omp::DeclareReductionOp)</a></li><li><a href=#ompdistribute-ompdistributeop><code>omp.distribute</code> (omp::DistributeOp)</a></li><li><a href=#ompflush-ompflushop><code>omp.flush</code> (omp::FlushOp)</a></li><li><a href=#omploop_nest-omploopnestop><code>omp.loop_nest</code> (omp::LoopNestOp)</a></li><li><a href=#ompmapbounds-ompmapboundsop><code>omp.map.bounds</code> (omp::MapBoundsOp)</a></li><li><a href=#ompmapinfo-ompmapinfoop><code>omp.map.info</code> (omp::MapInfoOp)</a></li><li><a href=#ompmasked-ompmaskedop><code>omp.masked</code> (omp::MaskedOp)</a></li><li><a href=#ompmaster-ompmasterop><code>omp.master</code> (omp::MasterOp)</a></li><li><a href=#ompordered-omporderedop><code>omp.ordered</code> (omp::OrderedOp)</a></li><li><a href=#omporderedregion-omporderedregionop><code>omp.ordered.region</code> (omp::OrderedRegionOp)</a></li><li><a href=#ompparallel-ompparallelop><code>omp.parallel</code> (omp::ParallelOp)</a></li><li><a href=#ompprivate-ompprivateclauseop><code>omp.private</code> (omp::PrivateClauseOp)</a></li><li><a href=#ompsection-ompsectionop><code>omp.section</code> (omp::SectionOp)</a></li><li><a href=#ompsections-ompsectionsop><code>omp.sections</code> (omp::SectionsOp)</a></li><li><a href=#ompsimd-ompsimdop><code>omp.simd</code> (omp::SimdOp)</a></li><li><a href=#ompsingle-ompsingleop><code>omp.single</code> (omp::SingleOp)</a></li><li><a href=#omptarget-omptargetop><code>omp.target</code> (omp::TargetOp)</a></li><li><a href=#omptarget_data-omptargetdataop><code>omp.target_data</code> (omp::TargetDataOp)</a></li><li><a href=#omptarget_enter_data-omptargetenterdataop><code>omp.target_enter_data</code> (omp::TargetEnterDataOp)</a></li><li><a href=#omptarget_exit_data-omptargetexitdataop><code>omp.target_exit_data</code> (omp::TargetExitDataOp)</a></li><li><a href=#omptarget_update-omptargetupdateop><code>omp.target_update</code> (omp::TargetUpdateOp)</a></li><li><a href=#omptask-omptaskop><code>omp.task</code> (omp::TaskOp)</a></li><li><a href=#omptaskgroup-omptaskgroupop><code>omp.taskgroup</code> (omp::TaskgroupOp)</a></li><li><a href=#omptaskloop-omptaskloopop><code>omp.taskloop</code> (omp::TaskloopOp)</a></li><li><a href=#omptaskwait-omptaskwaitop><code>omp.taskwait</code> (omp::TaskwaitOp)</a></li><li><a href=#omptaskyield-omptaskyieldop><code>omp.taskyield</code> (omp::TaskyieldOp)</a></li><li><a href=#ompteams-ompteamsop><code>omp.teams</code> (omp::TeamsOp)</a></li><li><a href=#ompterminator-ompterminatorop><code>omp.terminator</code> (omp::TerminatorOp)</a></li><li><a href=#ompthreadprivate-ompthreadprivateop><code>omp.threadprivate</code> (omp::ThreadprivateOp)</a></li><li><a href=#ompwsloop-ompwsloopop><code>omp.wsloop</code> (omp::WsloopOp)</a></li><li><a href=#ompyield-ompyieldop><code>omp.yield</code> (omp::YieldOp)</a></li></ul></li><li><a href=#attributes-30>Attributes</a><ul><li><a href=#clausecancellationconstructtypeattr>ClauseCancellationConstructTypeAttr</a></li><li><a href=#clausedependattr>ClauseDependAttr</a></li><li><a href=#clauserequiresattr>ClauseRequiresAttr</a></li><li><a href=#clausetaskdependattr>ClauseTaskDependAttr</a></li><li><a href=#datasharingclausetypeattr>DataSharingClauseTypeAttr</a></li><li><a href=#declaretargetattr>DeclareTargetAttr</a></li><li><a href=#declaretargetcaptureclauseattr>DeclareTargetCaptureClauseAttr</a></li><li><a href=#declaretargetdevicetypeattr>DeclareTargetDeviceTypeAttr</a></li><li><a href=#flagsattr>FlagsAttr</a></li><li><a href=#clausegrainsizetypeattr>ClauseGrainsizeTypeAttr</a></li><li><a href=#clausememoryorderkindattr>ClauseMemoryOrderKindAttr</a></li><li><a href=#clausenumtaskstypeattr>ClauseNumTasksTypeAttr</a></li><li><a href=#clauseorderkindattr>ClauseOrderKindAttr</a></li><li><a href=#ordermodifierattr>OrderModifierAttr</a></li><li><a href=#clauseprocbindkindattr>ClauseProcBindKindAttr</a></li><li><a href=#clauseschedulekindattr>ClauseScheduleKindAttr</a></li><li><a href=#schedulemodifierattr>ScheduleModifierAttr</a></li><li><a href=#variablecapturekindattr>VariableCaptureKindAttr</a></li><li><a href=#versionattr>VersionAttr</a></li></ul></li><li><a href=#types>Types</a><ul><li><a href=#mapboundstype>MapBoundsType</a></li></ul></li><li><a href=#enums>Enums</a><ul><li><a href=#clausecancellationconstructtype>ClauseCancellationConstructType</a></li><li><a href=#clausedepend>ClauseDepend</a></li><li><a href=#clauserequires>ClauseRequires</a></li><li><a href=#clausetaskdepend>ClauseTaskDepend</a></li><li><a href=#datasharingclausetype>DataSharingClauseType</a></li><li><a href=#declaretargetcaptureclause>DeclareTargetCaptureClause</a></li><li><a href=#declaretargetdevicetype>DeclareTargetDeviceType</a></li><li><a href=#clausegrainsizetype>ClauseGrainsizeType</a></li><li><a href=#clausememoryorderkind>ClauseMemoryOrderKind</a></li><li><a href=#clausenumtaskstype>ClauseNumTasksType</a></li><li><a href=#clauseorderkind>ClauseOrderKind</a></li><li><a href=#ordermodifier>OrderModifier</a></li><li><a href=#clauseprocbindkind>ClauseProcBindKind</a></li><li><a href=#clauseschedulekind>ClauseScheduleKind</a></li><li><a href=#schedulemodifier>ScheduleModifier</a></li><li><a href=#variablecapturekind>VariableCaptureKind</a></li></ul></li></ul></nav><h2 id=operations>Operations&nbsp;<a class=headline-hash href=#operations>¶</a></h2><p><a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPOps.td>source</a></p><h3 id=ompatomiccapture-ompatomiccaptureop><code>omp.atomic.capture</code> (omp::AtomicCaptureOp)&nbsp;<a class=headline-hash href=#ompatomiccapture-ompatomiccaptureop>¶</a></h3><p><em>Performs an atomic capture</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.atomic.capture` oilist(
+              `hint` `(` custom&lt;SynchronizationHint&gt;($hint) `)`
+              |
+              `memory_order` `(` custom&lt;ClauseAttr&gt;($memory_order) `)`
+              ) $region attr-dict
+</code></pre><p>This operation performs an atomic capture.</p><p>The region has the following allowed forms:</p><pre tabindex=0><code>  omp.atomic.capture {
+    omp.atomic.update ...
+    omp.atomic.read ...
+    omp.terminator
+  }
+
+  omp.atomic.capture {
+    omp.atomic.read ...
+    omp.atomic.update ...
+    omp.terminator
+  }
+
+  omp.atomic.capture {
+    omp.atomic.read ...
+    omp.atomic.write ...
+    omp.terminator
+  }
+</code></pre><p><code>hint</code> is the value of hint (as specified in the hint clause). It is a
+compile time constant. As the name suggests, this is just a hint for
+optimization.</p><p><code>memory_order</code> indicates the memory ordering behavior of the construct. It
+can be one of <code>seq_cst</code>, <code>acq_rel</code>, <code>release</code>, <code>acquire</code> or <code>relaxed</code>.</p><p>Traits: <code>RecursiveMemoryEffects</code>, <code>SingleBlockImplicitTerminator&lt;TerminatorOp></code>, <code>SingleBlock</code></p><p>Interfaces: <code>AtomicCaptureOpInterface</code></p><h4 id=attributes>Attributes:&nbsp;<a class=headline-hash href=#attributes>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>hint</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr><tr><td><code>memory_order</code></td><td>::mlir::omp::ClauseMemoryOrderKindAttr</td><td><details><summary>MemoryOrderKind Clause</summary><p>Enum cases:</p><ul><li>seq_cst (<code>Seq_cst</code>)</li><li>acq_rel (<code>Acq_rel</code>)</li><li>acquire (<code>Acquire</code>)</li><li>release (<code>Release</code>)</li><li>relaxed (<code>Relaxed</code>)</li></ul></details></td></tr></table><h3 id=ompatomicread-ompatomicreadop><code>omp.atomic.read</code> (omp::AtomicReadOp)&nbsp;<a class=headline-hash href=#ompatomicread-ompatomicreadop>¶</a></h3><p><em>Performs an atomic read</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.atomic.read` $v `=` $x oilist(
+              `hint` `(` custom&lt;SynchronizationHint&gt;($hint) `)`
+              |
+              `memory_order` `(` custom&lt;ClauseAttr&gt;($memory_order) `)`
+              ) `:` type($x) `,` $element_type attr-dict
+</code></pre><p>This operation performs an atomic read.</p><p>The operand <code>x</code> is the address from where the value is atomically read.
+The operand <code>v</code> is the address where the value is stored after reading.</p><p><code>hint</code> is the value of hint (as specified in the hint clause). It is a
+compile time constant. As the name suggests, this is just a hint for
+optimization.</p><p><code>memory_order</code> indicates the memory ordering behavior of the construct. It
+can be one of <code>seq_cst</code>, <code>acq_rel</code>, <code>release</code>, <code>acquire</code> or <code>relaxed</code>.</p><p>Interfaces: <code>AtomicReadOpInterface</code></p><h4 id=attributes-1>Attributes:&nbsp;<a class=headline-hash href=#attributes-1>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>element_type</code></td><td>::mlir::TypeAttr</td><td>any type attribute</td></tr><tr><td><code>hint</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr><tr><td><code>memory_order</code></td><td>::mlir::omp::ClauseMemoryOrderKindAttr</td><td><details><summary>MemoryOrderKind Clause</summary><p>Enum cases:</p><ul><li>seq_cst (<code>Seq_cst</code>)</li><li>acq_rel (<code>Acq_rel</code>)</li><li>acquire (<code>Acquire</code>)</li><li>release (<code>Release</code>)</li><li>relaxed (<code>Relaxed</code>)</li></ul></details></td></tr></table><h4 id=operands>Operands:&nbsp;<a class=headline-hash href=#operands>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>x</code></td><td>OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>v</code></td><td>OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompatomicupdate-ompatomicupdateop><code>omp.atomic.update</code> (omp::AtomicUpdateOp)&nbsp;<a class=headline-hash href=#ompatomicupdate-ompatomicupdateop>¶</a></h3><p><em>Performs an atomic update</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.atomic.update` oilist(
+              `hint` `(` custom&lt;SynchronizationHint&gt;($hint) `)`
+              |
+              `memory_order` `(` custom&lt;ClauseAttr&gt;($memory_order) `)`
+              )$x `:` type($x) $region attr-dict
+</code></pre><p>This operation performs an atomic update.</p><p>The operand <code>x</code> is exactly the same as the operand <code>x</code> in the OpenMP
+Standard (OpenMP 5.0, section 2.17.7). It is the address of the variable
+that is being updated. <code>x</code> is atomically read/written.</p><p>The region describes how to update the value of <code>x</code>. It takes the value at
+<code>x</code> as an input and must yield the updated value. Only the update to <code>x</code> is
+atomic. Generally the region must have only one instruction, but can
+potentially have more than one instructions too. The update is sematically
+similar to a compare-exchange loop based atomic update.</p><p>The syntax of atomic update operation is different from atomic read and
+atomic write operations. This is because only the host dialect knows how to
+appropriately update a value. For example, while generating LLVM IR, if
+there are no special <code>atomicrmw</code> instructions for the operation-type
+combination in atomic update, a compare-exchange loop is generated, where
+the core update operation is directly translated like regular operations by
+the host dialect. The front-end must handle semantic checks for allowed
+operations.</p><p><code>hint</code> is the value of hint (as specified in the hint clause). It is a
+compile time constant. As the name suggests, this is just a hint for
+optimization.</p><p><code>memory_order</code> indicates the memory ordering behavior of the construct. It
+can be one of <code>seq_cst</code>, <code>acq_rel</code>, <code>release</code>, <code>acquire</code> or <code>relaxed</code>.</p><p>Traits: <code>RecursiveMemoryEffects</code>, <code>SingleBlockImplicitTerminator&lt;YieldOp></code>, <code>SingleBlock</code></p><p>Interfaces: <code>AtomicUpdateOpInterface</code></p><h4 id=attributes-2>Attributes:&nbsp;<a class=headline-hash href=#attributes-2>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>hint</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr><tr><td><code>memory_order</code></td><td>::mlir::omp::ClauseMemoryOrderKindAttr</td><td><details><summary>MemoryOrderKind Clause</summary><p>Enum cases:</p><ul><li>seq_cst (<code>Seq_cst</code>)</li><li>acq_rel (<code>Acq_rel</code>)</li><li>acquire (<code>Acquire</code>)</li><li>release (<code>Release</code>)</li><li>relaxed (<code>Relaxed</code>)</li></ul></details></td></tr></table><h4 id=operands-1>Operands:&nbsp;<a class=headline-hash href=#operands-1>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>x</code></td><td>OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompatomicwrite-ompatomicwriteop><code>omp.atomic.write</code> (omp::AtomicWriteOp)&nbsp;<a class=headline-hash href=#ompatomicwrite-ompatomicwriteop>¶</a></h3><p><em>Performs an atomic write</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.atomic.write` $x `=` $expr oilist(
+              `hint` `(` custom&lt;SynchronizationHint&gt;($hint) `)`
+              |
+              `memory_order` `(` custom&lt;ClauseAttr&gt;($memory_order) `)`
+              ) `:` type($x) `,` type($expr) attr-dict
+</code></pre><p>This operation performs an atomic write.</p><p>The operand <code>x</code> is the address to where the <code>expr</code> is atomically
+written w.r.t. multiple threads. The evaluation of <code>expr</code> need not be
+atomic w.r.t. the write to address. In general, the type(x) must
+dereference to type(expr).</p><p><code>hint</code> is the value of hint (as specified in the hint clause). It is a
+compile time constant. As the name suggests, this is just a hint for
+optimization.</p><p><code>memory_order</code> indicates the memory ordering behavior of the construct. It
+can be one of <code>seq_cst</code>, <code>acq_rel</code>, <code>release</code>, <code>acquire</code> or <code>relaxed</code>.</p><p>Interfaces: <code>AtomicWriteOpInterface</code></p><h4 id=attributes-3>Attributes:&nbsp;<a class=headline-hash href=#attributes-3>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>hint</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr><tr><td><code>memory_order</code></td><td>::mlir::omp::ClauseMemoryOrderKindAttr</td><td><details><summary>MemoryOrderKind Clause</summary><p>Enum cases:</p><ul><li>seq_cst (<code>Seq_cst</code>)</li><li>acq_rel (<code>Acq_rel</code>)</li><li>acquire (<code>Acquire</code>)</li><li>release (<code>Release</code>)</li><li>relaxed (<code>Relaxed</code>)</li></ul></details></td></tr></table><h4 id=operands-2>Operands:&nbsp;<a class=headline-hash href=#operands-2>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>x</code></td><td>OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>expr</code></td><td>any type</td></tr></tbody></table><h3 id=ompbarrier-ompbarrierop><code>omp.barrier</code> (omp::BarrierOp)&nbsp;<a class=headline-hash href=#ompbarrier-ompbarrierop>¶</a></h3><p><em>Barrier construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.barrier` attr-dict
+</code></pre><p>The barrier construct specifies an explicit barrier at the point at which
+the construct appears.</p><h3 id=ompcancel-ompcancelop><code>omp.cancel</code> (omp::CancelOp)&nbsp;<a class=headline-hash href=#ompcancel-ompcancelop>¶</a></h3><p><em>Cancel directive</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.cancel` `cancellation_construct_type` `(`
+              custom&lt;ClauseAttr&gt;($cancel_directive) `)`
+              oilist(
+              `if` `(` $if_expr `)`
+              ) attr-dict
+</code></pre><p>The cancel construct activates cancellation of the innermost enclosing
+region of the type specified.</p><h4 id=attributes-4>Attributes:&nbsp;<a class=headline-hash href=#attributes-4>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>cancel_directive</code></td><td>::mlir::omp::ClauseCancellationConstructTypeAttr</td><td><details><summary>CancellationConstructType Clause</summary><p>Enum cases:</p><ul><li>parallel (<code>Parallel</code>)</li><li>loop (<code>Loop</code>)</li><li>sections (<code>Sections</code>)</li><li>taskgroup (<code>Taskgroup</code>)</li></ul></details></td></tr></table><h4 id=operands-3>Operands:&nbsp;<a class=headline-hash href=#operands-3>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr></tbody></table><h3 id=ompcancellation_point-ompcancellationpointop><code>omp.cancellation_point</code> (omp::CancellationPointOp)&nbsp;<a class=headline-hash href=#ompcancellation_point-ompcancellationpointop>¶</a></h3><p><em>Cancellation point directive</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.cancellation_point` `cancellation_construct_type` `(`
+              custom&lt;ClauseAttr&gt;($cancel_directive) `)`
+              attr-dict
+</code></pre><p>The cancellation point construct introduces a user-defined cancellation
+point at which implicit or explicit tasks check if cancellation of the
+innermost enclosing region of the type specified has been activated.</p><h4 id=attributes-5>Attributes:&nbsp;<a class=headline-hash href=#attributes-5>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>cancel_directive</code></td><td>::mlir::omp::ClauseCancellationConstructTypeAttr</td><td><details><summary>CancellationConstructType Clause</summary><p>Enum cases:</p><ul><li>parallel (<code>Parallel</code>)</li><li>loop (<code>Loop</code>)</li><li>sections (<code>Sections</code>)</li><li>taskgroup (<code>Taskgroup</code>)</li></ul></details></td></tr></table><h3 id=ompcritical-ompcriticalop><code>omp.critical</code> (omp::CriticalOp)&nbsp;<a class=headline-hash href=#ompcritical-ompcriticalop>¶</a></h3><p><em>Critical construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.critical` (`(` $name^ `)`)? $region attr-dict
+</code></pre><p>The critical construct imposes a restriction on the associated structured
+block (region) to be executed by only a single thread at a time.</p><p>The optional <code>name</code> argument of critical constructs is used to identify
+them. Unnamed critical constructs behave as though an identical name was
+specified.</p><p>Interfaces: <code>SymbolUserOpInterface</code></p><h4 id=attributes-6>Attributes:&nbsp;<a class=headline-hash href=#attributes-6>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>name</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr></table><h3 id=ompcriticaldeclare-ompcriticaldeclareop><code>omp.critical.declare</code> (omp::CriticalDeclareOp)&nbsp;<a class=headline-hash href=#ompcriticaldeclare-ompcriticaldeclareop>¶</a></h3><p><em>Declares a named critical section.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.critical.declare` $sym_name oilist(
+              `hint` `(` custom&lt;SynchronizationHint&gt;($hint) `)`
+              ) attr-dict
+</code></pre><p>Declares a named critical section.</p><p>The <code>sym_name</code> can be used in <code>omp.critical</code> constructs in the dialect.</p><p><code>hint</code> is the value of hint (as specified in the hint clause). It is a
+compile time constant. As the name suggests, this is just a hint for
+optimization.</p><p>Interfaces: <code>Symbol</code></p><h4 id=attributes-7>Attributes:&nbsp;<a class=headline-hash href=#attributes-7>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td><code>hint</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr></table><h3 id=ompdeclare_reduction-ompdeclarereductionop><code>omp.declare_reduction</code> (omp::DeclareReductionOp)&nbsp;<a class=headline-hash href=#ompdeclare_reduction-ompdeclarereductionop>¶</a></h3><p><em>Declares a reduction kind</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.declare_reduction` $sym_name `:` $type attr-dict-with-keyword ( `alloc` $allocRegion^ )? `init` $initializerRegion `combiner` $reductionRegion ( `atomic` $atomicReductionRegion^ )? ( `cleanup` $cleanupRegion^ )?
+</code></pre><p>Declares an OpenMP reduction kind. This requires two mandatory and three
+optional regions.</p><ol><li>The optional alloc region specifies how to allocate the thread-local
+reduction value. This region should not contain control flow and all
+IR should be suitable for inlining straight into an entry block. In
+the common case this is expected to contain only allocas. It is
+expected to <code>omp.yield</code> the allocated value on all control paths.
+If allocation is conditional (e.g. only allocate if the mold is
+allocated), this should be done in the initilizer region and this
+region not included. The alloc region is not used for by-value
+reductions (where allocation is implicit).</li><li>The initializer region specifies how to initialize the thread-local
+reduction value. This is usually the neutral element of the reduction.
+For convenience, the region has an argument that contains the value
+of the reduction accumulator at the start of the reduction. If an alloc
+region is specified, there is a second block argument containing the
+address of the allocated memory. The initializer region is expected to
+<code>omp.yield</code> the new value on all control flow paths.</li><li>The reduction region specifies how to combine two values into one, i.e.
+the reduction operator. It accepts the two values as arguments and is
+expected to <code>omp.yield</code> the combined value on all control flow paths.</li><li>The atomic reduction region is optional and specifies how two values
+can be combined atomically given local accumulator variables. It is
+expected to store the combined value in the first accumulator variable.</li><li>The cleanup region is optional and specifies how to clean up any memory
+allocated by the initializer region. The region has an argument that
+contains the value of the thread-local reduction accumulator. This will
+be executed after the reduction has completed.</li></ol><p>Note that the MLIR type system does not allow for type-polymorphic
+reductions. Separate reduction declarations should be created for different
+element and accumulator types.</p><p>For initializer and reduction regions, the operand to <code>omp.yield</code> must
+match the parent operation&rsquo;s results.</p><p>Traits: <code>IsolatedFromAbove</code></p><p>Interfaces: <code>RecipeInterface</code>, <code>Symbol</code></p><h4 id=attributes-8>Attributes:&nbsp;<a class=headline-hash href=#attributes-8>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td><code>type</code></td><td>::mlir::TypeAttr</td><td>any type attribute</td></tr></table><h3 id=ompdistribute-ompdistributeop><code>omp.distribute</code> (omp::DistributeOp)&nbsp;<a class=headline-hash href=#ompdistribute-ompdistributeop>¶</a></h3><p><em>Distribute construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.distribute` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `dist_schedule_static` $dist_schedule_static
+              | `dist_schedule_chunk_size` `(` $dist_schedule_chunk_size `:`
+              type($dist_schedule_chunk_size) `)`
+              |
+              `order` `(` custom&lt;OrderClause&gt;($order, $order_mod) `)`
+              )
+              custom&lt;PrivateRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms) attr-dict
+</code></pre><p>The distribute construct specifies that the iterations of one or more loops
+(optionally specified using collapse clause) will be executed by the
+initial teams in the context of their implicit tasks. The loops that the
+distribute op is associated with starts with the outermost loop enclosed by
+the distribute op region and going down the loop nest toward the innermost
+loop. The iterations are distributed across the initial threads of all
+initial teams that execute the teams region to which the distribute region
+binds.</p><p>The distribute loop construct specifies that the iterations of the loop(s)
+will be executed in parallel by threads in the current context. These
+iterations are spread across threads that already exist in the enclosing
+region.</p><p>The body region can only contain a single block which must contain a single
+operation and a terminator. The operation must be another compatible loop
+wrapper or an <code>omp.loop_nest</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>distribute <span class=p>&lt;</span>clauses<span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>loop_nest <span class=p>(</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>)</span> <span class=p>:</span> <span class=nl>index =</span> <span class=p>(</span><span class=nv>%c0</span><span class=p>,</span> <span class=nv>%c0</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%c10</span><span class=p>,</span> <span class=nv>%c10</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%c1</span><span class=p>,</span> <span class=nv>%c1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%a</span> <span class=p>=</span> load <span class=nv>%arrA</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%b</span> <span class=p>=</span> load <span class=nv>%arrB</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%sum</span> <span class=p>=</span> arith<span class=p>.</span>addf <span class=nv>%a</span><span class=p>,</span> <span class=nv>%b</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>    store <span class=nv>%sum</span><span class=p>,</span> <span class=nv>%arrC</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>terminator
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The <code>dist_schedule_static</code> attribute specifies the schedule for this loop,
+determining how the loop is distributed across the various teams. The
+optional <code>dist_schedule_chunk_size</code> associated with this determines further
+controls this distribution.</p><p>The optional <code>order</code> attribute specifies which order the iterations of the
+associated loops are executed in. Currently the only option for this
+attribute is &ldquo;concurrent&rdquo;.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>RecursiveMemoryEffects</code>, <code>SingleBlock</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ComposableOpInterface</code>, <code>LoopWrapperInterface</code></p><h4 id=attributes-9>Attributes:&nbsp;<a class=headline-hash href=#attributes-9>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>dist_schedule_static</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>order</code></td><td>::mlir::omp::ClauseOrderKindAttr</td><td><details><summary>OrderKind Clause</summary><p>Enum cases:</p><ul><li>concurrent (<code>Concurrent</code>)</li></ul></details></td></tr><tr><td><code>order_mod</code></td><td>::mlir::omp::OrderModifierAttr</td><td><details><summary>OpenMP Order Modifier</summary><p>Enum cases:</p><ul><li>reproducible (<code>reproducible</code>)</li><li>unconstrained (<code>unconstrained</code>)</li></ul></details></td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-4>Operands:&nbsp;<a class=headline-hash href=#operands-4>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>dist_schedule_chunk_size</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr></tbody></table><h3 id=ompflush-ompflushop><code>omp.flush</code> (omp::FlushOp)&nbsp;<a class=headline-hash href=#ompflush-ompflushop>¶</a></h3><p><em>Flush construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.flush` ( `(` $varList^ `:` type($varList) `)` )? attr-dict
+</code></pre><p>The flush construct executes the OpenMP flush operation. This operation
+makes a thread&rsquo;s temporary view of memory consistent with memory and
+enforces an order on the memory operations of the variables explicitly
+specified or implied.</p><h4 id=operands-5>Operands:&nbsp;<a class=headline-hash href=#operands-5>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>varList</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omploop_nest-omploopnestop><code>omp.loop_nest</code> (omp::LoopNestOp)&nbsp;<a class=headline-hash href=#omploop_nest-omploopnestop>¶</a></h3><p><em>Rectangular loop nest</em></p><p>This operation represents a collapsed rectangular loop nest. For each
+rectangular loop of the nest represented by an instance of this operation,
+lower and upper bounds, as well as a step variable, must be defined.</p><p>The lower and upper bounds specify a half-open range: the range includes the
+lower bound but does not include the upper bound. If the <code>loop_inclusive</code>
+attribute is specified then the upper bound is also included.</p><p>The body region can contain any number of blocks. The region is terminated
+by an <code>omp.yield</code> instruction without operands. The induction variables,
+represented as entry block arguments to the loop nest operation&rsquo;s single
+region, match the types of the <code>loop_lower_bounds</code>, <code>loop_upper_bounds</code> and
+<code>loop_steps</code> arguments.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>loop_nest <span class=p>(</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>)</span> <span class=p>:</span> <span class=nl>i32 =</span> <span class=p>(</span><span class=nv>%c0</span><span class=p>,</span> <span class=nv>%c0</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%c10</span><span class=p>,</span> <span class=nv>%c10</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%c1</span><span class=p>,</span> <span class=nv>%c1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%a</span> <span class=p>=</span> load <span class=nv>%arrA</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%b</span> <span class=p>=</span> load <span class=nv>%arrB</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%sum</span> <span class=p>=</span> arith<span class=p>.</span>addf <span class=nv>%a</span><span class=p>,</span> <span class=nv>%b</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  store <span class=nv>%sum</span><span class=p>,</span> <span class=nv>%arrC</span><span class=p>[</span><span class=nv>%i1</span><span class=p>,</span> <span class=nv>%i2</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This is a temporary simplified definition of a loop based on existing OpenMP
+loop operations intended to serve as a stopgap solution until the long-term
+representation of canonical loops is defined. Specifically, this operation
+is intended to serve as a unique source for loop information during the
+transition to making <code>omp.distribute</code>, <code>omp.simd</code>, <code>omp.taskloop</code> and
+<code>omp.wsloop</code> wrapper operations. It is not intended to help with the
+addition of support for loop transformations, non-rectangular loops and
+non-perfectly nested loops.</p><p>Traits: <code>RecursiveMemoryEffects</code>, <code>SameVariadicOperandSize</code></p><h4 id=attributes-10>Attributes:&nbsp;<a class=headline-hash href=#attributes-10>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>loop_inclusive</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-6>Operands:&nbsp;<a class=headline-hash href=#operands-6>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>loop_lower_bounds</code></td><td>variadic of integer or index</td></tr><tr><td style=text-align:center><code>loop_upper_bounds</code></td><td>variadic of integer or index</td></tr><tr><td style=text-align:center><code>loop_steps</code></td><td>variadic of integer or index</td></tr></tbody></table><h3 id=ompmapbounds-ompmapboundsop><code>omp.map.bounds</code> (omp::MapBoundsOp)&nbsp;<a class=headline-hash href=#ompmapbounds-ompmapboundsop>¶</a></h3><p><em>Represents normalized bounds information for map clauses.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.map.bounds` oilist(
+              `lower_bound` `(` $lower_bound `:` type($lower_bound) `)`
+              | `upper_bound` `(` $upper_bound `:` type($upper_bound) `)`
+              | `extent` `(` $extent `:` type($extent) `)`
+              | `stride` `(` $stride `:` type($stride) `)`
+              | `start_idx` `(` $start_idx `:` type($start_idx) `)`
+              ) attr-dict
+</code></pre><p>This operation is a variation on the OpenACC dialects DataBoundsOp. Within
+the OpenMP dialect it stores the bounds/range of data to be mapped to a
+device specified by map clauses on target directives. Within
+the OpenMP dialect, the MapBoundsOp is associated with MapInfoOp,
+helping to store bounds information for the mapped variable.</p><p>It is used to support OpenMP array sectioning, Fortran pointer and
+allocatable mapping and pointer/allocatable member of derived types.
+In all cases the MapBoundsOp holds information on the section of
+data to be mapped. Such as the upper bound and lower bound of the
+section of data to be mapped. This information is currently
+utilised by the LLVM-IR lowering to help generate instructions to
+copy data to and from the device when processing target operations.</p><p>The example below copys a section of a 10-element array; all except the
+first element, utilising OpenMP array sectioning syntax where array
+subscripts are provided to specify the bounds to be mapped to device.
+To simplify the examples, the constants are used directly, in reality
+they will be MLIR SSA values.</p><p>C++:</p><pre tabindex=0><code>int array[10];
+#pragma target map(array[1:9])
+</code></pre><p>=></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>map<span class=p>.</span>bounds lower_bound<span class=p>(</span><span class=m>1</span><span class=p>)</span> upper_bound<span class=p>(</span><span class=m>9</span><span class=p>)</span> extent<span class=p>(</span><span class=m>9</span><span class=p>)</span> start_idx<span class=p>(</span><span class=m>0</span><span class=p>)</span>
+</span></span></code></pre></div><p>Fortran:</p><pre tabindex=0><code>integer :: array(1:10)
+!$target map(array(2:10))
+</code></pre><p>=></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>map<span class=p>.</span>bounds lower_bound<span class=p>(</span><span class=m>1</span><span class=p>)</span> upper_bound<span class=p>(</span><span class=m>9</span><span class=p>)</span> extent<span class=p>(</span><span class=m>9</span><span class=p>)</span> start_idx<span class=p>(</span><span class=m>1</span><span class=p>)</span>
+</span></span></code></pre></div><p>For Fortran pointers and allocatables (as well as those that are
+members of derived types) the bounds information is provided by
+the Fortran compiler and runtime through descriptor information.</p><p>A basic pointer example can be found below (constants again
+provided for simplicity, where in reality SSA values will be
+used, in this case that point to data yielded by Fortran&rsquo;s
+descriptors):</p><p>Fortran:</p><pre tabindex=0><code>integer, pointer :: ptr(:)
+allocate(ptr(10))
+!$target map(ptr)
+</code></pre><p>=></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>map<span class=p>.</span>bounds lower_bound<span class=p>(</span><span class=m>0</span><span class=p>)</span> upper_bound<span class=p>(</span><span class=m>9</span><span class=p>)</span> extent<span class=p>(</span><span class=m>10</span><span class=p>)</span> start_idx<span class=p>(</span><span class=m>1</span><span class=p>)</span>
+</span></span></code></pre></div><p>This operation records the bounds information in a normalized fashion
+(zero-based). This works well with the <code>PointerLikeType</code>
+requirement in data clauses - since a <code>lower_bound</code> of 0 means looking
+at data at the zero offset from pointer.</p><p>This operation must have an <code>upper_bound</code> or <code>extent</code> (or both are allowed -
+but not checked for consistency). When the source language&rsquo;s arrays are
+not zero-based, the <code>start_idx</code> must specify the zero-position index.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-11>Attributes:&nbsp;<a class=headline-hash href=#attributes-11>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>stride_in_bytes</code></td><td>::mlir::BoolAttr</td><td>bool attribute</td></tr></table><h4 id=operands-7>Operands:&nbsp;<a class=headline-hash href=#operands-7>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>lower_bound</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>upper_bound</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>extent</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>stride</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>start_idx</code></td><td>integer or index</td></tr></tbody></table><h4 id=results>Results:&nbsp;<a class=headline-hash href=#results>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>Type for representing omp map clause bounds information</td></tr></tbody></table><h3 id=ompmapinfo-ompmapinfoop><code>omp.map.info</code> (omp::MapInfoOp)&nbsp;<a class=headline-hash href=#ompmapinfo-ompmapinfoop>¶</a></h3><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.map.info` `var_ptr` `(` $var_ptr `:` type($var_ptr) `,` $var_type `)`
+              oilist(
+              `var_ptr_ptr` `(` $var_ptr_ptr `:` type($var_ptr_ptr) `)`
+              | `map_clauses` `(` custom&lt;MapClause&gt;($map_type) `)`
+              | `capture` `(` custom&lt;CaptureType&gt;($map_capture_type) `)`
+              | `members` `(` $members `:` custom&lt;MembersIndex&gt;($members_index) `:` type($members) `)`
+              | `bounds` `(` $bounds `)`
+              ) `-&gt;` type($omp_ptr) attr-dict
+</code></pre><p>The MapInfoOp captures information relating to individual OpenMP map clauses
+that are applied to certain OpenMP directives such as Target and Target Data.</p><p>For example, the map type modifier; such as from, tofrom and to, the variable
+being captured or the bounds of an array section being mapped.</p><p>It can be used to capture both implicit and explicit map information, where
+explicit is an argument directly specified to an OpenMP map clause or implicit
+where a variable is utilised in a target region but is defined externally to
+the target region.</p><p>This map information is later used to aid the lowering of the target operations
+they are attached to providing argument input and output context for kernels
+generated or the target data mapping environment.</p><p>Example (Fortran):</p><pre tabindex=0><code>integer :: index
+!$target map(to: index)
+</code></pre><p>=></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>map<span class=p>.</span>info var_ptr<span class=p>(</span><span class=nv>%index_ssa</span><span class=p>)</span> map_type<span class=p>(</span>to<span class=p>)</span> map_capture_type<span class=p>(</span>ByRef<span class=p>)</span>
+</span></span><span class=line><span class=cl>  name<span class=p>(</span><span class=k>index</span><span class=p>)</span>
+</span></span></code></pre></div><p>Description of arguments:</p><ul><li><code>var_ptr</code>: The address of variable to copy.</li><li><code>var_type</code>: The type of the variable to copy.</li><li><code>var_ptr_ptr</code>: Used when the variable copied is a member of a class, structure
+or derived type and refers to the originating struct.</li><li><code>members</code>: Used to indicate mapped child members for the current MapInfoOp,
+represented as other MapInfoOp&rsquo;s, utilised in cases where a parent structure
+type and members of the structure type are being mapped at the same time.
+For example: map(to: parent, parent->member, parent->member2[:10])</li><li><code>members_index</code>: Used to indicate the ordering of members within the containing
+parent (generally a record type such as a structure, class or derived type),
+e.g. struct {int x, float y, double z}, x would be 0, y would be 1, and z
+would be 2. This aids the mapping.</li><li><code>bounds</code>: Used when copying slices of array&rsquo;s, pointers or pointer members of
+objects (e.g. derived types or classes), indicates the bounds to be copied
+of the variable. When it&rsquo;s an array slice it is in rank order where rank 0
+is the inner-most dimension.</li><li>&lsquo;map_clauses&rsquo;: OpenMP map type for this map capture, for example: from, to and
+always. It&rsquo;s a bitfield composed of the OpenMP runtime flags stored in
+OpenMPOffloadMappingFlags.</li><li>&lsquo;map_capture_type&rsquo;: Capture type for the variable e.g. this, byref, byvalue, byvla
+this can affect how the variable is lowered.</li><li><code>name</code>: Holds the name of variable as specified in user clause (including bounds).</li><li><code>partial_map</code>: The record type being mapped will not be mapped in its entirety,
+it may be used however, in a mapping to bind it&rsquo;s mapped components together.</li></ul><p>Traits: <code>AttrSizedOperandSegments</code></p><h4 id=attributes-12>Attributes:&nbsp;<a class=headline-hash href=#attributes-12>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>var_type</code></td><td>::mlir::TypeAttr</td><td>any type attribute</td></tr><tr><td><code>members_index</code></td><td>::mlir::DenseIntElementsAttr</td><td>integer elements attribute</td></tr><tr><td><code>map_type</code></td><td>::mlir::IntegerAttr</td><td>64-bit unsigned integer attribute</td></tr><tr><td><code>map_capture_type</code></td><td>::mlir::omp::VariableCaptureKindAttr</td><td><details><summary>variable capture kind</summary><p>Enum cases:</p><ul><li>This (<code>This</code>)</li><li>ByRef (<code>ByRef</code>)</li><li>ByCopy (<code>ByCopy</code>)</li><li>VLAType (<code>VLAType</code>)</li></ul></details></td></tr><tr><td><code>name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td><code>partial_map</code></td><td>::mlir::BoolAttr</td><td>bool attribute</td></tr></table><h4 id=operands-8>Operands:&nbsp;<a class=headline-hash href=#operands-8>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>var_ptr</code></td><td>OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>var_ptr_ptr</code></td><td>OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>members</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>bounds</code></td><td>variadic of Type for representing omp map clause bounds information</td></tr></tbody></table><h4 id=results-1>Results:&nbsp;<a class=headline-hash href=#results-1>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>omp_ptr</code></td><td>OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompmasked-ompmaskedop><code>omp.masked</code> (omp::MaskedOp)&nbsp;<a class=headline-hash href=#ompmasked-ompmaskedop>¶</a></h3><p><em>Masked construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.masked` oilist(
+              `filter` `(` $filtered_thread_id `:` type($filtered_thread_id) `)`
+              ) $region attr-dict
+</code></pre><p>Masked construct allows to specify a structured block to be executed by a subset of
+threads of the current team.</p><p>If <code>filter</code> is specified, the masked construct masks the execution of
+the region to only the thread id filtered. Other threads executing the
+parallel region are not expected to execute the region specified within
+the <code>masked</code> directive. If <code>filter</code> is not specified, master thread is
+expected to execute the region enclosed within <code>masked</code> directive.</p><h4 id=operands-9>Operands:&nbsp;<a class=headline-hash href=#operands-9>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>filtered_thread_id</code></td><td>integer or index</td></tr></tbody></table><h3 id=ompmaster-ompmasterop><code>omp.master</code> (omp::MasterOp)&nbsp;<a class=headline-hash href=#ompmaster-ompmasterop>¶</a></h3><p><em>Master construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.master` $region attr-dict
+</code></pre><p>The master construct specifies a structured block that is executed by
+the master thread of the team.</p><h3 id=ompordered-omporderedop><code>omp.ordered</code> (omp::OrderedOp)&nbsp;<a class=headline-hash href=#ompordered-omporderedop>¶</a></h3><p><em>Ordered construct without region</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.ordered` ( `depend_type` `` $doacross_depend_type^ )?
+              ( `depend_vec` `(` $doacross_depend_vars^ `:` type($doacross_depend_vars)
+              `)` )?
+              attr-dict
+</code></pre><p>The ordered construct without region is a stand-alone directive that
+specifies cross-iteration dependencies in a doacross loop nest.</p><p>The <code>doacross_depend_type</code> attribute refers to either the DEPEND(SOURCE)
+clause or the DEPEND(SINK: vec) clause.</p><p>The <code>doacross_num_loops</code> attribute specifies the number of loops in the
+doacross nest.</p><p>The <code>doacross_depend_vars</code> is a variadic list of operands that specifies the
+index of the loop iterator in the doacross nest for the DEPEND(SOURCE)
+clause or the index of the element of &ldquo;vec&rdquo; for the DEPEND(SINK: vec)
+clause. It contains the operands in multiple &ldquo;vec&rdquo; when multiple
+DEPEND(SINK: vec) clauses exist in one ORDERED directive.</p><h4 id=attributes-13>Attributes:&nbsp;<a class=headline-hash href=#attributes-13>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>doacross_depend_type</code></td><td>::mlir::omp::ClauseDependAttr</td><td><details><summary>depend clause</summary><p>Enum cases:</p><ul><li>dependsource (<code>dependsource</code>)</li><li>dependsink (<code>dependsink</code>)</li></ul></details></td></tr><tr><td><code>doacross_num_loops</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute whose minimum value is 0</td></tr></table><h4 id=operands-10>Operands:&nbsp;<a class=headline-hash href=#operands-10>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>doacross_depend_vars</code></td><td>variadic of any type</td></tr></tbody></table><h3 id=omporderedregion-omporderedregionop><code>omp.ordered.region</code> (omp::OrderedRegionOp)&nbsp;<a class=headline-hash href=#omporderedregion-omporderedregionop>¶</a></h3><p><em>Ordered construct with region</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.ordered.region` oilist(
+              `par_level_simd` $par_level_simd
+              ) $region attr-dict
+</code></pre><p>The ordered construct with region specifies a structured block in a
+worksharing-loop, SIMD, or worksharing-loop SIMD region that is executed in
+the order of the loop iterations.</p><p>The <code>par_level_simd</code> attribute corresponds to the simd clause specified. If
+it is not present, it behaves as if the threads clause is specified or no
+clause is specified.</p><h4 id=attributes-14>Attributes:&nbsp;<a class=headline-hash href=#attributes-14>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>par_level_simd</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h3 id=ompparallel-ompparallelop><code>omp.parallel</code> (omp::ParallelOp)&nbsp;<a class=headline-hash href=#ompparallel-ompparallelop>¶</a></h3><p><em>Parallel construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.parallel` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `num_threads` `(` $num_threads `:` type($num_threads) `)`
+              |
+              `proc_bind` `(` custom&lt;ClauseAttr&gt;($proc_bind_kind) `)`
+              )
+              custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+              $reduction_syms) attr-dict
+</code></pre><p>The parallel construct includes a region of code which is to be executed
+by a team of threads.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the parallel region runs
+as normal, if it is 0 then the parallel region is executed with one thread.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The optional <code>num_threads</code> parameter specifies the number of threads which
+should be used to execute the parallel region.</p><p>The optional <code>proc_bind_kind</code> attribute controls the thread affinity for the
+execution of the parallel region.</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>AutomaticAllocationScope</code>, <code>RecursiveMemoryEffects</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ComposableOpInterface</code>, <code>OutlineableOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-15>Attributes:&nbsp;<a class=headline-hash href=#attributes-15>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>proc_bind_kind</code></td><td>::mlir::omp::ClauseProcBindKindAttr</td><td><details><summary>ProcBindKind Clause</summary><p>Enum cases:</p><ul><li>primary (<code>Primary</code>)</li><li>master (<code>Master</code>)</li><li>close (<code>Close</code>)</li><li>spread (<code>Spread</code>)</li></ul></details></td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-11>Operands:&nbsp;<a class=headline-hash href=#operands-11>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>num_threads</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompprivate-ompprivateclauseop><code>omp.private</code> (omp::PrivateClauseOp)&nbsp;<a class=headline-hash href=#ompprivate-ompprivateclauseop>¶</a></h3><p><em>Provides declaration of [first]private logic.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.private` $data_sharing_type $sym_name `:` $type
+              `alloc` $alloc_region
+              (`copy` $copy_region^)?
+              (`dealloc` $dealloc_region^)?
+              attr-dict
+</code></pre><p>This operation provides a declaration of how to implement the
+[first]privatization of a variable. The dialect users should provide
+information about how to create an instance of the type in the alloc region,
+how to initialize the copy from the original item in the copy region, and if
+needed, how to deallocate allocated memory in the dealloc region.</p><p>Examples:</p><ul><li><code>private(x)</code> would be emitted as:</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>private <span class=p>{</span><span class=nl>type =</span> private<span class=p>}</span> <span class=nf>@x.privatizer</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;</span> alloc <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;):</span>
+</span></span><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=p>...</span> allocate proper memory for the private clone <span class=p>...</span>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>yield<span class=p>(</span><span class=nv>%0</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><ul><li><code>firstprivate(x)</code> would be emitted as:</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>private <span class=p>{</span><span class=nl>type =</span> firstprivate<span class=p>}</span> <span class=nf>@x.privatizer</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;</span> alloc <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;):</span>
+</span></span><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=p>...</span> allocate proper memory for the private clone <span class=p>...</span>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>yield<span class=p>(</span><span class=nv>%0</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> copy <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;,</span> <span class=nv>%arg1</span><span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;):</span>
+</span></span><span class=line><span class=cl><span class=c>// %arg0 is the original host variable. Same as for `alloc`.
+</span></span></span><span class=line><span class=cl><span class=c>// %arg1 represents the memory allocated in `alloc`.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>...</span> copy from host to the privatized clone <span class=p>....</span>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>yield<span class=p>(</span><span class=nv>%arg1</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><ul><li><code>private(x)</code> for &ldquo;allocatables&rdquo; would be emitted as:</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>private <span class=p>{</span><span class=nl>type =</span> private<span class=p>}</span> <span class=nf>@x.privatizer</span> <span class=p>:</span> <span class=p>!</span>some<span class=p>.</span>type alloc <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>some<span class=p>.</span>type<span class=p>):</span>
+</span></span><span class=line><span class=cl><span class=nv>%0</span> <span class=p>=</span> <span class=p>...</span> allocate proper memory for the private clone <span class=p>...</span>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>yield<span class=p>(</span><span class=nv>%0</span> <span class=p>:</span> <span class=p>!</span>fir<span class=p>.</span>ref<span class=p>&lt;</span><span class=k>i32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> dealloc <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=nl>^bb0</span><span class=p>(</span><span class=nv>%arg0</span><span class=p>:</span> <span class=p>!</span>some<span class=p>.</span>type<span class=p>):</span>
+</span></span><span class=line><span class=cl><span class=p>...</span> deallocate allocated memory <span class=p>...</span>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>There are no restrictions on the body except for:</p><ul><li>The <code>alloc</code> & <code>dealloc</code> regions have a single argument.</li><li>The <code>copy</code> region has 2 arguments.</li><li>All three regions are terminated by <code>omp.yield</code> ops.
+The above restrictions and other obvious restrictions (e.g. verifying the
+type of yielded values) are verified by the custom op verifier. The actual
+contents of the blocks inside all regions are not verified.</li></ul><p>Instances of this op would then be used by ops that model directives that
+accept data-sharing attribute clauses.</p><p>The $sym_name attribute provides a symbol by which the privatizer op can be
+referenced by other dialect ops.</p><p>The $type attribute is the type of the value being privatized.</p><p>The $data_sharing_type attribute specifies whether privatizer corresponds
+to a <code>private</code> or a <code>firstprivate</code> clause.</p><p>Traits: <code>IsolatedFromAbove</code></p><p>Interfaces: <code>RecipeInterface</code></p><h4 id=attributes-16>Attributes:&nbsp;<a class=headline-hash href=#attributes-16>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td><code>type</code></td><td>::mlir::TypeAttr</td><td>type attribute of any type</td></tr><tr><td><code>data_sharing_type</code></td><td>::mlir::omp::DataSharingClauseTypeAttr</td><td><details><summary>Type of a data-sharing clause</summary><p>Enum cases:</p><ul><li>private (<code>Private</code>)</li><li>firstprivate (<code>FirstPrivate</code>)</li></ul></details></td></tr></table><h3 id=ompsection-ompsectionop><code>omp.section</code> (omp::SectionOp)&nbsp;<a class=headline-hash href=#ompsection-ompsectionop>¶</a></h3><p><em>Section directive</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.section` $region attr-dict
+</code></pre><p>A section operation encloses a region which represents one section in a
+sections construct. A section op should always be surrounded by an
+<code>omp.sections</code> operation. The section operation may have block args
+which corespond to the block arguments of the surrounding <code>omp.sections</code>
+operation. This is done to reflect situations where these block arguments
+represent variables private to each section.</p><p>Traits: <code>HasParent&lt;SectionsOp></code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code></p><h3 id=ompsections-ompsectionsop><code>omp.sections</code> (omp::SectionsOp)&nbsp;<a class=headline-hash href=#ompsections-ompsectionsop>¶</a></h3><p><em>Sections construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.sections` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `nowait` $nowait
+              )
+              custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+              $reduction_syms) attr-dict
+</code></pre><p>The sections construct is a non-iterative worksharing construct that
+contains <code>omp.section</code> operations. The <code>omp.section</code> operations are to be
+distributed among and executed by the threads in a team. Each <code>omp.section</code>
+is executed once by one of the threads in the team in the context of its
+implicit task.
+Block arguments for reduction variables should be mirrored in enclosed
+<code>omp.section</code> operations.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-17>Attributes:&nbsp;<a class=headline-hash href=#attributes-17>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-12>Operands:&nbsp;<a class=headline-hash href=#operands-12>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompsimd-ompsimdop><code>omp.simd</code> (omp::SimdOp)&nbsp;<a class=headline-hash href=#ompsimd-ompsimdop>¶</a></h3><p><em>Simd construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.simd` oilist(
+              `aligned` `(` custom&lt;AlignedClause&gt;($aligned_vars, type($aligned_vars),
+              $alignments) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `linear` `(`
+              custom&lt;LinearClause&gt;($linear_vars, type($linear_vars),
+              $linear_step_vars) `)`
+              |
+              `nontemporal` `(`  $nontemporal_vars `:` type($nontemporal_vars) `)`
+              |
+              `order` `(` custom&lt;OrderClause&gt;($order, $order_mod) `)`
+              |
+              `safelen` `(` $safelen  `)`
+              |
+              `simdlen` `(` $simdlen  `)`
+              )
+              custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+              $reduction_syms) attr-dict
+</code></pre><p>The simd construct can be applied to a loop to indicate that the loop can be
+transformed into a SIMD loop (that is, multiple iterations of the loop can
+be executed concurrently using SIMD instructions).</p><p>The body region can only contain a single block which must contain a single
+operation and a terminator. The operation must be another compatible loop
+wrapper or an <code>omp.loop_nest</code>.</p><pre tabindex=0><code>omp.simd &lt;clauses&gt; {
+  omp.loop_nest (%i1, %i2) : index = (%c0, %c0) to (%c10, %c10) step (%c1, %c1) {
+    %a = load %arrA[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %b = load %arrB[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %sum = arith.addf %a, %b : f32
+    store %sum, %arrC[%i1, %i2] : memref&lt;?x?xf32&gt;
+    omp.yield
+  }
+  omp.terminator
+}
+</code></pre><p>When an if clause is present and evaluates to false, the preferred number of
+iterations to be executed concurrently is one, regardless of whether
+a simdlen clause is specified.</p><p>The <code>alignments</code> attribute additionally specifies alignment of each
+corresponding aligned operand. Note that <code>aligned_vars</code> and <code>alignments</code>
+must contain the same number of elements.</p><p>The <code>linear_step_vars</code> operand additionally specifies the step for each
+associated linear operand. Note that the <code>linear_vars</code> and
+<code>linear_step_vars</code> variadic lists should contain the same number of
+elements.</p><p>The optional <code>nontemporal</code> attribute specifies variables which have low
+temporal locality across the iterations where they are accessed.</p><p>The optional <code>order</code> attribute specifies which order the iterations of the
+associated loops are executed in. Currently the only option for this
+attribute is &ldquo;concurrent&rdquo;.</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>The <code>safelen</code> clause specifies that no two concurrent iterations within a
+SIMD chunk can have a distance in the logical iteration space that is
+greater than or equal to the value given in the clause.</p><p>When a <code>simdlen</code> clause is present, the preferred number of iterations to be
+executed concurrently is the value provided to the <code>simdlen</code> clause.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>RecursiveMemoryEffects</code>, <code>SingleBlock</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ComposableOpInterface</code>, <code>LoopWrapperInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-18>Attributes:&nbsp;<a class=headline-hash href=#attributes-18>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>alignments</code></td><td>::mlir::ArrayAttr</td><td>64-bit integer array attribute</td></tr><tr><td><code>order</code></td><td>::mlir::omp::ClauseOrderKindAttr</td><td><details><summary>OrderKind Clause</summary><p>Enum cases:</p><ul><li>concurrent (<code>Concurrent</code>)</li></ul></details></td></tr><tr><td><code>order_mod</code></td><td>::mlir::omp::OrderModifierAttr</td><td><details><summary>OpenMP Order Modifier</summary><p>Enum cases:</p><ul><li>reproducible (<code>reproducible</code>)</li><li>unconstrained (<code>unconstrained</code>)</li></ul></details></td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>safelen</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute whose value is positive</td></tr><tr><td><code>simdlen</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute whose value is positive</td></tr></table><h4 id=operands-13>Operands:&nbsp;<a class=headline-hash href=#operands-13>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>aligned_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>linear_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>linear_step_vars</code></td><td>variadic of 32-bit signless integer</td></tr><tr><td style=text-align:center><code>nontemporal_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompsingle-ompsingleop><code>omp.single</code> (omp::SingleOp)&nbsp;<a class=headline-hash href=#ompsingle-ompsingleop>¶</a></h3><p><em>Single directive</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.single` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `copyprivate` `(`
+              custom&lt;Copyprivate&gt;($copyprivate_vars, type($copyprivate_vars),
+              $copyprivate_syms) `)`
+              |
+              `nowait` $nowait
+              )
+              custom&lt;PrivateRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms) attr-dict
+</code></pre><p>The single construct specifies that the associated structured block is
+executed by only one of the threads in the team (not necessarily the
+master thread), in the context of its implicit task. The other threads
+in the team, which do not execute the block, wait at an implicit barrier
+at the end of the single construct.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>If <code>copyprivate</code> variables and functions are specified, then each thread
+variable is updated with the variable value of the thread that executed
+the single region, using the specified copy functions.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code></p><h4 id=attributes-19>Attributes:&nbsp;<a class=headline-hash href=#attributes-19>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>copyprivate_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-14>Operands:&nbsp;<a class=headline-hash href=#operands-14>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>copyprivate_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr></tbody></table><h3 id=omptarget-omptargetop><code>omp.target</code> (omp::TargetOp)&nbsp;<a class=headline-hash href=#omptarget-omptargetop>¶</a></h3><p><em>Target construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.target` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `device` `(` $device `:` type($device) `)`
+              |
+              `has_device_addr` `(` $has_device_addr_vars `:` type($has_device_addr_vars)
+              `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `is_device_ptr` `(` $is_device_ptr_vars `:` type($is_device_ptr_vars) `)`
+              |
+              `nowait` $nowait
+              |
+              `thread_limit` `(` $thread_limit `:` type($thread_limit) `)`
+              )
+              custom&lt;InReductionMapPrivateRegion&gt;(
+              $region, $in_reduction_vars, type($in_reduction_vars),
+              $in_reduction_byref, $in_reduction_syms, $map_vars, type($map_vars),
+              $private_vars, type($private_vars), $private_syms) attr-dict
+</code></pre><p>The target construct includes a region of code which is to be executed
+on a device.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the target region runs on
+a device, if it is 0 then the target region is executed on the host device.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>The optional <code>device</code> parameter specifies the device number for the target
+region.</p><p>The optional <code>has_device_addr_vars</code> indicates that list items already have
+device addresses, so they may be directly accessed from the target device.
+This includes array sections.</p><p>The optional <code>is_device_ptr_vars</code> indicates list items are device pointers.</p><p>The optional <code>map_vars</code> maps data from the current task&rsquo;s data environment
+to the device data environment.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>The optional <code>thread_limit</code> specifies the limit on the number of threads.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>IsolatedFromAbove</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>MapClauseOwningOpInterface</code>, <code>OutlineableOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-20>Attributes:&nbsp;<a class=headline-hash href=#attributes-20>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>in_reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>in_reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-15>Operands:&nbsp;<a class=headline-hash href=#operands-15>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>device</code></td><td>integer</td></tr><tr><td style=text-align:center><code>has_device_addr_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>in_reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>is_device_ptr_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>map_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>thread_limit</code></td><td>integer</td></tr></tbody></table><h3 id=omptarget_data-omptargetdataop><code>omp.target_data</code> (omp::TargetDataOp)&nbsp;<a class=headline-hash href=#omptarget_data-omptargetdataop>¶</a></h3><p><em>Target data construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.target_data` oilist(
+              `device` `(` $device `:` type($device) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `map_entries` `(` $map_vars `:` type($map_vars) `)`
+              )
+              custom&lt;UseDeviceAddrUseDevicePtrRegion&gt;(
+              $region, $use_device_addr_vars, type($use_device_addr_vars),
+              $use_device_ptr_vars, type($use_device_ptr_vars)) attr-dict
+</code></pre><p>Map variables to a device data environment for the extent of the region.</p><p>The omp target data directive maps variables to a device data
+environment, and defines the lexical scope of the data environment
+that is created. The omp target data directive can reduce data copies
+to and from the offloading device when multiple target regions are using
+the same data.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the target region runs on
+a device, if it is 0 then the target region is executed on the host device.</p><p>The optional <code>device</code> parameter specifies the device number for the target
+region.</p><p>The optional <code>map_vars</code> maps data from the current task&rsquo;s data environment
+to the device data environment.</p><p>The optional <code>use_device_addr_vars</code> specifies the address of the objects in
+the device data environment.</p><p>The optional <code>use_device_ptr_vars</code> specifies the device pointers to the
+corresponding list items in the device data environment.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>MapClauseOwningOpInterface</code></p><h4 id=operands-16>Operands:&nbsp;<a class=headline-hash href=#operands-16>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>device</code></td><td>integer</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>map_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>use_device_addr_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>use_device_ptr_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptarget_enter_data-omptargetenterdataop><code>omp.target_enter_data</code> (omp::TargetEnterDataOp)&nbsp;<a class=headline-hash href=#omptarget_enter_data-omptargetenterdataop>¶</a></h3><p><em>Target enter data construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.target_enter_data` oilist(
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `device` `(` $device `:` type($device) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `map_entries` `(` $map_vars `:` type($map_vars) `)`
+              |
+              `nowait` $nowait
+              ) attr-dict
+</code></pre><p>The target enter data directive specifies that variables are mapped to
+a device data environment. The target enter data directive is a
+stand-alone directive.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the target region runs on
+a device, if it is 0 then the target region is executed on the host device.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>The optional <code>device</code> parameter specifies the device number for the target
+region.</p><p>The optional <code>map_vars</code> maps data from the current task&rsquo;s data environment
+to the device data environment.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>MapClauseOwningOpInterface</code></p><h4 id=attributes-21>Attributes:&nbsp;<a class=headline-hash href=#attributes-21>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-17>Operands:&nbsp;<a class=headline-hash href=#operands-17>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>device</code></td><td>integer</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>map_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptarget_exit_data-omptargetexitdataop><code>omp.target_exit_data</code> (omp::TargetExitDataOp)&nbsp;<a class=headline-hash href=#omptarget_exit_data-omptargetexitdataop>¶</a></h3><p><em>Target exit data construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.target_exit_data` oilist(
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `device` `(` $device `:` type($device) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `map_entries` `(` $map_vars `:` type($map_vars) `)`
+              |
+              `nowait` $nowait
+              ) attr-dict
+</code></pre><p>The target exit data directive specifies that variables are mapped to a
+device data environment. The target exit data directive is
+a stand-alone directive.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the target region runs on
+a device, if it is 0 then the target region is executed on the host device.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>The optional <code>device</code> parameter specifies the device number for the target
+region.</p><p>The optional <code>map_vars</code> maps data from the current task&rsquo;s data environment
+to the device data environment.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>MapClauseOwningOpInterface</code></p><h4 id=attributes-22>Attributes:&nbsp;<a class=headline-hash href=#attributes-22>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-18>Operands:&nbsp;<a class=headline-hash href=#operands-18>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>device</code></td><td>integer</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>map_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptarget_update-omptargetupdateop><code>omp.target_update</code> (omp::TargetUpdateOp)&nbsp;<a class=headline-hash href=#omptarget_update-omptargetupdateop>¶</a></h3><p><em>Target update construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.target_update` oilist(
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `device` `(` $device `:` type($device) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `map_entries` `(` $map_vars `:` type($map_vars) `)`
+              |
+              `nowait` $nowait
+              ) attr-dict
+</code></pre><p>The target update directive makes the corresponding list items in the device
+data environment consistent with their original list items, according to the
+specified motion clauses. The target update construct is a stand-alone
+directive.</p><p>The optional <code>if_expr</code> parameter specifies a boolean result of a conditional
+check. If this value is 1 or is not provided then the target region runs on
+a device, if it is 0 then the target region is executed on the host device.</p><p>We use <code>MapInfoOp</code> to model the motion clauses and their modifiers. Even
+though the spec differentiates between map-types & map-type-modifiers vs.
+motion-clauses & motion-modifiers, the motion clauses and their modifiers
+are a subset of map types and their modifiers. The subset relation is
+handled in during verification to make sure the restrictions for target
+update are respected.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>The optional <code>device</code> parameter specifies the device number for the target
+region.</p><p>The optional <code>map_vars</code> maps data from the current task&rsquo;s data environment
+to the device data environment.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>Traits: <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>MapClauseOwningOpInterface</code></p><h4 id=attributes-23>Attributes:&nbsp;<a class=headline-hash href=#attributes-23>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-19>Operands:&nbsp;<a class=headline-hash href=#operands-19>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>device</code></td><td>integer</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>map_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptask-omptaskop><code>omp.task</code> (omp::TaskOp)&nbsp;<a class=headline-hash href=#omptask-omptaskop>¶</a></h3><p><em>Task construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.task` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `final` `(` $final `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `mergeable` $mergeable
+              |
+              `priority` `(` $priority `:` type($priority) `)`
+              |
+              `untied` $untied
+              )
+              custom&lt;InReductionPrivateRegion&gt;(
+              $region, $in_reduction_vars, type($in_reduction_vars),
+              $in_reduction_byref, $in_reduction_syms, $private_vars,
+              type($private_vars), $private_syms) attr-dict
+</code></pre><p>The task construct defines an explicit task.</p><p>For definitions of &ldquo;undeferred task&rdquo;, &ldquo;included task&rdquo;, &ldquo;final task&rdquo; and
+&ldquo;mergeable task&rdquo;, please check OpenMP Specification.</p><p>When an <code>if</code> clause is present on a task construct, and the value of
+<code>if_expr</code> evaluates to <code>false</code>, an &ldquo;undeferred task&rdquo; is generated, and the
+encountering thread must suspend the current task region, for which
+execution cannot be resumed until execution of the structured block that is
+associated with the generated task is completed.</p><p>The <code>in_reduction</code> clause specifies that this particular task (among all the
+tasks in current taskgroup, if any) participates in a reduction.
+<code>in_reduction_byref</code> indicates whether each reduction variable should
+be passed by value or by reference.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>When a <code>final</code> clause is present and the <code>final</code> clause expression evaluates
+to <code>true</code>, the generated tasks will be final tasks. All task constructs
+encountered during execution of a final task will generate final and
+included tasks. The use of a variable in a <code>final</code> clause expression causes
+an implicit reference to the variable in all enclosing constructs.</p><p>When the <code>mergeable</code> clause is present, the tasks generated by the construct
+are &ldquo;mergeable tasks&rdquo;.</p><p>The <code>priority</code> clause is a hint for the priority of the generated tasks.
+The <code>priority</code> is a non-negative integer expression that provides a hint for
+task execution order. Among all tasks ready to be executed, higher priority
+tasks (those with a higher numerical value in the priority clause
+expression) are recommended to execute before lower priority ones. The
+default priority-value when no priority clause is specified should be
+assumed to be zero (the lowest priority).</p><p>If the <code>untied</code> clause is present on a task construct, any thread in the
+team can resume the task region after a suspension. The <code>untied</code> clause is
+ignored if a <code>final</code> clause is present on the same task construct and the
+<code>final</code> expression evaluates to <code>true</code>, or if a task is an included task.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>AutomaticAllocationScope</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>OutlineableOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-24>Attributes:&nbsp;<a class=headline-hash href=#attributes-24>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>in_reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>in_reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>mergeable</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>untied</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-20>Operands:&nbsp;<a class=headline-hash href=#operands-20>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>final</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>in_reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>priority</code></td><td>integer</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr></tbody></table><h3 id=omptaskgroup-omptaskgroupop><code>omp.taskgroup</code> (omp::TaskgroupOp)&nbsp;<a class=headline-hash href=#omptaskgroup-omptaskgroupop>¶</a></h3><p><em>Taskgroup construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.taskgroup` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              )
+              custom&lt;TaskReductionRegion&gt;(
+              $region, $task_reduction_vars, type($task_reduction_vars),
+              $task_reduction_byref, $task_reduction_syms) attr-dict
+</code></pre><p>The taskgroup construct specifies a wait on completion of child tasks of the
+current task and their descendent tasks.</p><p>When a thread encounters a taskgroup construct, it starts executing the
+region. All child tasks generated in the taskgroup region and all of their
+descendants that bind to the same parallel region as the taskgroup region
+are part of the taskgroup set associated with the taskgroup region. There is
+an implicit task scheduling point at the end of the taskgroup region. The
+current task is suspended at the task scheduling point until all tasks in
+the taskgroup set complete execution.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The <code>task_reduction</code> clause specifies a reduction among tasks. For each list
+item, the number of copies is unspecified. Any copies associated with the
+reduction are initialized before they are accessed by the tasks
+participating in the reduction. After the end of the region, the original
+list item contains the result of the reduction. Similarly to the <code>reduction</code>
+clause, accumulator variables must be passed in <code>task_reduction_vars</code>,
+symbols referring to reduction declarations in the <code>task_reduction_syms</code>
+attribute, and whether the reduction variable should be passed into the
+reduction region by value or by reference in <code>task_reduction_byref</code>.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>AutomaticAllocationScope</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-25>Attributes:&nbsp;<a class=headline-hash href=#attributes-25>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>task_reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>task_reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-21>Operands:&nbsp;<a class=headline-hash href=#operands-21>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>task_reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptaskloop-omptaskloopop><code>omp.taskloop</code> (omp::TaskloopOp)&nbsp;<a class=headline-hash href=#omptaskloop-omptaskloopop>¶</a></h3><p><em>Taskloop construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.taskloop` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `final` `(` $final `)`
+              |
+              `grainsize` `(` $grainsize `:` type($grainsize) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `mergeable` $mergeable
+              |
+              `nogroup` $nogroup
+              |
+              `num_tasks` `(` $num_tasks `:` type($num_tasks) `)`
+              |
+              `priority` `(` $priority `:` type($priority) `)`
+              |
+              `untied` $untied
+              )
+              custom&lt;InReductionPrivateReductionRegion&gt;(
+              $region, $in_reduction_vars, type($in_reduction_vars),
+              $in_reduction_byref, $in_reduction_syms, $private_vars,
+              type($private_vars), $private_syms, $reduction_vars,
+              type($reduction_vars), $reduction_byref, $reduction_syms) attr-dict
+</code></pre><p>The taskloop construct specifies that the iterations of one or more
+associated loops will be executed in parallel using explicit tasks. The
+iterations are distributed across tasks generated by the construct and
+scheduled to be executed.</p><p>The body region can only contain a single block which must contain a single
+operation and a terminator. The operation must be another compatible loop
+wrapper or an <code>omp.loop_nest</code>.</p><pre tabindex=0><code>omp.taskloop &lt;clauses&gt; {
+  omp.loop_nest (%i1, %i2) : index = (%c0, %c0) to (%c10, %c10) step (%c1, %c1) {
+    %a = load %arrA[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %b = load %arrB[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %sum = arith.addf %a, %b : f32
+    store %sum, %arrC[%i1, %i2] : memref&lt;?x?xf32&gt;
+    omp.yield
+  }
+  omp.terminator
+}
+</code></pre><p>For definitions of &ldquo;undeferred task&rdquo;, &ldquo;included task&rdquo;, &ldquo;final task&rdquo; and
+&ldquo;mergeable task&rdquo;, please check OpenMP Specification.</p><p>When an <code>if</code> clause is present on a taskloop construct, and if the <code>if</code>
+clause expression evaluates to <code>false</code>, undeferred tasks are generated. The
+use of a variable in an <code>if</code> clause expression of a taskloop construct
+causes an implicit reference to the variable in all enclosing constructs.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>When a <code>final</code> clause is present and the <code>final</code> clause expression evaluates
+to <code>true</code>, the generated tasks will be final tasks. All task constructs
+encountered during execution of a final task will generate final and
+included tasks. The use of a variable in a <code>final</code> clause expression causes
+an implicit reference to the variable in all enclosing constructs.</p><p>If a <code>grainsize</code> clause is present, the number of logical loop iterations
+assigned to each generated task is greater than or equal to the minimum of
+the value of the grain-size expression and the number of logical loop
+iterations, but less than two times the value of the grain-size expression.</p><p>When the <code>mergeable</code> clause is present, the tasks generated by the construct
+are &ldquo;mergeable tasks&rdquo;.</p><p>By default, the taskloop construct executes as if it was enclosed in a
+taskgroup construct with no statements or directives outside of the taskloop
+construct. Thus, the taskloop construct creates an implicit taskgroup
+region. If the <code>nogroup</code> clause is present, no implicit taskgroup region is
+created.</p><p>If <code>num_tasks</code> is specified, the taskloop construct creates as many tasks as
+the minimum of the num-tasks expression and the number of logical loop
+iterations. Each task must have at least one logical loop iteration.</p><p>The <code>priority</code> clause is a hint for the priority of the generated tasks.
+The <code>priority</code> is a non-negative integer expression that provides a hint for
+task execution order. Among all tasks ready to be executed, higher priority
+tasks (those with a higher numerical value in the priority clause
+expression) are recommended to execute before lower priority ones. The
+default priority-value when no priority clause is specified should be
+assumed to be zero (the lowest priority).</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>If the <code>untied</code> clause is present on a task construct, any thread in the
+team can resume the task region after a suspension. The <code>untied</code> clause is
+ignored if a <code>final</code> clause is present on the same task construct and the
+<code>final</code> expression evaluates to <code>true</code>, or if a task is an included task.</p><p>If an <code>in_reduction</code> clause is present on the taskloop construct, the
+behavior is as if each generated task was defined by a task construct on
+which an <code>in_reduction</code> clause with the same reduction operator and list
+items is present. Thus, the generated tasks are participants of a reduction
+previously defined by a reduction scoping clause. In this case, accumulator
+variables are specified in <code>in_reduction_vars</code>, symbols referring to
+reduction declarations in <code>in_reduction_syms</code> and <code>in_reduction_byref</code>
+indicate for each reduction variable whether it should be passed by value or
+by reference.</p><p>If a <code>reduction</code> clause is present on the taskloop construct, the behavior
+is as if a <code>task_reduction</code> clause with the same reduction operator and list
+items was applied to the implicit taskgroup construct enclosing the taskloop
+construct. The taskloop construct executes as if each generated task was
+defined by a task construct on which an <code>in_reduction</code> clause with the same
+reduction operator and list items is present. Thus, the generated tasks are
+participants of the reduction defined by the <code>task_reduction</code> clause that
+was applied to the implicit taskgroup construct.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>AutomaticAllocationScope</code>, <code>RecursiveMemoryEffects</code>, <code>SingleBlock</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ComposableOpInterface</code>, <code>LoopWrapperInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-26>Attributes:&nbsp;<a class=headline-hash href=#attributes-26>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>in_reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>in_reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>mergeable</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>nogroup</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>untied</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-22>Operands:&nbsp;<a class=headline-hash href=#operands-22>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>final</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>grainsize</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>in_reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>num_tasks</code></td><td>integer or index</td></tr><tr><td style=text-align:center><code>priority</code></td><td>integer</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptaskwait-omptaskwaitop><code>omp.taskwait</code> (omp::TaskwaitOp)&nbsp;<a class=headline-hash href=#omptaskwait-omptaskwaitop>¶</a></h3><p><em>Taskwait construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.taskwait` oilist(
+              `depend` `(`
+              custom&lt;DependVarList&gt;($depend_vars, type($depend_vars), $depend_kinds) `)`
+              |
+              `nowait` $nowait
+              ) attr-dict
+</code></pre><p>The taskwait construct specifies a wait on the completion of child tasks
+of the current task.</p><p>The <code>depend_kinds</code> and <code>depend_vars</code> arguments are variadic lists of values
+that specify the dependencies of this particular task in relation to other
+tasks.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><h4 id=attributes-27>Attributes:&nbsp;<a class=headline-hash href=#attributes-27>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>depend_kinds</code></td><td>::mlir::ArrayAttr</td><td>depend clause in a target or task construct array</td></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-23>Operands:&nbsp;<a class=headline-hash href=#operands-23>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>depend_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr></tbody></table><h3 id=omptaskyield-omptaskyieldop><code>omp.taskyield</code> (omp::TaskyieldOp)&nbsp;<a class=headline-hash href=#omptaskyield-omptaskyieldop>¶</a></h3><p><em>Taskyield construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.taskyield` attr-dict
+</code></pre><p>The taskyield construct specifies that the current task can be suspended
+in favor of execution of a different task.</p><h3 id=ompteams-ompteamsop><code>omp.teams</code> (omp::TeamsOp)&nbsp;<a class=headline-hash href=#ompteams-ompteamsop>¶</a></h3><p><em>Teams construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.teams` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `if` `(` $if_expr `)`
+              |
+              `num_teams` `(` ( $num_teams_lower^ `:` type($num_teams_lower) )? `to`
+              $num_teams_upper `:` type($num_teams_upper) `)`
+              |
+              `thread_limit` `(` $thread_limit `:` type($thread_limit) `)`
+              )
+              custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+              $reduction_syms) attr-dict
+</code></pre><p>The teams construct defines a region of code that triggers the creation of a
+league of teams. Once created, the number of teams remains constant for the
+duration of its code region.</p><p>If the <code>if_expr</code> is present and it evaluates to <code>false</code>, the number of teams
+created is one.</p><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The optional <code>num_teams_upper</code> and <code>num_teams_lower</code> arguments specify the
+limit on the number of teams to be created. If only the upper bound is
+specified, it acts as if the lower bound was set to the same value. It is
+not allowed to set <code>num_teams_lower</code> if <code>num_teams_upper</code> is not specified.
+They define a closed range, where both the lower and upper bounds are
+included.</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>The optional <code>thread_limit</code> specifies the limit on the number of threads.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>RecursiveMemoryEffects</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-28>Attributes:&nbsp;<a class=headline-hash href=#attributes-28>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr></table><h4 id=operands-24>Operands:&nbsp;<a class=headline-hash href=#operands-24>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>if_expr</code></td><td>1-bit signless integer</td></tr><tr><td style=text-align:center><code>num_teams_lower</code></td><td>integer</td></tr><tr><td style=text-align:center><code>num_teams_upper</code></td><td>integer</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>thread_limit</code></td><td>integer</td></tr></tbody></table><h3 id=ompterminator-ompterminatorop><code>omp.terminator</code> (omp::TerminatorOp)&nbsp;<a class=headline-hash href=#ompterminator-ompterminatorop>¶</a></h3><p><em>Terminator for OpenMP regions</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.terminator` attr-dict
+</code></pre><p>A terminator operation for regions that appear in the body of OpenMP
+operation. These regions are not expected to return any value so the
+terminator takes no operands. The terminator op returns control to the
+enclosing op.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>Terminator</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h3 id=ompthreadprivate-ompthreadprivateop><code>omp.threadprivate</code> (omp::ThreadprivateOp)&nbsp;<a class=headline-hash href=#ompthreadprivate-ompthreadprivateop>¶</a></h3><p><em>Threadprivate directive</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.threadprivate` $sym_addr `:` type($sym_addr) `-&gt;` type($tls_addr) attr-dict
+</code></pre><p>The threadprivate directive specifies that variables are replicated, with
+each thread having its own copy.</p><p>The current implementation uses the OpenMP runtime to provide thread-local
+storage (TLS). Using the TLS feature of the LLVM IR will be supported in
+future.</p><p>This operation takes in the address of a symbol that represents the original
+variable and returns the address of its TLS. All occurrences of
+threadprivate variables in a parallel region should use the TLS returned by
+this operation.</p><p>The <code>sym_addr</code> refers to the address of the symbol, which is a pointer to
+the original variable.</p><h4 id=operands-25>Operands:&nbsp;<a class=headline-hash href=#operands-25>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>sym_addr</code></td><td>OpenMP-compatible variable type</td></tr></tbody></table><h4 id=results-2>Results:&nbsp;<a class=headline-hash href=#results-2>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>tls_addr</code></td><td>OpenMP-compatible variable type</td></tr></tbody></table><h3 id=ompwsloop-ompwsloopop><code>omp.wsloop</code> (omp::WsloopOp)&nbsp;<a class=headline-hash href=#ompwsloop-ompwsloopop>¶</a></h3><p><em>Worksharing-loop construct</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.wsloop` oilist(
+              `allocate` `(`
+              custom&lt;AllocateAndAllocator&gt;($allocate_vars, type($allocate_vars),
+              $allocator_vars, type($allocator_vars)) `)`
+              |
+              `linear` `(`
+              custom&lt;LinearClause&gt;($linear_vars, type($linear_vars),
+              $linear_step_vars) `)`
+              |
+              `nowait` $nowait
+              |
+              `order` `(` custom&lt;OrderClause&gt;($order, $order_mod) `)`
+              |
+              `ordered` `(` $ordered `)`
+              |
+              `schedule` `(`
+              custom&lt;ScheduleClause&gt;($schedule_kind, $schedule_mod, $schedule_simd,
+              $schedule_chunk, type($schedule_chunk)) `)`
+              )
+              custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+              $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+              $reduction_syms) attr-dict
+</code></pre><p>The worksharing-loop construct specifies that the iterations of the loop(s)
+will be executed in parallel by threads in the current context. These
+iterations are spread across threads that already exist in the enclosing
+parallel region.</p><p>The body region can only contain a single block which must contain a single
+operation and a terminator. The operation must be another compatible loop
+wrapper or an <code>omp.loop_nest</code>.</p><pre tabindex=0><code>omp.wsloop &lt;clauses&gt; {
+  omp.loop_nest (%i1, %i2) : index = (%c0, %c0) to (%c10, %c10) step (%c1, %c1) {
+    %a = load %arrA[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %b = load %arrB[%i1, %i2] : memref&lt;?x?xf32&gt;
+    %sum = arith.addf %a, %b : f32
+    store %sum, %arrC[%i1, %i2] : memref&lt;?x?xf32&gt;
+    omp.yield
+  }
+  omp.terminator
+}
+</code></pre><p>The <code>allocator_vars</code> and <code>allocate_vars</code> parameters are a variadic list of
+values that specify the memory allocator to be used to obtain storage for
+private values.</p><p>The <code>linear_step_vars</code> operand additionally specifies the step for each
+associated linear operand. Note that the <code>linear_vars</code> and
+<code>linear_step_vars</code> variadic lists should contain the same number of
+elements.</p><p>The optional <code>nowait</code> attribute, when present, eliminates the implicit
+barrier at the end of the construct, so the parent operation can make
+progress even if the child operation has not completed yet.</p><p>The optional <code>order</code> attribute specifies which order the iterations of the
+associated loops are executed in. Currently the only option for this
+attribute is &ldquo;concurrent&rdquo;.</p><p>The optional <code>ordered</code> attribute specifies how many loops are associated
+with the worksharing-loop construct. The value of zero refers to the ordered
+clause specified without parameter.</p><p>Reductions can be performed by specifying reduction accumulator variables in
+<code>reduction_vars</code>, symbols referring to reduction declarations in the
+<code>reduction_syms</code> attribute, and whether the reduction variable should be
+passed into the reduction region by value or by reference in
+<code>reduction_byref</code>. Each reduction is identified by the accumulator it uses
+and accumulators must not be repeated in the same reduction. A private
+variable corresponding to the accumulator is used in place of the
+accumulator inside the body of the operation. The reduction declaration
+specifies how to combine the values from each iteration, section, team,
+thread or simd lane defined by the operation&rsquo;s region into the final value,
+which is available in the accumulator after they all complete.</p><p>The optional <code>schedule_kind</code> attribute specifies the loop schedule for this
+loop, determining how the loop is distributed across the parallel threads.
+The optional <code>schedule_chunk</code> associated with this determines further
+controls this distribution.</p><p>Traits: <code>AttrSizedOperandSegments</code>, <code>RecursiveMemoryEffects</code>, <code>SingleBlock</code></p><p>Interfaces: <code>BlockArgOpenMPOpInterface</code>, <code>ComposableOpInterface</code>, <code>LoopWrapperInterface</code>, <code>ReductionClauseInterface</code></p><h4 id=attributes-29>Attributes:&nbsp;<a class=headline-hash href=#attributes-29>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>nowait</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr><tr><td><code>order</code></td><td>::mlir::omp::ClauseOrderKindAttr</td><td><details><summary>OrderKind Clause</summary><p>Enum cases:</p><ul><li>concurrent (<code>Concurrent</code>)</li></ul></details></td></tr><tr><td><code>order_mod</code></td><td>::mlir::omp::OrderModifierAttr</td><td><details><summary>OpenMP Order Modifier</summary><p>Enum cases:</p><ul><li>reproducible (<code>reproducible</code>)</li><li>unconstrained (<code>unconstrained</code>)</li></ul></details></td></tr><tr><td><code>ordered</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute whose minimum value is 0</td></tr><tr><td><code>private_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>reduction_byref</code></td><td>::mlir::DenseBoolArrayAttr</td><td>i1 dense array attribute</td></tr><tr><td><code>reduction_syms</code></td><td>::mlir::ArrayAttr</td><td>symbol ref array attribute</td></tr><tr><td><code>schedule_kind</code></td><td>::mlir::omp::ClauseScheduleKindAttr</td><td><details><summary>ScheduleKind Clause</summary><p>Enum cases:</p><ul><li>static (<code>Static</code>)</li><li>dynamic (<code>Dynamic</code>)</li><li>guided (<code>Guided</code>)</li><li>auto (<code>Auto</code>)</li><li>runtime (<code>Runtime</code>)</li></ul></details></td></tr><tr><td><code>schedule_mod</code></td><td>::mlir::omp::ScheduleModifierAttr</td><td><details><summary>OpenMP Schedule Modifier</summary><p>Enum cases:</p><ul><li>none (<code>none</code>)</li><li>monotonic (<code>monotonic</code>)</li><li>nonmonotonic (<code>nonmonotonic</code>)</li><li>simd (<code>simd</code>)</li></ul></details></td></tr><tr><td><code>schedule_simd</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-26>Operands:&nbsp;<a class=headline-hash href=#operands-26>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>allocate_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>allocator_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>linear_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>linear_step_vars</code></td><td>variadic of 32-bit signless integer</td></tr><tr><td style=text-align:center><code>private_vars</code></td><td>variadic of any type</td></tr><tr><td style=text-align:center><code>reduction_vars</code></td><td>variadic of OpenMP-compatible variable type</td></tr><tr><td style=text-align:center><code>schedule_chunk</code></td><td>any type</td></tr></tbody></table><h3 id=ompyield-ompyieldop><code>omp.yield</code> (omp::YieldOp)&nbsp;<a class=headline-hash href=#ompyield-ompyieldop>¶</a></h3><p><em>Loop yield and termination operation</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `omp.yield` ( `(` $results^ `:` type($results) `)` )? attr-dict
+</code></pre><p>&ldquo;omp.yield&rdquo; yields SSA values from the OpenMP dialect op region and
+terminates the region. The semantics of how the values are yielded is
+defined by the parent operation.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>HasParent&lt;AtomicUpdateOp, DeclareReductionOp, LoopNestOp, PrivateClauseOp></code>, <code>ReturnLike</code>, <code>Terminator</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>RegionBranchTerminatorOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=operands-27>Operands:&nbsp;<a class=headline-hash href=#operands-27>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>results</code></td><td>variadic of any type</td></tr></tbody></table><h2 id=attributes-30>Attributes&nbsp;<a class=headline-hash href=#attributes-30>¶</a></h2><h3 id=clausecancellationconstructtypeattr>ClauseCancellationConstructTypeAttr&nbsp;<a class=headline-hash href=#clausecancellationconstructtypeattr>¶</a></h3><p>CancellationConstructType Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.cancellationconstructtype&lt;
+  ::mlir::omp::ClauseCancellationConstructType   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>parallel (<code>Parallel</code>)</li><li>loop (<code>Loop</code>)</li><li>sections (<code>Sections</code>)</li><li>taskgroup (<code>Taskgroup</code>)</li></ul><h4 id=parameters>Parameters:&nbsp;<a class=headline-hash href=#parameters>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseCancellationConstructType</code></td><td>an enum of type ClauseCancellationConstructType</td></tr></tbody></table><h3 id=clausedependattr>ClauseDependAttr&nbsp;<a class=headline-hash href=#clausedependattr>¶</a></h3><p>depend clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.clause_depend&lt;
+  ::mlir::omp::ClauseDepend   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>dependsource (<code>dependsource</code>)</li><li>dependsink (<code>dependsink</code>)</li></ul><h4 id=parameters-1>Parameters:&nbsp;<a class=headline-hash href=#parameters-1>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseDepend</code></td><td>an enum of type ClauseDepend</td></tr></tbody></table><h3 id=clauserequiresattr>ClauseRequiresAttr&nbsp;<a class=headline-hash href=#clauserequiresattr>¶</a></h3><p>requires clauses</p><p>Syntax:</p><pre tabindex=0><code>#omp.clause_requires&lt;
+  ::mlir::omp::ClauseRequires   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>none (<code>none</code>)</li><li>reverse_offload (<code>reverse_offload</code>)</li><li>unified_address (<code>unified_address</code>)</li><li>unified_shared_memory (<code>unified_shared_memory</code>)</li><li>dynamic_allocators (<code>dynamic_allocators</code>)</li></ul><h4 id=parameters-2>Parameters:&nbsp;<a class=headline-hash href=#parameters-2>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseRequires</code></td><td>an enum of type ClauseRequires</td></tr></tbody></table><h3 id=clausetaskdependattr>ClauseTaskDependAttr&nbsp;<a class=headline-hash href=#clausetaskdependattr>¶</a></h3><p>depend clause in a target or task construct</p><p>Syntax:</p><pre tabindex=0><code>#omp.clause_task_depend&lt;
+  ::mlir::omp::ClauseTaskDepend   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>taskdependin (<code>taskdependin</code>)</li><li>taskdependout (<code>taskdependout</code>)</li><li>taskdependinout (<code>taskdependinout</code>)</li></ul><h4 id=parameters-3>Parameters:&nbsp;<a class=headline-hash href=#parameters-3>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseTaskDepend</code></td><td>an enum of type ClauseTaskDepend</td></tr></tbody></table><h3 id=datasharingclausetypeattr>DataSharingClauseTypeAttr&nbsp;<a class=headline-hash href=#datasharingclausetypeattr>¶</a></h3><p>Type of a data-sharing clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.data_sharing_type&lt;
+  ::mlir::omp::DataSharingClauseType   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>private (<code>Private</code>)</li><li>firstprivate (<code>FirstPrivate</code>)</li></ul><h4 id=parameters-4>Parameters:&nbsp;<a class=headline-hash href=#parameters-4>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::DataSharingClauseType</code></td><td>an enum of type DataSharingClauseType</td></tr></tbody></table><h3 id=declaretargetattr>DeclareTargetAttr&nbsp;<a class=headline-hash href=#declaretargetattr>¶</a></h3><p>Syntax:</p><pre tabindex=0><code>#omp.declaretarget&lt;
+  DeclareTargetDeviceTypeAttr,   # device_type
+  DeclareTargetCaptureClauseAttr   # capture_clause
+&gt;
+</code></pre><h4 id=parameters-5>Parameters:&nbsp;<a class=headline-hash href=#parameters-5>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>device_type</td><td style=text-align:center><code>DeclareTargetDeviceTypeAttr</code></td><td></td></tr><tr><td style=text-align:center>capture_clause</td><td style=text-align:center><code>DeclareTargetCaptureClauseAttr</code></td><td></td></tr></tbody></table><h3 id=declaretargetcaptureclauseattr>DeclareTargetCaptureClauseAttr&nbsp;<a class=headline-hash href=#declaretargetcaptureclauseattr>¶</a></h3><p>capture clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.capture_clause&lt;
+  ::mlir::omp::DeclareTargetCaptureClause   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>to (<code>to</code>)</li><li>link (<code>link</code>)</li><li>enter (<code>enter</code>)</li></ul><h4 id=parameters-6>Parameters:&nbsp;<a class=headline-hash href=#parameters-6>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::DeclareTargetCaptureClause</code></td><td>an enum of type DeclareTargetCaptureClause</td></tr></tbody></table><h3 id=declaretargetdevicetypeattr>DeclareTargetDeviceTypeAttr&nbsp;<a class=headline-hash href=#declaretargetdevicetypeattr>¶</a></h3><p>device_type clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.device_type&lt;
+  ::mlir::omp::DeclareTargetDeviceType   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>any (<code>any</code>)</li><li>host (<code>host</code>)</li><li>nohost (<code>nohost</code>)</li></ul><h4 id=parameters-7>Parameters:&nbsp;<a class=headline-hash href=#parameters-7>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::DeclareTargetDeviceType</code></td><td>an enum of type DeclareTargetDeviceType</td></tr></tbody></table><h3 id=flagsattr>FlagsAttr&nbsp;<a class=headline-hash href=#flagsattr>¶</a></h3><p>Syntax:</p><pre tabindex=0><code>#omp.flags&lt;
+  uint32_t,   # debug_kind
+  bool,   # assume_teams_oversubscription
+  bool,   # assume_threads_oversubscription
+  bool,   # assume_no_thread_state
+  bool,   # assume_no_nested_parallelism
+  bool,   # no_gpu_lib
+  uint32_t   # openmp_device_version
+&gt;
+</code></pre><h4 id=parameters-8>Parameters:&nbsp;<a class=headline-hash href=#parameters-8>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>debug_kind</td><td style=text-align:center><code>uint32_t</code></td><td></td></tr><tr><td style=text-align:center>assume_teams_oversubscription</td><td style=text-align:center><code>bool</code></td><td></td></tr><tr><td style=text-align:center>assume_threads_oversubscription</td><td style=text-align:center><code>bool</code></td><td></td></tr><tr><td style=text-align:center>assume_no_thread_state</td><td style=text-align:center><code>bool</code></td><td></td></tr><tr><td style=text-align:center>assume_no_nested_parallelism</td><td style=text-align:center><code>bool</code></td><td></td></tr><tr><td style=text-align:center>no_gpu_lib</td><td style=text-align:center><code>bool</code></td><td></td></tr><tr><td style=text-align:center>openmp_device_version</td><td style=text-align:center><code>uint32_t</code></td><td></td></tr></tbody></table><h3 id=clausegrainsizetypeattr>ClauseGrainsizeTypeAttr&nbsp;<a class=headline-hash href=#clausegrainsizetypeattr>¶</a></h3><p>GrainsizeType Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.grainsizetype&lt;
+  ::mlir::omp::ClauseGrainsizeType   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>strict (<code>Strict</code>)</li></ul><h4 id=parameters-9>Parameters:&nbsp;<a class=headline-hash href=#parameters-9>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseGrainsizeType</code></td><td>an enum of type ClauseGrainsizeType</td></tr></tbody></table><h3 id=clausememoryorderkindattr>ClauseMemoryOrderKindAttr&nbsp;<a class=headline-hash href=#clausememoryorderkindattr>¶</a></h3><p>MemoryOrderKind Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.memoryorderkind&lt;
+  ::mlir::omp::ClauseMemoryOrderKind   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>seq_cst (<code>Seq_cst</code>)</li><li>acq_rel (<code>Acq_rel</code>)</li><li>acquire (<code>Acquire</code>)</li><li>release (<code>Release</code>)</li><li>relaxed (<code>Relaxed</code>)</li></ul><h4 id=parameters-10>Parameters:&nbsp;<a class=headline-hash href=#parameters-10>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseMemoryOrderKind</code></td><td>an enum of type ClauseMemoryOrderKind</td></tr></tbody></table><h3 id=clausenumtaskstypeattr>ClauseNumTasksTypeAttr&nbsp;<a class=headline-hash href=#clausenumtaskstypeattr>¶</a></h3><p>NumTasksType Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.numtaskstype&lt;
+  ::mlir::omp::ClauseNumTasksType   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>strict (<code>Strict</code>)</li></ul><h4 id=parameters-11>Parameters:&nbsp;<a class=headline-hash href=#parameters-11>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseNumTasksType</code></td><td>an enum of type ClauseNumTasksType</td></tr></tbody></table><h3 id=clauseorderkindattr>ClauseOrderKindAttr&nbsp;<a class=headline-hash href=#clauseorderkindattr>¶</a></h3><p>OrderKind Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.orderkind&lt;
+  ::mlir::omp::ClauseOrderKind   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>concurrent (<code>Concurrent</code>)</li></ul><h4 id=parameters-12>Parameters:&nbsp;<a class=headline-hash href=#parameters-12>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseOrderKind</code></td><td>an enum of type ClauseOrderKind</td></tr></tbody></table><h3 id=ordermodifierattr>OrderModifierAttr&nbsp;<a class=headline-hash href=#ordermodifierattr>¶</a></h3><p>OpenMP Order Modifier</p><p>Syntax:</p><pre tabindex=0><code>#omp.order_mod&lt;
+  ::mlir::omp::OrderModifier   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>reproducible (<code>reproducible</code>)</li><li>unconstrained (<code>unconstrained</code>)</li></ul><h4 id=parameters-13>Parameters:&nbsp;<a class=headline-hash href=#parameters-13>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::OrderModifier</code></td><td>an enum of type OrderModifier</td></tr></tbody></table><h3 id=clauseprocbindkindattr>ClauseProcBindKindAttr&nbsp;<a class=headline-hash href=#clauseprocbindkindattr>¶</a></h3><p>ProcBindKind Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.procbindkind&lt;
+  ::mlir::omp::ClauseProcBindKind   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>primary (<code>Primary</code>)</li><li>master (<code>Master</code>)</li><li>close (<code>Close</code>)</li><li>spread (<code>Spread</code>)</li></ul><h4 id=parameters-14>Parameters:&nbsp;<a class=headline-hash href=#parameters-14>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseProcBindKind</code></td><td>an enum of type ClauseProcBindKind</td></tr></tbody></table><h3 id=clauseschedulekindattr>ClauseScheduleKindAttr&nbsp;<a class=headline-hash href=#clauseschedulekindattr>¶</a></h3><p>ScheduleKind Clause</p><p>Syntax:</p><pre tabindex=0><code>#omp.schedulekind&lt;
+  ::mlir::omp::ClauseScheduleKind   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>static (<code>Static</code>)</li><li>dynamic (<code>Dynamic</code>)</li><li>guided (<code>Guided</code>)</li><li>auto (<code>Auto</code>)</li><li>runtime (<code>Runtime</code>)</li></ul><h4 id=parameters-15>Parameters:&nbsp;<a class=headline-hash href=#parameters-15>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ClauseScheduleKind</code></td><td>an enum of type ClauseScheduleKind</td></tr></tbody></table><h3 id=schedulemodifierattr>ScheduleModifierAttr&nbsp;<a class=headline-hash href=#schedulemodifierattr>¶</a></h3><p>OpenMP Schedule Modifier</p><p>Syntax:</p><pre tabindex=0><code>#omp.sched_mod&lt;
+  ::mlir::omp::ScheduleModifier   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>none (<code>none</code>)</li><li>monotonic (<code>monotonic</code>)</li><li>nonmonotonic (<code>nonmonotonic</code>)</li><li>simd (<code>simd</code>)</li></ul><h4 id=parameters-16>Parameters:&nbsp;<a class=headline-hash href=#parameters-16>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::ScheduleModifier</code></td><td>an enum of type ScheduleModifier</td></tr></tbody></table><h3 id=variablecapturekindattr>VariableCaptureKindAttr&nbsp;<a class=headline-hash href=#variablecapturekindattr>¶</a></h3><p>variable capture kind</p><p>Syntax:</p><pre tabindex=0><code>#omp.variable_capture_kind&lt;
+  ::mlir::omp::VariableCaptureKind   # value
+&gt;
+</code></pre><p>Enum cases:</p><ul><li>This (<code>This</code>)</li><li>ByRef (<code>ByRef</code>)</li><li>ByCopy (<code>ByCopy</code>)</li><li>VLAType (<code>VLAType</code>)</li></ul><h4 id=parameters-17>Parameters:&nbsp;<a class=headline-hash href=#parameters-17>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::omp::VariableCaptureKind</code></td><td>an enum of type VariableCaptureKind</td></tr></tbody></table><h3 id=versionattr>VersionAttr&nbsp;<a class=headline-hash href=#versionattr>¶</a></h3><p>Syntax:</p><pre tabindex=0><code>#omp.version&lt;
+  uint32_t   # version
+&gt;
+</code></pre><h4 id=parameters-18>Parameters:&nbsp;<a class=headline-hash href=#parameters-18>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>version</td><td style=text-align:center><code>uint32_t</code></td><td></td></tr></tbody></table><h2 id=types>Types&nbsp;<a class=headline-hash href=#types>¶</a></h2><h3 id=mapboundstype>MapBoundsType&nbsp;<a class=headline-hash href=#mapboundstype>¶</a></h3><p>Type for representing omp map clause bounds information</p><p>Syntax: <code>!omp.map_bounds_ty</code></p><h2 id=enums>Enums&nbsp;<a class=headline-hash href=#enums>¶</a></h2><h3 id=clausecancellationconstructtype>ClauseCancellationConstructType&nbsp;<a class=headline-hash href=#clausecancellationconstructtype>¶</a></h3><p>CancellationConstructType Clause</p><h4 id=cases>Cases:&nbsp;<a class=headline-hash href=#cases>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Parallel</td><td style=text-align:center><code>0</code></td><td>parallel</td></tr><tr><td style=text-align:center>Loop</td><td style=text-align:center><code>1</code></td><td>loop</td></tr><tr><td style=text-align:center>Sections</td><td style=text-align:center><code>2</code></td><td>sections</td></tr><tr><td style=text-align:center>Taskgroup</td><td style=text-align:center><code>3</code></td><td>taskgroup</td></tr></tbody></table><h3 id=clausedepend>ClauseDepend&nbsp;<a class=headline-hash href=#clausedepend>¶</a></h3><p>depend clause</p><h4 id=cases-1>Cases:&nbsp;<a class=headline-hash href=#cases-1>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>dependsource</td><td style=text-align:center><code>0</code></td><td>dependsource</td></tr><tr><td style=text-align:center>dependsink</td><td style=text-align:center><code>1</code></td><td>dependsink</td></tr></tbody></table><h3 id=clauserequires>ClauseRequires&nbsp;<a class=headline-hash href=#clauserequires>¶</a></h3><p>requires clauses</p><h4 id=cases-2>Cases:&nbsp;<a class=headline-hash href=#cases-2>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>none</td><td style=text-align:center><code>0</code></td><td>none</td></tr><tr><td style=text-align:center>reverse_offload</td><td style=text-align:center><code>1</code></td><td>reverse_offload</td></tr><tr><td style=text-align:center>unified_address</td><td style=text-align:center><code>2</code></td><td>unified_address</td></tr><tr><td style=text-align:center>unified_shared_memory</td><td style=text-align:center><code>4</code></td><td>unified_shared_memory</td></tr><tr><td style=text-align:center>dynamic_allocators</td><td style=text-align:center><code>8</code></td><td>dynamic_allocators</td></tr></tbody></table><h3 id=clausetaskdepend>ClauseTaskDepend&nbsp;<a class=headline-hash href=#clausetaskdepend>¶</a></h3><p>depend clause in a target or task construct</p><h4 id=cases-3>Cases:&nbsp;<a class=headline-hash href=#cases-3>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>taskdependin</td><td style=text-align:center><code>0</code></td><td>taskdependin</td></tr><tr><td style=text-align:center>taskdependout</td><td style=text-align:center><code>1</code></td><td>taskdependout</td></tr><tr><td style=text-align:center>taskdependinout</td><td style=text-align:center><code>2</code></td><td>taskdependinout</td></tr></tbody></table><h3 id=datasharingclausetype>DataSharingClauseType&nbsp;<a class=headline-hash href=#datasharingclausetype>¶</a></h3><p>Type of a data-sharing clause</p><h4 id=cases-4>Cases:&nbsp;<a class=headline-hash href=#cases-4>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Private</td><td style=text-align:center><code>0</code></td><td>private</td></tr><tr><td style=text-align:center>FirstPrivate</td><td style=text-align:center><code>1</code></td><td>firstprivate</td></tr></tbody></table><h3 id=declaretargetcaptureclause>DeclareTargetCaptureClause&nbsp;<a class=headline-hash href=#declaretargetcaptureclause>¶</a></h3><p>capture clause</p><h4 id=cases-5>Cases:&nbsp;<a class=headline-hash href=#cases-5>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>to</td><td style=text-align:center><code>0</code></td><td>to</td></tr><tr><td style=text-align:center>link</td><td style=text-align:center><code>1</code></td><td>link</td></tr><tr><td style=text-align:center>enter</td><td style=text-align:center><code>2</code></td><td>enter</td></tr></tbody></table><h3 id=declaretargetdevicetype>DeclareTargetDeviceType&nbsp;<a class=headline-hash href=#declaretargetdevicetype>¶</a></h3><p>device_type clause</p><h4 id=cases-6>Cases:&nbsp;<a class=headline-hash href=#cases-6>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>any</td><td style=text-align:center><code>0</code></td><td>any</td></tr><tr><td style=text-align:center>host</td><td style=text-align:center><code>1</code></td><td>host</td></tr><tr><td style=text-align:center>nohost</td><td style=text-align:center><code>2</code></td><td>nohost</td></tr></tbody></table><h3 id=clausegrainsizetype>ClauseGrainsizeType&nbsp;<a class=headline-hash href=#clausegrainsizetype>¶</a></h3><p>GrainsizeType Clause</p><h4 id=cases-7>Cases:&nbsp;<a class=headline-hash href=#cases-7>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Strict</td><td style=text-align:center><code>0</code></td><td>strict</td></tr></tbody></table><h3 id=clausememoryorderkind>ClauseMemoryOrderKind&nbsp;<a class=headline-hash href=#clausememoryorderkind>¶</a></h3><p>MemoryOrderKind Clause</p><h4 id=cases-8>Cases:&nbsp;<a class=headline-hash href=#cases-8>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Seq_cst</td><td style=text-align:center><code>0</code></td><td>seq_cst</td></tr><tr><td style=text-align:center>Acq_rel</td><td style=text-align:center><code>1</code></td><td>acq_rel</td></tr><tr><td style=text-align:center>Acquire</td><td style=text-align:center><code>2</code></td><td>acquire</td></tr><tr><td style=text-align:center>Release</td><td style=text-align:center><code>3</code></td><td>release</td></tr><tr><td style=text-align:center>Relaxed</td><td style=text-align:center><code>4</code></td><td>relaxed</td></tr></tbody></table><h3 id=clausenumtaskstype>ClauseNumTasksType&nbsp;<a class=headline-hash href=#clausenumtaskstype>¶</a></h3><p>NumTasksType Clause</p><h4 id=cases-9>Cases:&nbsp;<a class=headline-hash href=#cases-9>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Strict</td><td style=text-align:center><code>0</code></td><td>strict</td></tr></tbody></table><h3 id=clauseorderkind>ClauseOrderKind&nbsp;<a class=headline-hash href=#clauseorderkind>¶</a></h3><p>OrderKind Clause</p><h4 id=cases-10>Cases:&nbsp;<a class=headline-hash href=#cases-10>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Concurrent</td><td style=text-align:center><code>1</code></td><td>concurrent</td></tr></tbody></table><h3 id=ordermodifier>OrderModifier&nbsp;<a class=headline-hash href=#ordermodifier>¶</a></h3><p>OpenMP Order Modifier</p><h4 id=cases-11>Cases:&nbsp;<a class=headline-hash href=#cases-11>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>reproducible</td><td style=text-align:center><code>0</code></td><td>reproducible</td></tr><tr><td style=text-align:center>unconstrained</td><td style=text-align:center><code>1</code></td><td>unconstrained</td></tr></tbody></table><h3 id=clauseprocbindkind>ClauseProcBindKind&nbsp;<a class=headline-hash href=#clauseprocbindkind>¶</a></h3><p>ProcBindKind Clause</p><h4 id=cases-12>Cases:&nbsp;<a class=headline-hash href=#cases-12>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Primary</td><td style=text-align:center><code>0</code></td><td>primary</td></tr><tr><td style=text-align:center>Master</td><td style=text-align:center><code>1</code></td><td>master</td></tr><tr><td style=text-align:center>Close</td><td style=text-align:center><code>2</code></td><td>close</td></tr><tr><td style=text-align:center>Spread</td><td style=text-align:center><code>3</code></td><td>spread</td></tr></tbody></table><h3 id=clauseschedulekind>ClauseScheduleKind&nbsp;<a class=headline-hash href=#clauseschedulekind>¶</a></h3><p>ScheduleKind Clause</p><h4 id=cases-13>Cases:&nbsp;<a class=headline-hash href=#cases-13>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>Static</td><td style=text-align:center><code>0</code></td><td>static</td></tr><tr><td style=text-align:center>Dynamic</td><td style=text-align:center><code>1</code></td><td>dynamic</td></tr><tr><td style=text-align:center>Guided</td><td style=text-align:center><code>2</code></td><td>guided</td></tr><tr><td style=text-align:center>Auto</td><td style=text-align:center><code>3</code></td><td>auto</td></tr><tr><td style=text-align:center>Runtime</td><td style=text-align:center><code>4</code></td><td>runtime</td></tr></tbody></table><h3 id=schedulemodifier>ScheduleModifier&nbsp;<a class=headline-hash href=#schedulemodifier>¶</a></h3><p>OpenMP Schedule Modifier</p><h4 id=cases-14>Cases:&nbsp;<a class=headline-hash href=#cases-14>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>none</td><td style=text-align:center><code>0</code></td><td>none</td></tr><tr><td style=text-align:center>monotonic</td><td style=text-align:center><code>1</code></td><td>monotonic</td></tr><tr><td style=text-align:center>nonmonotonic</td><td style=text-align:center><code>2</code></td><td>nonmonotonic</td></tr><tr><td style=text-align:center>simd</td><td style=text-align:center><code>3</code></td><td>simd</td></tr></tbody></table><h3 id=variablecapturekind>VariableCaptureKind&nbsp;<a class=headline-hash href=#variablecapturekind>¶</a></h3><p>variable capture kind</p><h4 id=cases-15>Cases:&nbsp;<a class=headline-hash href=#cases-15>¶</a></h4><table><thead><tr><th style=text-align:center>Symbol</th><th style=text-align:center>Value</th><th>String</th></tr></thead><tbody><tr><td style=text-align:center>This</td><td style=text-align:center><code>0</code></td><td>This</td></tr><tr><td style=text-align:center>ByRef</td><td style=text-align:center><code>1</code></td><td>ByRef</td></tr><tr><td style=text-align:center>ByCopy</td><td style=text-align:center><code>2</code></td><td>ByCopy</td></tr><tr><td style=text-align:center>VLAType</td><td style=text-align:center><code>3</code></td><td>VLAType</td></tr></tbody></table><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ title="'omp' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - 'omp' Dialect</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/ title="'pdl_interp' Dialect">Next - 'pdl_interp' Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark opened">-</span></a><ul class=sub-menu><li class=active><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
