@@ -27,13 +27,13 @@ cmake --build . --target check-mlir-integration
 ### Run C++ unit tests:
 
 ```sh
-bin/llvm-lit -v tools/mlir/Unit
+bin/llvm-lit -v tools/mlir/test/Unit
 ```
 
 ### Run `lit` tests in a specific directory
 
 ```sh
-bin/llvm-lit -v tools/mlir/test/Dialect/Arithmetic
+bin/llvm-lit -v tools/mlir/test/Dialect/Arith
 ```
 
 ### Run a specific `lit` test file
@@ -109,18 +109,18 @@ Subsets of the testing tree can be invoked by passing a more specific path
 instead of `tools/mlir/test` above. Example:
 
 ```shell
-./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic
+./bin/llvm-lit tools/mlir/test/Dialect/Arith
 
 # Note that it is possible to test at the file granularity, but since these
 # files do not actually exist in the build directory, you need to know the
 # name.
-./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
+./bin/llvm-lit tools/mlir/test/Dialect/Arith/ops.mlir
 ```
 
 Or for running all the C++ unit-tests:
 
 ```shell
-./bin/llvm-lit tools/mlir/Unit
+./bin/llvm-lit tools/mlir/test/Unit
 ```
 
 The C++ unit-tests can also be executed as individual binaries, which is
