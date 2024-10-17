@@ -1,0 +1,366 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>'omp' Dialect - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://bugs.llvm.org/buglist.cgi?bug_status=__open__&amp;list_id=177877&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;product=MLIR&amp;query_format=specific">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>'omp' Dialect</h1><p>The <code>omp</code> dialect is for representing directives, clauses and other definitions
+of the
+<a href=https://www.openmp.org>OpenMP programming model</a>. This directive-based
+programming model, defined for the C, C++ and Fortran programming languages,
+provides abstractions to simplify the development of parallel and accelerated
+programs. All versions of the OpenMP specification can be found
+<a href=https://www.openmp.org/specifications/>here</a>.</p><p>Operations in this MLIR dialect generally correspond to a single OpenMP
+directive, taking arguments that represent their supported clauses, though this
+is not always the case. For a detailed information of operations, types and
+other definitions in this dialect, refer to the automatically-generated
+<a href=/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a>.</p><p><nav id=TableOfContents><ul><li><a href=#operation-naming-conventions>Operation Naming Conventions</a></li><li><a href=#clause-based-operation-definition>Clause-Based Operation Definition</a><ul><li><a href=#adding-a-clause>Adding a Clause</a></li><li><a href=#adding-an-operation>Adding an Operation</a></li><li><a href=#overriding-clause-inherited-properties>Overriding Clause-Inherited Properties</a></li><li><a href=#tablegen-verification-pass>Tablegen Verification Pass</a></li><li><a href=#operand-structures>Operand Structures</a></li><li><a href=#entry-block-argument-defining-clauses>Entry Block Argument-Defining Clauses</a></li></ul></li><li><a href=#loop-associated-directives>Loop-Associated Directives</a><ul><li><a href=#loop-transformations>Loop Transformations</a></li></ul></li><li><a href=#compound-construct-representation>Compound Construct Representation</a><ul><li><a href=#combined-constructs>Combined Constructs</a></li><li><a href=#composite-constructs>Composite Constructs</a></li></ul></li></ul></nav><h2 id=operation-naming-conventions>Operation Naming Conventions</h2><p>This section aims to standardize how dialect operation names are chosen, to
+ensure a level of consistency. There are two categories of names: tablegen names
+and assembly names. The former also corresponds to the C++ class that is
+generated for the operation, whereas the latter is used to represent it in MLIR
+text form.</p><p>Tablegen names are CamelCase, with the first letter capitalized and an &ldquo;Op&rdquo;
+suffix, whereas assembly names are snake_case, with all lowercase letters and
+words separated by underscores.</p><p>If the operation corresponds to a directive, clause or other kind of definition
+in the OpenMP specification, it must use the same name split into words in the
+same way. For example, the <code>target data</code> directive would become <code>TargetDataOp</code> /
+<code>omp.target_data</code>, whereas <code>taskloop</code> would become <code>TaskloopOp</code> /
+<code>omp.taskloop</code>.</p><p>Operations intended to carry extra information for another particular operation
+or clause must be named after that other operation or clause, followed by the
+name of the additional information. The assembly name must use a period to
+separate both parts. For example, the operation used to define some extra
+mapping information is named <code>MapInfoOp</code> / <code>omp.map.info</code>. The same rules are
+followed if multiple operations are created for different variants of the same
+directive, e.g. <code>atomic</code> becomes <code>Atomic{Read,Write,Update,Capture}Op</code> /
+<code>omp.atomic.{read,write,update,capture}</code>.</p><h2 id=clause-based-operation-definition>Clause-Based Operation Definition</h2><p>One main feature of the OpenMP specification is that, even though the set of
+clauses that could be applied to a given directive is independent from other
+directives, these clauses can generally apply to multiple directives. Since
+clauses usually define which arguments the corresponding MLIR operation takes,
+it is possible (and preferred) to define OpenMP dialect operations based on the
+list of clauses taken by the corresponding directive. This makes it simpler to
+keep their representation consistent across operations and minimizes redundancy
+in the dialect.</p><p>To achieve this, the base <code>OpenMP_Clause</code> tablegen class has been created. It is
+intended to be used to create clause definitions that can be then attached to
+multiple <code>OpenMP_Op</code> definitions, resulting in the latter inheriting by default
+all properties defined by clauses attached, similarly to the trait mechanism.
+This mechanism is implemented in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPOpBase.td>OpenMPOpBase.td</a>.</p><h3 id=adding-a-clause>Adding a Clause</h3><p>OpenMP clause definitions are located in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPClauses.td>OpenMPClauses.td</a>.
+For each clause, an <code>OpenMP_Clause</code> subclass and a definition based on it must
+be created. The subclass must take a <code>bit</code> template argument for each of the
+properties it can populate on associated <code>OpenMP_Op</code>s. These must be forwarded
+to the base class. The definition must be an instantiation of the base class
+where all these template arguments are set to <code>false</code>. The definition&rsquo;s name
+must be <code>OpenMP_&lt;Name>Clause</code>, whereas its base class&rsquo; must be
+<code>OpenMP_&lt;Name>ClauseSkip</code>. Following this pattern makes it possible to
+optionally skip the inheritance of some properties when defining operations:
+<a href=#overriding-clause-inherited-properties>more info</a>.</p><p>Clauses can define the following properties:</p><ul><li><code>list&lt;Traits> traits</code>: To be used when having a certain clause always
+implies some op trait, like the <code>map</code> clause and the <code>MapClauseOwningInterface</code>.</li><li><code>dag(ins) arguments</code>: Mandatory property holding values and attributes
+used to represent the clause. Argument names use snake_case and should contain
+the clause name to avoid name clashes between clauses. Variadic arguments
+(non-attributes) must contain the &ldquo;_vars&rdquo; suffix.</li><li><code>string {req,opt}AssemblyFormat</code>: Optional formatting strings to produce
+custom human-friendly printers and parsers for arguments associated with the
+clause. It will be combined with assembly formats for other clauses as explained
+<a href=#adding-an-operation>below</a>.</li><li><code>string description</code>: Optional description text to describe the clause and
+its representation.</li><li><code>string extraClassDeclaration</code>: Optional C++ declarations to be added to
+operation classes including the clause.</li></ul><p>For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>class</span> <span class=nv>OpenMP_ExampleClauseSkip</span><span class=p>&lt;</span>
+</span></span><span class=line><span class=cl>    <span class=k>bit</span> <span class=nv>traits</span> <span class=p>=</span> <span class=nv>false</span><span class=p>,</span> <span class=k>bit</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=nv>false</span><span class=p>,</span> <span class=k>bit</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=nv>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>bit</span> <span class=nv>description</span> <span class=p>=</span> <span class=nv>false</span><span class=p>,</span> <span class=k>bit</span> <span class=nv>extraClassDeclaration</span> <span class=p>=</span> <span class=nv>false</span>
+</span></span><span class=line><span class=cl>  <span class=p>&gt;</span> <span class=p>:</span> <span class=nv>OpenMP_Clause</span><span class=p>&lt;</span><span class=nv>traits</span><span class=p>,</span> <span class=nv>arguments</span><span class=p>,</span> <span class=nv>assemblyFormat</span><span class=p>,</span> <span class=nv>description</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=nv>extraClassDeclaration</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>(</span><span class=nv>ins</span>
+</span></span><span class=line><span class=cl>    <span class=nv>Optional</span><span class=p>&lt;</span><span class=nv>AnyType</span><span class=p>&gt;:</span><span class=nv>$example_var</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>optAssemblyFormat</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    `example` `(` $example_var `:` type($example_var) `)`
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    The `example_var` argument defines the variable to which the EXAMPLE clause
+</span></span></span><span class=line><span class=cl><span class=s>    applies.
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nv>OpenMP_ExampleClause</span> <span class=p>:</span> <span class=nv>OpenMP_ExampleClauseSkip</span><span class=p>&lt;&gt;;</span>
+</span></span></code></pre></div><h3 id=adding-an-operation>Adding an Operation</h3><p>Operations in the OpenMP dialect, located in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPOps.td>OpenMPOps.td</a>,
+can be defined like any other regular operation by just specifying a <code>mnemonic</code>
+and optional list of <code>traits</code> when inheriting from <code>OpenMP_Op</code>, and then
+defining the expected <code>description</code>, <code>arguments</code>, etc. properties inside of its
+body. However, in most cases, basing the operation definition on its list of
+accepted clauses is significantly simpler because some of the properties can
+just be inherited from these clauses.</p><p>In general, the way to achieve this is to specify, in addition to the <code>mnemonic</code>
+and optional list of <code>traits</code>, a list of <code>clauses</code> where all the applicable
+<code>OpenMP_&lt;Name>Clause</code> definitions are added. Then, the only properties that
+would have to be defined in the operation&rsquo;s body are the <code>summary</code> and
+<code>description</code>. For the latter, only the operation itself would have to be
+defined, and the description for its clause-inherited arguments is appended
+through the inherited <code>clausesDescription</code> property. By convention, the list of
+clauses for an operation must be specified in alphabetical order.</p><p>If the operation is intended to have a single region, this is better achieved by
+setting the <code>singleRegion=true</code> template argument of <code>OpenMP_Op</code> rather manually
+populating the <code>regions</code> property of the operation, because that way the default
+<code>assemblyFormat</code> is also updated correspondingly.</p><p>For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>ExampleOp</span> <span class=p>:</span> <span class=nv>OpenMP_Op</span><span class=p>&lt;</span><span class=s>&#34;example&#34;</span><span class=p>,</span> <span class=nv>traits</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>AttrSizedOperandSegments</span><span class=p>,</span> <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span> <span class=nv>clauses</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpenMP_AlignedClause</span><span class=p>,</span> <span class=nv>OpenMP_IfClause</span><span class=p>,</span> <span class=nv>OpenMP_LinearClause</span><span class=p>,</span> <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span> <span class=nv>singleRegion</span> <span class=p>=</span> <span class=nv>true</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;example construct&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    The example construct represents...
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span> <span class=err>#</span> <span class=nv>clausesDescription</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>This is possible because the <code>arguments</code>, <code>assemblyFormat</code> and
+<code>extraClassDeclaration</code> properties of the operation are by default
+populated by concatenating the corresponding properties of the clauses on the
+list. In the case of the <code>assemblyFormat</code>, this involves combining the
+<code>reqAssemblyFormat</code> and the <code>optAssemblyFormat</code> properties. The
+<code>reqAssemblyFormat</code> of all clauses is concatenated first and separated using
+spaces, whereas the <code>optAssemblyFormat</code> is wrapped in an <code>oilist()</code> and
+interleaved with &ldquo;|&rdquo; instead of spaces. The resulting <code>assemblyFormat</code> contains
+the required assembly format strings, followed by the optional assembly format
+strings, optionally the <code>$region</code> and the <code>attr-dict</code>.</p><h3 id=overriding-clause-inherited-properties>Overriding Clause-Inherited Properties</h3><p>Although the clause-based definition of operations can greatly reduce work, it&rsquo;s
+also somewhat restrictive, since there may be some situations where only part of
+the operation definition can be automated in that manner. For a fine-grained
+control over properties inherited from each clause two features are available:</p><ul><li>Inhibition of properties. By using <code>OpenMP_&lt;Name>ClauseSkip</code> tablegen
+classes, the list of properties copied from the clause to the operation can be
+selected. For example, <code>OpenMP_IfClauseSkip&lt;assemblyFormat = true></code> would result
+in every property defined for the <code>OpenMP_IfClause</code> except for the
+<code>assemblyFormat</code> being used to initially populate the properties of the
+operation.</li><li>Augmentation of properties. There are times when there is a need to add to
+a clause-populated operation property. Instead of overriding the property in the
+definition of the operation and having to manually replicate what would
+otherwise be automatically populated before adding to it, some internal
+properties are defined to hold this default value: <code>clausesArgs</code>,
+<code>clausesAssemblyFormat</code>, <code>clauses{Req,Opt}AssemblyFormat</code> and
+<code>clausesExtraClassDeclaration</code>.</li></ul><p>In the following example, assuming both the <code>OpenMP_InReductionClause</code> and the
+<code>OpenMP_ReductionClause</code> define a <code>getReductionVars</code> extra class declaration,
+we skip the conflicting <code>extraClassDeclaration</code>s inherited by both clauses and
+provide another implementation, without having to also re-define other
+declarations inherited from the <code>OpenMP_AllocateClause</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>def</span> <span class=nv>ExampleOp</span> <span class=p>:</span> <span class=nv>OpenMP_Op</span><span class=p>&lt;</span><span class=s>&#34;example&#34;</span><span class=p>,</span> <span class=nv>traits</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>AttrSizedOperandSegments</span><span class=p>,</span> <span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span> <span class=nv>clauses</span> <span class=p>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpenMP_AllocateClause</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpenMP_InReductionClauseSkip</span><span class=p>&lt;</span><span class=nv>extraClassDeclaration</span> <span class=p>=</span> <span class=nv>true</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>OpenMP_ReductionClauseSkip</span><span class=p>&lt;</span><span class=nv>extraClassDeclaration</span> <span class=p>=</span> <span class=nv>true</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span> <span class=nv>singleRegion</span> <span class=p>=</span> <span class=nv>true</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>summary</span> <span class=p>=</span> <span class=s>&#34;example construct&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>let</span> <span class=nv>description</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    This operation represents...
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span> <span class=err>#</span> <span class=nv>clausesDescription</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c>// Override the clause-populated extraClassDeclaration and add the default
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// back via appending clausesExtraClassDeclaration to it. This has the effect
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// of adding one declaration. Since this property is skipped for the
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// InReduction and Reduction clauses, clausesExtraClassDeclaration won&#39;t
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// incorporate the definition of this property for these clauses.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=k>let</span> <span class=nv>extraClassDeclaration</span> <span class=p>=</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>    SmallVector&lt;Value&gt; getReductionVars() {
+</span></span></span><span class=line><span class=cl><span class=s>      // Concatenate inReductionVars and reductionVars and return the result...
+</span></span></span><span class=line><span class=cl><span class=s>    }
+</span></span></span><span class=line><span class=cl><span class=s>  }]</span> <span class=err>#</span> <span class=nv>clausesExtraClassDeclaration</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>These features are intended for complex edge cases, but an effort should be made
+to avoid having to use them, since they may introduce inconsistencies and
+complexity to the dialect.</p><h3 id=tablegen-verification-pass>Tablegen Verification Pass</h3><p>As a result of the implicit way in which fundamental properties of MLIR
+operations are populated following this approach, and the ability to override
+them, forgetting to append clause-inherited values might result in hard to debug
+tablegen errors.</p><p>For this reason, the <code>-verify-openmp-ops</code> tablegen pseudo-backend was created.
+It runs before any other tablegen backends are triggered for the
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPOps.td>OpenMPOps.td</a>
+file and warns any time a property defined for a clause is not found in the
+corresponding operation, except if it is explicitly skipped as described
+<a href=#overriding-clause-inherited-properties>above</a>. This way, in case of a later
+tablegen failure while processing OpenMP dialect operations, earlier messages
+triggered by that pass can point to a likely solution.</p><h3 id=operand-structures>Operand Structures</h3><p>One consequence of basing the representation of operations on the set of values
+and attributes defined for each clause applicable to the corresponding OpenMP
+directive is that operation argument lists tend to be long. This has the effect
+of making C++ operation builders difficult to work with and easy to mistakenly
+pass arguments in the wrong order, which may sometimes introduce hard to detect
+problems.</p><p>A solution provided to this issue are operand structures. The main idea behind
+them is that there is one defined for each clause, holding a set of fields that
+contain the data needed to initialize each of the arguments associated with that
+clause. Clause operand structures are aggregated into operation operand
+structures via class inheritance. Then, a custom builder is defined for each
+operation taking the corresponding operand structure as a parameter. Since each
+argument is a named member of the structure, it becomes much simpler to set up
+the desired arguments to create a new operation.</p><p>Ad-hoc operand structures available for use within the ODS definition of custom
+operation builders might be defined in
+<a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/OpenMP/OpenMPClauseOperands.h>OpenMPClauseOperands.h</a>.
+However, this is generally not needed for clause-based operation definitions.
+The <code>-gen-openmp-clause-ops</code> tablegen backend, triggered when building the &lsquo;omp&rsquo;
+dialect, will automatically produce structures in the following way:</p><ul><li>It will create a <code>&lt;Name>ClauseOps</code> structure for each <code>OpenMP_Clause</code>
+definition with one field per argument.</li><li>The name of each field will match the tablegen name of the corresponding
+argument, except for replacing snake case with camel case.</li><li>The type of the field will be obtained from the corresponding tablegen
+argument&rsquo;s type:<ul><li>Values are represented with <code>mlir::Value</code>, except for <code>Variadic</code>, which
+makes it an <code>llvm::SmallVector&lt;mlir::Value></code>.</li><li><code>OptionalAttr</code> is represented by the translation of its <code>baseAttr</code>.</li><li><code>TypedArrayAttrBase</code>-based attribute types are represented by wrapping the
+translation of their <code>elementAttr</code> in an <code>llvm::SmallVector</code>. The only
+exception for this case is if the <code>elementAttr</code> is a &ldquo;scalar&rdquo; (i.e. non
+array-like) attribute type, in which case the more generic <code>mlir::Attribute</code>
+will be used in place of its <code>storageType</code>.</li><li>For <code>ElementsAttrBase</code>-based attribute types a best effort is attempted to
+obtain an element type (<code>llvm::APInt</code>, <code>llvm::APFloat</code> or
+<code>DenseArrayAttrBase</code>&rsquo;s <code>returnType</code>) to be wrapped in an <code>llvm::SmallVector</code>.
+If it cannot be obtained, which will happen with non-builtin direct subclasses
+of <code>ElementsAttrBase</code>, a warning will be emitted and the <code>storageType</code> (i.e.
+specific <code>mlir::Attribute</code> subclass) will be used instead.</li><li>Other attribute types will be represented with their <code>storageType</code>.</li></ul></li><li>It will create <code>&lt;Name>Operands</code> structure for each operation, which is an
+empty structure subclassing all operand structures defined for the corresponding
+<code>OpenMP_Op</code>&rsquo;s clauses.</li></ul><h3 id=entry-block-argument-defining-clauses>Entry Block Argument-Defining Clauses</h3><p>In their MLIR representation, certain OpenMP clauses introduce a mapping between
+values defined outside the operation they are applied to and entry block
+arguments for the region of that MLIR operation. This enables, for example, the
+introduction of private copies of the same underlying variable defined outside
+the MLIR operation the clause is attached to. Currently, clauses with this
+property can be classified into three main categories:</p><ul><li>Map-like clauses: <code>map</code>, <code>use_device_addr</code> and <code>use_device_ptr</code>.</li><li>Reduction-like clauses: <code>in_reduction</code>, <code>reduction</code> and <code>task_reduction</code>.</li><li>Privatization clauses: <code>private</code>.</li></ul><p>All three kinds of entry block argument-defining clauses use a similar custom
+assembly format representation, only differing based on the different pieces of
+information attached to each kind. Below, one example of each is shown:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>target map_entries<span class=p>(</span><span class=nv>%x</span> <span class=p>-&gt;</span> <span class=nv>%x.m</span><span class=p>,</span> <span class=nv>%y</span> <span class=p>-&gt;</span> <span class=nv>%y.m</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// Use %x.m, %y.m in place of %x and %y...
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>wsloop reduction<span class=p>(</span><span class=nf>@add.i32</span> <span class=nv>%x</span> <span class=p>-&gt;</span> <span class=nv>%x.r</span><span class=p>,</span> byref <span class=nf>@add.f32</span> <span class=nv>%y</span> <span class=p>-&gt;</span> <span class=nv>%y.r</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// Use %x.r, %y.r in place of %x and %y...
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>omp<span class=p>.</span>parallel private<span class=p>(</span><span class=nf>@x.privatizer</span> <span class=nv>%x</span> <span class=p>-&gt;</span> <span class=nv>%x.p</span><span class=p>,</span> <span class=nf>@y.privatizer</span> <span class=nv>%y</span> <span class=p>-&gt;</span> <span class=nv>%y.p</span> <span class=p>:</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>,</span> <span class=p>!</span>llvm<span class=p>.</span>ptr<span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// Use %x.p, %y.p in place of %x and %y...
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span></code></pre></div><p>As a consequence of parsing and printing the operation&rsquo;s first region entry
+block argument names together with the custom assembly format of these clauses,
+entry block arguments (i.e. the <code>^bb0(...):</code> line) must not be explicitly
+defined for these operations. Additionally, it is not possible to implement this
+feature while allowing each clause to be independently parsed and printed,
+because they need to be printed/parsed together with the corresponding
+operation&rsquo;s first region. They must have a well-defined ordering in which
+multiple of these clauses are specified for a given operation, as well.</p><p>The parsing/printing of these clauses together with the region provides the
+ability to define entry block arguments directly after the <code>-></code>. Forcing a
+specific ordering between these clauses makes the block argument ordering
+well-defined, which is the property used to easily match each clause with the
+entry block arguments defined by it.</p><p>Custom printers and parsers for operation regions based on the entry block
+argument-defining clauses they take are implemented based on the
+<code>{parse,print}BlockArgRegion</code> functions, which take care of the sorting and
+formatting of each kind of clause, minimizing code duplication resulting from
+this approach. One example of the custom assembly format of an operation taking
+the <code>private</code> and <code>reduction</code> clauses is the following:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-tablegen data-lang=tablegen><span class=line><span class=cl><span class=k>let</span> <span class=nv>assemblyFormat</span> <span class=p>=</span> <span class=nv>clausesAssemblyFormat</span> <span class=err>#</span> <span class=s>[{
+</span></span></span><span class=line><span class=cl><span class=s>  custom&lt;PrivateReductionRegion&gt;($region, $private_vars, type($private_vars),
+</span></span></span><span class=line><span class=cl><span class=s>      $private_syms, $reduction_vars, type($reduction_vars), $reduction_byref,
+</span></span></span><span class=line><span class=cl><span class=s>      $reduction_syms) attr-dict
+</span></span></span><span class=line><span class=cl><span class=s>}]</span><span class=p>;</span>
+</span></span></code></pre></div><p>The <code>BlockArgOpenMPOpInterface</code> has been introduced to simplify the addition and
+handling of these kinds of clauses. It holds <code>num&lt;ClauseName>BlockArgs()</code>
+functions that by default return 0, to be overriden by each clause through the
+<code>extraClassDeclaration</code> property. Based on these functions and the expected
+alphabetical sorting between entry block argument-defining clauses, it
+implements <code>get&lt;ClauseName>BlockArgs()</code> functions that are the intended method
+of accessing clause-defined block arguments.</p><h2 id=loop-associated-directives>Loop-Associated Directives</h2><p>Loop-associated OpenMP constructs are represented in the dialect as loop wrapper
+operations. These implement the <code>LoopWrapperInterface</code>, which enforces a series
+of restrictions upon the operation:</p><ul><li>It has the <code>NoTerminator</code> and <code>SingleBlock</code> traits;</li><li>It contains a single region; and</li><li>Its only block contains exactly one operation, which must be another loop
+wrapper or <code>omp.loop_nest</code> operation.</li></ul><p>This approach splits the representation for a loop nest and the loop-associated
+constructs that specify how its iterations are executed, possibly across various
+SIMD lanes (<code>omp.simd</code>), threads (<code>omp.wsloop</code>), teams of threads
+(<code>omp.distribute</code>) or tasks (<code>omp.taskloop</code>). The ability to directly nest
+multiple loop wrappers to impact the execution of a single loop nest is used to
+represent composite constructs in a modular way.</p><p>The <code>omp.loop_nest</code> operation represents a collapsed rectangular loop nest that
+must always be wrapped by at least one loop wrapper, which defines how it is
+intended to be executed. It serves as a simpler and more restrictive
+representation of OpenMP loops while a more general approach to support
+non-rectangular loop nests, loop transformations and non-perfectly nested loops
+based on a new <code>omp.canonical_loop</code> definition is developed.</p><p>The following example shows how a <code>parallel {do,for}</code> construct would be
+represented:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>parallel <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>wsloop <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    omp<span class=p>.</span>loop_nest <span class=p>(</span><span class=nv>%i</span><span class=p>)</span> <span class=p>:</span> <span class=nl>index =</span> <span class=p>(</span><span class=nv>%lb</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%ub</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%step</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nv>%a</span> <span class=p>=</span> load <span class=nv>%a</span><span class=p>[</span><span class=nv>%i</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nv>%b</span> <span class=p>=</span> load <span class=nv>%b</span><span class=p>[</span><span class=nv>%i</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nv>%sum</span> <span class=p>=</span> arith<span class=p>.</span>addf <span class=nv>%a</span><span class=p>,</span> <span class=nv>%b</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>      store <span class=nv>%sum</span><span class=p>,</span> <span class=nv>%c</span><span class=p>[</span><span class=nv>%i</span><span class=p>]</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>?x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>terminator
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=loop-transformations>Loop Transformations</h3><p>In addition to the worksharing loop-associated constructs described above, the
+OpenMP specification also defines a set of loop transformation constructs. They
+replace the associated loop(s) before worksharing constructs are executed on the
+generated loop(s). Some examples of such constructs are <code>tile</code> and <code>unroll</code>.</p><p>A general approach for representing these types of OpenMP constructs has not yet
+been implemented, but it is closely linked to the <code>omp.canonical_loop</code> work.
+Nevertheless, loop transformation that the <code>collapse</code> clause for loop-associated
+worksharing constructs defines can be represented by introducing multiple
+bounds, step and induction variables to the <code>omp.loop_nest</code> operation.</p><h2 id=compound-construct-representation>Compound Construct Representation</h2><p>The OpenMP specification defines certain shortcuts that allow specifying
+multiple constructs in a single directive, which are referred to as compound
+constructs (e.g. <code>parallel do</code> contains the <code>parallel</code> and <code>do</code> constructs).
+These can be further classified into
+<a href=#combined-constructs>combined</a> and
+<a href=#composite-constructs>composite</a> constructs. This section describes how they
+are represented in the dialect.</p><p>When clauses are specified for compound constructs, the OpenMP specification
+defines a set of rules to decide to which leaf constructs they apply, as well as
+potentially introducing some other implicit clauses. These rules must be taken
+into account by those creating the MLIR representation, since it is a per-leaf
+representation that expects these rules to have already been followed.</p><h3 id=combined-constructs>Combined Constructs</h3><p>Combined constructs are semantically equivalent to specifying one construct
+immediately nested inside another. This property is used to simplify the dialect
+by representing them through the operations associated to each leaf construct.
+For example, <code>target teams</code> would be represented as follows:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>target <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>teams <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl>    omp<span class=p>.</span>terminator
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>terminator
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=composite-constructs>Composite Constructs</h3><p>Composite constructs are similar to combined constructs in that they specify the
+effect of one construct being applied immediately after another. However, they
+group together constructs that cannot be directly nested into each other.
+Specifically, they group together multiple loop-associated constructs that apply
+to the same collapsed loop nest.</p><p>As of version 5.2 of the OpenMP specification, the list of composite constructs
+is the following:</p><ul><li><code>{do,for} simd</code>;</li><li><code>distribute simd</code>;</li><li><code>distribute parallel {do,for}</code>;</li><li><code>distribute parallel {do,for} simd</code>; and</li><li><code>taskloop simd</code>.</li></ul><p>Even though the list of composite constructs is relatively short and it would
+also be possible to create dialect operations for each, it was decided to
+allow attaching multiple loop wrappers to a single loop instead. This minimizes
+redundancy in the dialect and maximizes its modularity, since there is a single
+operation for each leaf construct regardless of whether it can be part of a
+composite construct. On the other hand, this means the <code>omp.loop_nest</code> operation
+will have to be interpreted differently depending on how many and which loop
+wrappers are attached to it.</p><p>To simplify the detection of operations taking part in the representation of a
+composite construct, the <code>ComposableOpInterface</code> was introduced. Its purpose is
+to handle the <code>omp.composite</code> discardable dialect attribute that can optionally
+be attached to these operations. Operation verifiers will ensure its presence is
+consistent with the context the operation appears in, so that it is valid when
+the attribute is present if and only if it represents a leaf of a composite
+construct.</p><p>For example, the <code>distribute simd</code> composite construct is represented as
+follows:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>distribute <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>simd <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    omp<span class=p>.</span>loop_nest <span class=p>(</span><span class=nv>%i</span><span class=p>)</span> <span class=p>:</span> <span class=nl>index =</span> <span class=p>(</span><span class=nv>%lb</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%ub</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%step</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...</span>
+</span></span><span class=line><span class=cl>      omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=p>{</span>omp<span class=p>.</span>composite<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>{</span>omp<span class=p>.</span>composite<span class=p>}</span>
+</span></span></code></pre></div><p>One exception to this is the representation of the
+<code>distribute parallel {do,for}</code> composite construct. The presence of a
+block-associated <code>parallel</code> leaf construct would introduce many problems if it
+was allowed to work as a loop wrapper. In this case, the &ldquo;hoisted <code>omp.parallel</code>
+representation&rdquo; is used instead. This consists in making <code>omp.parallel</code> the
+parent operation, with a nested <code>omp.loop_nest</code> wrapped by <code>omp.distribute</code> and
+<code>omp.wsloop</code> (and <code>omp.simd</code>, in the <code>distribute parallel {do,for} simd</code> case).</p><p>This approach works because <code>parallel</code> is a parallelism-generating construct,
+whereas <code>distribute</code> is a worksharing construct impacting the higher level
+<code>teams</code> construct, making the ordering between these constructs not cause
+semantic mismatches. This property is also exploited by LLVM&rsquo;s SPMD-mode.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>omp<span class=p>.</span>parallel <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>distribute <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    omp<span class=p>.</span>wsloop <span class=p>...</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      omp<span class=p>.</span>loop_nest <span class=p>(</span><span class=nv>%i</span><span class=p>)</span> <span class=p>:</span> <span class=nl>index =</span> <span class=p>(</span><span class=nv>%lb</span><span class=p>)</span> to <span class=p>(</span><span class=nv>%ub</span><span class=p>)</span> step <span class=p>(</span><span class=nv>%step</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=p>...</span>
+</span></span><span class=line><span class=cl>        omp<span class=p>.</span>yield
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=p>{</span>omp<span class=p>.</span>composite<span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=p>{</span>omp<span class=p>.</span>composite<span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>...</span>
+</span></span><span class=line><span class=cl>  omp<span class=p>.</span>terminator
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=p>{</span>omp<span class=p>.</span>composite<span class=p>}</span>
+</span></span></code></pre></div><h2>'omp' Dialect Docs</h2><ul><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/ title="'nvvm' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - 'nvvm' Dialect</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/ title="ODS Documentation">Next - ODS Documentation <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-rewrite/>mlir-rewrite</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/QuantPasses/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/BufferDeallocationInternals/>Buffer Deallocation - Internals</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/DLTITransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Mesh/>'mesh' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class="active has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PolynomialDialect/>'polynomial' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
