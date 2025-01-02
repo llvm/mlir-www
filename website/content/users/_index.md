@@ -241,6 +241,14 @@ SOPHGO TPU. https://arxiv.org/abs/2210.15016.
 MLIR is used as a Graph Transformation framework and the foundation for
 building many tools (XLA, TFLite converter, quantization, ...).
 
+## [Tenstorrent MLIR Compiler](https://github.com/tenstorrent/tt-mlir)
+
+tt-mlir is a compiler project aimed at defining MLIR dialects to abstract compute
+on Tenstorrent AI accelerators. It is built on top of the MLIR compiler infrastructure
+and targets TTNN.
+
+For more information on the project, see https://tenstorrent.github.io/tt-mlir/.
+
 ## [TFRT: TensorFlow Runtime](https://github.com/tensorflow/runtime)
 
 TFRT aims to provide a unified, extensible infrastructure layer for an
