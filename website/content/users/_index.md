@@ -92,7 +92,7 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
-## [Kokkos](https://kokkos.org):
+## [Kokkos](https://kokkos.org)
 
 The Kokkos C++ Performance Portability Ecosystem is a production level solution 
 for writing modern C++ applications in a hardware agnostic way. It is part of the 
