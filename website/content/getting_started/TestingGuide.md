@@ -372,3 +372,248 @@ func.func @simple_constant() -> (i32, i32) {
 }
 ```
 
+### Test Formatting Best Practices
+
+When adding new tests, strive to follow these two key rules:
+
+1. **Follow the existing naming and whitespace style.**
+   - This applies when modifying existing test files.
+2. **Consistently document the edge case being tested.**
+   - Clearly state what makes this test unique and how it complements other
+     similar tests.
+
+While the first rule extends LLVM’s general coding style to tests, the second
+may feel new. The goal is to improve:
+
+- **Test discoverability** – Well-documented tests make it easier to pair tests
+  with patterns and understand their purpose.
+- **Test consistency** – Consistent documentation and naming lowers cognitive
+  load and helps avoid duplication.
+
+A well-thought-out naming convention helps achieve all of the above.
+
+---
+
+#### Example: Improving Test Readability & Naming
+
+Consider these **three tests** that exercise `vector.maskedload -> vector.load`
+lowering under the `-test-vector-to-vector-lowering` flag:
+
+##### Before: Inconsistent & Hard to Differentiate
+
+```mlir
+// CHECK-LABEL:   func @maskedload_regression_1(
+//  CHECK-SAME:       %[[A0:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_2(
+//  CHECK-SAME:       %[[A0:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[A1:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_3(
+// CHECK-SAME:        %[[A0:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[A1]] : vector<16xf32>
+func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [0] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+While all examples test `vector.maskedload` -> `vector.load lowering`, it’s
+difficult to tell their actual differences.
+
+##### Step 1: Use Consistent Variable Names
+
+To reduce cognitive load, use consistent names across MLIR and FileCheck. Also,
+instead of using generic names like `%arg0`, encode some additional context by
+using names from existing documentation (e.g. from Op definition, see e.g.
+[vector.maskedload](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop)
+for this particular case):
+
+```mlir
+// CHECK-LABEL:   func @maskedload_regression_1(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_regression_1(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_2(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_regression_2(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_3(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+func.func @maskedload_regression_3(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [0] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+##### Step 2: Improve Test Naming
+
+Instead of using "regression" (which doesn't add unique information), rename
+tests based on key attributes:
+
+* All examples test the `vector.maskedload` to `vector.load` lowering.
+* The first test uses a _dynamically_ shaped `memref`, while the others use
+  _static_ shapes.
+* The mask in the first two examples is "all true" (`vector.constant_mas
+  [16]`), while it is "all false" (`vector.constant_mask [0]`) in the thir
+  example.
+* The first and the third tests use `i32` elements, whereas the second uses
+  `i8`.
+
+This suggest the following naming scheme:
+* `@maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false}`.
+
+```mlir
+// CHECK-LABEL:   func @maskedload_to_load_dynamic_i32_all_true(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_to_load_dynamic_i32_all_true(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_to_load_static_i8_all_true(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_to_load_static_i8_all_true(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_to_load_static_i32_all_false(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+func.func @maskedload_to_load_static_i32_all_false(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [0] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+##### Step 3: Add The Newly Identified Missing Case
+
+The update in Step 2 made us realize that we were missing an important edge
+case:
+
+* A mask that is neither "all true" nor "all false".
+
+Unlike the existing cases, this mask must be preserved. In this scenario,
+`vector.load` is not the right abstraction. Thus, no lowering should occur:
+
+```mlir
+// CHECK-LABEL:   func @negative_maskedload_to_load_static_i32_mixed(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    vector.maskedload
+func.func @negative_maskedload_to_load_static_i32_mixed(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [4] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+The `negative_` prefix indicates that this test should fail to lower, as the
+pattern should not match.
+
+To summarize, here’s the naming convention used:
+
+* `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
+
+#### Final Points - key principles
+
+The above approach is just an example. It may not fit your use case perfectly,
+so feel free to adapt it as needed. For example, for "folding" tests, it may
+make more sense to use "no" as prefix for negative tests (e.g.
+`@no_fold_<case>_<subcase>`). Key principles to follow:
+
+* Make tests self-documenting.
+* Follow existing conventions.
+
+By applying these best practices, we leverage available tools (e.g., test
+function names) to make tests easier to discover and maintain.
