@@ -448,6 +448,7 @@ func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>)
   return %ld : vector<16xf32>
 }
 ```
+
 While all examples test `vector.maskedload` -> `vector.load lowering`, it’s
 difficult to tell their actual differences.
 
@@ -456,7 +457,7 @@ difficult to tell their actual differences.
 To reduce cognitive load, use consistent names across MLIR and FileCheck. Also,
 instead of using generic names like `%arg0`, encode some additional context by
 using names from existing documentation (e.g. from Op definition, see e.g.
-[vector.maskedload](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop)
+[`vector.maskedload`](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop)
 for this particular case):
 
 ```mlir
@@ -516,7 +517,7 @@ tests based on key attributes:
 * The first test uses a _dynamically_ shaped `memref`, while the others use
   _static_ shapes.
 * The mask in the first two examples is "all true" (`vector.constant_mas
-  [16]`), while it is "all false" (`vector.constant_mask [0]`) in the thir
+  [16]`), while it is "all false" (`vector.constant_mask [0]`) in the third
   example.
 * The first and the third tests use `i32` elements, whereas the second uses
   `i8`.
@@ -605,7 +606,19 @@ To summarize, here’s the naming convention used:
 
 * `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
 
-#### Final Points - key principles
+#### What if there is no pre-existing style to follow?
+
+If you are adding a new test file, you can use other test files in the same
+directory as inspiration.
+
+If the test file you are modifying lacks a clear style and instead has mixed,
+inconsistent styles, try to identify the dominant one and follow it. Even
+better, consider refactoring the file to adopt a single, consistent style —
+this helps improve our overall testing quality.
+
+This is also encouraged when the existing style leaves room for improvement.
+
+#### Final Points - Key Principles
 
 The above approach is just an example. It may not fit your use case perfectly,
 so feel free to adapt it as needed. For example, for "folding" tests, it may
