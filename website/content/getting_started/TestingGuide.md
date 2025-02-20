@@ -630,3 +630,205 @@ make more sense to use "no" as prefix for negative tests (e.g.
 
 By applying these best practices, we leverage available tools (e.g., test
 function names) to make tests easier to discover and maintain.
+
+### Test Docmentation Best Practices
+
+Apart from following good naming and formatting conventions, please document
+your tests with comments. Focus on explaining **why** rather than **what**,
+since the latter is usually clear from the code itself.
+
+As an example, consider two test cases exercising the same pattern:
+
+
+```mlir
+// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed
+//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>,
+//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x8x4xi16>
+//  CHECK-SAME:      %[[IDX:.*]]: index)
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+//       CHECK:      vector.transfer_write
+
+/// The permutation map was replaced with vector.transpose
+// CHECK-NOT:       permutation_map
+
+// CHECK-SAME:      %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]] : vector<8x4xi16>, memref<2x2x?x?xi16>
+func.func @xfer_write_minor_identity_transposed(
+    %vec: vector<4x8xi16>,
+    %mem: memref<2x2x8x4xi16>,
+    %idx: index) {
+
+  vector.transfer_write %vec, %mem[%idx, %idx, %idx, %idx] {
+    in_bounds = [true, true],
+    permutation_map = affine_map<(d0, d1, d2, d3) -> (d3, d2)>
+  } : vector<4x8xi16>, memref<2x2x8x4xi16>
+
+  return
+}
+
+/// Even with out-of-bounds accesses, it is safe to apply this pattern as it
+/// does not modify the memory location being accessed.
+
+// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed_out_of_bounds
+//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>
+//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x?x?xi16>
+//  CHECK-SAME:      %[[IDX:.*]]: index)
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+
+/// Expect the in_bounds attribute to be preserved. However, since we don't
+//// print it when all flags are "false", it should not appear in the output.
+/// CHECK-NOT:       in_bounds
+
+// CHECK:           vector.transfer_write
+
+/// The permutation map was replaced with vector.transpose
+// CHECK-NOT:       permutation_map
+
+// CHECK-SAME:      %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]] : vector<8x4xi16>, memref<2x2x?x?xi16>
+func.func @xfer_write_minor_identity_transposed_out_of_bounds(
+    %vec: vector<4x8xi16>,
+    %mem: memref<2x2x?x?xi16>,
+    %idx: index) {
+
+  vector.transfer_write %vec, %mem[%idx, %idx, %idx, %idx] {
+    in_bounds = [false, false],
+    permutation_map = affine_map<(d0, d1, d2, d3) -> (d3, d2)>
+  } : vector<4x8xi16>, memref<2x2x?x?xi16>
+
+  return
+}
+```
+
+Here, we document two non-obvious behaviors:
+
+* _Why_ is `permutation_map` missing from the output?
+* _Why_ is the `in_bounds` attribute missing in one of the outputs?
+
+
+#### How to Identify What Needs Documentation?
+A good rule of thumb is to think of yourself six months from now and ask:
+"What might be difficult to decipher without comments?"
+
+If you expect something to be tricky for future-you, it’s likely to be tricky
+for others encountering the test for the first time.
+
+#### Making Tests Self-Documenting
+We can improve documentation further by clarifying what pattern is being
+tested, providing high-level reasoning, and consolidating shared comments. For
+instance:
+
+```mlir
+///----------------------------------------------------------------------------------------
+/// [Pattern: TransferWritePermutationLowering]
+///
+/// IN: vector.transfer_write (_transposed_ minor identity permutation map)
+/// OUT: vector.transpose + vector.transfer_write (minor identity permutation map)
+///
+/// Note, `permutation_map` from the input Op is replaced with the newly
+/// inserted vector.traspose Op.
+///----------------------------------------------------------------------------------------
+
+// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed
+//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>,
+//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x8x4xi16>
+//  CHECK-SAME:      %[[IDX:.*]]: index)
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+// (...)
+```
+
+This documents:
+* The transformation pattern being tested.
+* The key logic behind the transformation.
+* The expected change in output.
+
+
+#### Documenting the "What"
+While we generally document why, documenting what is valid and encouraged in
+cases where:
+
+* The he test generates long or complex output
+* The logic is non-trivial or involves multiple transformations
+
+For example, in a test for Linalg convolution vectorization, some comments
+document what is happening step-by-step:
+
+```mlir
+func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x3x8xf32>, %output: memref<4x2x8xf32>) {
+  linalg.conv_1d_nwc_wcf
+    {dilations = dense<1> : tensor<1xi64>, strides = dense<3> : tensor<1xi64>}
+    ins(%input, %filter : memref<4x6x3xf32>, memref<1x3x8xf32>)
+    outs(%output : memref<4x2x8xf32>)
+  return
+}
+
+// CHECK: #[[INPUT_MAP:.+]] = affine_map<(d0, d1, d2, d3) -> (d0, d1, d3)>
+// CHECK: #[[FILTER_MAP:.+]] = affine_map<(d0, d1, d2, d3) -> (d3, d2)>
+// CHECK: #[[OUTPUT_MAP:.+]] = affine_map<(d0, d1, d2, d3) -> (d0, d1, d2)>
+
+//      CHECK: func @conv1d_nwc_4x2x8_memref
+// CHECK-SAME: (%[[INPUT:.+]]: memref<4x6x3xf32>, %[[FILTER:.+]]: memref<1x3x8xf32>, %[[OUTPUT:.+]]: memref<4x2x8xf32>)
+
+//  CHECK-DAG:   %[[C0:.+]] = arith.constant 0 : index
+//  CHECK-DAG:   %[[F0:.+]] = arith.constant 0.000000e+00 : f32
+
+/// Read the whole data in one shot.
+//  CHECK-DAG:   %[[V_INPUT_R:.+]] = vector.transfer_read %[[INPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+//  CHECK-DAG:  %[[V_FILTER_R:.+]] = vector.transfer_read %[[FILTER]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+//  CHECK-DAG:  %[[V_OUTPUT_R:.+]] = vector.transfer_read %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+
+//      CHECK:   %[[V_INPUT_0:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+// CHECK-SAME:     {offsets = [0, 0, 0], sizes = [4, 1, 3], strides = [1, 1, 1]} : vector<4x4x3xf32> to vector<4x1x3xf32>
+//      CHECK:   %[[V_INPUT_1:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+// CHECK-SAME:     {offsets = [0, 3, 0], sizes = [4, 1, 3], strides = [1, 1, 1]} : vector<4x4x3xf32> to vector<4x1x3xf32>
+
+//      CHECK:    %[[V_FILTER:.+]] = vector.extract %[[V_FILTER_R]][0] : vector<3x8xf32> from vector<1x3x8xf32>
+
+//      CHECK:  %[[V_OUTPUT_0:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+// CHECK-SAME:     {offsets = [0, 0, 0], sizes = [4, 1, 8], strides = [1, 1, 1]} : vector<4x2x8xf32> to vector<4x1x8xf32>
+//      CHECK:  %[[V_OUTPUT_1:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+// CHECK-SAME:     {offsets = [0, 1, 0], sizes = [4, 1, 8], strides = [1, 1, 1]} : vector<4x2x8xf32> to vector<4x1x8xf32>
+
+/// w == 0, kw == 0
+//      CHECK:   %[[CONTRACT_0:.+]] = vector.contract {
+// CHECK-SAME:       indexing_maps = [#[[INPUT_MAP]], #[[FILTER_MAP]], #[[OUTPUT_MAP]]],
+// CHECK-SAME:       iterator_types = ["parallel", "parallel", "parallel", "reduction"]
+// CHECK-SAME:       kind = #vector.kind<add>
+// CHECK-SAME:     %[[V_INPUT_0]], %[[V_FILTER]], %[[V_OUTPUT_0]]
+// CHECK-SAME:     : vector<4x1x3xf32>, vector<3x8xf32> into vector<4x1x8xf32>
+
+/// w == 1, kw == 0
+//      CHECK:   %[[CONTRACT_1:.+]] = vector.contract {
+// CHECK-SAME:       indexing_maps = [#[[INPUT_MAP]], #[[FILTER_MAP]], #[[OUTPUT_MAP]]],
+// CHECK-SAME:       iterator_types = ["parallel", "parallel", "parallel", "reduction"]
+// CHECK-SAME:       kind = #vector.kind<add>
+// CHECK-SAME:     %[[V_INPUT_1]], %[[V_FILTER]], %[[V_OUTPUT_1]]
+// CHECK-SAME:     : vector<4x1x3xf32>, vector<3x8xf32> into vector<4x1x8xf32>
+
+/// w == 0, kw == 0
+//      CHECK:   %[[RES_0:.+]] = vector.insert_strided_slice %[[CONTRACT_0]], %[[V_OUTPUT_R]]
+// CHECK-SAME:     {offsets = [0, 0, 0], strides = [1, 1, 1]} : vector<4x1x8xf32> into vector<4x2x8xf32>
+/// w == 1, kw == 0
+//      CHECK:   %[[RES_1:.+]] = vector.insert_strided_slice %[[CONTRACT_1]], %[[RES_0]]
+// CHECK-SAME:     {offsets = [0, 1, 0], strides = [1, 1, 1]} : vector<4x1x8xf32> into vector<4x2x8xf32>
+
+/// Write the result back in one shot.
+//      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]]
+
+```
+
+Note that while the comments document what is happening (e.g., "Write the
+result back in one shot"), some variables — like `w` and `kw` — remain
+"enigmatic" and are not explicitly explained. This might leave us
+second-guessing their meaning at first. However, that’s intentional—their
+purpose becomes clear when studying the corresponding Linalg vectorizer
+implementation.
+
+It’s important to remember that comments should assist in understanding the
+code, not replace the need to read it. Their role is to guide the reader, not
+to restate what the code already conveys.
+
+#### Final Takeaways
+* Prioritize documenting _why_ something happens, unless the _what_ is non-trivial.
+* Use high-level block comments to describe patterns being tested.
+* Think about maintainability - comments should help future developers
+	understand tests at a glance.
+* Comments should assist, not replace reading the code—avoid over-explaining.
