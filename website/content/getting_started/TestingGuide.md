@@ -516,7 +516,7 @@ tests based on key attributes:
 * All examples test the `vector.maskedload` to `vector.load` lowering.
 * The first test uses a _dynamically_ shaped `memref`, while the others use
   _static_ shapes.
-* The mask in the first two examples is "all true" (`vector.constant_mas
+* The mask in the first two examples is "all true" (`vector.constant_mask
   [16]`), while it is "all false" (`vector.constant_mask [0]`) in the third
   example.
 * The first and the third tests use `i32` elements, whereas the second uses
@@ -617,6 +617,16 @@ better, consider refactoring the file to adopt a single, consistent style —
 this helps improve our overall testing quality.
 
 This is also encouraged when the existing style leaves room for improvement.
+
+
+#### Don't forget the common sense
+
+As a reviewer or contributor, always apply common sense when naming functions
+and variables. Encoding too much information in names can negatively impact
+readability and maintainability.
+
+Trust your judgment. When in doubt, consult your future self: "Will this still
+make sense to me six months from now?"
 
 #### Final Points - Key Principles
 
@@ -830,5 +840,5 @@ to restate what the code already conveys.
 * Prioritize documenting _why_ something happens, unless the _what_ is non-trivial.
 * Use high-level block comments to describe patterns being tested.
 * Think about maintainability - comments should help future developers
-	understand tests at a glance.
+  understand tests at a glance.
 * Comments should assist, not replace reading the code—avoid over-explaining.
