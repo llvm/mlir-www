@@ -377,7 +377,8 @@ func.func @simple_constant() -> (i32, i32) {
 When adding new tests, strive to follow these two key rules:
 
 1. **Follow the existing naming and whitespace style.**
-   - This applies when modifying existing test files.
+   - This applies when modifying existing test files that follow a particular
+     convention, as it likely fits the context.
 2. **Consistently document the edge case being tested.**
    - Clearly state what makes this test unique and how it complements other
      similar tests.
@@ -614,9 +615,25 @@ directory as inspiration.
 If the test file you are modifying lacks a clear style and instead has mixed,
 inconsistent styles, try to identify the dominant one and follow it. Even
 better, consider refactoring the file to adopt a single, consistent style —
-this helps improve our overall testing quality.
+this helps improve our overall testing quality. Alternatively, create a GitHub
+issue and leave a TODO in the test file taht you are modyfying.
 
 This is also encouraged when the existing style leaves room for improvement.
+
+When creating a new naming convention, keep these points in mind:
+
+* **Write Orthogonal Tests**
+Struggling with good naming may indicate the absence of a clear pattern in the
+set of tests being written. A good rule of thumb is to avoid testing the same
+thing repeatedly. Before writing tests, define clear categories to cover (e.g.,
+number of loops, data types). This often leads to a natural naming scheme—for
+example: `@loop_depth_2_i32`.
+
+* **What vs Why**
+Test names should reflect _what_ is being tested, not _why_.
+
+Encoding _why_ in test names can lead to unnecessarily long and complex names.
+Instead, add inline comments where needed—but avoid over-explaining.
 
 
 #### Don't forget the common sense
@@ -841,4 +858,4 @@ to restate what the code already conveys.
 * Use high-level block comments to describe patterns being tested.
 * Think about maintainability - comments should help future developers
   understand tests at a glance.
-* Comments should assist, not replace reading the code—avoid over-explaining.
+* Comments should assist, not replace reading the code. Avoid over-explaining.
