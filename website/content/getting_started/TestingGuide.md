@@ -616,7 +616,7 @@ If the test file you are modifying lacks a clear style and instead has mixed,
 inconsistent styles, try to identify the dominant one and follow it. Even
 better, consider refactoring the file to adopt a single, consistent style —
 this helps improve our overall testing quality. Alternatively, create a GitHub
-issue and leave a TODO in the test file taht you are modyfying.
+issue and leave a TODO linking to it in the test file that you are modifying.
 
 This is also encouraged when the existing style leaves room for improvement.
 
@@ -633,7 +633,7 @@ example: `@loop_depth_2_i32`.
 Test names should reflect _what_ is being tested, not _why_.
 
 Encoding _why_ in test names can lead to unnecessarily long and complex names.
-Instead, add inline comments where needed—but avoid over-explaining.
+Instead, add inline comments where needed.
 
 
 #### Don't forget the common sense
@@ -658,7 +658,7 @@ make more sense to use "no" as prefix for negative tests (e.g.
 By applying these best practices, we leverage available tools (e.g., test
 function names) to make tests easier to discover and maintain.
 
-### Test Docmentation Best Practices
+### Test Documentation Best Practices
 
 Apart from following good naming and formatting conventions, please document
 your tests with comments. Focus on explaining **why** rather than **what**,
