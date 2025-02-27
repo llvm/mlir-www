@@ -615,10 +615,16 @@ directory as inspiration.
 If the test file you are modifying lacks a clear style and instead has mixed,
 inconsistent styles, try to identify the dominant one and follow it. Even
 better, consider refactoring the file to adopt a single, consistent style —
-this helps improve our overall testing quality. Alternatively, create a GitHub
-issue and leave a TODO linking to it in the test file that you are modifying.
+this helps improve our overall testing quality. Refactoring is also encouraged
+when the existing style could be improved.
 
-This is also encouraged when the existing style leaves room for improvement.
+In many cases, it’s best to create a separate PR for test refactoring to reduce
+per-PR noise. However, this depends on the scale of changes — reducing PR
+traffic is also important. Work with reviewers to use your judgment and decide
+the best approach.
+
+Alternatively, if you defer refactoring, consider creating a GitHub issue and
+adding a TODO in the test file linking to it.
 
 When creating a new naming convention, keep these points in mind:
 
