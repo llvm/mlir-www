@@ -450,16 +450,16 @@ func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>)
 }
 ```
 
-While all examples test `vector.maskedload` -> `vector.load lowering`, it’s
+While all examples test `vector.maskedload` -> `vector.load lowering`, it is
 difficult to tell their actual differences.
 
 ##### Step 1: Use Consistent Variable Names
 
 To reduce cognitive load, use consistent names across MLIR and FileCheck. Also,
 instead of using generic names like `%arg0`, encode some additional context by
-using names from existing documentation (e.g. from Op definition, see e.g.
-[`vector.maskedload`](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop)
-for this particular case):
+using names from existing documentation. For example from the Op documentation,
+[`vector.maskedload`](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop),
+in this case.
 
 ```mlir
 // CHECK-LABEL:   func @maskedload_regression_1(
@@ -511,7 +511,7 @@ func.func @maskedload_regression_3(%base: memref<16xf32>, %pass_thru: vector<16x
 
 ##### Step 2: Improve Test Naming
 
-Instead of using "regression" (which doesn't add unique information), rename
+Instead of using "regression" (which does not add unique information), rename
 tests based on key attributes:
 
 * All examples test the `vector.maskedload` to `vector.load` lowering.
@@ -523,7 +523,7 @@ tests based on key attributes:
 * The first and the third tests use `i32` elements, whereas the second uses
   `i8`.
 
-This suggest the following naming scheme:
+This suggests the following naming scheme:
 * `@maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false}`.
 
 ```mlir
@@ -576,8 +576,7 @@ func.func @maskedload_to_load_static_i32_all_false(%base: memref<16xf32>, %pass_
 
 ##### Step 3: Add The Newly Identified Missing Case
 
-The update in Step 2 made us realize that we were missing an important edge
-case:
+Step 2 made it possible to see that there is a case which is not tested:
 
 * A mask that is neither "all true" nor "all false".
 
@@ -603,7 +602,7 @@ func.func @negative_maskedload_to_load_static_i32_mixed(%base: memref<16xf32>, %
 The `negative_` prefix indicates that this test should fail to lower, as the
 pattern should not match.
 
-To summarize, here’s the naming convention used:
+To summarize, here is the naming convention used:
 
 * `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
 
@@ -618,10 +617,10 @@ better, consider refactoring the file to adopt a single, consistent style —
 this helps improve our overall testing quality. Refactoring is also encouraged
 when the existing style could be improved.
 
-In many cases, it’s best to create a separate PR for test refactoring to reduce
-per-PR noise. However, this depends on the scale of changes — reducing PR
-traffic is also important. Work with reviewers to use your judgment and decide
-the best approach.
+In many cases, it is best to create a separate PR for test refactoring to
+reduce per-PR noise. However, this depends on the scale of changes — reducing
+PR traffic is also important. Work with reviewers to use your judgment and
+decide the best approach.
 
 Alternatively, if you defer refactoring, consider creating a GitHub issue and
 adding a TODO in the test file linking to it.
@@ -629,24 +628,21 @@ adding a TODO in the test file linking to it.
 When creating a new naming convention, keep these points in mind:
 
 * **Write Orthogonal Tests**
-Struggling with good naming may indicate the absence of a clear pattern in the
-set of tests being written. A good rule of thumb is to avoid testing the same
-thing repeatedly. Before writing tests, define clear categories to cover (e.g.,
-number of loops, data types). This often leads to a natural naming scheme—for
-example: `@loop_depth_2_i32`.
+If naming is difficult then the tests may be lacking a clear purpose. A good
+rule of thumb is to avoid testing the same thing repeatedly. Before writing
+tests, define clear categories to cover (e.g., number of loops, data types).
+This often leads to a natural naming scheme—for example: `@loop_depth_2_i32`.
 
 * **What vs Why**
 Test names should reflect _what_ is being tested, not _why_.
 
-Encoding _why_ in test names can lead to unnecessarily long and complex names.
+Encoding _why_ in test names can lead to overly long and complex names.
 Instead, add inline comments where needed.
 
+#### Do not forget the common sense
 
-#### Don't forget the common sense
-
-As a reviewer or contributor, always apply common sense when naming functions
-and variables. Encoding too much information in names can negatively impact
-readability and maintainability.
+Always apply common sense when naming functions and variables. Encoding too
+much information in names makes the tests less readable and less maintainable.
 
 Trust your judgment. When in doubt, consult your future self: "Will this still
 make sense to me six months from now?"
@@ -661,22 +657,22 @@ make more sense to use "no" as prefix for negative tests (e.g.
 * Make tests self-documenting.
 * Follow existing conventions.
 
-By applying these best practices, we leverage available tools (e.g., test
-function names) to make tests easier to discover and maintain.
+These principles make tests easier to discover and maintain. For you, future
+you, and the rest of the MLIR community.
 
 ### Test Documentation Best Practices
 
-Apart from following good naming and formatting conventions, please document
-your tests with comments. Focus on explaining **why** rather than **what**,
-since the latter is usually clear from the code itself.
+In addition to following good naming and formatting conventions, please
+document your tests with comments. Focus on explaining **why** since the
+**what** is usually clear from the code itself.
 
-As an example, consider this test exercising the
+As an example, consider this test that uses the
 `TransferWritePermutationLowering` pattern:
 
 
 ```mlir
 /// Even with out-of-bounds accesses, it is safe to apply this pattern as it
-/// does not modify what memory location is being accessed.
+/// does not modify which memory location is being accessed.
 
 // CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed_out_of_bounds
 //  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>
@@ -708,15 +704,15 @@ func.func @xfer_write_minor_identity_transposed_out_of_bounds(
 }
 ```
 
-Here, we document two non-obvious behaviors:
+The comments in the example above document two non-obvious behaviors:
 
 * _Why_ is the `permutation_map` attribute missing from the output?
 * _Why_ is the `in_bounds` attribute missing from the output?
 
 
 #### How to Identify What Needs Documentation?
-A good rule of thumb is to think of yourself six months from now and ask:
-"What might be difficult to decipher without comments?"
+A good rule of thumb is to think of yourself six months from now and ask: "What
+might be difficult to understand without comments?"
 
 If you expect something to be tricky for future-you, it’s likely to be tricky
 for others encountering the test for the first time.
@@ -733,7 +729,7 @@ instance:
 /// IN: vector.transfer_write (_transposed_ minor identity permutation map)
 /// OUT: vector.transpose + vector.transfer_write (minor identity permutation map)
 ///
-/// Note, `permutation_map` from the input Op is replaced with the newly
+/// Note: `permutation_map` from the input Op is replaced with the newly
 /// inserted vector.traspose Op.
 ///----------------------------------------------------------------------------------------
 
@@ -745,7 +741,7 @@ instance:
 // (...)
 ```
 
-This documents:
+The example above documents:
 * The transformation pattern being tested.
 * The key logic behind the transformation.
 * The expected change in output.
@@ -804,20 +800,19 @@ func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x
 //      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]]
 ```
 
-Note that while the comments document what is happening (e.g., "Write the
-result back in one shot"), some variables — like `w` and `kw` — remain
-"enigmatic" and are not explicitly explained. This might leave us
-second-guessing their meaning at first. However, that’s intentional - their
-purpose becomes clear when studying the corresponding Linalg vectorizer
-implementation (or, when analysing how `linalg.conv_1d_nwc_wcf` works).
+Though the comments document _what_ is happening (e.g., "Write the result back
+in one shot"), some variables — like `w` and `kw` — are not explained. This is
+intentional - their purpose becomes clear when studying the corresponding
+Linalg vectorizer implementation (or, when analysing how
+`linalg.conv_1d_nwc_wcf` works).
 
-It’s important to remember that comments should assist in understanding the
-code, not replace the need to read it. Their role is to guide the reader, not
-to restate what the code already conveys.
+Comments help you understand code, they do not replace the need to read it.
+Comments guide the reader, they do not repeat what the code already says.
 
 #### Final Takeaways
-* Prioritize documenting _why_ something happens, unless the _what_ is non-trivial.
-* Use high-level block comments to describe patterns being tested.
-* Think about maintainability - comments should help future developers
-  understand tests at a glance.
+* Always document _why_, document _what_ if you need to (e.g. the underlying
+	logic is non-trivial).
+* Use block comments to describe the patterns being tested.
+* Think about maintainability - comments should help future developers (which
+	includes you) understand tests at a glance.
 * Comments should assist, not replace reading the code. Avoid over-explaining.
