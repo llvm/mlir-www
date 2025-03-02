@@ -606,6 +606,15 @@ To summarize, here is the naming convention used:
 
 * `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
 
+> **_NOTE:_** In some cases, prefixes other than `negative_` might be more
+> suitable to indicate that a test is expected to "fail." For example, in
+> "folding" tests, `no_` would be equally clear and also a more concise
+> alternative — e.g., `@no_fold_<case>_<subcase>`.
+>
+> Whichever prefix you choose, ensure it is used **consistently**.
+> Avoid using suffixes to mark a test as intentionally failing; prefixes
+> are easier to spot.
+
 #### What if there is no pre-existing style to follow?
 
 If you are adding a new test file, you can use other test files in the same
@@ -650,9 +659,7 @@ make sense to me six months from now?"
 #### Final Points - Key Principles
 
 The above approach is just an example. It may not fit your use case perfectly,
-so feel free to adapt it as needed. For example, for "folding" tests, it may
-make more sense to use "no" as prefix for negative tests (e.g.
-`@no_fold_<case>_<subcase>`). Key principles to follow:
+so feel free to adapt it as needed.  Key principles to follow:
 
 * Make tests self-documenting.
 * Follow existing conventions.
@@ -718,9 +725,12 @@ If you expect something to be tricky for future-you, it’s likely to be tricky
 for others encountering the test for the first time.
 
 #### Making Tests Self-Documenting
-We can improve documentation further by clarifying what pattern is being
-tested, providing high-level reasoning, and consolidating shared comments. For
-instance:
+We can improve documentation further by:
+* clarifying what pattern is being tested,
+* providing high-level reasoning, and
+* consolidating shared comments.
+
+For example:
 
 ```mlir
 ///----------------------------------------------------------------------------------------
@@ -809,10 +819,12 @@ Linalg vectorizer implementation (or, when analysing how
 Comments help you understand code, they do not replace the need to read it.
 Comments guide the reader, they do not repeat what the code already says.
 
-#### Final Takeaways
+#### Final Points - Key Principles
+Below are key principles to follow when documenting tests:
 * Always document _why_, document _what_ if you need to (e.g. the underlying
 	logic is non-trivial).
-* Use block comments to describe the patterns being tested.
+* Use block comments for higher-level comments (e.g. to describe the patterns
+	being tested).
 * Think about maintainability - comments should help future developers (which
 	includes you) understand tests at a glance.
-* Comments should assist, not replace reading the code. Avoid over-explaining.
+* Avoid over-explaining. Comments should assist, not replace reading the code.
