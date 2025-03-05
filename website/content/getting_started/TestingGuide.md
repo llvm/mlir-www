@@ -653,8 +653,8 @@ Instead, add inline comments where needed.
 Always apply common sense when naming functions and variables. Encoding too
 much information in names makes the tests less readable and less maintainable.
 
-Trust your judgment. When in doubt, consult your future self: "Will this still
-make sense to me six months from now?"
+Trust your judgment. When in doubt, consult your "future self": _"Will this still
+make sense to me six months from now?_"
 
 #### Final Points - Key Principles
 
@@ -664,8 +664,8 @@ so feel free to adapt it as needed.  Key principles to follow:
 * Make tests self-documenting.
 * Follow existing conventions.
 
-These principles make tests easier to discover and maintain. For you, future
-you, and the rest of the MLIR community.
+These principles make tests easier to discover and maintain. For you, "future
+you", and the rest of the MLIR community.
 
 ### Test Documentation Best Practices
 
@@ -718,10 +718,10 @@ The comments in the example above document two non-obvious behaviors:
 
 
 #### How to Identify What Needs Documentation?
-A good rule of thumb is to think of yourself six months from now and ask: "What
-might be difficult to understand without comments?"
+Think of yourself six months from now and ask: _"What might be difficult to
+understand without comments?"_
 
-If you expect something to be tricky for future-you, it’s likely to be tricky
+If you expect something to be tricky for "future-you", it’s likely to be tricky
 for others encountering the test for the first time.
 
 #### Making Tests Self-Documenting
@@ -758,8 +758,8 @@ The example above documents:
 
 
 #### Documenting the "What"
-While we generally document why, documenting what is valid and encouraged in
-cases where:
+You should always document why, but documenting what is also valid and
+encouraged in cases where:
 
 * The test output is long and complex.
 * The tested logic is non-trivial and/or involves multiple transformations.
