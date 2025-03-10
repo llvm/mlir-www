@@ -92,7 +92,7 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
-## [Kokkos](https://kokkos.org):
+## [Kokkos](https://kokkos.org)
 
 The Kokkos C++ Performance Portability Ecosystem is a production level solution 
 for writing modern C++ applications in a hardware agnostic way. It is part of the 
@@ -221,7 +221,7 @@ and the GPU Polygeist paper
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
 conformance. It uses MLIR Dialects for the task of high level, language specific
-optimizations as well as LLVM for code genereation and garbage collector
+optimizations as well as LLVM for code generation and garbage collector
 support.
 
 ## [RISE](https://rise-lang.org/)
