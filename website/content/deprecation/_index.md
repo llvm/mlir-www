@@ -20,6 +20,11 @@ When casting attributes or type, use the free functions variants, e.g.,
 methods in the future.
 [Discussion on Discourse](https://discourse.llvm.org/t/preferred-casting-style-going-forward/68443)
 
+### Use `matchAndRewrite` instead of `match` / `rewrite`
+
+The `match` and `rewrite` functions of `RewritePattern` and `ConversionPattern`
+are deprecated. Use the combined `matchAndRewrite` instead.
+
 ## On-going Refactoring & large changes
 
 # Past Deprecation and Refactoring
