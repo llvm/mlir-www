@@ -384,3 +384,459 @@ func.func @simple_constant() -> (i32, i32) {
 }
 ```
 
+### Test Formatting Best Practices
+
+When adding new tests, strive to follow these two key rules:
+
+1. **Follow the existing naming and whitespace style.**
+   - This applies when modifying existing test files that follow a particular
+     convention, as it likely fits the context.
+2. **Consistently document the edge case being tested.**
+   - Clearly state what makes this test unique and how it complements other
+     similar tests.
+
+While the first rule extends LLVM’s general coding style to tests, the second
+may feel new. The goal is to improve:
+
+- **Test discoverability** – Well-documented tests make it easier to pair tests
+  with patterns and understand their purpose.
+- **Test consistency** – Consistent documentation and naming lowers cognitive
+  load and helps avoid duplication.
+
+A well-thought-out naming convention helps achieve all of the above.
+
+---
+
+#### Example: Improving Test Readability & Naming
+
+Consider these **three tests** that exercise `vector.maskedload -> vector.load`
+lowering under the `-test-vector-to-vector-lowering` flag:
+
+##### Before: Inconsistent & Hard to Differentiate
+
+```mlir
+// CHECK-LABEL:   func @maskedload_regression_1(
+//  CHECK-SAME:       %[[A0:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_2(
+//  CHECK-SAME:       %[[A0:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[A1:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_3(
+// CHECK-SAME:        %[[A0:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[A1]] : vector<16xf32>
+func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %vec_i1 = vector.constant_vec_i1 [0] : vector<16xi1>
+
+  %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+While all examples test `vector.maskedload` -> `vector.load lowering`, it is
+difficult to tell their actual differences.
+
+##### Step 1: Use Consistent Variable Names
+
+To reduce cognitive load, use consistent names across MLIR and FileCheck. Also,
+instead of using generic names like `%arg0`, encode some additional context by
+using names from existing documentation. For example from the Op documentation,
+[`vector.maskedload`](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop),
+in this case.
+
+```mlir
+// CHECK-LABEL:   func @maskedload_regression_1(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_regression_1(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_2(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_regression_2(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_regression_3(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+func.func @maskedload_regression_3(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [0] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+##### Step 2: Improve Test Naming
+
+Instead of using "regression" (which does not add unique information), rename
+tests based on key attributes:
+
+* All examples test the `vector.maskedload` to `vector.load` lowering.
+* The first test uses a _dynamically_ shaped `memref`, while the others use
+  _static_ shapes.
+* The mask in the first two examples is "all true" (`vector.constant_mask
+  [16]`), while it is "all false" (`vector.constant_mask [0]`) in the third
+  example.
+* The first and the third tests use `i32` elements, whereas the second uses
+  `i8`.
+
+This suggests the following naming scheme:
+* `@maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false}`.
+
+```mlir
+// CHECK-LABEL:   func @maskedload_to_load_dynamic_i32_all_true(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   return %[[LOAD]] : vector<16xf32>
+func.func @maskedload_to_load_dynamic_i32_all_true(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+
+// CHECK-LABEL:   func @maskedload_to_load_static_i8_all_true(
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
+//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   return %[[LOAD]] : vector<16xi8>
+func.func @maskedload_to_load_static_i8_all_true(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [16] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
+
+  return %ld : vector<16xi8>
+}
+
+// CHECK-LABEL:   func @maskedload_to_load_static_i32_all_false(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+func.func @maskedload_to_load_static_i32_all_false(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [0] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+##### Step 3: Add The Newly Identified Missing Case
+
+Step 2 made it possible to see that there is a case which is not tested:
+
+* A mask that is neither "all true" nor "all false".
+
+Unlike the existing cases, this mask must be preserved. In this scenario,
+`vector.load` is not the right abstraction. Thus, no lowering should occur:
+
+```mlir
+// CHECK-LABEL:   func @negative_maskedload_to_load_static_i32_mixed(
+// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
+// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+//      CHECK:    vector.maskedload
+func.func @negative_maskedload_to_load_static_i32_mixed(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+  %c0 = arith.constant 0 : index
+  %mask = vector.constant_mask [4] : vector<16xi1>
+
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+  return %ld : vector<16xf32>
+}
+```
+
+The `negative_` prefix indicates that this test should fail to lower, as the
+pattern should not match.
+
+To summarize, here is the naming convention used:
+
+* `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
+
+> **_NOTE:_** In some cases, prefixes other than `negative_` might be more
+> suitable to indicate that a test is expected to "fail." For example, in
+> "folding" tests, `no_` would be equally clear and also a more concise
+> alternative — e.g., `@no_fold_<case>_<subcase>`.
+>
+> Whichever prefix you choose, ensure it is used **consistently**.
+> Avoid using suffixes to mark a test as intentionally failing; prefixes
+> are easier to spot.
+
+#### What if there is no pre-existing style to follow?
+
+If you are adding a new test file, you can use other test files in the same
+directory as inspiration.
+
+If the test file you are modifying lacks a clear style and instead has mixed,
+inconsistent styles, try to identify the dominant one and follow it. Even
+better, consider refactoring the file to adopt a single, consistent style —
+this helps improve our overall testing quality. Refactoring is also encouraged
+when the existing style could be improved.
+
+In many cases, it is best to create a separate PR for test refactoring to
+reduce per-PR noise. However, this depends on the scale of changes — reducing
+PR traffic is also important. Work with reviewers to use your judgment and
+decide the best approach.
+
+Alternatively, if you defer refactoring, consider creating a GitHub issue and
+adding a TODO in the test file linking to it.
+
+When creating a new naming convention, keep these points in mind:
+
+* **Write Orthogonal Tests**
+If naming is difficult then the tests may be lacking a clear purpose. A good
+rule of thumb is to avoid testing the same thing repeatedly. Before writing
+tests, define clear categories to cover (e.g., number of loops, data types).
+This often leads to a natural naming scheme—for example: `@loop_depth_2_i32`.
+
+* **What vs Why**
+Test names should reflect _what_ is being tested, not _why_.
+
+Encoding _why_ in test names can lead to overly long and complex names.
+Instead, add inline comments where needed.
+
+#### Do not forget the common sense
+
+Always apply common sense when naming functions and variables. Encoding too
+much information in names makes the tests less readable and less maintainable.
+
+Trust your judgment. When in doubt, consult your "future self": _"Will this still
+make sense to me six months from now?_"
+
+#### Final Points - Key Principles
+
+The above approach is just an example. It may not fit your use case perfectly,
+so feel free to adapt it as needed.  Key principles to follow:
+
+* Make tests self-documenting.
+* Follow existing conventions.
+
+These principles make tests easier to discover and maintain. For you, "future
+you", and the rest of the MLIR community.
+
+### Test Documentation Best Practices
+
+In addition to following good naming and formatting conventions, please
+document your tests with comments. Focus on explaining **why** since the
+**what** is usually clear from the code itself.
+
+As an example, consider this test that uses the
+`TransferWritePermutationLowering` pattern:
+
+
+```mlir
+/// Even with out-of-bounds accesses, it is safe to apply this pattern as it
+/// does not modify which memory location is being accessed.
+
+// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed_out_of_bounds
+//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>
+//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x?x?xi16>
+//  CHECK-SAME:      %[[IDX:.*]]: index)
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+
+/// Expect the in_bounds attribute to be preserved. However, since we don't
+/// print it when all flags are "false", it should not appear in the output.
+/// CHECK-NOT:       in_bounds
+
+// CHECK:           vector.transfer_write
+
+/// The permutation map was replaced with vector.transpose
+// CHECK-NOT:       permutation_map
+
+// CHECK-SAME:      %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]] : vector<8x4xi16>, memref<2x2x?x?xi16>
+func.func @xfer_write_minor_identity_transposed_out_of_bounds(
+    %vec: vector<4x8xi16>,
+    %mem: memref<2x2x?x?xi16>,
+    %idx: index) {
+
+  vector.transfer_write %vec, %mem[%idx, %idx, %idx, %idx] {
+    in_bounds = [false, false],
+    permutation_map = affine_map<(d0, d1, d2, d3) -> (d3, d2)>
+  } : vector<4x8xi16>, memref<2x2x?x?xi16>
+
+  return
+}
+```
+
+The comments in the example above document two non-obvious behaviors:
+
+* _Why_ is the `permutation_map` attribute missing from the output?
+* _Why_ is the `in_bounds` attribute missing from the output?
+
+
+#### How to Identify What Needs Documentation?
+Think of yourself six months from now and ask: _"What might be difficult to
+understand without comments?"_
+
+If you expect something to be tricky for "future-you", it’s likely to be tricky
+for others encountering the test for the first time.
+
+#### Making Tests Self-Documenting
+We can improve documentation further by:
+* clarifying what pattern is being tested,
+* providing high-level reasoning, and
+* consolidating shared comments.
+
+For example:
+
+```mlir
+///----------------------------------------------------------------------------------------
+/// [Pattern: TransferWritePermutationLowering]
+///
+/// IN: vector.transfer_write (_transposed_ minor identity permutation map)
+/// OUT: vector.transpose + vector.transfer_write (minor identity permutation map)
+///
+/// Note: `permutation_map` from the input Op is replaced with the newly
+/// inserted vector.traspose Op.
+///----------------------------------------------------------------------------------------
+
+// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed
+//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>,
+//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x8x4xi16>
+//  CHECK-SAME:      %[[IDX:.*]]: index)
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+// (...)
+```
+
+The example above documents:
+* The transformation pattern being tested.
+* The key logic behind the transformation.
+* The expected change in output.
+
+
+#### Documenting the "What"
+You should always document why, but documenting what is also valid and
+encouraged in cases where:
+
+* The test output is long and complex.
+* The tested logic is non-trivial and/or involves multiple transformations.
+
+For example, in this test for Linalg convolution vectorization, comments are
+used to document high-level steps (original FileCheck "check" lines have been
+trimmed for brevity):
+
+```mlir
+func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x3x8xf32>, %output: memref<4x2x8xf32>) {
+  linalg.conv_1d_nwc_wcf
+    {dilations = dense<1> : tensor<1xi64>, strides = dense<3> : tensor<1xi64>}
+    ins(%input, %filter : memref<4x6x3xf32>, memref<1x3x8xf32>)
+    outs(%output : memref<4x2x8xf32>)
+  return
+}
+
+//      CHECK: func @conv1d_nwc_4x2x8_memref
+// CHECK-SAME: (%[[INPUT:.+]]: memref<4x6x3xf32>, %[[FILTER:.+]]: memref<1x3x8xf32>, %[[OUTPUT:.+]]: memref<4x2x8xf32>)
+
+/// Read the whole data in one shot.
+//  CHECK-DAG:   %[[V_INPUT_R:.+]] = vector.transfer_read %[[INPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+//  CHECK-DAG:  %[[V_FILTER_R:.+]] = vector.transfer_read %[[FILTER]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+//  CHECK-DAG:  %[[V_OUTPUT_R:.+]] = vector.transfer_read %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+
+//      CHECK:   %[[V_INPUT_0:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+//      CHECK:   %[[V_INPUT_1:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+
+//      CHECK:    %[[V_FILTER:.+]] = vector.extract %[[V_FILTER_R]][0] : vector<3x8xf32> from vector<1x3x8xf32>
+
+//      CHECK:  %[[V_OUTPUT_0:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+//      CHECK:  %[[V_OUTPUT_1:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+
+/// w == 0, kw == 0
+//      CHECK:   %[[CONTRACT_0:.+]] = vector.contract
+// CHECK-SAME:     %[[V_INPUT_0]], %[[V_FILTER]], %[[V_OUTPUT_0]]
+
+/// w == 1, kw == 0
+//      CHECK:   %[[CONTRACT_1:.+]] = vector.contract
+// CHECK-SAME:     %[[V_INPUT_1]], %[[V_FILTER]], %[[V_OUTPUT_1]]
+
+/// w == 0, kw == 0
+//      CHECK:   %[[RES_0:.+]] = vector.insert_strided_slice %[[CONTRACT_0]], %[[V_OUTPUT_R]]
+/// w == 1, kw == 0
+//      CHECK:   %[[RES_1:.+]] = vector.insert_strided_slice %[[CONTRACT_1]], %[[RES_0]]
+
+/// Write the result back in one shot.
+//      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]]
+```
+
+Though the comments document _what_ is happening (e.g., "Write the result back
+in one shot"), some variables — like `w` and `kw` — are not explained. This is
+intentional - their purpose becomes clear when studying the corresponding
+Linalg vectorizer implementation (or, when analysing how
+`linalg.conv_1d_nwc_wcf` works).
+
+Comments help you understand code, they do not replace the need to read it.
+Comments guide the reader, they do not repeat what the code already says.
+
+#### Final Points - Key Principles
+Below are key principles to follow when documenting tests:
+* Always document _why_, document _what_ if you need to (e.g. the underlying
+	logic is non-trivial).
+* Use block comments for higher-level comments (e.g. to describe the patterns
+	being tested).
+* Think about maintainability - comments should help future developers (which
+	includes you) understand tests at a glance.
+* Avoid over-explaining. Comments should assist, not replace reading the code.
