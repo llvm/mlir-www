@@ -27,13 +27,13 @@ cmake --build . --target check-mlir-integration
 ### Run C++ unit tests:
 
 ```sh
-bin/llvm-lit -v tools/mlir/Unit
+bin/llvm-lit -v tools/mlir/test/Unit
 ```
 
 ### Run `lit` tests in a specific directory
 
 ```sh
-bin/llvm-lit -v tools/mlir/test/Dialect/Arithmetic
+bin/llvm-lit -v tools/mlir/test/Dialect/Arith
 ```
 
 ### Run a specific `lit` test file
@@ -109,18 +109,18 @@ Subsets of the testing tree can be invoked by passing a more specific path
 instead of `tools/mlir/test` above. Example:
 
 ```shell
-./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic
+./bin/llvm-lit tools/mlir/test/Dialect/Arith
 
 # Note that it is possible to test at the file granularity, but since these
 # files do not actually exist in the build directory, you need to know the
 # name.
-./bin/llvm-lit tools/mlir/test/Dialect/Arithmetic/ops.mlir
+./bin/llvm-lit tools/mlir/test/Dialect/Arith/ops.mlir
 ```
 
 Or for running all the C++ unit-tests:
 
 ```shell
-./bin/llvm-lit tools/mlir/Unit
+./bin/llvm-lit tools/mlir/test/Unit
 ```
 
 The C++ unit-tests can also be executed as individual binaries, which is
@@ -246,6 +246,18 @@ To run only the integration tests, run the `check-mlir-integration` target.
 cmake --build . --target check-mlir-integration
 ```
 
+Note that integration tests are relatively expensive to run (primarily due to
+JIT compilation), and tend to be trickier to debug (with multiple compilation
+steps _integrated_, it usually takes a bit of triaging to find the root cause
+of a failure). We reserve e2e tests for cases that are hard to verify
+otherwise, e.g. when composing and testing complex compilation pipelines. In
+those cases, verifying run-time output tends to be easier then the checking
+e.g. LLVM IR with FileCheck. Lowering optimized `linalg.matmul` (with tiling
+and vectorization) is a good example. For less involved lowering pipelines or
+when there's almost 1-1 mapping between an Op and it's LLVM IR counterpart
+(e.g. `arith.cmpi` and LLVM IR `icmp` instruction),  regular unit tests are considered
+enough.
+
 The source files of the integration tests are organized within the `mlir` source
 tree by dialect (for example, `test/Integration/Dialect/Vector`).
 
@@ -315,9 +327,9 @@ func.func @simple_constant() -> (i32, i32) {
 ```
 
 The above example is another way to write the original example shown in the main
-[FileCheck tests](#filecheck-tests) section. There are a few problems with this
-test; below is a breakdown of the no-nos of this test to specifically highlight
-best practices.
+[`lit` and `FileCheck` tests](#lit-and-filecheck-tests) section. There are a few
+problems with this test; below is a breakdown of the no-nos of this test to
+specifically highlight best practices.
 
 *   Tests should be self-contained.
 

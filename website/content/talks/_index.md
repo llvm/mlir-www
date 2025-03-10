@@ -83,6 +83,9 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
+* 2024-08-22: Upstream SPIR-V Conversion
+[slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf)
+[recording](https://youtu.be/-qoMMrlYvGs)
 * 2023-02-15: OpenMP GPU target offload
 [slides](/OpenMeetings/2023-02-15-OpenMP-GPU-Offload.pdf) -
 [recording](https://youtu.be/lOK6JPuVFYg)
@@ -270,14 +273,20 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2024-10-17: Shaderpulse, a GLSL Frontend for MLIR SPIR-V ;
+[slides](/OpenMeetings/2024-10-17-Shaderpulse.pdf) -
+[recording](https://youtu.be/qofyrgPfuUI)
+* 2024-09-12: XLA Indexing Maps ;
+[slides](/OpenMeetings/2024-09-12-XLA-Indexing-Analysis.pdf) -
+[recording](https://youtu.be/8KKjYeXGHOM)
 * 2023-12-22: PyDSL, a small subset of Python for constructing affine & transform dialects
-[slides](/OpenMeetings/2023-12-21-PyDSL.pdf)
-[recording](https://youtu.be/nmtHeRkl850)
+[slides](/OpenMeetings/2023-12-21-PyDSL.pdf) ;
+[recording](https://youtu.be/nmtHeRkl850) -
 * 2023-06-08/15: Update on Numba/MLIR
-[slides](/OpenMeetings/2023-06-08-Numba.pdf)
-[recording](https://youtu.be/ATvH4JOW4tA)
-* 2023-05-04: Catalyst, an AOT/JIT compiler for hybrid quantum programs
-[slides](/OpenMeetings/2023-05-04-Catalyst-compiler-for-hybrid-quantum-programs.pdf)
+[slides](/OpenMeetings/2023-06-08-Numba.pdf) ;
+[recording](https://youtu.be/ATvH4JOW4tA) -
+* 2023-05-04: Catalyst, an AOT/JIT compiler for hybrid quantum programs ;
+[slides](/OpenMeetings/2023-05-04-Catalyst-compiler-for-hybrid-quantum-programs.pdf) -
 [recording](https://youtu.be/VY-Rsi5SFB8)
 * 2023-03-30: Representing dataflow with MLIR ;
 [slides](/OpenMeetings/2023-03-30-Representing-Dataflow-With-MLIR.pdf) -
