@@ -103,6 +103,19 @@ and address its various deficiencies. F18 was subsequently accepted into the LLV
 project and rechristened as Flang. The high level IR of the Fortran compiler is modeled
 using MLIR.
 
+## [HEIR](https://github.com/google/heir)
+
+HEIR (Homomorphic Encryption Intermediate Representation) is an MLIR-based
+toolchain developed by Google for compiling programs that utilize homomorphic
+encryption. Homomorphic encryption allows computations to be performed directly
+on encrypted data without needing to decrypt it first, thereby preserving data
+privacy throughout the computational process.
+
+Building upon the foundation of MLIR (Multi-Level Intermediate Representation),
+HEIR provides a flexible and extensible framework for developing compilers
+targeting homomorphic encryption. This approach facilitates the optimization and
+transformation of code in a manner that is both modular and scalable.
+
 ## [IREE](https://github.com/google/iree)
 
 IREE (pronounced "eerie") is a compiler and minimal runtime system for
