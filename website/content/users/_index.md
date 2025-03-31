@@ -270,6 +270,13 @@ and hardware-specific optimisation choices".
 TPU-MLIR is an open-source machine-learning compiler based on MLIR for
 SOPHGO TPU. https://arxiv.org/abs/2210.15016.
 
+## [Substrait MLIR](https://github.com/substrait-io/substrait-mlir-contrib/)
+
+Substrait MLIR is an input/output dialect for
+[Substrait](https://substrait.io/), the cross-language serialization format of
+database query plans (akin to an intermediate representation/IR for database
+queries).
+
 ## [TensorFlow](https://www.tensorflow.org/mlir)
 
 MLIR is used as a Graph Transformation framework and the foundation for
