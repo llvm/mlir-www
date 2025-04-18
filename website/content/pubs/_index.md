@@ -16,6 +16,10 @@ weight: 1
 
 ### About MLIR and MLIR Components
 
+* [The MLIR Transform Dialect: Your Compiler Is More Powerful Than You Think](https://dl.acm.org/doi/abs/10.1145/3696443.3708922) -
+  Martin Paul Lücke, Oleksandr Zinenko, William S Moses, Michel Steuwer, Albert Cohen - In Proceedings of
+  the 23rd ACM/IEEE International Symposium on Code Generation and Optimization - pp. 241-254 - March 3,
+  2025.
 * [Compiler Support for Sparse Tensor Computations in MLIR](https://dl.acm.org/doi/10.1145/3544559) -
   Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, Fredrik Kjolstad.
   ACM Transactions on Architecture and Code Optimization, June, 2022.
