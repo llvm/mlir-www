@@ -12,14 +12,6 @@ up with MLIR development.
 
 ## Deprecated
 
-### Use the free function variants for `dyn_cast`/`cast`/`isa`/...
-
-When casting attributes or type, use the free functions variants, e.g.,
-`dyn_cast<T>(x)`, `isa<T>(x)`, etc. Use of the cast methods variants (e.g.,
-`x.dyn_cast<T>()`) should be avoided in new code as we'll remove these
-methods in the future.
-[Discussion on Discourse](https://discourse.llvm.org/t/preferred-casting-style-going-forward/68443)
-
 ### Use `matchAndRewrite` instead of `match` / `rewrite`
 
 The `match` and `rewrite` functions of `RewritePattern` and `ConversionPattern`
@@ -108,3 +100,14 @@ been implemented in upstream MLIR or any known downstream projects. Due to this
 lack of use, it was decided that the operation should be removed.
 
 [Discussion on Discourse](https://discourse.llvm.org/t/rfc-should-vector-reshape-be-removed/80478)
+
+## LLVM 21
+
+### Use the free function variants for `dyn_cast`/`cast`/`isa`/...
+
+When casting attributes or type, use the free functions variants, e.g.,
+`dyn_cast<T>(x)`, `isa<T>(x)`, etc. Use of the cast methods variants (e.g.,
+`x.dyn_cast<T>()`) should be avoided in new code as we removed these
+methods in https://github.com/llvm/llvm-project/pull/135556.
+
+[Discussion on Discourse](https://discourse.llvm.org/t/preferred-casting-style-going-forward/68443)
