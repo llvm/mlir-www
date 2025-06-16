@@ -419,12 +419,13 @@ lowering under the `-test-vector-to-vector-lowering` flag:
 //  CHECK-SAME:       %[[A0:.*]]: memref<?xf32>,
 //  CHECK-SAME:       %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
 //       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<?xf32>, vector<16xf32>
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
+//  CHECK-SAME:     : memref<?xf32>, vector<16xf32>
 //       CHECK:   return %[[LOAD]] : vector<16xf32>
 func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
   %c0 = arith.constant 0 : index
-  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
 
+  %vec_i1 = vector.constant_mask [16] : vector<16xi1>
   %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
     : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
 
@@ -435,12 +436,13 @@ func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) 
 //  CHECK-SAME:       %[[A0:.*]]: memref<16xi8>,
 //  CHECK-SAME:       %[[A1:.*]]: vector<16xi8>) -> vector<16xi8> {
 //       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]] : memref<16xi8>, vector<16xi8>
+//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
+//  CHECK-SAME:     : memref<16xi8>, vector<16xi8>
 //       CHECK:   return %[[LOAD]] : vector<16xi8>
 func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -> vector<16xi8> {
   %c0 = arith.constant 0 : index
-  %vec_i1 = vector.constant_vec_i1 [16] : vector<16xi1>
 
+  %vec_i1 = vector.constant_mask [16] : vector<16xi1>
   %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
     : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
 
@@ -453,8 +455,8 @@ func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -
 //      CHECK:    return %[[A1]] : vector<16xf32>
 func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
   %c0 = arith.constant 0 : index
-  %vec_i1 = vector.constant_vec_i1 [0] : vector<16xi1>
 
+  %vec_i1 = vector.constant_mask [0] : vector<16xi1>
   %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
     : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
 
@@ -465,63 +467,51 @@ func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>)
 While all examples test `vector.maskedload` -> `vector.load lowering`, it is
 difficult to tell their actual differences.
 
-##### Step 1: Use Consistent Variable Names
+##### After Step 1 (Introduce Consistent Variable Names)
 
-To reduce cognitive load, use consistent names across MLIR and FileCheck. Also,
-instead of using generic names like `%arg0`, encode some additional context by
-using names from existing documentation. For example from the Op documentation,
+To reduce cognitive load, use consistent names across MLIR and FileCheck (e.g.,
+`%arg0` and `A0` above are not consistent). Also, instead of using generic
+names like `%arg0` or `%vec_i1`, encode some additional context by using names
+from existing documentation. For example from the Op documentation,
 [`vector.maskedload`](https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop),
-in this case.
+in this case, you can use `%base`, `%mask` and `%pass_thru`.
 
 ```mlir
 // CHECK-LABEL:   func @maskedload_regression_1(
 //  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
 //  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
-//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
-//       CHECK:   return %[[LOAD]] : vector<16xf32>
+// (...)
 func.func @maskedload_regression_1(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
-  %c0 = arith.constant 0 : index
+  // (...)
   %mask = vector.constant_mask [16] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
-
-  return %ld : vector<16xf32>
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru (...)
+  // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_regression_2(
 //  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
 //  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
-//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
-//       CHECK:   return %[[LOAD]] : vector<16xi8>
+// (...)
 func.func @maskedload_regression_2(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
-  %c0 = arith.constant 0 : index
+  // (...)
   %mask = vector.constant_mask [16] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
-
-  return %ld : vector<16xi8>
+  %ld = vector.maskedload %base[%c0], %mask, %pass_thru (...)
+  // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_regression_3(
-// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
-// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
-//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xf32>,
+//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
+// (...)
 func.func @maskedload_regression_3(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
-  %c0 = arith.constant 0 : index
+  // (...)
   %mask = vector.constant_mask [0] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
-
-  return %ld : vector<16xf32>
+  %ld = vector.maskedload %base[%c0], %mask, %base (...)
+  // (...)
 }
 ```
 
-##### Step 2: Improve Test Naming
+##### After Step 2 (Improve Test Naming)
 
 Instead of using "regression" (which does not add unique information), rename
 tests based on key attributes:
@@ -540,53 +530,25 @@ This suggests the following naming scheme:
 
 ```mlir
 // CHECK-LABEL:   func @maskedload_to_load_dynamic_i32_all_true(
-//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
-//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
-//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<?xf32>, vector<16xf32>
-//       CHECK:   return %[[LOAD]] : vector<16xf32>
+// (...)
 func.func @maskedload_to_load_dynamic_i32_all_true(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
-  %c0 = arith.constant 0 : index
-  %mask = vector.constant_mask [16] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
-
-  return %ld : vector<16xf32>
+  // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_to_load_static_i8_all_true(
-//  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
-//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
-//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
-//       CHECK:   %[[LOAD:.*]] = vector.load %[[BASE]][%[[C]]] : memref<16xi8>, vector<16xi8>
-//       CHECK:   return %[[LOAD]] : vector<16xi8>
+// (...)
 func.func @maskedload_to_load_static_i8_all_true(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
-  %c0 = arith.constant 0 : index
-  %mask = vector.constant_mask [16] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<16xi8>, vector<16xi1>, vector<16xi8> into vector<16xi8>
-
-  return %ld : vector<16xi8>
+  // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_to_load_static_i32_all_false(
-// CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
-// CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
-//      CHECK:    return %[[PASS_THRU]] : vector<16xf32>
+// (...)
 func.func @maskedload_to_load_static_i32_all_false(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
-  %c0 = arith.constant 0 : index
-  %mask = vector.constant_mask [0] : vector<16xi1>
-
-  %ld = vector.maskedload %base[%c0], %mask, %pass_thru
-    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
-
-  return %ld : vector<16xf32>
+  // (...)
 }
 ```
 
-##### Step 3: Add The Newly Identified Missing Case
+##### After Step 3 (Add The Newly Identified Missing Case)
 
 Step 2 made it possible to see that there is a case which is not tested:
 
@@ -614,18 +576,21 @@ func.func @negative_maskedload_to_load_static_i32_mixed(%base: memref<16xf32>, %
 The `negative_` prefix indicates that this test should fail to lower, as the
 pattern should not match.
 
-To summarize, here is the naming convention used:
+##### Test Naming Convention
+To summarize, here is the naming convention used in the examples above:
 
 * `@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}`.
 
-> **_NOTE:_** In some cases, prefixes other than `negative_` might be more
-> suitable to indicate that a test is expected to "fail." For example, in
-> "folding" tests, `no_` would be equally clear and also a more concise
-> alternative — e.g., `@no_fold_<case>_<subcase>`.
->
-> Whichever prefix you choose, ensure it is used **consistently**.
-> Avoid using suffixes to mark a test as intentionally failing; prefixes
-> are easier to spot.
+The exact format may vary depending on context. However:
+* **Avoid using suffixes** (e.g., `_fail`) to indicate negative tests — prefixes like
+  `negative_` are easier to spot and grep for.
+* Whatever naming convention you choose, **apply it consistently** throughout
+  the test suite.
+
+**Note:** In some cases, a prefix other than `negative_` might be more
+appropriate. For instance, in "folding" tests where a pattern is expected not
+to apply, using `no_` can be a more concise and equally clear alternative —
+e.g., `@no_fold_<case>_<subcase>.`
 
 #### What if there is no pre-existing style to follow?
 
@@ -697,7 +662,8 @@ As an example, consider this test that uses the
 //  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>
 //  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x?x?xi16>
 //  CHECK-SAME:      %[[IDX:.*]]: index)
-//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
+//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0]
+//  CHECK_SAME:        : vector<4x8xi16> to vector<8x4xi16>
 
 /// Expect the in_bounds attribute to be preserved. However, since we don't
 /// print it when all flags are "false", it should not appear in the output.
@@ -708,7 +674,8 @@ As an example, consider this test that uses the
 /// The permutation map was replaced with vector.transpose
 // CHECK-NOT:       permutation_map
 
-// CHECK-SAME:      %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]] : vector<8x4xi16>, memref<2x2x?x?xi16>
+// CHECK-SAME:        %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]]
+// CHECK-SAME:        : vector<8x4xi16>, memref<2x2x?x?xi16>
 func.func @xfer_write_minor_identity_transposed_out_of_bounds(
     %vec: vector<4x8xi16>,
     %mem: memref<2x2x?x?xi16>,
@@ -745,7 +712,7 @@ We can improve documentation further by:
 For example:
 
 ```mlir
-///----------------------------------------------------------------------------------------
+///--------------------------------------------------------------------------------
 /// [Pattern: TransferWritePermutationLowering]
 ///
 /// IN: vector.transfer_write (_transposed_ minor identity permutation map)
@@ -753,14 +720,12 @@ For example:
 ///
 /// Note: `permutation_map` from the input Op is replaced with the newly
 /// inserted vector.traspose Op.
-///----------------------------------------------------------------------------------------
-
+///--------------------------------------------------------------------------------
 // CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed
-//  CHECK-SAME:      %[[VEC:.*]]: vector<4x8xi16>,
-//  CHECK-SAME:      %[[MEM:.*]]: memref<2x2x8x4xi16>
-//  CHECK-SAME:      %[[IDX:.*]]: index)
-//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0] : vector<4x8xi16> to vector<8x4xi16>
-// (...)
+//       (...)
+//       CHECK:      %[[TR:.*]] = vector.transpose (...)
+//       CHECK:      vector.transfer_write %[[TR]] (...)
+//       (...)
 ```
 
 The example above documents:
