@@ -84,6 +84,7 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 ### About MLIR and MLIR Components
 
 * 2025-06-26: WebAssembly Dialect [slides](/OpenMeetings/2025-06-26-WASM-Dialect.pdf) - [recording](https://youtu.be/emyOylywgs0)
+* 2025-06-12: Rank-0 Vectors [slides](/OpenMeetings/2025-06-12-Rank0-Vectors.pdf) - [recording](https://youtu.be/CyOtFU6kzDs)
 * 2024-08-22: Upstream SPIR-V Conversion
 [slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf) - 
 [recording](https://youtu.be/-qoMMrlYvGs)
