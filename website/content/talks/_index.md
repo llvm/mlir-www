@@ -85,6 +85,8 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 * 2025-06-26: WebAssembly Dialect [slides](/OpenMeetings/2025-06-26-WASM-Dialect.pdf) - [recording](https://youtu.be/emyOylywgs0)
 * 2025-06-12: Rank-0 Vectors [slides](/OpenMeetings/2025-06-12-Rank0-Vectors.pdf) - [recording](https://youtu.be/CyOtFU6kzDs)
+* 2025-04-03: Upstreaming SMT and Verif Dialects (cont'd) [recording](https://youtu.be/dVxCynKK1AM)
+* 2025-03-27: Upstreaming SMT and Verif Dialects [recording](https://youtu.be/a9fRzBWI0AE)
 * 2024-08-22: Upstream SPIR-V Conversion
 [slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf) - 
 [recording](https://youtu.be/-qoMMrlYvGs)
@@ -275,6 +277,9 @@ recording [part 1](https://drive.google.com/a/google.com/file/d/1JvirzO_LgUTacs0
 
 ### Using MLIR
 
+* 2025-04-10: Inet: Interaction Network Dialect ;
+[slides](/OpenMeetings/2025-04-10-Inet-Dialect.pdf) -
+[recording](https://youtu.be/XKY4LLBwmmg)
 * 2024-10-17: Shaderpulse, a GLSL Frontend for MLIR SPIR-V ;
 [slides](/OpenMeetings/2024-10-17-Shaderpulse.pdf) -
 [recording](https://youtu.be/qofyrgPfuUI)
