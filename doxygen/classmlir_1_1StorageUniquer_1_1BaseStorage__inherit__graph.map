@@ -1,0 +1,51 @@
+<map id="mlir::StorageUniquer::BaseStorage" name="mlir::StorageUniquer::BaseStorage">
+<area shape="rect" id="node1" title="This class acts as the base storage that all storage classes must derived from." alt="" coords="5,1937,163,1979"/>
+<area shape="rect" id="node2" href="$classmlir_1_1AttributeStorage.html" title="Base storage class appearing in an attribute." alt="" coords="239,339,402,366"/>
+<area shape="rect" id="node13" href="$classmlir_1_1GenericLatticeAnchor.html" title="Abstract class for generic lattice anchor." alt="" coords="223,734,418,761"/>
+<area shape="rect" id="node16" href="$structmlir_1_1ProgramPoint.html" title="Program point represents a specific location in the execution of a program." alt="" coords="249,1309,393,1335"/>
+<area shape="rect" id="node17" href="$classmlir_1_1TypeStorage.html" title="Base storage class appearing in a Type." alt="" coords="253,1359,389,1386"/>
+<area shape="rect" id="node35" href="$structmlir_1_1detail_1_1AffineExprStorage.html" title="Base storage class appearing in an affine expression." alt="" coords="237,1908,405,1949"/>
+<area shape="rect" id="node39" href="$structmlir_1_1detail_1_1AffineMapStorage.html" title=" " alt="" coords="212,1974,429,2001"/>
+<area shape="rect" id="node40" href="$structmlir_1_1detail_1_1IntegerSetStorage.html" title=" " alt="" coords="237,2025,405,2067"/>
+<area shape="rect" id="node41" href="$classmlir_1_1pdl__to__pdl__interp_1_1Position.html" title="A position describes a value on the input IR on which a predicate may be applied, such as an operatio..." alt="" coords="237,2180,405,2221"/>
+<area shape="rect" id="node48" href="$classmlir_1_1pdl__to__pdl__interp_1_1Qualifier.html" title="An ordinal predicate consists of a &quot;Question&quot; and a set of acceptable &quot;Answers&quot; (later converted to o..." alt="" coords="237,2245,405,2287"/>
+<area shape="rect" id="node49" href="$structmlir_1_1pdll_1_1ast_1_1Type_1_1Storage.html" title=" " alt="" coords="247,2311,394,2352"/>
+<area shape="rect" id="node3" href="$classmlir_1_1detail_1_1DataLayoutEntryAttrStorage.html" title=" " alt="" coords="539,5,715,47"/>
+<area shape="rect" id="node4" href="$structmlir_1_1detail_1_1DenseElementsAttributeStorage.html" title="An attribute representing a reference to a dense vector or tensor object." alt="" coords="526,71,729,112"/>
+<area shape="rect" id="node5" href="$structmlir_1_1detail_1_1DistinctAttrStorage.html" title="An attribute to store a distinct reference to another attribute." alt="" coords="540,136,715,177"/>
+<area shape="rect" id="node6" href="$structmlir_1_1detail_1_1DynamicAttrStorage.html" title="Storage of DynamicAttr." alt="" coords="536,201,719,243"/>
+<area shape="rect" id="node7" href="$structmlir_1_1detail_1_1FileLineColRangeAttrStorage.html" title=" " alt="" coords="541,267,713,308"/>
+<area shape="rect" id="node8" href="$structmlir_1_1detail_1_1StringAttrStorage.html" title=" " alt="" coords="546,332,709,373"/>
+<area shape="rect" id="node9" href="$structmlir_1_1spirv_1_1detail_1_1InterfaceVarABIAttributeStorage.html" title=" " alt="" coords="533,398,721,454"/>
+<area shape="rect" id="node10" href="$structmlir_1_1spirv_1_1detail_1_1TargetEnvAttributeStorage.html" title=" " alt="" coords="527,479,728,520"/>
+<area shape="rect" id="node11" href="$structmlir_1_1spirv_1_1detail_1_1VerCapExtAttributeStorage.html" title=" " alt="" coords="525,544,729,585"/>
+<area shape="rect" id="node12" href="$structmlir_1_1vector_1_1detail_1_1BitmaskEnumStorage.html" title=" " alt="" coords="542,609,713,651"/>
+<area shape="rect" id="node14" href="$classmlir_1_1GenericLatticeAnchorBase.html" title=" " alt="" coords="972,690,1167,746"/>
+<area shape="rect" id="node15" href="$classmlir_1_1GenericLatticeAnchorBase.html" title="Base class for generic lattice anchor based on a concrete lattice anchor type and a content key." alt="" coords="530,727,725,768"/>
+<area shape="rect" id="node18" href="$structmlir_1_1LLVM_1_1detail_1_1LLVMStructTypeStorage.html" title="Type storage for LLVM structure types." alt="" coords="536,792,719,833"/>
+<area shape="rect" id="node19" href="$structmlir_1_1LLVM_1_1detail_1_1LLVMTypeAndSizeStorage.html" title="Common storage used for LLVM dialect types that need an element type and a number: arrays,..." alt="" coords="529,857,725,899"/>
+<area shape="rect" id="node20" href="$structmlir_1_1detail_1_1DynamicTypeStorage.html" title="Storage of DynamicType." alt="" coords="533,923,722,964"/>
+<area shape="rect" id="node21" href="$structmlir_1_1detail_1_1FunctionTypeStorage.html" title="Function Type Storage and Uniquing." alt="" coords="534,988,721,1029"/>
+<area shape="rect" id="node22" href="$structmlir_1_1detail_1_1IntegerTypeStorage.html" title="Integer Type Storage and Uniquing." alt="" coords="539,1053,716,1095"/>
+<area shape="rect" id="node23" href="$structmlir_1_1detail_1_1TupleTypeStorage.html" title="A type representing a collection of other types." alt="" coords="520,1119,735,1146"/>
+<area shape="rect" id="node24" href="$structmlir_1_1gpu_1_1MMAMatrixStorageType.html" title="MMAMatrixType storage and uniquing." alt="" coords="506,1170,749,1197"/>
+<area shape="rect" id="node25" href="$structmlir_1_1quant_1_1detail_1_1QuantizedTypeStorage.html" title=" " alt="" coords="539,1221,715,1263"/>
+<area shape="rect" id="node26" href="$structspirv_1_1detail_1_1ArrayTypeStorage.html" title=" " alt="" coords="555,1287,700,1328"/>
+<area shape="rect" id="node27" href="$structspirv_1_1detail_1_1CooperativeMatrixTypeStorage.html" title=" " alt="" coords="512,1352,743,1393"/>
+<area shape="rect" id="node28" href="$structspirv_1_1detail_1_1ImageTypeStorage.html" title=" " alt="" coords="552,1417,703,1459"/>
+<area shape="rect" id="node29" href="$structspirv_1_1detail_1_1MatrixTypeStorage.html" title=" " alt="" coords="551,1483,703,1524"/>
+<area shape="rect" id="node30" href="$structspirv_1_1detail_1_1PointerTypeStorage.html" title=" " alt="" coords="549,1548,705,1589"/>
+<area shape="rect" id="node31" href="$structspirv_1_1detail_1_1RuntimeArrayTypeStorage.html" title=" " alt="" coords="527,1613,727,1655"/>
+<area shape="rect" id="node32" href="$structspirv_1_1detail_1_1SampledImageTypeStorage.html" title=" " alt="" coords="523,1679,731,1720"/>
+<area shape="rect" id="node33" href="$structspirv_1_1detail_1_1StructTypeStorage.html" title="Type storage for SPIR&#45;V structure types:" alt="" coords="553,1744,701,1785"/>
+<area shape="rect" id="node34" href="$structspirv_1_1detail_1_1TensorArmTypeStorage.html" title=" " alt="" coords="538,1809,717,1851"/>
+<area shape="rect" id="node36" href="$structmlir_1_1detail_1_1AffineBinaryOpExprStorage.html" title="A binary operation appearing in an affine expression." alt="" coords="537,1875,718,1916"/>
+<area shape="rect" id="node37" href="$structmlir_1_1detail_1_1AffineConstantExprStorage.html" title="An integer constant appearing in affine expression." alt="" coords="529,1940,726,1981"/>
+<area shape="rect" id="node38" href="$structmlir_1_1detail_1_1AffineDimExprStorage.html" title="A dimensional or symbolic identifier appearing in an affine expression." alt="" coords="530,2005,725,2047"/>
+<area shape="rect" id="node42" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="522,2071,733,2141"/>
+<area shape="rect" id="node43" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="481,2165,773,2236"/>
+<area shape="rect" id="node44" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="506,2260,749,2331"/>
+<area shape="rect" id="node45" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="479,2355,776,2425"/>
+<area shape="rect" id="node46" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="483,2449,771,2520"/>
+<area shape="rect" id="node47" href="$classmlir_1_1pdl__to__pdl__interp_1_1PredicateBase.html" title=" " alt="" coords="501,2544,754,2644"/>
+</map>
