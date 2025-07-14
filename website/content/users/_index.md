@@ -14,6 +14,14 @@ hand-writing Assembly code. With Accera, these problems and impediments can be
 addressed in an optimized way. It is available as a Python library and supports
 cross-compiling to a wide range of processor targets.
 
+## [Allo](https://github.com/cornell-zhang/allo)
+
+Allo is a Python-embedded Accelerator Design Language (ADL) and compiler that
+facilitates the construction of large-scale, high-performance hardware accelerators
+in a modular and composable manner. It supports progressive hardware customizations,
+reusable parameterized kernel templates, and composable schedules on top of MLIR
+for productive hardware development.
+
 ## [Beaver](https://github.com/beaver-lodge/beaver)
 
 Beaver is an MLIR frontend in Elixir and Zig.
