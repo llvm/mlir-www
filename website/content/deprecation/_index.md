@@ -17,6 +17,13 @@ up with MLIR development.
 The `match` and `rewrite` functions of `RewritePattern` and `ConversionPattern`
 are deprecated. Use the combined `matchAndRewrite` instead.
 
+
+### Use `vector.broadcast` instead of `vector.splat`
+
+The `vector.splat` operation has been deprecated.
+
+[Discussion on Discourse](https://discourse.llvm.org/t/rfc-mlir-vector-deprecate-then-remove-vector-splat/87143)
+
 ## On-going Refactoring & large changes
 
 # Past Deprecation and Refactoring
