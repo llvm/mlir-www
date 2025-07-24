@@ -26,7 +26,7 @@ The `vector.splat` operation has been deprecated.
 
 ### Use `OpTy::create(builder, loc, ...)` instead of `builder.create<OpTy>(loc, ...)`
 
-The `OpBuilder::create` has been deprecated in favor of generated `OpTy::create` methods.
+The `OpBuilder::create` API has been deprecated in favor of generated `OpTy::create` methods.
 
 [Discussion on Discourse](https://discourse.llvm.org/t/psa-opty-create-now-with-100-more-tab-complete/87339)
 
