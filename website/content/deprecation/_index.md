@@ -24,6 +24,12 @@ The `vector.splat` operation has been deprecated.
 
 [Discussion on Discourse](https://discourse.llvm.org/t/rfc-mlir-vector-deprecate-then-remove-vector-splat/87143)
 
+### Use `OpTy::create(builder, loc, ...)` instead of `builder.create<OpTy>(loc, ...)`
+
+The `OpBuilder::create` has been deprecated in favor of generated `OpTy::create` methods.
+
+[Discussion on Discourse](https://discourse.llvm.org/t/psa-opty-create-now-with-100-more-tab-complete/87339)
+
 ## On-going Refactoring & large changes
 
 # Past Deprecation and Refactoring
