@@ -1,0 +1,501 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>'shard' Dialect - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/docs/Dialects/Shard/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li></ul></li><li><a href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue%20state%3Aopen%20label%3Amlir">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>'shard' Dialect</h1><p>The &lsquo;shard&rsquo; dialect defines a set of attributes, operations, and interfaces for
+working with tensor sharding and device communication.</p><p>It’s inspired by [GSPMD](<em>General and Scalable Parallelization for ML Computation Graphs</em>).</p><p>Originally, the dialect was called <code>mesh</code>, but it was renamed to better reflect
+what it actually does.</p><p><nav id=TableOfContents><ul><li><a href=#collective-communication-operations>Collective Communication Operations</a><ul><li><a href=#device-groups>Device Groups</a></li><li><a href=#in-group-devices>In-group Devices</a></li><li><a href=#purity-and-execution-model>Purity and Execution Model</a></li></ul></li><li><a href=#operations>Operations</a><ul><li><a href=#shardall_gather-shardallgatherop><code>shard.all_gather</code> (shard::AllGatherOp)</a></li><li><a href=#shardall_reduce-shardallreduceop><code>shard.all_reduce</code> (shard::AllReduceOp)</a></li><li><a href=#shardall_slice-shardallsliceop><code>shard.all_slice</code> (shard::AllSliceOp)</a></li><li><a href=#shardall_to_all-shardalltoallop><code>shard.all_to_all</code> (shard::AllToAllOp)</a></li><li><a href=#shardbroadcast-shardbroadcastop><code>shard.broadcast</code> (shard::BroadcastOp)</a></li><li><a href=#shardgather-shardgatherop><code>shard.gather</code> (shard::GatherOp)</a></li><li><a href=#shardget_sharding-shardgetshardingop><code>shard.get_sharding</code> (shard::GetShardingOp)</a></li><li><a href=#shardgrid-shardgridop><code>shard.grid</code> (shard::GridOp)</a></li><li><a href=#shardgrid_shape-shardgridshapeop><code>shard.grid_shape</code> (shard::GridShapeOp)</a></li><li><a href=#shardneighbors_linear_indices-shardneighborslinearindicesop><code>shard.neighbors_linear_indices</code> (shard::NeighborsLinearIndicesOp)</a></li><li><a href=#shardprocess_linear_index-shardprocesslinearindexop><code>shard.process_linear_index</code> (shard::ProcessLinearIndexOp)</a></li><li><a href=#shardprocess_multi_index-shardprocessmultiindexop><code>shard.process_multi_index</code> (shard::ProcessMultiIndexOp)</a></li><li><a href=#shardrecv-shardrecvop><code>shard.recv</code> (shard::RecvOp)</a></li><li><a href=#shardreduce-shardreduceop><code>shard.reduce</code> (shard::ReduceOp)</a></li><li><a href=#shardreduce_scatter-shardreducescatterop><code>shard.reduce_scatter</code> (shard::ReduceScatterOp)</a></li><li><a href=#shardscatter-shardscatterop><code>shard.scatter</code> (shard::ScatterOp)</a></li><li><a href=#shardsend-shardsendop><code>shard.send</code> (shard::SendOp)</a></li><li><a href=#shardshard-shardshardop><code>shard.shard</code> (shard::ShardOp)</a></li><li><a href=#shardshard_shape-shardshardshapeop><code>shard.shard_shape</code> (shard::ShardShapeOp)</a></li><li><a href=#shardsharding-shardshardingop><code>shard.sharding</code> (shard::ShardingOp)</a></li><li><a href=#shardshift-shardshiftop><code>shard.shift</code> (shard::ShiftOp)</a></li><li><a href=#shardupdate_halo-shardupdatehaloop><code>shard.update_halo</code> (shard::UpdateHaloOp)</a></li></ul></li><li><a href=#attributes-21>Attributes</a><ul><li><a href=#gridaxesarrayattr>GridAxesArrayAttr</a></li><li><a href=#reductionkindattr>ReductionKindAttr</a></li></ul></li></ul></nav><h2 id=collective-communication-operations>Collective Communication Operations&nbsp;<a class=headline-hash href=#collective-communication-operations>¶</a></h2><p>The &lsquo;shard&rsquo; dialect includes several collective operations that help coordinate
+communication between devices arranged in a grid.</p><p>If you’re not already familiar with collective operations,
+<a href=https://en.wikipedia.org/wiki/Collective_operation>this Wikipedia
+article</a> is a good starting
+point.</p><p>Unlike traditional collectives that are defined in terms of message-passing
+between explicit buffers on each process, the collectives in this dialect work
+at a higher level. They’re defined in terms of how data moves across the
+dimensions of a tensor, and the participating processes are inferred from how
+the tensor is sharded - not specified manually.</p><h3 id=device-groups>Device Groups&nbsp;<a class=headline-hash href=#device-groups>¶</a></h3><p>Each collective operation runs within a group of devices. You define groups
+using the <code>grid</code> and <code>grid_axes</code> attributes, which describe how to slice the
+full device grid into smaller groups.</p><p>Devices that have the same coordinates <em>outside</em> the listed <code>grid_axes</code> belong
+to the same group.</p><p>Example: Say your device grid is shaped <code>2×3×4×5</code>, and you set
+<code>grid_axes = [0, 1]</code>. This splits the grid into groups by fixing axes 2 and 3. You’d get groups like:</p><pre tabindex=0><code>{ { (i, j, k, m) | 0 ≤ i &lt; 2, 0 ≤ j &lt; 3 } | 0 ≤ k &lt; 4, 0 ≤ m &lt; 5 }
+</code></pre><p>So the groups are identified by the coordinates <code>(k, m)</code>, and devices like
+<code>(1, 0, 2, 3)</code> and <code>(1, 1, 2, 3)</code> are in the same group. But <code>(1, 0, 2, 4)</code>
+is in a different group.</p><p>For some collectives (like <code>all-to-all</code>), the order of devices in the group
+matters. The device order is based on the order of axes in <code>grid_axes</code>, from
+outermost to innermost.</p><p>Example: If <code>grid_axes = [3, 1]</code>, then device <code>(i, 1, k, 0)</code> comes before
+<code>(i, 0, k, 1)</code> and <code>(i, 2, k, 0)</code>.</p><h3 id=in-group-devices>In-group Devices&nbsp;<a class=headline-hash href=#in-group-devices>¶</a></h3><p>Some operations (like <code>broadcast</code>, <code>scatter</code>, and <code>send</code>) refer to a specific
+device within each group. These in-group devices are identified using their
+coordinates over the axes listed in <code>grid_axes</code>.</p><p>Example: In a 3D grid with <code>grid_axes = [0, 2]</code>, an in-group device is specified
+as <code>(i, j)</code>. If a group is fixed at coordinate <code>g</code> on axis 1, then the full
+device index would be <code>(i, g, j)</code>.</p><h3 id=purity-and-execution-model>Purity and Execution Model&nbsp;<a class=headline-hash href=#purity-and-execution-model>¶</a></h3><p>Collective operations involve all devices in a group (e.g. <code>all-gather</code>,
+<code>all-to-all</code>) and are considered pure. Operations like <code>send</code> and <code>recv</code> are not
+collective and are not pure.</p><p>The execution model assumes SPMD (Single Program, Multiple Data):</p><ul><li>Every process runs the same program.</li><li>At any collective operation, all processes are in sync.</li></ul><p>This means compiler optimizations must treat collective ops carefully. For
+example, if a collective is removed during optimization, it must be removed from
+<em>every</em> path and <em>every</em> process that would have participated - otherwise, you’ll
+get undefined behavior at runtime.</p><p>Marking these ops as pure also helps with standard compiler passes like dead
+code elimination and common subexpression elimination. It ensures that when the
+program is executed, all devices hit the same line of code at the same time
+during collectives and so avoid dead-locks.</p><h2 id=operations>Operations&nbsp;<a class=headline-hash href=#operations>¶</a></h2><p><a href=https://github.com/llvm/llvm-project/blob/main/mlir/include/mlir/Dialect/Shard/IR/ShardOps.td>source</a></p><h3 id=shardall_gather-shardallgatherop><code>shard.all_gather</code> (shard::AllGatherOp)&nbsp;<a class=headline-hash href=#shardall_gather-shardallgatherop>¶</a></h3><p><em>All-gather over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.all_gather` $input `on` $grid (`grid_axes` `=` $grid_axes^)? `gather_axis` `=` $gather_axis
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>Gathers along the <code>gather_axis</code> tensor axis.</p><p>Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>shard<span class=p>.</span>grid <span class=nf>@grid0</span><span class=p>(</span><span class=nl>shape =</span> <span class=m>2x2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> shard<span class=p>.</span>all_gather <span class=nv>%0</span> on <span class=nf>@grid0</span> <span class=nl>grid_axes =</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=nl>gather_axis =</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x2x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x4x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>Input:</p><pre tabindex=0><code>                 +-------+-------+
+device (0, 0) -&gt; |  1  2 |  5  6 | &lt;- device (0, 1)
+                 |  3  4 |  7  8 |
+                 +-------+-------+
+device (1, 0) -&gt; |  9 10 | 13 14 | &lt;- device (1, 1)
+                 | 11 12 | 15 16 |
+                 +-------+-------+
+</code></pre><p>Result:</p><pre tabindex=0><code>gather tensor
+axis 1
+------------&gt;
++-------------+
+|  1  2  5  6 | &lt;- devices (0, 0) and (0, 1)
+|  3  4  7  8 |
++-------------+
+|  9 10 13 14 | &lt;- devices (1, 0) and (1, 1)
+| 11 12 15 16 |
++-------------+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultElementType</code>, <code>SameOperandsAndResultRank</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes>Attributes:&nbsp;<a class=headline-hash href=#attributes>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>gather_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr></table><h4 id=operands>Operands:&nbsp;<a class=headline-hash href=#operands>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h4 id=results>Results:&nbsp;<a class=headline-hash href=#results>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h3 id=shardall_reduce-shardallreduceop><code>shard.all_reduce</code> (shard::AllReduceOp)&nbsp;<a class=headline-hash href=#shardall_reduce-shardallreduceop>¶</a></h3><p><em>All-reduce over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.all_reduce` $input `on` $grid (`grid_axes` `=` $grid_axes^)? (`reduction` `=` $reduction^)?
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>The accumulation element type is specified by the result type and
+it does not need to match the input element type.
+The input element is converted to the result element type before
+performing the reduction.</p><p>Attributes:
+<code>reduction</code>: Indicates the reduction method.</p><p>Example:</p><pre tabindex=0><code>%1 = shard.all_reduce %0 on @grid0 grid_axes = [1, 0] reduction = &lt;max&gt;
+  : tensor&lt;3x4xf32&gt; -&gt; tensor&lt;3x4xf64&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultShape</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-1>Attributes:&nbsp;<a class=headline-hash href=#attributes-1>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>reduction</code></td><td>::mlir::shard::ReductionKindAttr</td><td>Reduction of an iterator/grid dimension.</td></tr></table><h4 id=operands-1>Operands:&nbsp;<a class=headline-hash href=#operands-1>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>memref of any type values or ranked tensor of any type values</td></tr></tbody></table><h4 id=results-1>Results:&nbsp;<a class=headline-hash href=#results-1>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>memref of any type values or ranked tensor of any type values</td></tr></tbody></table><h3 id=shardall_slice-shardallsliceop><code>shard.all_slice</code> (shard::AllSliceOp)&nbsp;<a class=headline-hash href=#shardall_slice-shardallsliceop>¶</a></h3><p><em>All-slice over a device grid. This is the inverse of all-gather.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.all_slice` $input `on` $grid (`grid_axes` `=` $grid_axes^)? `slice_axis` `=` $slice_axis
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>Slice along the <code>slice_axis</code> tensor axis.
+This operation can be thought of as the inverse of all-gather.
+Technically, it is not required that all processes have the same input tensor.
+Each process will slice a piece of its local tensor based on its in-group device index.
+The operation does not communicate data between devices.</p><p>Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>shard<span class=p>.</span>grid <span class=nf>@grid0</span><span class=p>(</span><span class=nl>shape =</span> <span class=m>2x2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> shard<span class=p>.</span>all_slice <span class=nv>%0</span> on <span class=nf>@grid0</span> <span class=nl>grid_axes =</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=nl>slice_axis =</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x4x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x2x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>Input:</p><pre tabindex=0><code>+-------------+
+|  1  2  5  6 | &lt;- devices (0, 0) and (0, 1)
+|  3  4  7  8 |
++-------------+
+|  9 10 13 14 | &lt;- devices (1, 0) and (1, 1)
+| 11 12 15 16 |
++-------------+
+</code></pre><p>Result:</p><pre tabindex=0><code>gather tensor
+axis 1
+------------&gt;
+                 +-------+-------+
+device (0, 0) -&gt; |  1  2 |  5  6 | &lt;- device (0, 1)
+                 |  3  4 |  7  8 |
+                 +-------+-------+
+device (1, 0) -&gt; |  9 10 | 13 14 | &lt;- device (1, 1)
+                 | 11 12 | 15 16 |
+                 +-------+-------+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultElementType</code>, <code>SameOperandsAndResultRank</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-2>Attributes:&nbsp;<a class=headline-hash href=#attributes-2>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>slice_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr></table><h4 id=operands-2>Operands:&nbsp;<a class=headline-hash href=#operands-2>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h4 id=results-2>Results:&nbsp;<a class=headline-hash href=#results-2>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h3 id=shardall_to_all-shardalltoallop><code>shard.all_to_all</code> (shard::AllToAllOp)&nbsp;<a class=headline-hash href=#shardall_to_all-shardalltoallop>¶</a></h3><p><em>All-to-all over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.all_to_all` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `split_axis` `=` $split_axis
+              `concat_axis` `=` $concat_axis
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>Performs an all-to-all on tensor pieces split along <code>split_axis</code>.
+The resulting pieces are concatenated along <code>concat_axis</code> on ech device.</p><p>Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 3)
+...
+%1 = shard.all_to_all %0 on @grid0 grid_axes = [0]
+  split_axis = 0 concat_axis = 0
+  : tensor&lt;3x2xi8&gt; -&gt; tensor&lt;3x2xi8&gt;
+</code></pre><p>Input:</p><pre tabindex=0><code> device  device  device
+ (0)     (1)     (2)
++-------+-------+-------+  | split and concat along
+| 11 12 | 21 22 | 31 32 |  | tensor axis 0
+| 13 14 | 23 24 | 33 34 |  ↓
+| 15 16 | 25 26 | 35 36 |
++-------+-------+-------+
+</code></pre><p>Result:</p><pre tabindex=0><code> device  device  device
+ (0)     (1)     (2)
++-------+-------+-------+
+| 11 12 | 13 14 | 15 16 |
+| 21 22 | 23 24 | 25 26 |
+| 31 32 | 33 34 | 35 36 |
++-------+-------+-------+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultElementType</code>, <code>SameOperandsAndResultRank</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-3>Attributes:&nbsp;<a class=headline-hash href=#attributes-3>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>split_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr><tr><td><code>concat_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr></table><h4 id=operands-3>Operands:&nbsp;<a class=headline-hash href=#operands-3>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h4 id=results-3>Results:&nbsp;<a class=headline-hash href=#results-3>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h3 id=shardbroadcast-shardbroadcastop><code>shard.broadcast</code> (shard::BroadcastOp)&nbsp;<a class=headline-hash href=#shardbroadcast-shardbroadcastop>¶</a></h3><p><em>Broadcast over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.broadcast` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `root` `=` custom&lt;DynamicIndexList&gt;($root_dynamic, $root)
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>Broadcast the tensor on <code>root</code> to all devices in each respective group.
+The operation broadcasts along grid axes <code>grid_axes</code>.
+The <code>root</code> device specifies the in-group multi-index that is broadcast to
+all other devices in the group.</p><p>Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 2x2)
+
+%1 = shard.broadcast %0 on @grid0
+  grid_axes = [0]
+  root = [0]
+  : (tensor&lt;2xi8&gt;) -&gt; tensor&lt;2xi8&gt;
+</code></pre><p>Input:</p><pre tabindex=0><code>                 +-------+-------+                   | broadcast
+device (0, 0) -&gt; |  1  2 |  3  4 | &lt;- device (0, 1)  | along axis 0
+                 +-------+-------+                   ↓
+device (1, 0) -&gt; |       |       | &lt;- device (1, 1) 
+                 +-------+-------+
+</code></pre><p>Output:</p><pre tabindex=0><code>                 +-------+-------+
+device (0, 0) -&gt; |  1  2 |  3  4 | &lt;- device (0, 1)
+                 +-------+-------+
+device (1, 0) -&gt; |  1  2 |  3  4 | &lt;- device (1, 1)
+                 +-------+-------+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-4>Attributes:&nbsp;<a class=headline-hash href=#attributes-4>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>root</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-4>Operands:&nbsp;<a class=headline-hash href=#operands-4>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>ranked tensor of any type values</td></tr><tr><td style=text-align:center><code>root_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-4>Results:&nbsp;<a class=headline-hash href=#results-4>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardgather-shardgatherop><code>shard.gather</code> (shard::GatherOp)&nbsp;<a class=headline-hash href=#shardgather-shardgatherop>¶</a></h3><p><em>Gather over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.gather` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `gather_axis` `=` $gather_axis
+              `root` `=` custom&lt;DynamicIndexList&gt;($root_dynamic, $root)
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>Gathers on device <code>root</code> along the <code>gather_axis</code> tensor axis.
+<code>root</code> specifies the coordinates of a device along <code>grid_axes</code>.
+It uniquely identifies the root device for each device group.
+The result tensor on non-root devices is undefined.
+Using it will result in undefined behavior.</p><p>Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl>shard<span class=p>.</span>grid <span class=nf>@grid0</span><span class=p>(</span><span class=nl>shape =</span> <span class=m>2x2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=nv>%1</span> <span class=p>=</span> shard<span class=p>.</span>gather <span class=nv>%0</span> on <span class=nf>@grid0</span> <span class=nl>grid_axes =</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nl>gather_axis =</span> <span class=m>1</span> <span class=nl>root =</span> <span class=p>[</span><span class=m>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>:</span> <span class=p>(</span><span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x2x</span><span class=k>i8</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>2x4x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span></code></pre></div><p>Input:</p><pre tabindex=0><code>                  gather tensor
+                  axis 1
+                  ------------&gt;
+                 +-------+-------+
+device (0, 0) -&gt; |  1  2 |  5  6 | &lt;- device (0, 1)
+                 |  3  4 |  7  8 |
+                 +-------+-------+
+device (1, 0) -&gt; |  9 10 | 13 14 | &lt;- device (1, 1)
+                 | 11 12 | 15 16 |
+                 +-------+-------+
+</code></pre><p>Result:</p><pre tabindex=0><code>+-------------+
+|  1  2  5  6 | &lt;- devices (0, 1)
+|  3  4  7  8 |
++-------------+
+|  9 10 13 14 | &lt;- devices (1, 1)
+| 11 12 15 16 |
++-------------+
+</code></pre><p>Devices <code>(0, 0)</code> and <code>(1, 0)</code> have undefined result.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-5>Attributes:&nbsp;<a class=headline-hash href=#attributes-5>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>gather_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr><tr><td><code>root</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-5>Operands:&nbsp;<a class=headline-hash href=#operands-5>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr><tr><td style=text-align:center><code>root_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-5>Results:&nbsp;<a class=headline-hash href=#results-5>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h3 id=shardget_sharding-shardgetshardingop><code>shard.get_sharding</code> (shard::GetShardingOp)&nbsp;<a class=headline-hash href=#shardget_sharding-shardgetshardingop>¶</a></h3><p><em>Get the sharding of the given tensor.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.get_sharding` $source attr-dict `:` type($source) `-&gt;` type($result)
+</code></pre><p>This operation returns the sharding of the given tensor as a Sharding.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>InferTypeOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=operands-6>Operands:&nbsp;<a class=headline-hash href=#operands-6>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>source</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h4 id=results-6>Results:&nbsp;<a class=headline-hash href=#results-6>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>sharding definition</td></tr></tbody></table><h3 id=shardgrid-shardgridop><code>shard.grid</code> (shard::GridOp)&nbsp;<a class=headline-hash href=#shardgrid-shardgridop>¶</a></h3><p><em>Description of a device/process grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.grid` $sym_name `(` `shape` `=` custom&lt;DimensionList&gt;($shape) `)`
+              attr-dict
+</code></pre><p>The shard.grid operation is a symbol operation that identifies a specific
+grid. The operation has three attributes:</p><ol><li><p><code>sym_name</code>: This attribute uniquely identifies the name of the grid.
+This name serves as a symbolic reference to the grid throughout
+the MLIR module, allowing for consistent referencing and easier debugging.</p></li><li><p><code>shape</code>: This attribute represents the shape of the device grid.
+It uses the same notation as a tensor shape. Also allowing for dynamic
+dimensions.
+This flexibility allows for dynamic device assignment or configurations
+where the exact number of devices might not be determined during compile
+time.
+For example <code>2x?x4</code>.</p></li></ol><p>Example:</p><pre tabindex=0><code>// A device grid with 3 axes, the total device number is 4 * 8 * 12
+// The dimension sizes are 4, 8, 12 
+shard.grid @grid0(shape = 4x8x12)
+
+// A device grid with 2 axes, the total device number is unknown
+// The first dimension size is 4 and the second is unknown
+shard.grid @grid1(shape = 4x?)
+
+// A device grid with 2 axes, the total device number is unknown
+// The first dimension size is unknown and the second is 4
+shard.grid @grid2(shape = ?x4)
+
+// A device grid with 2 axes, the number of devices along both axes
+// is unknown
+shard.grid @grid3(shape = ?x?)
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>Symbol</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-6>Attributes:&nbsp;<a class=headline-hash href=#attributes-6>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr><tr><td><code>shape</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h3 id=shardgrid_shape-shardgridshapeop><code>shard.grid_shape</code> (shard::GridShapeOp)&nbsp;<a class=headline-hash href=#shardgrid_shape-shardgridshapeop>¶</a></h3><p><em>Get the shape of the grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.grid_shape` $grid (`axes` `=` $axes^)?
+              attr-dict `:` type($result)
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-7>Attributes:&nbsp;<a class=headline-hash href=#attributes-7>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr></table><h4 id=results-7>Results:&nbsp;<a class=headline-hash href=#results-7>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>variadic of index</td></tr></tbody></table><h3 id=shardneighbors_linear_indices-shardneighborslinearindicesop><code>shard.neighbors_linear_indices</code> (shard::NeighborsLinearIndicesOp)&nbsp;<a class=headline-hash href=#shardneighbors_linear_indices-shardneighborslinearindicesop>¶</a></h3><p><em>For given grid index get the linear indices of the direct neighbor processes along the given split.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.neighbors_linear_indices` `on` $grid `[` $device `]`
+              `split_axes` `=` $split_axes
+              attr-dict `:` type(results)
+</code></pre><p>Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 10x20x30)
+%c1 = arith.constant 1 : index
+%c2 = arith.constant 2 : index
+%c3 = arith.constant 3 : index
+%idx = shard.neighbors_linear_indices on @grid[%c1, %c2, %c3] split_axes = [1] : index
+</code></pre><p>The above returns two indices, <code>633</code> and <code>693</code>, which correspond to the
+index of the previous process <code>(1, 1, 3)</code>, and the next process
+<code>(1, 3, 3) along the split axis </code>1`.</p><p>A negative value is returned if there is no neighbor in the respective
+direction along the given <code>split_axes</code>.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>InferTypeOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-8>Attributes:&nbsp;<a class=headline-hash href=#attributes-8>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>split_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr></table><h4 id=operands-7>Operands:&nbsp;<a class=headline-hash href=#operands-7>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>device</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-8>Results:&nbsp;<a class=headline-hash href=#results-8>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>neighbor_down</code></td><td>index</td></tr><tr><td style=text-align:center><code>neighbor_up</code></td><td>index</td></tr></tbody></table><h3 id=shardprocess_linear_index-shardprocesslinearindexop><code>shard.process_linear_index</code> (shard::ProcessLinearIndexOp)&nbsp;<a class=headline-hash href=#shardprocess_linear_index-shardprocesslinearindexop>¶</a></h3><p><em>Get the linear index of the current device.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.process_linear_index` `on` $grid attr-dict `:` type($result)
+</code></pre><p>Example:</p><pre tabindex=0><code>%idx = shard.process_linear_index on @grid : index
+</code></pre><p>if <code>@grid</code> has shape <code>(10, 20, 30)</code>, a device with multi
+index <code>(1, 2, 3)</code> will have linear index <code>3 + 30*2 + 20*30*1</code>.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>InferTypeOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-9>Attributes:&nbsp;<a class=headline-hash href=#attributes-9>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr></table><h4 id=results-9>Results:&nbsp;<a class=headline-hash href=#results-9>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>index</td></tr></tbody></table><h3 id=shardprocess_multi_index-shardprocessmultiindexop><code>shard.process_multi_index</code> (shard::ProcessMultiIndexOp)&nbsp;<a class=headline-hash href=#shardprocess_multi_index-shardprocessmultiindexop>¶</a></h3><p><em>Get the multi index of current device along specified grid axes.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.process_multi_index` `on` $grid (`axes` `=` $axes^)?
+              attr-dict `:` type($result)
+</code></pre><p>It is used in the SPMD format of IR.
+The <code>axes</code> mush be non-negative and less than the total number of grid axes.
+If the axes are empty then get the index along all axes.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-10>Attributes:&nbsp;<a class=headline-hash href=#attributes-10>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr></table><h4 id=results-10>Results:&nbsp;<a class=headline-hash href=#results-10>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>variadic of index</td></tr></tbody></table><h3 id=shardrecv-shardrecvop><code>shard.recv</code> (shard::RecvOp)&nbsp;<a class=headline-hash href=#shardrecv-shardrecvop>¶</a></h3><p><em>Send over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.recv` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              (`source` `=` custom&lt;DynamicIndexList&gt;($source_dynamic, $source)^)?
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>Receive from a device within a device group.</p><p>Interfaces: <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><h4 id=attributes-11>Attributes:&nbsp;<a class=headline-hash href=#attributes-11>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>source</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-8>Operands:&nbsp;<a class=headline-hash href=#operands-8>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr><tr><td style=text-align:center><code>source_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-11>Results:&nbsp;<a class=headline-hash href=#results-11>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardreduce-shardreduceop><code>shard.reduce</code> (shard::ReduceOp)&nbsp;<a class=headline-hash href=#shardreduce-shardreduceop>¶</a></h3><p><em>Reduce over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.reduce` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              (`reduction` `=` $reduction^)?
+              `root` `=` custom&lt;DynamicIndexList&gt;($root_dynamic, $root)
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>Reduces on device <code>root</code> within each device group.
+<code>root</code> specifies the coordinates of a device along <code>grid_axes</code>.
+It uniquely identifies the root device within its device group.
+The accumulation element type is specified by the result type and
+it does not need to match the input element type.
+The input element is converted to the result element type before
+performing the reduction.</p><p>Attributes:
+<code>reduction</code>: Indicates the reduction method.</p><p>Example:</p><pre tabindex=0><code>%1 = shard.reduce %0 on @grid0 grid_axes = [1, 0]
+  reduction = &lt;max&gt; root = [2, 3]
+  : (tensor&lt;3x4xf32&gt;) -&gt; tensor&lt;3x4xf64&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-12>Attributes:&nbsp;<a class=headline-hash href=#attributes-12>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>reduction</code></td><td>::mlir::shard::ReductionKindAttr</td><td>Reduction of an iterator/grid dimension.</td></tr><tr><td><code>root</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-9>Operands:&nbsp;<a class=headline-hash href=#operands-9>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>ranked tensor of any type values</td></tr><tr><td style=text-align:center><code>root_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-12>Results:&nbsp;<a class=headline-hash href=#results-12>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardreduce_scatter-shardreducescatterop><code>shard.reduce_scatter</code> (shard::ReduceScatterOp)&nbsp;<a class=headline-hash href=#shardreduce_scatter-shardreducescatterop>¶</a></h3><p><em>Reduce-scatter over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.reduce_scatter` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              (`reduction` `=` $reduction^)?
+              `scatter_axis` `=` $scatter_axis
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>After the reduction, the result is scattered within each device group.
+The tensor is split along <code>scatter_axis</code> and the pieces distributed
+across the device group.
+Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 2x2)
+...
+%1 = shard.reduce_scatter %0 on @grid0 grid_axes = [1]
+  reduction = &lt;max&gt; scatter_axis = 0
+  : tensor&lt;3x4xf32&gt; -&gt; tensor&lt;1x4xf64&gt;
+</code></pre><p>Input:</p><pre tabindex=0><code>                          device
+                          (0, 1)
+                             ↓
+                 +-------+-------+  | scatter tensor
+device (0, 0) -&gt; |  1  2 |  5  6 |  | axis 0
+                 |  3  4 |  7  8 |  ↓
+                 +-------+-------+
+device (1, 0) -&gt; |  9 10 | 13 14 |
+                 | 11 12 | 15 16 |
+                 +-------+-------+
+                            ↑
+                          device
+                          (1, 1)
+</code></pre><p>Result:</p><pre tabindex=0><code>+-------+
+|  6  8 | &lt;- devices (0, 0)
++-------+
+| 10 12 | &lt;- devices (0, 1)
++-------+
+| 22 24 | &lt;- devices (1, 0)
++-------+
+| 26 28 | &lt;- devices (1, 1)
++-------+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultRank</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-13>Attributes:&nbsp;<a class=headline-hash href=#attributes-13>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>reduction</code></td><td>::mlir::shard::ReductionKindAttr</td><td>Reduction of an iterator/grid dimension.</td></tr><tr><td><code>scatter_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr></table><h4 id=operands-10>Operands:&nbsp;<a class=headline-hash href=#operands-10>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h4 id=results-13>Results:&nbsp;<a class=headline-hash href=#results-13>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardscatter-shardscatterop><code>shard.scatter</code> (shard::ScatterOp)&nbsp;<a class=headline-hash href=#shardscatter-shardscatterop>¶</a></h3><p><em>Scatter over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.scatter` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `scatter_axis` `=` $scatter_axis
+              `root` `=` custom&lt;DynamicIndexList&gt;($root_dynamic, $root)
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>For each device group split the input tensor on the <code>root</code> device along
+axis <code>scatter_axis</code> and scatter the parts across the group devices.</p><p>Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 2x2)
+%1 = shard.scatter %0 on @grid0 grid_axes = [0]
+  scatter_axis = 0
+  root = [1]
+  : (tensor&lt;2x2xi8&gt;) -&gt; tensor&lt;1x2xi8&gt;
+</code></pre><p>Input:</p><pre tabindex=0><code>                          device
+                          (0, 1)
+                             ↓
+                 +-------+-------+  | scatter tensor
+device (0, 0) -&gt; |       |       |  | axis 0
+                 |       |       |  ↓
+                 +-------+-------+
+device (1, 0) -&gt; |  1  2 |  5  6 |
+                 |  3  4 |  7  8 |
+                 +-------+-------+
+                            ↑
+                          device
+                          (1, 1)
+</code></pre><p>Result:</p><pre tabindex=0><code>                          device
+                          (0, 1)
+                             ↓
+                 +-------+-------+
+device (0, 0) -&gt; |  1  2 |  5  6 |
+                 +-------+-------+ 
+device (1, 0) -&gt; |  3  4 |  7  8 |
+                 +-------+-------+
+                            ↑
+                          device
+                          (1, 1)
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-14>Attributes:&nbsp;<a class=headline-hash href=#attributes-14>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>scatter_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr><tr><td><code>root</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-11>Operands:&nbsp;<a class=headline-hash href=#operands-11>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr><tr><td style=text-align:center><code>root_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-14>Results:&nbsp;<a class=headline-hash href=#results-14>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardsend-shardsendop><code>shard.send</code> (shard::SendOp)&nbsp;<a class=headline-hash href=#shardsend-shardsendop>¶</a></h3><p><em>Send over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.send` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `destination` `=` custom&lt;DynamicIndexList&gt;($destination_dynamic, $destination)
+              attr-dict `:` functional-type(operands, results)
+</code></pre><p>Send from one device to another within a device group.</p><p>Interfaces: <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><h4 id=attributes-15>Attributes:&nbsp;<a class=headline-hash href=#attributes-15>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>destination</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-12>Operands:&nbsp;<a class=headline-hash href=#operands-12>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr><tr><td style=text-align:center><code>destination_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-15>Results:&nbsp;<a class=headline-hash href=#results-15>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardshard-shardshardop><code>shard.shard</code> (shard::ShardOp)&nbsp;<a class=headline-hash href=#shardshard-shardshardop>¶</a></h3><p><em>Annotate on how a tensor is sharded across a shard.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.shard` $src `to` $sharding
+              (`annotate_for_users` $annotate_for_users^)?
+              attr-dict `:` type($result)
+</code></pre><p>The shard.shard operation is designed to specify and guide the sharding
+behavior of a tensor value across a grid topology. This operation has two
+operands and two optional attributes:</p><ol><li><p><code>input</code>: This operand represents the tensor value that needs to be
+annotated for sharding.</p></li><li><p><code>sharding</code>: This attribute is type of <code>ShardingType</code>, which is the core data
+structure to represent distribution of a tensor on a shard. it is typically defined
+by an <code>shard.sharding</code> operation.</p></li><li><p><code>annotate_for_users</code>: A unit attribute addressing the scenario when a
+tensor&rsquo;s sharding annotation differs based on its context of use (either as
+a result or an operand). If specified, the sharding pertains to specific
+users of the tensor value, indicating how it should be considered when used
+as an operand in subsequent operations. If not, the sharding applies to the
+operation that defines the tensor value.</p></li></ol><p>Example:</p><pre tabindex=0><code>func.func @only_result_annotated(%arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding : tensor&lt;4x8xf32&gt;
+  ...
+}
+
+func.func @only_operand_annotated(%arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding annotate_for_users : tensor&lt;4x8xf32&gt;
+  ...
+}
+
+func.func @two_operands_annotated(%arg0 : tensor&lt;4x8xf32&gt;, %arg1 : tensor&lt;16x8xf32&gt;) -&gt; () {
+  %sharding = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding annotate_for_users : tensor&lt;4x8xf32&gt;
+  %1 = shard.shard %arg1 to %sharding annotate_for_users : tensor&lt;16x8xf32&gt;
+  ...
+}
+
+// The first shard.shard op applies to %arg0, the second shard.shard op
+// applies for the operand of op0, the third shard.shard op applies for the
+// operand of op2
+func.func @both_result_and_multi_operands_annotated(
+    %arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding : tensor&lt;4x8xf32&gt;
+  %sharding1 = shard.sharding @grid0 split_axes = [[1]] : !shard.sharding
+  %1 = shard.shard %0 to %sharding1 annotate_for_users : tensor&lt;4x8xf32&gt;
+  %sharding2 = shard.sharding @grid0 split_axes = [[2]] : !shard.sharding
+  %2 = shard.shard %0 to %sharding2 annotate_for_users : tensor&lt;4x8xf32&gt;
+  &#34;op0&#34;(%1) : ...
+  &#34;op1&#34;(%2) : ...
+  ...
+}
+</code></pre><p>The following usages are undefined:</p><pre tabindex=0><code>func.func @annotate_on_same_result_with_different_sharding(
+    %arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding1 = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %sharding2 = shard.sharding @grid0 split_axes = [[1]] : !shard.sharding
+  %0 = shard.shard %arg0 to $sharding1 : tensor&lt;4x8xf32&gt;
+  %1 = shard.shard %0 to sharding2 : tensor&lt;4x8xf32&gt;
+  ...
+}
+
+func.func @annotate_on_same_result_same_value_with_different_sharding(
+    %arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding1 = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %sharding2 = shard.sharding @grid0 split_axes = [[1]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding1 : tensor&lt;4x8xf32&gt;
+  %1 = shard.shard %arg0 to %sharding2 : tensor&lt;4x8xf32&gt;
+  ...
+}
+
+func.func @annotate_on_same_operand_with_different_sharding(
+    %arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding1 = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %sharding2 = shard.sharding @grid0 split_axes = [[1]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding1 annotate_for_users : tensor&lt;4x8xf32&gt;
+  %1 = shard.shard %0 to %sharding2 annotate_for_users : tensor&lt;4x8xf32&gt;
+  ...
+}
+
+func.func @result_annotated_after_operand(
+    %arg0 : tensor&lt;4x8xf32&gt;) -&gt; () {
+  %sharding1 = shard.sharding @grid0 split_axes = [[0]] : !shard.sharding
+  %sharding2 = shard.sharding @grid0 split_axes = [[1]] : !shard.sharding
+  %0 = shard.shard %arg0 to %sharding1 annotate_for_users : tensor&lt;4x8xf32&gt;
+  %1 = shard.shard %0 to %sharding2 : tensor&lt;4x8xf32&gt;
+  ...
+}
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>InferTypeOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-16>Attributes:&nbsp;<a class=headline-hash href=#attributes-16>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>annotate_for_users</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-13>Operands:&nbsp;<a class=headline-hash href=#operands-13>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>src</code></td><td>ranked tensor of any type values</td></tr><tr><td style=text-align:center><code>sharding</code></td><td>sharding definition</td></tr></tbody></table><h4 id=results-16>Results:&nbsp;<a class=headline-hash href=#results-16>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardshard_shape-shardshardshapeop><code>shard.shard_shape</code> (shard::ShardShapeOp)&nbsp;<a class=headline-hash href=#shardshard_shape-shardshardshapeop>¶</a></h3><p><em>Get the shard shape for a given process/device.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.shard_shape` `dims` `=` custom&lt;DynamicIndexList&gt;($dims_dynamic, $dims)
+              `sharding` `=` $sharding
+              `device` `=` custom&lt;DynamicIndexList&gt;($device_dynamic, $device)
+              attr-dict `:` type(results)
+</code></pre><p>The device/process id is a multi-index of the device/process in the shard.
+This operation might be used during partition when the shard shape depends
+on (non-constant) values used in <code>shard.sharding</code>.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-17>Attributes:&nbsp;<a class=headline-hash href=#attributes-17>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>dims</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr><tr><td><code>device</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-14>Operands:&nbsp;<a class=headline-hash href=#operands-14>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>dims_dynamic</code></td><td>variadic of index</td></tr><tr><td style=text-align:center><code>sharding</code></td><td>sharding definition</td></tr><tr><td style=text-align:center><code>device_dynamic</code></td><td>variadic of index</td></tr></tbody></table><h4 id=results-17>Results:&nbsp;<a class=headline-hash href=#results-17>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>variadic of index</td></tr></tbody></table><h3 id=shardsharding-shardshardingop><code>shard.sharding</code> (shard::ShardingOp)&nbsp;<a class=headline-hash href=#shardsharding-shardshardingop>¶</a></h3><p><em>Define a sharding of a tensor.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.sharding` $grid
+              `split_axes` `=` $split_axes
+              (`halo_sizes` `=` custom&lt;DynamicIndexList&gt;($dynamic_halo_sizes, $static_halo_sizes)^)?
+              (`sharded_dims_offsets` `=` custom&lt;DynamicIndexList&gt;($dynamic_sharded_dims_offsets, $static_sharded_dims_offsets)^)?
+              attr-dict `:` type($result)
+</code></pre><p>The Sharding specifies how a tensor is sharded and distributed across the
+process shard. It is typically used in a <code>shard.shard</code> operation.
+The operation has the following attributes and operands:</p><ol><li><p><code>grid</code>: this attribute is a FlatSymbolRefAttr that refers to the device
+grid where the distributed tensor is placed. The symbol must resolve to a
+<code>shard.grid</code> operation.</p></li><li><p><code>split_axes</code>: is an array composed of int64_t sub-arrays. The outer array&rsquo;s
+maximum size is the <code>rank</code> of the related tensor. For the i-th sub-array, if
+its value is [x, y], it indicates that the tensor&rsquo;s i-th dimension is splitted
+along the x and y axes of the device grid.</p></li><li><p>[Optional] Sizes of halos to be added for each sharded tensor dimension.
+<code>halo_sizes</code> is provided as a flattened 1d array of i64s, 2 values for each
+sharded dimension. <code>halo_sizes = [1, 2]</code> means that the first sharded dimension
+gets an additional halo of size 1 at the start of the first dimension and a halo
+size is 2 at its end. <code>halo_sizes = [1, 2, 2, 3]</code> defines halos for the first 2
+sharded dimensions e.g. the first sharded dimension gets <code>[1,2]</code> halos and the
+seconds gets <code>[2,3]</code> halos. <code>?</code> indicates dynamic halo sizes.</p></li><li><p>[Optional] Offsets for each shard and sharded tensor dimension.
+<code>sharded_dims_offsets</code> is provided as a flattened 1d array of i64s. For each
+sharded tensor dimension the offsets (starting index) of all shards in that
+dimension and an additional value for the end of the last shard are provided.
+For a 1d sharding this means that position <code>i</code> has the exclusive prefix sum for
+shard <code>i</code>, and since only contiguous sharding is supported, its inclusive prefix
+sum is at position &lsquo;i+1&rsquo;.</p></li></ol><p>Assuming a 3d-tensor of shape 32x32x32 with the first 2 dimensions being sharded,
+<code>sharded_dims_offsets</code> = [0, 24, 32, 0, 20, 32] means that the first device of
+the device-grid will get a shard of shape 24x20x32 and the second device will get
+a shard of shape 8x12x32. <code>?</code> indicates dynamic shard dimensions.</p><p><code>halo_sizes</code> and <code>sharded_dims_offsets</code> are mutually exclusive.</p><p>Examples:</p><pre tabindex=0><code>shard.grid @grid0(shape = 2x2x4)
+shard.grid @grid1d_4(shape = 4)
+
+// The tensor is fully replicated on @grid0.
+// Currently, there must be at least one sub-array present in axes, even
+// if it&#39;s empty. Otherwise, a parsing error will occur.
+%sharding0 = shard.sharding @grid0 split_axes = [[]]
+
+// The tensor is sharded on the first dimension along axis 0 of @grid0
+%sharding1 = shard.sharding @grid0 split_axes = [[0]]
+
+// Could be used for a shard.shard op
+%sharded0 = shard.shard %arg0 to %sharding3 : tensor&lt;4x8xf32&gt;
+
+// The tensor is sharded on its first dimension along axis 0 of @grid0 and
+// and it has halo-sizes of 1 and 2 on the sharded dim.
+%halo_sharding = shard.sharding @grid0 split_axes = [[0]] halo_sizes = [1, 2]
+%sharded1 = shard.shard %arg0 to %halo_sharding : tensor&lt;4x8xf32&gt;
+
+// The tensor is sharded on its second dimension along axis 0 of @grid1d_4
+// and it has pre-defined shard sizes. The shards of the devices will have
+// the following shapes: [4x2, 4x3, 4x4, 4x5]
+%sharding4 = shard.sharding @grid1d_4 split_axes = [[], [0]] sharded_dims_offsets = [0, 2, 5, 9, 14]
+%sharded2 = shard.shard %arg0 to %sharding4 : tensor&lt;4x14xf32&gt;
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>AttrSizedOperandSegments</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>InferTypeOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-18>Attributes:&nbsp;<a class=headline-hash href=#attributes-18>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>split_axes</code></td><td>::mlir::shard::GridAxesArrayAttr</td><td></td></tr><tr><td><code>static_sharded_dims_offsets</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr><tr><td><code>static_halo_sizes</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-15>Operands:&nbsp;<a class=headline-hash href=#operands-15>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>dynamic_sharded_dims_offsets</code></td><td>variadic of 64-bit signless integer</td></tr><tr><td style=text-align:center><code>dynamic_halo_sizes</code></td><td>variadic of 64-bit signless integer</td></tr></tbody></table><h4 id=results-18>Results:&nbsp;<a class=headline-hash href=#results-18>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>sharding definition</td></tr></tbody></table><h3 id=shardshift-shardshiftop><code>shard.shift</code> (shard::ShiftOp)&nbsp;<a class=headline-hash href=#shardshift-shardshiftop>¶</a></h3><p><em>Shift over a device grid.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.shift` $input `on` $grid (`grid_axes` `=` $grid_axes^)?
+              `shift_axis` `=` $shift_axis
+              `offset` `=` $offset
+              (`rotate` $rotate^)?
+              attr-dict `:` type($input) `-&gt;` type($result)
+</code></pre><p>Within each device group shift along grid axis <code>shift_axis</code> by an offset
+<code>offset</code>.
+The result on devices that do not have a corresponding source is undefined.
+<code>shift_axis</code> must be one of <code>grid_axes</code>.
+If the <code>rotate</code> attribute is present,
+instead of a shift a rotation is done.</p><p>Example:</p><pre tabindex=0><code>shard.grid @grid0(shape = 2x4)
+%1 = shard.shift on @grid0 grid_axes = [1]
+  shift_axis = 1 offset = 2 rotate
+  : tensor&lt;2xi8&gt; -&gt; tensor&lt;2xi8&gt;
+</code></pre><p>Input:</p><pre tabindex=0><code>grid axis 1
+-----------&gt;
+
++----+----+----+----+
+|  1 |  2 |  3 |  4 |
++----+----+----+----+
+|  5 |  6 |  7 |  8 |
++----+----+----+----+
+</code></pre><p>Result:</p><pre tabindex=0><code>+----+----+----+----+
+|  3 |  4 |  1 |  2 |
++----+----+----+----+
+|  7 |  8 |  5 |  6 |
++----+----+----+----+
+</code></pre><p>Traits: <code>AlwaysSpeculatableImplTrait</code>, <code>SameOperandsAndResultElementType</code>, <code>SameOperandsAndResultShape</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>OpAsmOpInterface</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-19>Attributes:&nbsp;<a class=headline-hash href=#attributes-19>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>grid_axes</code></td><td>::mlir::DenseI16ArrayAttr</td><td>i16 dense array attribute</td></tr><tr><td><code>shift_axis</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr><tr><td><code>offset</code></td><td>::mlir::IntegerAttr</td><td>64-bit signless integer attribute</td></tr><tr><td><code>rotate</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr></table><h4 id=operands-16>Operands:&nbsp;<a class=headline-hash href=#operands-16>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>input</code></td><td>non-0-ranked.tensor of any type values</td></tr></tbody></table><h4 id=results-19>Results:&nbsp;<a class=headline-hash href=#results-19>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>ranked tensor of any type values</td></tr></tbody></table><h3 id=shardupdate_halo-shardupdatehaloop><code>shard.update_halo</code> (shard::UpdateHaloOp)&nbsp;<a class=headline-hash href=#shardupdate_halo-shardupdatehaloop>¶</a></h3><p><em>Update halo data.</em></p><p>Syntax:</p><pre tabindex=0><code>operation ::= `shard.update_halo` $destination
+              `on` $grid
+              `split_axes` `=` $split_axes
+              (`halo_sizes` `=` custom&lt;DynamicIndexList&gt;($halo_sizes, $static_halo_sizes)^)?
+              attr-dict `:` type($result)
+</code></pre><p>This operation updates halo regions of shards, e.g. if their sharding
+specified halos and the actual tensor/memref data might have changed
+on the remote devices. Changes might be caused by mutating operations
+and/or if the new halo regions are larger than the existing ones.</p><p>Destination is supposed to be initialized with the local data (not halos).</p><p>Assumes all devices hold tensors with same-sized halo data as specified
+by <code>source_halo_sizes/static_source_halo_sizes</code> and
+<code>destination_halo_sizes/static_destination_halo_sizes</code> in source shard
+and destination/result shard.</p><p><code>split_axes</code> specifies for each tensor axis along which grid axes its halo
+data is updated.</p><p>Traits: <code>AlwaysSpeculatableImplTrait</code></p><p>Interfaces: <code>ConditionallySpeculatable</code>, <code>DestinationStyleOpInterface</code>, <code>NoMemoryEffect (MemoryEffectOpInterface)</code>, <code>SymbolUserOpInterface</code></p><p>Effects: <code>MemoryEffects::Effect{}</code></p><h4 id=attributes-20>Attributes:&nbsp;<a class=headline-hash href=#attributes-20>¶</a></h4><table><tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr><tr><td><code>grid</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr><tr><td><code>split_axes</code></td><td>::mlir::shard::GridAxesArrayAttr</td><td></td></tr><tr><td><code>static_halo_sizes</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr></table><h4 id=operands-17>Operands:&nbsp;<a class=headline-hash href=#operands-17>¶</a></h4><table><thead><tr><th style=text-align:center>Operand</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>destination</code></td><td>non-0-ranked.memref of any type values or non-0-ranked.tensor of any type values</td></tr><tr><td style=text-align:center><code>halo_sizes</code></td><td>variadic of 64-bit signless integer</td></tr></tbody></table><h4 id=results-20>Results:&nbsp;<a class=headline-hash href=#results-20>¶</a></h4><table><thead><tr><th style=text-align:center>Result</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center><code>result</code></td><td>non-0-ranked.memref of any type values or non-0-ranked.tensor of any type values</td></tr></tbody></table><h2 id=attributes-21>Attributes&nbsp;<a class=headline-hash href=#attributes-21>¶</a></h2><h3 id=gridaxesarrayattr>GridAxesArrayAttr&nbsp;<a class=headline-hash href=#gridaxesarrayattr>¶</a></h3><p>Syntax:</p><pre tabindex=0><code>#shard.axisarray&lt;
+  ::llvm::ArrayRef&lt;GridAxesAttr&gt;   # axes
+&gt;
+</code></pre><h4 id=parameters>Parameters:&nbsp;<a class=headline-hash href=#parameters>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>axes</td><td style=text-align:center><code>::llvm::ArrayRef&lt;GridAxesAttr></code></td><td></td></tr></tbody></table><h3 id=reductionkindattr>ReductionKindAttr&nbsp;<a class=headline-hash href=#reductionkindattr>¶</a></h3><p><em>Reduction of an iterator/grid dimension.</em></p><p>Syntax:</p><pre tabindex=0><code>#shard.partial&lt;
+  ::mlir::shard::ReductionKind   # value
+&gt;
+</code></pre><h4 id=parameters-1>Parameters:&nbsp;<a class=headline-hash href=#parameters-1>¶</a></h4><table><thead><tr><th style=text-align:center>Parameter</th><th style=text-align:center>C++ type</th><th>Description</th></tr></thead><tbody><tr><td style=text-align:center>value</td><td style=text-align:center><code>::mlir::shard::ReductionKind</code></td><td>an enum of type ReductionKind</td></tr></tbody></table><div class=edit-meta><br></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/ title="'shape' Dialect"><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - 'shape' Dialect</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/Dialects/SMT/ title="'smt' Dialect">Next - 'smt' Dialect <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/governance/>Governance</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark opened">-</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-rewrite/>mlir-rewrite</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Assembly/>Customizing Assembly Behavior</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li class=active><a href=https://mlir.llvm.org/docs/Dialects/Shard/>'shard' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SMT/>'smt' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeVMDialect/>'xevm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
