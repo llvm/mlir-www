@@ -31,7 +31,7 @@ jobs:
       run: ./mlir-www-helper.sh --help
 
     - name: Install dependencies
-      run: sudo apt-get install doxygen graphviz
+      run: sudo apt-get install doxygen graphviz python3
 
     - name: Clone LLVM repo
       uses: actions/checkout@v3
@@ -45,7 +45,8 @@ jobs:
         mkdir llvm_src/build
         cd llvm_src/build
         cmake ../llvm \
-          -DCMAKE_BUILD_TYPE=Release \
+          # Debug mode is needed for the pattern search index
+          -DCMAKE_BUILD_TYPE=Debug \
           -DLLVM_ENABLE_PROJECTS=mlir \
           -DLLVM_TARGETS_TO_BUILD="host" \
           -DMLIR_INCLUDE_DOCS="true" \
@@ -54,6 +55,21 @@ jobs:
 
     - name: Install docs
       run: ./mlir-www-helper.sh --install-docs "llvm_src" "website"
+
+    - name: Build pattern search index
+      run: |
+        cd llvm_src/build
+        make -j$(nproc) check-mlir
+        echo "finished building tests"
+        # ignore nonzero exit codes in this command, since some threaded tests fail
+        { MLIR_GENERATE_PATTERN_CATALOG=1 bin/llvm-lit -j$(nproc) -v -a tools/mlir/test || true ; } \
+          | grep '# | \[pattern-logging-listener' \
+          | sed 's/# | \[pattern-logging-listener:[0-9]*\] PatternLoggingListener.cpp:[0-9]* //g' \
+          | sort | uniq > ../../pattern_catalog.txt
+        # back to mlir-www root
+        cd ../..
+        head pattern_catalog.txt
+        python3 build_pattern_catalog_index.py pattern_catalog.txt website/static/pattern-search/pattern-index.json
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
