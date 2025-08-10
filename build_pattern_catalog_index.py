@@ -40,7 +40,7 @@ def parse_line(line):
     """Parse a single line from the input file."""
     parts = [part.strip() for part in line.strip().split('|')]
 
-    if len(parts) < 3:
+    if len(parts) < 3 or parts[0].strip() == '':
         return None
 
     class_name = parts[0]
