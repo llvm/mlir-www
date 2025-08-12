@@ -46,7 +46,8 @@ jobs:
         cd llvm_src/build
         # Debug mode is needed for the pattern search index
         cmake ../llvm \
-          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DLLVM_ENABLE_ASSERTIONS=ON \
           -DLLVM_ENABLE_PROJECTS=mlir \
           -DLLVM_TARGETS_TO_BUILD="host" \
           -DMLIR_INCLUDE_DOCS="true" \
