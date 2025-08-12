@@ -62,7 +62,8 @@ jobs:
         cd llvm_src/build
         make -j$(nproc) check-mlir
         echo "finished building tests"
-        # ignore nonzero exit codes in this command, since some threaded tests fail
+        # ignore nonzero exit codes in this command, since MLIR_GENERATE_PATTERN_CATALOG
+        # implicitly enables`--mlir-disable-threading` which some tests are incompatible with.
         { MLIR_GENERATE_PATTERN_CATALOG=1 bin/llvm-lit -j$(nproc) -v -a tools/mlir/test || true ; } \
           | grep '# | \[pattern-logging-listener' \
           | sed 's/# | \[pattern-logging-listener:[0-9]*\] PatternLoggingListener.cpp:[0-9]* //g' \
