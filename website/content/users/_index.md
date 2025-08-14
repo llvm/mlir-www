@@ -328,3 +328,10 @@ best-fit program abstraction.
 Project Verona is a research programming language to explore the concept of
 concurrent ownership. They are providing a new concurrency model that seamlessly
 integrates ownership.
+
+## [Zaozi](https://github.com/sequencer/zaozi)
+
+Zaozi is an project aimed at rewriting [Chisel](https://github.com/chipsalliance/chisel) in
+pure Scala 3 and MLIR. it provides a lean eDSL in Scala 3 and binds MLIR C-API with JVM 
+Project Panama.
+The goal of this project is providing an eDSL frontend framework for hardware designs.
