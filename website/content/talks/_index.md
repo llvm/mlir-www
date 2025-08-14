@@ -83,10 +83,20 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 
 ### About MLIR and MLIR Components
 
-* 2025-06-26: WebAssembly Dialect [slides](/OpenMeetings/2025-06-26-WASM-Dialect.pdf) - [recording](https://youtu.be/emyOylywgs0)
-* 2025-06-12: Rank-0 Vectors [slides](/OpenMeetings/2025-06-12-Rank0-Vectors.pdf) - [recording](https://youtu.be/CyOtFU6kzDs)
-* 2025-04-03: Upstreaming SMT and Verif Dialects (cont'd) [recording](https://youtu.be/dVxCynKK1AM)
-* 2025-03-27: Upstreaming SMT and Verif Dialects [recording](https://youtu.be/a9fRzBWI0AE)
+* 2025-08-14: Discussion on the next steps on Properties
+[slides 1](/OpenMeetings/2025-08-14-Properties1.pdf) and
+[slides 2](/OpenMeetings/2025-08-14-Properties2.pdf) -
+[recording](https://youtu.be/PqlnAZRnlI0)
+* 2025-06-26: WebAssembly Dialect
+[slides](/OpenMeetings/2025-06-26-WASM-Dialect.pdf) -
+[recording](https://youtu.be/emyOylywgs0)
+* 2025-06-12: Rank-0 Vectors
+[slides](/OpenMeetings/2025-06-12-Rank0-Vectors.pdf) -
+[recording](https://youtu.be/CyOtFU6kzDs)
+* 2025-04-03: Upstreaming SMT and Verif Dialects (cont'd)
+[recording](https://youtu.be/dVxCynKK1AM)
+* 2025-03-27: Upstreaming SMT and Verif Dialects
+[recording](https://youtu.be/a9fRzBWI0AE)
 * 2024-08-22: Upstream SPIR-V Conversion
 [slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf) - 
 [recording](https://youtu.be/-qoMMrlYvGs)
