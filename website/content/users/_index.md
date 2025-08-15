@@ -134,6 +134,15 @@ the GPU (via Vulkan/SPIR-V), CPU or some combination. It also aims to
 interoperate seamlessly with existing users of Vulkan APIs, specifically
 focused on games and rendering pipelines.
 
+## [JSIR](https://github.com/google/jsir)
+
+JSIR is a next-generation JavaScript analysis tool. At its core is an MLIR-based
+high-level intermediate representation, which supports both dataflow analysis
+and lossless conversion back to source. This unique design makes it suitable for
+source-to-source transformation. JSIR is used at Google for analyzing and
+detecting malicious JavaScript files, protecting products like Ads, Android, and
+Chrome.
+
 ## [Kokkos](https://kokkos.org)
 
 The Kokkos C++ Performance Portability Ecosystem is a production level solution 
