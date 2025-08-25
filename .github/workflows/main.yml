@@ -70,8 +70,8 @@ jobs:
           | sort | uniq > /pattern_catalog.txt
         # back to mlir-www root
         cd ../..
-        head /pattern_catalog.txt
-        python3 build_pattern_catalog_index.py /pattern_catalog.txt website/static/pattern-search/pattern-index.json
+        head $HOME/pattern_catalog.txt
+        python3 build_pattern_catalog_index.py $HOME/pattern_catalog.txt website/static/pattern-search/pattern-index.json
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
