@@ -60,6 +60,9 @@ jobs:
     - name: Build pattern search index
       run: |
         cd llvm_src/build
+        # Run the tests once to ensure they are passing.
+        # The next run used to generate the patterns log is disabling error checking. This first
+        # run will ensure we don't generate the website when tests are broken.
         make -j$(nproc) check-mlir
         echo "finished building tests"
         # ignore nonzero exit codes in this command, since MLIR_GENERATE_PATTERN_CATALOG
