@@ -44,7 +44,7 @@ jobs:
       run: |
         mkdir llvm_src/build
         cd llvm_src/build
-        # Debug mode is needed for the pattern search index
+        # Assert mode is needed for the pattern search index
         cmake ../llvm \
           -DCMAKE_BUILD_TYPE=Release \
           -DLLVM_ENABLE_ASSERTIONS=ON \
