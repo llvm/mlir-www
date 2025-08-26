@@ -1,6 +1,7 @@
 ---
 title: "Pattern Search"
-date: 2025-08-25
+date: 1970-01-01T00:00:00Z
+draft: false
 ---
 
 Search for an operation name below (e.g., `linalg.matvec`) to find a list of
