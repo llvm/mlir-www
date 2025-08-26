@@ -394,11 +394,6 @@ function navigateToSearch(query = "", namespace = "", method = "") {
   // Perform search
   const results = searchEngine.searchOperations(query, { namespace, method });
   displayResults(results, query);
-
-  // Scroll to results
-  document
-    .getElementById("resultsContainer")
-    .scrollIntoView({ behavior: "smooth" });
 }
 
 function navigateToDetail(className) {
@@ -429,11 +424,6 @@ function navigateToDetail(className) {
   // Push to history
   const state = { view: "detail", className };
   history.pushState(state, "MLIR Patterns - " + className, url.toString());
-
-  // Scroll to top
-  document
-    .getElementById("detailContainer")
-    .scrollIntoView({ behavior: "smooth" });
 }
 
 function navigateToSearchInitial() {
