@@ -1,0 +1,52 @@
+<div class="pattern-search-container">
+    <div class="search-container">
+        <div class="search-row">
+            <div class="search-input">
+                <input type="text" id="searchInput" placeholder="Search operations (e.g., spirv.IsNan)..." autocomplete="off">
+                <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+            </div>
+            <div class="filter-select">
+                <select id="namespaceFilter">
+                    <option value="">All Namespaces</option>
+                </select>
+            </div>
+            <div class="filter-select">
+                <select id="methodFilter">
+                    <option value="">All Methods</option>
+                </select>
+            </div>
+        </div>
+        <div class="stats" id="stats">Loading data...</div>
+    </div>
+
+    <div class="results-container" id="resultsContainer">
+        <div class="results-header" id="resultsHeader">
+            <span id="resultsCount">Enter a search term to begin</span>
+        </div>
+        <div id="results" class="loading">
+            Loading MLIR data...
+        </div>
+    </div>
+
+    <!-- Detail View (inline) -->
+    <div class="detail-container" id="detailContainer" style="display: none;">
+        <div class="detail-header">
+            <div class="detail-nav">
+                <button class="back-button" id="backButton" onclick="goBack()">&larr; Back to Results</button>
+            </div>
+            <div class="detail-title" id="detailTitle"></div>
+        </div>
+        <div class="detail-body">
+            <div class="detail-stats" id="detailStats"></div>
+            <div class="methods-list" id="methodsList"></div>
+        </div>
+    </div>
+</div>
+
+{{ $cssPath := "css/pattern-search.css" | relURL }}
+<link rel="stylesheet" href="{{ $cssPath }}">
+
+{{ $jsPath := "js/pattern-search.js" | relURL }}
+{{ $uiJsPath := "js/pattern-search-ui.js" | relURL }}
+<script src="{{ $jsPath }}"></script>
+<script src="{{ $uiJsPath }}"></script>
