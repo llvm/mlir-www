@@ -155,7 +155,50 @@ class MLIRSearch {
   }
 
   generateGitHubURL(className) {
-    return `https://github.com/llvm/llvm-project/search?q=${encodeURIComponent(className)}&type=code`;
+    // Extract bare class name and template parameters without namespaces
+    // Example: ::foo::bar::ClassName<baz::Quux, other::Type> -> search for "ClassName Quux Type"
+
+    const searchTerms = [];
+
+    // Extract bare class name (everything after last :: before any <)
+    const templateStart = className.indexOf("<");
+    const classNamePart =
+      templateStart >= 0 ? className.substring(0, templateStart) : className;
+    const lastColonIndex = classNamePart.lastIndexOf("::");
+    const bareClassName =
+      lastColonIndex >= 0
+        ? classNamePart.substring(lastColonIndex + 2)
+        : classNamePart;
+    searchTerms.push(bareClassName);
+
+    // Extract template parameters if they exist
+    if (templateStart >= 0) {
+      const templateEnd = className.lastIndexOf(">");
+      if (templateEnd > templateStart) {
+        const templateContent = className.substring(
+          templateStart + 1,
+          templateEnd,
+        );
+
+        // Split by comma and extract bare names from each parameter
+        const params = templateContent.split(",");
+        params.forEach((param) => {
+          const trimmed = param.trim();
+          // Remove any namespace qualification from the parameter
+          const lastColonInParam = trimmed.lastIndexOf("::");
+          const bareParam =
+            lastColonInParam >= 0
+              ? trimmed.substring(lastColonInParam + 2)
+              : trimmed;
+          if (bareParam) {
+            searchTerms.push(bareParam);
+          }
+        });
+      }
+    }
+
+    const searchQuery = searchTerms.join(" ") + " path:mlir";
+    return `https://github.com/llvm/llvm-project/search?q=${encodeURIComponent(searchQuery)}&type=code`;
   }
 }
 
