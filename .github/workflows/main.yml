@@ -69,7 +69,7 @@ jobs:
         # implicitly enables`--mlir-disable-threading` which some tests are incompatible with.
         { MLIR_GENERATE_PATTERN_CATALOG=1 bin/llvm-lit -j$(nproc) -v -a tools/mlir/test || true ; } \
           | grep '# | \[pattern-logging-listener' \
-          | sed 's/# | \[pattern-logging-listener:[0-9]*\] PatternLoggingListener.cpp:[0-9]* //g' \
+          | sed 's/# | \[pattern-logging-listener PatternLoggingListener.cpp:[0-9]* [0-9]*] //g' \
           | sort | uniq > $HOME/pattern_catalog.txt
         # back to mlir-www root
         cd ../..
