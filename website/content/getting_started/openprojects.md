@@ -15,32 +15,22 @@ or on the MLIR channel of the [LLVM discord](https://discord.gg/xS7Z362)
 server. The mentors are indicative and suggestion of first point of contact for
 starting on these projects.
 
-* Implement C bindings for the core IR: this will allow to manipulate IR from other languages.
-* llvm-canon kind of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
-* IR query tool to make exploring the IR easier (e.g., all operations dominated
-  by X, find possible path between two ops, etc.) (mentor: Jacques Pienaar)
+* Building an MLIR interpreter (mentor: Mehdi Amini).
+  At the moment we have constant folding implemented as an eager folding on a per op basis.
+  This relies on attribute storage and is very inefficient. It also does not mesh well with
+  control-flow (symbolic execution of a for loop for example). The idea would be to revamp
+  this to ultimately allow to have features like "constexpr evaluation" of functions in MLIR.
+* [llvm-canon](https://llvm.org/devmtg/2019-10/slides/Paszkowski-LLVMCanon.pdf) kind of tool for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
 * GLSL to SPIR-V dialect frontend (mentor: Lei Zhang)
   * Requires: building up graphics side of the SPIR-V dialect
   * Purpose: give MLIR more frontends :) improve graphics tooling
   * Potential real-world usage: providing a migration solution from WebGL
   (shaders represented as GLSL) to WebGPU (shaders represented as SPIR-V-like language, [WGSL](https://gpuweb.github.io/gpuweb/wgsl.html))
-* TableGen "front-end dialect" (mentor: Jacques Pienaar)
-* Polyhedral scheduling in MLIR (mentor: Alex Zinenko)
-* MLIR visualization (mentor: Jacques Pienaar)
 * MLIR sparsifier (aka sparse compiler) [starter tasks](https://github.com/llvm/llvm-project/labels/mlir%3Asparse) (mentor: Aart Bik)
-* MLIR allows for representing multiple levels of abstraction all together in the same IR/function. Visualizing MLIR modules therefore requires going beyond visualizing a graph of nodes all at the same level (which is not trivial in and of itself!), nor is it specific to Machine Learning. Beyond visualizing a MLIR module, there is also visualizing MLIR itself that is of interest. In particular, visualizing the rewrite rules, visualizing the matching process (including the failure to match, sort of like https://www.debuggex.com/ but for declarative rewrites), considering effects of rewrites over time, etc. The visualizations should all be built with open source components but whether standalone (e.g., combining with, say, GraphViz to generate offline images) or dynamic tools (e.g., displayed in browser) is open for discussion. It should be usable completely offline in either case. We will be working with interested students to refine the exact project based on interests given the wide scope of potential approaches. And open to proposals within this general area.
-* Rewrite patterns expressed in MLIR (mentor: Jacques Pienaar)
-* Generic value range analysis for MLIR (mentor: River Riddle)
-
-### Projects started/starting soon:
-
-This is section for projects that have not yet started but there are
-individuals/groups intending to start work on in near future.
-
-* [bugpoint/llvm-reduce](https://llvm.org/docs/BugpointRedesign.html) kind
-  of tools for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
-* MLIR visualization, there are some projects in flight but we unfortunately
-  don't know the project plans of those teams. But if you intend to work on
-  something in this area it would be good to discuss on the forum early
-  in case there are collaboration opportunity.
+* MLIR visualization (mentor: Jacques Pienaar)
+  MLIR allows for representing multiple levels of abstraction all together in the same IR/function. Visualizing MLIR modules therefore requires going beyond visualizing a graph of nodes all at the same level (which is not trivial in and of itself!), nor is it specific to Machine Learning. Beyond visualizing a MLIR module, there is also visualizing MLIR itself that is of interest. In particular, visualizing the rewrite rules, visualizing the matching process (including the failure to match, sort of like https://www.debuggex.com/ but for declarative rewrites), considering effects of rewrites over time, etc. The visualizations should all be built with open source components but whether standalone (e.g., combining with, say, GraphViz to generate offline images) or dynamic tools (e.g., displayed in browser) is open for discussion. It should be usable completely offline in either case. We will be working with interested students to refine the exact project based on interests given the wide scope of potential approaches. And open to proposals within this general area.
+* Improving [mlir-reduce](https://mlir.llvm.org/docs/Tools/mlir-reduce/) (mentor: Jacques Pienaar, Mehdi Amini).
+  This tools is basic in its current form and needs investment to make it really useful in practice.
+  That means developing new reduction pattern and strategies. Possibly interfaces for dialects
+  to plug into injecting custom logic.
 
