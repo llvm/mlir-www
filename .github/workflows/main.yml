@@ -55,7 +55,7 @@ jobs:
           -DLLVM_ENABLE_DOXYGEN="true" \
           -DMLIR_ENABLE_BINDINGS_PYTHON=ON
         ninja -j$(nproc) mlir-doc doxygen-mlir MLIRPythonModules
-        export "PYTHONPATH=$(pwd)/tools/mlir/python_packages/mlir_core" >> $GITHUB_ENV
+        echo "PYTHONPATH=$(pwd)/tools/mlir/python_packages/mlir_core" >> $GITHUB_ENV
 
     - name: Install docs
       run: ./mlir-www-helper.sh --install-docs "llvm_src" "website"
