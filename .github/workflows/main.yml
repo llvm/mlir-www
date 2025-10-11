@@ -44,6 +44,7 @@ jobs:
       run: |
         mkdir llvm_src/build
         cd llvm_src/build
+        pip install -r ../mlir/python/requirements.txt
         # Assert mode is needed for the pattern search index
         cmake ../llvm -GNinja \
           -DCMAKE_BUILD_TYPE=Release \
