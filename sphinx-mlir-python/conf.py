@@ -42,7 +42,7 @@ def ensure_mlir_index(_):
     os.makedirs(mlir_dir, exist_ok=True)
     mlir_index = os.path.join(mlir_dir, "index.rst")
     with open(mlir_index, "w", encoding="utf-8") as f:
-        f.write("mlir namespace\n===============\n\n.. toctree::\n   :maxdepth: 2\n   :glob:\n\n   */*\n")
+        f.write("mlir namespace\n===============\n\n.. toctree::\n   :maxdepth: 2\n   :glob:\n\n   **\n")
 
 
 def setup(app):
