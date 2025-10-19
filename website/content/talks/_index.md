@@ -101,7 +101,7 @@ to [this public calendar](https://calendar.google.com/calendar/u/0?cid=N2EzMDU3N
 [slides](/OpenMeetings/2024-08-22-Upstream-SPIRV-Conversion.pdf) - 
 [recording](https://youtu.be/-qoMMrlYvGs)
 * 2024-02-15: OpenMP GPU target offload
-[slides](/OpenMeetings/2023-02-15-OpenMP-GPU-Offload.pdf) -
+[slides](/OpenMeetings/2024-02-15-OpenMP-GPU-Offload.pdf) -
 [recording](https://youtu.be/lOK6JPuVFYg)
 * 2023-12-14: Vector dialect, reshape, and handling of unit dimensions
 [slides](/OpenMeetings/2023-12-14-Vector-reshapes.pdf) -
