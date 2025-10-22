@@ -416,18 +416,20 @@ lowering under the `-test-vector-to-vector-lowering` flag:
 
 ```mlir
 // CHECK-LABEL:   func @maskedload_regression_1(
-//  CHECK-SAME:       %[[A0:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[A0:.*]]: memref<16xf32>,
 //  CHECK-SAME:       %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
 //       CHECK:   %[[C0:.*]] = arith.constant 0 : index
 //       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
-//  CHECK-SAME:     : memref<?xf32>, vector<16xf32>
+//  CHECK-SAME:     : memref<16xf32>, vector<16xf32>
 //       CHECK:   return %[[LOAD]] : vector<16xf32>
-func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_regression_1(
+    %arg0: memref<16xf32>,
+    %arg1: vector<16xf32>) -> vector<16xf32> {
   %c0 = arith.constant 0 : index
 
   %vec_i1 = vector.constant_mask [16] : vector<16xi1>
   %ld = vector.maskedload %arg0[%c0], %vec_i1, %arg1
-    : memref<?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+    : memref<16xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
 
   return %ld : vector<16xf32>
 }
@@ -439,7 +441,9 @@ func.func @maskedload_regression_1(%arg0: memref<?xf32>, %arg1: vector<16xf32>) 
 //       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
 //  CHECK-SAME:     : memref<16xi8>, vector<16xi8>
 //       CHECK:   return %[[LOAD]] : vector<16xi8>
-func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -> vector<16xi8> {
+func.func @maskedload_regression_2(
+    %arg0: memref<16xi8>,
+    %arg1: vector<16xi8>) -> vector<16xi8> {
   %c0 = arith.constant 0 : index
 
   %vec_i1 = vector.constant_mask [16] : vector<16xi1>
@@ -453,7 +457,9 @@ func.func @maskedload_regression_2(%arg0: memref<16xi8>, %arg1: vector<16xi8>) -
 // CHECK-SAME:        %[[A0:.*]]: memref<16xf32>,
 // CHECK-SAME:        %[[A1:.*]]: vector<16xf32>) -> vector<16xf32> {
 //      CHECK:    return %[[A1]] : vector<16xf32>
-func.func @maskedload_regression_3(%arg0: memref<16xf32>, %arg1: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_regression_3(
+    %arg0: memref<16xf32>,
+    %arg1: vector<16xf32>) -> vector<16xf32> {
   %c0 = arith.constant 0 : index
 
   %vec_i1 = vector.constant_mask [0] : vector<16xi1>
@@ -478,10 +484,12 @@ in this case, you can use `%base`, `%mask` and `%pass_thru`.
 
 ```mlir
 // CHECK-LABEL:   func @maskedload_regression_1(
-//  CHECK-SAME:       %[[BASE:.*]]: memref<?xf32>,
+//  CHECK-SAME:       %[[BASE:.*]]: memref<16xf32>,
 //  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
 // (...)
-func.func @maskedload_regression_1(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_regression_1(
+    %base: memref<16xf32>,
+    %pass_thru: vector<16xf32>) -> vector<16xf32> {
   // (...)
   %mask = vector.constant_mask [16] : vector<16xi1>
   %ld = vector.maskedload %base[%c0], %mask, %pass_thru (...)
@@ -492,7 +500,9 @@ func.func @maskedload_regression_1(%base: memref<?xf32>, %pass_thru: vector<16xf
 //  CHECK-SAME:       %[[BASE:.*]]: memref<16xi8>,
 //  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xi8>) -> vector<16xi8> {
 // (...)
-func.func @maskedload_regression_2(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+func.func @maskedload_regression_2(
+    %base: memref<16xi8>,
+    %pass_thru: vector<16xi8>) -> vector<16xi8> {
   // (...)
   %mask = vector.constant_mask [16] : vector<16xi1>
   %ld = vector.maskedload %base[%c0], %mask, %pass_thru (...)
@@ -503,7 +513,9 @@ func.func @maskedload_regression_2(%base: memref<16xi8>, %pass_thru: vector<16xi
 //  CHECK-SAME:       %[[BASE:.*]]: memref<16xf32>,
 //  CHECK-SAME:       %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
 // (...)
-func.func @maskedload_regression_3(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_regression_3(
+    %base: memref<16xf32>,
+    %pass_thru: vector<16xf32>) -> vector<16xf32> {
   // (...)
   %mask = vector.constant_mask [0] : vector<16xi1>
   %ld = vector.maskedload %base[%c0], %mask, %base (...)
@@ -528,22 +540,24 @@ tests based on key attributes:
 This suggests the following naming scheme:
 * `@maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false}`.
 
+Below are the updated names:
+
 ```mlir
 // CHECK-LABEL:   func @maskedload_to_load_dynamic_i32_all_true(
 // (...)
-func.func @maskedload_to_load_dynamic_i32_all_true(%base: memref<?xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_to_load_dynamic_i32_all_true(...) -> vector<16xf32> {
   // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_to_load_static_i8_all_true(
 // (...)
-func.func @maskedload_to_load_static_i8_all_true(%base: memref<16xi8>, %pass_thru: vector<16xi8>) -> vector<16xi8> {
+func.func @maskedload_to_load_static_i8_all_true(...) -> vector<16xi8> {
   // (...)
 }
 
 // CHECK-LABEL:   func @maskedload_to_load_static_i32_all_false(
 // (...)
-func.func @maskedload_to_load_static_i32_all_false(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+func.func @maskedload_to_load_static_i32_all_false(...) -> vector<16xf32> {
   // (...)
 }
 ```
@@ -562,7 +576,9 @@ Unlike the existing cases, this mask must be preserved. In this scenario,
 // CHECK-SAME:        %[[BASE:.*]]: memref<16xf32>,
 // CHECK-SAME:        %[[PASS_THRU:.*]]: vector<16xf32>) -> vector<16xf32> {
 //      CHECK:    vector.maskedload
-func.func @negative_maskedload_to_load_static_i32_mixed(%base: memref<16xf32>, %pass_thru: vector<16xf32>) -> vector<16xf32> {
+func.func @negative_maskedload_to_load_static_i32_mixed(
+    %base: memref<16xf32>,
+    %pass_thru: vector<16xf32>) -> vector<16xf32> {
   %c0 = arith.constant 0 : index
   %mask = vector.constant_mask [4] : vector<16xi1>
 
@@ -746,7 +762,10 @@ used to document high-level steps (original FileCheck "check" lines have been
 trimmed for brevity):
 
 ```mlir
-func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x3x8xf32>, %output: memref<4x2x8xf32>) {
+func.func @conv1d_nwc_4x2x8_memref(
+    %input: memref<4x6x3xf32>,
+    %filter: memref<1x3x8xf32>,
+    %output: memref<4x2x8xf32>) {
   linalg.conv_1d_nwc_wcf
     {dilations = dense<1> : tensor<1xi64>, strides = dense<3> : tensor<1xi64>}
     ins(%input, %filter : memref<4x6x3xf32>, memref<1x3x8xf32>)
@@ -755,17 +774,19 @@ func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x
 }
 
 //      CHECK: func @conv1d_nwc_4x2x8_memref
-// CHECK-SAME: (%[[INPUT:.+]]: memref<4x6x3xf32>, %[[FILTER:.+]]: memref<1x3x8xf32>, %[[OUTPUT:.+]]: memref<4x2x8xf32>)
+// CHECK-SAME: %[[INPUT:.+]]: memref<4x6x3xf32>
+// CHECK-SAME: %[[FILTER:.+]]: memref<1x3x8xf32>,
+// CHECK-SAME: %[[OUTPUT:.+]]: memref<4x2x8xf32>
 
 /// Read the whole data in one shot.
-//  CHECK-DAG:   %[[V_INPUT_R:.+]] = vector.transfer_read %[[INPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
-//  CHECK-DAG:  %[[V_FILTER_R:.+]] = vector.transfer_read %[[FILTER]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
-//  CHECK-DAG:  %[[V_OUTPUT_R:.+]] = vector.transfer_read %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]], %[[F0]]
+//  CHECK-DAG:   %[[V_INPUT_R:.+]] = vector.transfer_read %[[INPUT]]
+//  CHECK-DAG:  %[[V_FILTER_R:.+]] = vector.transfer_read %[[FILTER]]
+//  CHECK-DAG:  %[[V_OUTPUT_R:.+]] = vector.transfer_read %[[OUTPUT]]
 
 //      CHECK:   %[[V_INPUT_0:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
 //      CHECK:   %[[V_INPUT_1:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
 
-//      CHECK:    %[[V_FILTER:.+]] = vector.extract %[[V_FILTER_R]][0] : vector<3x8xf32> from vector<1x3x8xf32>
+//      CHECK:    %[[V_FILTER:.+]] = vector.extract %[[V_FILTER_R]][0]
 
 //      CHECK:  %[[V_OUTPUT_0:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
 //      CHECK:  %[[V_OUTPUT_1:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
@@ -779,12 +800,14 @@ func.func @conv1d_nwc_4x2x8_memref(%input: memref<4x6x3xf32>, %filter: memref<1x
 // CHECK-SAME:     %[[V_INPUT_1]], %[[V_FILTER]], %[[V_OUTPUT_1]]
 
 /// w == 0, kw == 0
-//      CHECK:   %[[RES_0:.+]] = vector.insert_strided_slice %[[CONTRACT_0]], %[[V_OUTPUT_R]]
+//      CHECK:   %[[RES_0:.+]] = vector.insert_strided_slice
+// CHECK-SAME:    %[[CONTRACT_0]], %[[V_OUTPUT_R]]
 /// w == 1, kw == 0
-//      CHECK:   %[[RES_1:.+]] = vector.insert_strided_slice %[[CONTRACT_1]], %[[RES_0]]
+//      CHECK:   %[[RES_1:.+]] = vector.insert_strided_slice
+// CHECK-SAME:    %[[CONTRACT_1]], %[[RES_0]]
 
 /// Write the result back in one shot.
-//      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]][%[[C0]], %[[C0]], %[[C0]]]
+//      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]]
 ```
 
 Though the comments document _what_ is happening (e.g., "Write the result back
