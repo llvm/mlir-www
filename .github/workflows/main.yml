@@ -44,18 +44,28 @@ jobs:
       run: |
         mkdir llvm_src/build
         cd llvm_src/build
+        pip install -r ../mlir/python/requirements.txt
         # Assert mode is needed for the pattern search index
-        cmake ../llvm \
+        cmake ../llvm -GNinja \
           -DCMAKE_BUILD_TYPE=Release \
           -DLLVM_ENABLE_ASSERTIONS=ON \
           -DLLVM_ENABLE_PROJECTS=mlir \
           -DLLVM_TARGETS_TO_BUILD="host" \
           -DMLIR_INCLUDE_DOCS="true" \
-          -DLLVM_ENABLE_DOXYGEN="true"
-        make -j$(nproc) mlir-doc doxygen-mlir
+          -DLLVM_ENABLE_DOXYGEN="true" \
+          -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+        ninja -j$(nproc) mlir-doc doxygen-mlir MLIRPythonModules
+        echo "PYTHONPATH=$(pwd)/tools/mlir/python_packages/mlir_core" >> $GITHUB_ENV
 
     - name: Install docs
       run: ./mlir-www-helper.sh --install-docs "llvm_src" "website"
+
+    - name: Install python bindings docs
+      run: |
+        cd sphinx-mlir-python
+        pip install -r requirements.txt
+        make html
+        cp -r _build/html ../website/static/python-bindings
 
     - name: Build pattern search index
       run: |
@@ -63,7 +73,7 @@ jobs:
         # Run the tests once to ensure they are passing.
         # The next run used to generate the patterns log is disabling error checking. This first
         # run will ensure we don't generate the website when tests are broken.
-        make -j$(nproc) check-mlir
+        ninja -j$(nproc) check-mlir
         echo "finished building tests"
         # ignore nonzero exit codes in this command, since MLIR_GENERATE_PATTERN_CATALOG
         # implicitly enables`--mlir-disable-threading` which some tests are incompatible with.
