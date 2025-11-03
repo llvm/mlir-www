@@ -31,7 +31,11 @@ jobs:
       run: ./mlir-www-helper.sh --help
 
     - name: Install dependencies
-      run: sudo apt-get install doxygen graphviz python3
+      run: |
+        sudo apt-get install graphviz python3
+        wget https://github.com/doxygen/doxygen/releases/download/Release_1_14_0/doxygen-1.14.0.linux.bin.tar.gz -O /tmp/doxygen.tar.gz
+        tar -xvf /tmp/doxygen.tar.gz
+        echo "$(pwd)/doxygen-1.14.0/bin" >> $GITHUB_PATH
 
     - name: Clone LLVM repo
       uses: actions/checkout@v3
