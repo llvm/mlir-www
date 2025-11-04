@@ -68,7 +68,7 @@ jobs:
       run: |
         cd sphinx-mlir-python
         pip install -r requirements.txt
-        make html
+        SPHINX_LLVM_SRC_PATH=$(pwd)/../llvm_src make html
         cp -r _build/html ../website/static/python-bindings
 
     - name: Build pattern search index
