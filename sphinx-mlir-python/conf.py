@@ -50,6 +50,22 @@ def prepare_docstring(doc):
     return rst
 _autoapi_parser._prepare_docstring = prepare_docstring
 
+html_static_path = ['_static']
+html_css_files = [
+  'ignore_highlight_err.css',
+]
+
+if llvm_path := os.environ.get("SPHINX_LLVM_SRC_PATH"):
+    import sphinx.highlighting as _hl
+    import importlib
+
+    # load the lexer module
+    lexer_path = llvm_path + "/mlir/utils/pygments/mlir_lexer.py"
+    lexer_spec = importlib.util.spec_from_file_location("mlir_lexer", lexer_path)
+    lexer_module = importlib.util.module_from_spec(lexer_spec)
+    lexer_spec.loader.exec_module(lexer_module)
+
+    _hl.lexers["mlir"] = lexer_module.MlirLexer()
 
 # generate an index page for the mlir namespace
 def ensure_mlir_index(_):
