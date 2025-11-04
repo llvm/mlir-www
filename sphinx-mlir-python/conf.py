@@ -36,7 +36,22 @@ import mlir
 autoapi_dirs = list(mlir.__path__)
 autoapi_python_use_implicit_namespaces = True
 
+import autoapi._parser as _autoapi_parser
+import commonmark
 
+
+# hook the _prepare_docstring function in sphinx-autoapi,
+# so that we can convert markdown to rst.
+_prepare_docstring = _autoapi_parser._prepare_docstring
+def prepare_docstring(doc):
+    md = _prepare_docstring(doc)
+    ast = commonmark.Parser().parse(md)
+    rst = commonmark.ReStructuredTextRenderer().render(ast)
+    return rst
+_autoapi_parser._prepare_docstring = prepare_docstring
+
+
+# generate an index page for the mlir namespace
 def ensure_mlir_index(_):
     mlir_dir = os.path.join(os.path.dirname(__file__), "autoapi/mlir")
     os.makedirs(mlir_dir, exist_ok=True)
