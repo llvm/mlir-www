@@ -244,6 +244,16 @@ MLIR](https://arxiv.org/abs/2008.08272).
 
 A community-driven, open source ML compiler ecosystem, using the best of XLA & MLIR.
 
+## [P4](https://p4.org/)
+
+Programming Protocol-independent Packet Processors (P4) is a domain-specific language
+for network devices, specifying how data plane devices (switches, NICs, routers,
+filters, etc.) process packets.
+
+[P4HIR](https://github.com/p4lang/project-ideas/issues/20) is a project to create a
+backend for the P4 reference compiler that uses MLIR, via new dialects to model P4's
+semantics.
+
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
 PlaidML is a tensor compiler that facilitates reusable and performance portable
