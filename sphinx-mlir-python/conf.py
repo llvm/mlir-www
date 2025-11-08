@@ -38,16 +38,26 @@ autoapi_python_use_implicit_namespaces = True
 
 import autoapi._parser as _autoapi_parser
 import commonmark
+from sphinx.ext.napoleon.docstring import GoogleDocstring
 
+# Check if the docstring is google-style.
+# NOTE: It is pretty minimal but enough to cover current cases in MLIR Python.
+def is_google_docstring(doc):
+    return any(x in doc for x in ["Args:\n", "Returns:\n", "Raises:\n"])
 
-# hook the _prepare_docstring function in sphinx-autoapi,
+# Hook the _prepare_docstring function in sphinx-autoapi,
 # so that we can convert markdown to rst.
 _prepare_docstring = _autoapi_parser._prepare_docstring
 def prepare_docstring(doc):
-    md = _prepare_docstring(doc)
-    ast = commonmark.Parser().parse(md)
-    rst = commonmark.ReStructuredTextRenderer().render(ast)
-    return rst
+    docstring = _prepare_docstring(doc)
+    if is_google_docstring(docstring):
+        # convert google-style docstring to rst
+        docstring = str(GoogleDocstring(docstring))
+    else:
+        # convert markdown to rst
+        ast = commonmark.Parser().parse(docstring)
+        docstring = commonmark.ReStructuredTextRenderer().render(ast)
+    return docstring
 _autoapi_parser._prepare_docstring = prepare_docstring
 
 html_static_path = ['_static']
