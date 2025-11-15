@@ -1,0 +1,38 @@
+mlir.dialects.transform.gpu
+===========================
+
+.. py:module:: mlir.dialects.transform.gpu
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.gpu.MapForallToBlocks
+   mlir.dialects.transform.gpu.MapNestedForallToThreads
+
+
+Module Contents
+---------------
+
+.. py:class:: MapForallToBlocks(result_type: Type, target: Union[Operation, OpView, Value], *, grid_dims: Optional[Union[Sequence[int], Attribute]] = None, generate_gpu_launch: Optional[Union[bool, Attribute]] = None, loc=None, ip=None)
+              MapForallToBlocks(target: Union[Operation, OpView, Value], *, grid_dims: Optional[Union[Sequence[int], Attribute]] = None, generate_gpu_launch: Optional[Union[bool, Attribute]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MapForallToBlocks`
+
+
+   
+   Specialization for MapForallToBlocks class.
+
+
+.. py:class:: MapNestedForallToThreads(result_type: Type, target: Union[Operation, OpView, Value], *, block_dims: Optional[Sequence[int]] = None, warp_size: Optional[Sequence[int]] = None, sync_after_distribute: Optional[bool] = None, loc=None, ip=None)
+              MapNestedForallToThreads(target: Union[Operation, OpView, Value], *, block_dims: Optional[Sequence[int]] = None, warp_size: Optional[Sequence[int]] = None, sync_after_distribute: Optional[bool] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MapNestedForallToThreads`
+
+
+   
+   Specialization for MapNestedForallToThreads class.
+
+

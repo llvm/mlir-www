@@ -1,0 +1,79 @@
+mlir._mlir_libs
+===============
+
+.. py:module:: mlir._mlir_libs
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/_mlir_libs/_mlir/index
+   /autoapi/mlir/_mlir_libs/_mlirExecutionEngine/index
+   /autoapi/mlir/_mlir_libs/_mlirPythonTestNanobind/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._this_dir
+   mlir._mlir_libs._dialect_registry
+   mlir._mlir_libs._load_on_create_dialects
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs.get_lib_dirs
+   mlir._mlir_libs.get_include_dirs
+   mlir._mlir_libs.get_dialect_registry
+   mlir._mlir_libs.append_load_on_create_dialect
+   mlir._mlir_libs.get_load_on_create_dialects
+   mlir._mlir_libs._site_initialize
+
+
+Package Contents
+----------------
+
+.. py:data:: _this_dir
+
+.. py:function:: get_lib_dirs() -> Sequence[str]
+
+   
+   Gets the lib directory for linking to shared libraries.
+
+   On some platforms, the package may need to be built specially to export
+   development libraries.
+
+
+.. py:function:: get_include_dirs() -> Sequence[str]
+
+   
+   Gets the include directory for compiling against exported C libraries.
+
+   Depending on how the package was build, development C libraries may or may
+   not be present.
+
+
+.. py:data:: _dialect_registry
+   :value: None
+
+
+.. py:data:: _load_on_create_dialects
+   :value: None
+
+
+.. py:function:: get_dialect_registry()
+
+.. py:function:: append_load_on_create_dialect(dialect: str)
+
+.. py:function:: get_load_on_create_dialects()
+
+.. py:function:: _site_initialize()
+

@@ -1,0 +1,237 @@
+mlir.dialects._cf_ops_gen
+=========================
+
+.. py:module:: mlir.dialects._cf_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._cf_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._cf_ops_gen._Dialect
+   mlir.dialects._cf_ops_gen.AssertOp
+   mlir.dialects._cf_ops_gen.BranchOp
+   mlir.dialects._cf_ops_gen.CondBranchOp
+   mlir.dialects._cf_ops_gen.SwitchOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._cf_ops_gen.assert_
+   mlir.dialects._cf_ops_gen.br
+   mlir.dialects._cf_ops_gen.cond_br
+   mlir.dialects._cf_ops_gen.switch
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'cf'
+
+
+
+.. py:class:: AssertOp(arg, msg, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Assert operation at runtime with single boolean operand and an error
+   message attribute.
+   If the argument is ``true`` this operation has no effect. Otherwise, the
+   program execution will abort. The provided error message may be used by a
+   runtime to propagate the error to the user.
+
+   Example:
+
+   .. code:: mlir
+
+       cf.assert %b, "Expected ... to be true"
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'cf.assert'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: arg() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: msg() -> _ods_ir
+
+
+.. py:function:: assert_(arg, msg, *, loc=None, ip=None) -> AssertOp
+
+.. py:class:: BranchOp(destOperands, dest, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cf.br`` operation represents a direct branch operation to a given
+   block. The operands of this operation are forwarded to the successor block,
+   and the number and type of the operands must match the arguments of the
+   target block.
+
+   Example:
+
+   .. code:: mlir
+
+       ^bb2:
+         %2 = call @someFn()
+         cf.br ^bb3(%2 : tensor<*xf32>)
+       ^bb3(%3: tensor<*xf32>):
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'cf.br'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: destOperands() -> _ods_ir
+
+
+.. py:function:: br(dest_operands, dest, *, loc=None, ip=None) -> BranchOp
+
+.. py:class:: CondBranchOp(condition, trueDestOperands, falseDestOperands, trueDest, falseDest, *, branch_weights=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cf.cond_br`` terminator operation represents a conditional branch on a
+   boolean (1-bit integer) value. If the bit is set, then the first destination
+   is jumped to; if it is false, the second destination is chosen. The count
+   and types of operands must align with the arguments in the corresponding
+   target blocks.
+
+   The MLIR conditional branch operation is not allowed to target the entry
+   block for a region. The two destinations of the conditional branch operation
+   are allowed to be the same.
+
+   The following example illustrates a function with a conditional branch
+   operation that targets the same block.
+
+   Example:
+
+   .. code:: mlir
+
+       func.func @select(%a: i32, %b: i32, %flag: i1) -> i32 {
+         // Both targets are the same, operands differ
+         cf.cond_br %flag, ^bb1(%a : i32), ^bb1(%b : i32)
+       
+       ^bb1(%x : i32) :
+         return %x : i32
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'cf.cond_br'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: condition() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: trueDestOperands() -> _ods_ir
+
+
+   .. py:method:: falseDestOperands() -> _ods_ir
+
+
+   .. py:method:: branch_weights() -> Optional[_ods_ir]
+
+
+.. py:function:: cond_br(condition, true_dest_operands, false_dest_operands, true_dest, false_dest, *, branch_weights=None, loc=None, ip=None) -> CondBranchOp
+
+.. py:class:: SwitchOp(flag, defaultOperands, caseOperands, case_operand_segments, defaultDestination, caseDestinations, *, case_values=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cf.switch`` terminator operation represents a switch on a signless integer
+   value. If the flag matches one of the specified cases, then the
+   corresponding destination is jumped to. If the flag does not match any of
+   the cases, the default destination is jumped to. The count and types of
+   operands must align with the arguments in the corresponding target blocks.
+
+   Example:
+
+   .. code:: mlir
+
+       cf.switch %flag : i32, [
+         default: ^bb1(%a : i32),
+         42: ^bb1(%b : i32),
+         43: ^bb3(%c : i32)
+       ]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'cf.switch'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: flag() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: defaultOperands() -> _ods_ir
+
+
+   .. py:method:: caseOperands() -> _ods_ir
+
+
+   .. py:method:: case_values() -> Optional[_ods_ir]
+
+
+   .. py:method:: case_operand_segments() -> _ods_ir
+
+
+.. py:function:: switch(flag, default_operands, case_operands, case_operand_segments, default_destination, case_destinations, *, case_values=None, loc=None, ip=None) -> SwitchOp
+

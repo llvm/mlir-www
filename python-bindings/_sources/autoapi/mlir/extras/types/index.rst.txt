@@ -1,0 +1,143 @@
+mlir.extras.types
+=================
+
+.. py:module:: mlir.extras.types
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.extras.types.index
+   mlir.extras.types.bool
+   mlir.extras.types.i8
+   mlir.extras.types.i16
+   mlir.extras.types.i32
+   mlir.extras.types.i64
+   mlir.extras.types.si8
+   mlir.extras.types.si16
+   mlir.extras.types.si32
+   mlir.extras.types.si64
+   mlir.extras.types.ui8
+   mlir.extras.types.ui16
+   mlir.extras.types.ui32
+   mlir.extras.types.ui64
+   mlir.extras.types.f16
+   mlir.extras.types.f32
+   mlir.extras.types.tf32
+   mlir.extras.types.f64
+   mlir.extras.types.bf16
+   mlir.extras.types.f8E5M2
+   mlir.extras.types.f8E4M3
+   mlir.extras.types.f8E4M3FN
+   mlir.extras.types.f8E4M3B11FNUZ
+   mlir.extras.types.f8E3M4
+   mlir.extras.types.f4E2M1FN
+   mlir.extras.types.f6E2M3FN
+   mlir.extras.types.f6E3M2FN
+   mlir.extras.types.f8E8M0FNU
+   mlir.extras.types.none
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.extras.types.i
+   mlir.extras.types.si
+   mlir.extras.types.ui
+   mlir.extras.types.complex
+   mlir.extras.types.opaque
+   mlir.extras.types._shaped
+   mlir.extras.types.vector
+   mlir.extras.types.tensor
+   mlir.extras.types.memref
+   mlir.extras.types.tuple
+   mlir.extras.types.function
+
+
+Module Contents
+---------------
+
+.. py:data:: index
+
+.. py:function:: i(width)
+
+.. py:function:: si(width)
+
+.. py:function:: ui(width)
+
+.. py:data:: bool
+
+.. py:data:: i8
+
+.. py:data:: i16
+
+.. py:data:: i32
+
+.. py:data:: i64
+
+.. py:data:: si8
+
+.. py:data:: si16
+
+.. py:data:: si32
+
+.. py:data:: si64
+
+.. py:data:: ui8
+
+.. py:data:: ui16
+
+.. py:data:: ui32
+
+.. py:data:: ui64
+
+.. py:data:: f16
+
+.. py:data:: f32
+
+.. py:data:: tf32
+
+.. py:data:: f64
+
+.. py:data:: bf16
+
+.. py:data:: f8E5M2
+
+.. py:data:: f8E4M3
+
+.. py:data:: f8E4M3FN
+
+.. py:data:: f8E4M3B11FNUZ
+
+.. py:data:: f8E3M4
+
+.. py:data:: f4E2M1FN
+
+.. py:data:: f6E2M3FN
+
+.. py:data:: f6E3M2FN
+
+.. py:data:: f8E8M0FNU
+
+.. py:data:: none
+
+.. py:function:: complex(type)
+
+.. py:function:: opaque(dialect_namespace, type_data)
+
+.. py:function:: _shaped(*shape, element_type: mlir.ir.Type = None, type_constructor=None)
+
+.. py:function:: vector(*shape, element_type: mlir.ir.Type = None, scalable: Optional[List[bool]] = None, scalable_dims: Optional[List[int]] = None)
+
+.. py:function:: tensor(*shape, element_type: mlir.ir.Type = None, encoding: Optional[str] = None)
+
+.. py:function:: memref(*shape, element_type: mlir.ir.Type = None, memory_space: Optional[int] = None, layout: Optional[mlir.ir.StridedLayoutAttr] = None)
+
+.. py:function:: tuple(*elements)
+
+.. py:function:: function(*, inputs, results)
+

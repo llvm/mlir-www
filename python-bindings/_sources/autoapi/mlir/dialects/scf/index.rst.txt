@@ -1,0 +1,229 @@
+mlir.dialects.scf
+=================
+
+.. py:module:: mlir.dialects.scf
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.scf.ForOp
+   mlir.dialects.scf.ForallOp
+   mlir.dialects.scf.InParallelOp
+   mlir.dialects.scf.IfOp
+   mlir.dialects.scf.IndexSwitchOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.scf._dispatch_index_op_fold_results
+   mlir.dialects.scf.for_
+   mlir.dialects.scf.index_switch
+
+
+Module Contents
+---------------
+
+.. py:class:: ForOp(lower_bound, upper_bound, step, iter_args: Optional[Union[Operation, OpView, Sequence[Value]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`ForOp`
+
+
+   
+   Specialization for the SCF for op class.
+
+
+   .. py:property:: body
+
+      
+      Returns the body (block) of the loop.
+
+
+
+   .. py:property:: induction_variable
+
+      
+      Returns the induction variable of the loop.
+
+
+
+   .. py:property:: inner_iter_args
+
+      
+      Returns the loop-carried arguments usable within the loop.
+
+      To obtain the loop-carried operands, use ``iter_args``.
+
+
+
+.. py:function:: _dispatch_index_op_fold_results(ofrs: Sequence[Union[Operation, OpView, Value, int]]) -> Tuple[List[Value], List[int]]
+
+   
+   ``mlir::dispatchIndexOpFoldResults``
+
+
+.. py:class:: ForallOp(lower_bounds: Sequence[Union[Operation, OpView, Value, int]], upper_bounds: Sequence[Union[Operation, OpView, Value, int]], steps: Sequence[Union[Value, int]], shared_outs: Optional[Union[Operation, OpView, Sequence[Value]]] = None, *, mapping=None, loc=None, ip=None)
+
+   Bases: :py:obj:`ForallOp`
+
+
+   
+   Specialization for the SCF forall op class.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+      
+      Returns the body (block) of the loop.
+
+
+
+   .. py:property:: rank
+      :type: int
+
+
+      
+      Returns the number of induction variables the loop has.
+
+
+
+   .. py:property:: induction_variables
+      :type: BlockArgumentList
+
+
+      
+      Returns the induction variables usable within the loop.
+
+
+
+   .. py:property:: inner_iter_args
+      :type: BlockArgumentList
+
+
+      
+      Returns the loop-carried arguments usable within the loop.
+
+      To obtain the loop-carried operands, use ``iter_args``.
+
+
+
+   .. py:method:: terminator() -> InParallelOp
+
+      
+      Returns the loop terminator if it exists.
+      Otherwise, creates a new one.
+
+
+
+.. py:class:: InParallelOp(loc=None, ip=None)
+
+   Bases: :py:obj:`InParallelOp`
+
+
+   
+   Specialization of the SCF forall.in_parallel op class.
+
+
+   .. py:property:: block
+      :type: Block
+
+
+
+.. py:class:: IfOp(cond, results_=None, *, hasElse=False, loc=None, ip=None)
+
+   Bases: :py:obj:`IfOp`
+
+
+   
+   Specialization for the SCF if op class.
+
+
+   .. py:property:: then_block
+
+      
+      Returns the then block of the if operation.
+
+
+
+   .. py:property:: else_block
+
+      
+      Returns the else block of the if operation.
+
+
+
+.. py:function:: for_(start, stop=None, step=None, iter_args: Optional[Sequence[Value]] = None, *, loc=None, ip=None)
+
+.. py:class:: IndexSwitchOp(results, arg, cases, case_body_builder=None, default_body_builder=None, loc=None, ip=None)
+
+   Bases: :py:obj:`IndexSwitchOp`
+
+
+   
+   The ``scf.index_switch`` is a control-flow operation that branches to one of
+   the given regions based on the values of the argument and the cases. The
+   argument is always of type ``index``.
+
+   The operation always has a "default" region and any number of case regions
+   denoted by integer constants. Control-flow transfers to the case region
+   whose constant value equals the value of the argument. If the argument does
+   not equal any of the case values, control-flow transfer to the "default"
+   region.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = scf.index_switch %arg0 : index -> i32
+       case 2 {
+         %1 = arith.constant 10 : i32
+         scf.yield %1 : i32
+       }
+       case 5 {
+         %2 = arith.constant 20 : i32
+         scf.yield %2 : i32
+       }
+       default {
+         %3 = arith.constant 30 : i32
+         scf.yield %3 : i32
+       }
+
+
+   .. py:attribute:: __doc__
+
+
+   .. py:property:: default_region
+      :type: Region
+
+
+
+   .. py:property:: default_block
+      :type: Block
+
+
+
+   .. py:property:: case_regions
+      :type: Sequence[Region]
+
+
+
+   .. py:method:: case_region(i: int) -> Region
+
+
+   .. py:property:: case_blocks
+      :type: Sequence[Block]
+
+
+
+   .. py:method:: case_block(i: int) -> Block
+
+
+.. py:function:: index_switch(results, arg, cases, case_body_builder=None, default_body_builder=None, loc=None, ip=None) -> Union[OpResult, OpResultList, IndexSwitchOp]
+

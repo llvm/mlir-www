@@ -1,0 +1,38 @@
+mlir.dialects.transform.memref
+==============================
+
+.. py:module:: mlir.dialects.transform.memref
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.memref.MemRefAllocaToGlobalOp
+   mlir.dialects.transform.memref.MemRefMultiBufferOp
+
+
+Module Contents
+---------------
+
+.. py:class:: MemRefAllocaToGlobalOp(get_global_type: Type, global_type: Type, alloca: Union[Operation, OpView, Value], *, loc=None, ip=None)
+              MemRefAllocaToGlobalOp(alloca: Union[Operation, OpView, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`MemRefAllocaToGlobalOp`
+
+
+   
+   Specialization for MemRefAllocaToGlobalOp class.
+
+
+.. py:class:: MemRefMultiBufferOp(transformed_type: Type, target: Union[Operation, OpView, Value], factor: Union[int, IntegerAttr], *, skip_analysis: Optional[bool] = None, loc=None, ip=None)
+              MemRefMultiBufferOp(target: Union[Operation, OpView, Value], factor: Union[int, IntegerAttr], *, skip_analysis: Optional[bool] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MemRefMultiBufferOp`
+
+
+   
+   Specialization for MemRefMultiBufferOp class.
+
+

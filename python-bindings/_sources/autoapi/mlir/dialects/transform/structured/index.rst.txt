@@ -1,0 +1,187 @@
+mlir.dialects.transform.structured
+==================================
+
+.. py:module:: mlir.dialects.transform.structured
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.structured.BufferizeToAllocationOp
+   mlir.dialects.transform.structured.DecomposeOp
+   mlir.dialects.transform.structured.FuseIntoContainingOp
+   mlir.dialects.transform.structured.FuseOp
+   mlir.dialects.transform.structured.GeneralizeOp
+   mlir.dialects.transform.structured.InterchangeOp
+   mlir.dialects.transform.structured.MapCopyToThreadsOp
+   mlir.dialects.transform.structured.VectorizeOp
+   mlir.dialects.transform.structured.MatchOp
+   mlir.dialects.transform.structured.MultiTileSizesOp
+   mlir.dialects.transform.structured.PadOp
+   mlir.dialects.transform.structured.ScalarizeOp
+   mlir.dialects.transform.structured.SplitOp
+   mlir.dialects.transform.structured.TileUsingForOp
+   mlir.dialects.transform.structured.TileUsingForallOp
+   mlir.dialects.transform.structured.VectorizeChildrenAndApplyPatternsOp
+
+
+Module Contents
+---------------
+
+.. py:class:: BufferizeToAllocationOp(target: Union[Operation, OpView, Value], *, memory_space: Optional[Union[int, str, Attribute]] = None, memcpy_op: Optional[str] = None, alloc_op: Optional[str] = None, bufferize_destination_only: Optional[bool] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`BufferizeToAllocationOp`
+
+
+   
+   Specialization for BufferizeToAllocationOp class.
+
+
+.. py:class:: DecomposeOp(target: Union[Operation, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`DecomposeOp`
+
+
+   
+   Specialization for DecomposeOp class.
+
+
+.. py:class:: FuseIntoContainingOp(fused_op_type: Type, new_containing_op_type: Type, producer_op: Union[Operation, OpView, Value], containing_op: Union[Operation, OpView, Value], *, loc=None, ip=None)
+              FuseIntoContainingOp(producer_op: Union[Operation, OpView, Value], containing_op: Union[Operation, OpView, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`FuseIntoContainingOp`
+
+
+   
+   Specialization for FuseIntoContainingOp class.
+
+
+.. py:class:: FuseOp(loop_types: Union[Type, Sequence[Type]], target: Union[Operation, Value, OpView], *, tile_sizes: Optional[mlir.dialects._ods_common.MixedValues] = None, tile_interchange: Optional[mlir.dialects._ods_common.MixedValues] = None, apply_cleanup: bool = False, use_forall: bool = False, loc=None, ip=None)
+              FuseOp(target: Union[Operation, Value, OpView], *, tile_sizes: Optional[mlir.dialects._ods_common.MixedValues] = None, tile_interchange: Optional[mlir.dialects._ods_common.MixedValues] = None, apply_cleanup: bool = False, use_forall: bool = False, loc=None, ip=None)
+
+   Bases: :py:obj:`FuseOp`
+
+
+   
+   Specialization for FuseOp class.
+
+
+.. py:class:: GeneralizeOp(target: Union[Operation, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`GeneralizeOp`
+
+
+   
+   Specialization for GeneralizeOp class.
+
+
+.. py:class:: InterchangeOp(target: Union[Operation, Value], *, iterator_interchange: mlir.dialects._ods_common.OptionalIntList = None, loc=None, ip=None)
+
+   Bases: :py:obj:`InterchangeOp`
+
+
+   
+   Specialization for InterchangeOp class.
+
+
+.. py:class:: MapCopyToThreadsOp(forall_op_type: Type, tiled_op_type: Type, target: Union[Operation, OpView, Value], *, total_num_threads: Union[int, IntegerAttr], desired_bit_alignment: Union[int, IntegerAttr], loc=None, ip=None)
+              MapCopyToThreadsOp(target: Union[Operation, OpView, Value], *, total_num_threads: Union[int, IntegerAttr], desired_bit_alignment: Union[int, IntegerAttr], loc=None, ip=None)
+
+   Bases: :py:obj:`MapCopyToThreadsOp`
+
+
+   
+   Specialization for MapCopyToThreadsOp class.
+
+
+.. py:class:: VectorizeOp(target: Union[Operation, OpView, Value], vector_sizes: Optional[Union[mlir.dialects._ods_common.DynamicIndexList, ArrayAttr]] = None, *, vectorize_nd_extract: Optional[bool] = None, scalable_sizes: mlir.dialects._ods_common.OptionalBoolList = None, static_vector_sizes: mlir.dialects._ods_common.OptionalIntList = None, loc=None, ip=None)
+
+   Bases: :py:obj:`VectorizeOp`
+
+
+   
+   Specialization for VectorizeOp class.
+
+
+.. py:class:: MatchOp(results_, target, *, ops=None, interface=None, op_attrs=None, filter_result_type=None, filter_operand_types=None, loc=None, ip=None)
+
+   Bases: :py:obj:`MatchOp`
+
+
+   
+   Specialization for MatchOp class.
+
+
+   .. py:method:: match_op_names(target: Union[Operation, Value], names: Union[str, Sequence[str]], *, loc=None, ip=None)
+                  match_op_names(result_type: Type, target: Union[Operation, Value], names: Union[str, Sequence[str]], *, loc=None, ip=None)
+      :classmethod:
+
+
+
+.. py:class:: MultiTileSizesOp(result_type: Type, target: Union[Operation, Value], *, dimension: Union[int, IntegerAttr], target_size: Union[int, IntegerAttr], divisor: Optional[Optional[Union[int, IntegerAttr]]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MultiTileSizesOp`
+
+
+   
+   Specialization for MultiTileSizesOp class.
+
+
+.. py:class:: PadOp(target: Union[Operation, OpView, Value], *, pad_to_multiple_of: Optional[Union[mlir.dialects._ods_common.DynamicIndexList, ArrayAttr]] = None, padding_values: Optional[Union[ArrayAttr, Sequence[Attribute]]] = None, padding_dimensions: mlir.dialects._ods_common.OptionalIntList = None, nofold_flags: mlir.dialects._ods_common.OptionalIntList = None, transpose_paddings: Optional[Union[ArrayAttr, Sequence[Union[ArrayAttr, mlir.dialects._ods_common.IntOrAttrList]]]] = None, copy_back_op: Optional[Union[str, StringAttr]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`PadOp`
+
+
+   
+   Specialization for PadOp class.
+
+
+.. py:class:: ScalarizeOp(target: Union[Operation, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`ScalarizeOp`
+
+
+   
+   Specialization for ScalarizeOp class.
+
+
+.. py:class:: SplitOp(target: Union[Operation, Value], dimension: Union[int, Attribute], chunk_sizes: Union[int, Operation, Value, Attribute], *, loc=None, ip=None)
+
+   Bases: :py:obj:`SplitOp`
+
+
+   
+   Specialization for SplitOp class.
+
+
+.. py:class:: TileUsingForOp(loop_types: Union[Type, List[Type]], target: Union[Operation, Value], *, sizes: Optional[Union[mlir.dialects._ods_common.DynamicIndexList, ArrayAttr]] = None, interchange: mlir.dialects._ods_common.OptionalIntList = None, loc=None, ip=None)
+              TileUsingForOp(target: Union[Operation, Value, OpView], *, sizes: Optional[Union[mlir.dialects._ods_common.DynamicIndexList, ArrayAttr]] = None, interchange: mlir.dialects._ods_common.OptionalIntList = None, loc=None, ip=None)
+
+   Bases: :py:obj:`TileUsingForOp`
+
+
+   
+   Specialization for TileUsingForOp class.
+
+
+.. py:class:: TileUsingForallOp(loops_type: Type, tiled_op_type: Type, target: Union[Operation, Value, OpView], *, num_threads: Optional[mlir.dialects._ods_common.MixedValues] = None, tile_sizes: mlir.dialects._ods_common.MixedValues = None, mapping=None, loc=None, ip=None)
+              TileUsingForallOp(target: Union[Operation, Value, OpView], *, num_threads: Optional[mlir.dialects._ods_common.MixedValues] = None, tile_sizes: mlir.dialects._ods_common.MixedValues = None, mapping=None, loc=None, ip=None)
+
+   Bases: :py:obj:`TileUsingForallOp`
+
+
+   
+   Specialization for TileUsingForallOp class.
+
+
+.. py:class:: VectorizeChildrenAndApplyPatternsOp(target: Union[Operation, Value], *, disable_multi_reduction_to_contract_patterns: bool = False, disable_transfer_permutation_map_lowering_patterns: bool = False, vectorize_nd_extract: bool = False, vectorize_padding: bool = False, flatten_1d_depthwise_conv: bool = False, fold_type_extensions_into_contract: bool = False, loc=None, ip=None)
+
+   Bases: :py:obj:`VectorizeChildrenAndApplyPatternsOp`
+
+
+   
+   Specialization for VectorizeChildrenAndApplyPatternsOp class.
+
+

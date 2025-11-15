@@ -1,0 +1,46 @@
+mlir.dialects.tensor
+====================
+
+.. py:module:: mlir.dialects.tensor
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.tensor.generate
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.tensor.EmptyOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.tensor.empty
+
+
+Module Contents
+---------------
+
+.. py:class:: EmptyOp(sizes: Sequence[Union[int, Value]], element_type: Type, *, encoding: Optional[Attribute] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`EmptyOp`
+
+
+   
+   Extends the tensor.empty op.
+
+
+.. py:function:: empty(sizes: Sequence[Union[int, Value]], element_type: Type, *, encoding: Optional[Attribute] = None, loc=None, ip=None) -> mlir.dialects._ods_common._cext.ir.Value
+
+.. py:data:: generate
+

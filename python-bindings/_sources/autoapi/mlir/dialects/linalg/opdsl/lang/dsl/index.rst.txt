@@ -1,0 +1,83 @@
+mlir.dialects.linalg.opdsl.lang.dsl
+===================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.dsl
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.dsl._CONTEXT
+   mlir.dialects.linalg.opdsl.lang.dsl.StructuredOpOuts
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.dsl.DefinedOpCallable
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.dsl.bind_op_def
+   mlir.dialects.linalg.opdsl.lang.dsl.current_op_def
+   mlir.dialects.linalg.opdsl.lang.dsl._prepare_structured_op_outs
+   mlir.dialects.linalg.opdsl.lang.dsl.linalg_structured_op
+   mlir.dialects.linalg.opdsl.lang.dsl.domain
+   mlir.dialects.linalg.opdsl.lang.dsl.implements
+   mlir.dialects.linalg.opdsl.lang.dsl.defines
+
+
+Module Contents
+---------------
+
+.. py:data:: _CONTEXT
+
+.. py:data:: StructuredOpOuts
+
+.. py:function:: bind_op_def(op_def: mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef)
+
+.. py:function:: current_op_def() -> mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef
+
+.. py:function:: _prepare_structured_op_outs(outs: StructuredOpOuts) -> mlir.dialects.linalg.opdsl.lang.emitter.ValueList
+
+.. py:class:: DefinedOpCallable(op_name: str, op_def: mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef)
+
+   
+   Callable that wraps any defined op function.
+
+
+   .. py:attribute:: op_name
+
+
+   .. py:attribute:: op_def
+
+
+   .. py:method:: __call__(*ins: mlir.dialects.linalg.opdsl.lang.emitter.Union[mlir.ir.Operation, mlir.ir.OpView, mlir.ir.Value], outs: StructuredOpOuts, **kwargs)
+
+      
+      Emits the corresponding op definition as IR.
+
+      Most arguments are passed through to the underlying emitter. The following
+      keyword argument is interpreted here:
+      emit_generic: Emits a generic form as appropriate (default True). If
+      False, a named form is emitted (which must have been built in to the
+      compiler).
+
+
+
+.. py:function:: linalg_structured_op(dsl_func=None, *, op_name=None, op_class_name=None) -> DefinedOpCallable
+
+.. py:function:: domain(*dimensions: mlir.dialects.linalg.opdsl.lang.emitter.DimDef)
+
+.. py:function:: implements(*interfaces: mlir.dialects.linalg.opdsl.lang.emitter.OpInterfaceDef)
+
+.. py:function:: defines(*definitions: mlir.dialects.linalg.opdsl.lang.emitter.OpDefinitionDef)
+

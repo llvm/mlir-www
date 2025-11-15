@@ -1,0 +1,2328 @@
+mlir.dialects.transform
+=======================
+
+.. py:module:: mlir.dialects.transform
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/dialects/transform/bufferization/index
+   /autoapi/mlir/dialects/transform/debug/index
+   /autoapi/mlir/dialects/transform/extras/index
+   /autoapi/mlir/dialects/transform/gpu/index
+   /autoapi/mlir/dialects/transform/interpreter/index
+   /autoapi/mlir/dialects/transform/loop/index
+   /autoapi/mlir/dialects/transform/memref/index
+   /autoapi/mlir/dialects/transform/nvgpu/index
+   /autoapi/mlir/dialects/transform/pdl/index
+   /autoapi/mlir/dialects/transform/smt/index
+   /autoapi/mlir/dialects/transform/sparse_tensor/index
+   /autoapi/mlir/dialects/transform/structured/index
+   /autoapi/mlir/dialects/transform/tensor/index
+   /autoapi/mlir/dialects/transform/tune/index
+   /autoapi/mlir/dialects/transform/vector/index
+   /autoapi/mlir/dialects/transform/xegpu/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.transform._ods_ir
+   mlir.dialects.transform._ods_ir
+   mlir.dialects.transform.OptionValueTypes
+   mlir.dialects.transform.AnyOpTypeT
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.FailurePropagationMode
+   mlir.dialects.transform.MatchCmpIPredicate
+   mlir.dialects.transform._Dialect
+   mlir.dialects.transform.AlternativesOp
+   mlir.dialects.transform.AnnotateOp
+   mlir.dialects.transform.ApplyCanonicalizationPatternsOp
+   mlir.dialects.transform.ApplyCommonSubexpressionEliminationOp
+   mlir.dialects.transform.ApplyConversionPatternsOp
+   mlir.dialects.transform.ApplyDeadCodeEliminationOp
+   mlir.dialects.transform.ApplyLoopInvariantCodeMotionOp
+   mlir.dialects.transform.ApplyPatternsOp
+   mlir.dialects.transform.ApplyRegisteredPassOp
+   mlir.dialects.transform.ApplyToLLVMConversionPatternsOp
+   mlir.dialects.transform.CastOp
+   mlir.dialects.transform.CollectMatchingOp
+   mlir.dialects.transform.ForeachMatchOp
+   mlir.dialects.transform.ForeachOp
+   mlir.dialects.transform.GetConsumersOfResult
+   mlir.dialects.transform.GetDefiningOp
+   mlir.dialects.transform.GetOperandOp
+   mlir.dialects.transform.GetParentOp
+   mlir.dialects.transform.GetProducerOfOperand
+   mlir.dialects.transform.GetResultOp
+   mlir.dialects.transform.GetTypeOp
+   mlir.dialects.transform.IncludeOp
+   mlir.dialects.transform.MatchOperationEmptyOp
+   mlir.dialects.transform.MatchOperationNameOp
+   mlir.dialects.transform.MatchParamCmpIOp
+   mlir.dialects.transform.MergeHandlesOp
+   mlir.dialects.transform.NamedSequenceOp
+   mlir.dialects.transform.NumAssociationsOp
+   mlir.dialects.transform.ParamConstantOp
+   mlir.dialects.transform.PrintOp
+   mlir.dialects.transform.ReplicateOp
+   mlir.dialects.transform.SelectOp
+   mlir.dialects.transform.SequenceOp
+   mlir.dialects.transform.SplitHandleOp
+   mlir.dialects.transform.VerifyOp
+   mlir.dialects.transform.YieldOp
+   mlir.dialects.transform._Dialect
+   mlir.dialects.transform.CastOp
+   mlir.dialects.transform.ApplyPatternsOp
+   mlir.dialects.transform.GetParentOp
+   mlir.dialects.transform.MergeHandlesOp
+   mlir.dialects.transform.ReplicateOp
+   mlir.dialects.transform.SequenceOp
+   mlir.dialects.transform.NamedSequenceOp
+   mlir.dialects.transform.YieldOp
+   mlir.dialects.transform.ApplyRegisteredPassOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.register_attribute_builder
+   mlir.dialects.transform._failurepropagationmode
+   mlir.dialects.transform._matchcmpipredicateattr
+   mlir.dialects.transform._ods_equally_sized_accessor
+   mlir.dialects.transform._ods_get_default_loc_context
+   mlir.dialects.transform._get_op_results_or_values
+   mlir.dialects.transform._ods_segmented_accessor
+   mlir.dialects.transform.alternatives
+   mlir.dialects.transform.annotate
+   mlir.dialects.transform.apply_patterns_canonicalization
+   mlir.dialects.transform.apply_cse
+   mlir.dialects.transform.apply_conversion_patterns
+   mlir.dialects.transform.apply_dce
+   mlir.dialects.transform.apply_licm
+   mlir.dialects.transform.apply_patterns
+   mlir.dialects.transform.apply_registered_pass
+   mlir.dialects.transform.apply_conversion_patterns_dialect_to_llvm
+   mlir.dialects.transform.cast
+   mlir.dialects.transform.collect_matching
+   mlir.dialects.transform.foreach_match
+   mlir.dialects.transform.foreach
+   mlir.dialects.transform.get_consumers_of_result
+   mlir.dialects.transform.get_defining_op
+   mlir.dialects.transform.get_operand
+   mlir.dialects.transform.get_parent_op
+   mlir.dialects.transform.get_producer_of_operand
+   mlir.dialects.transform.get_result
+   mlir.dialects.transform.get_type
+   mlir.dialects.transform.include
+   mlir.dialects.transform.match_operation_empty
+   mlir.dialects.transform.match_operation_name
+   mlir.dialects.transform.match_param_cmpi
+   mlir.dialects.transform.merge_handles
+   mlir.dialects.transform.named_sequence
+   mlir.dialects.transform.num_associations
+   mlir.dialects.transform.param_constant
+   mlir.dialects.transform.print_
+   mlir.dialects.transform.replicate
+   mlir.dialects.transform.select
+   mlir.dialects.transform.sequence
+   mlir.dialects.transform.split_handle
+   mlir.dialects.transform.verify_
+   mlir.dialects.transform.yield_
+   mlir.dialects.transform._paramOperandAttr
+   mlir.dialects.transform.cast
+   mlir.dialects.transform.apply_patterns
+   mlir.dialects.transform.get_parent_op
+   mlir.dialects.transform.merge_handles
+   mlir.dialects.transform.replicate
+   mlir.dialects.transform.sequence
+   mlir.dialects.transform.named_sequence
+   mlir.dialects.transform.yield_
+   mlir.dialects.transform.apply_registered_pass
+   mlir.dialects.transform.any_op_t
+
+
+Package Contents
+----------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: FailurePropagationMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Silenceable error propagation policy
+
+
+   .. py:attribute:: Propagate
+      :value: 1
+
+
+
+   .. py:attribute:: Suppress
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _failurepropagationmode(x, context)
+
+.. py:class:: MatchCmpIPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4, 5
+
+
+   .. py:attribute:: eq
+      :value: 0
+
+
+
+   .. py:attribute:: ne
+      :value: 1
+
+
+
+   .. py:attribute:: lt
+      :value: 2
+
+
+
+   .. py:attribute:: le
+      :value: 3
+
+
+
+   .. py:attribute:: gt
+      :value: 4
+
+
+
+   .. py:attribute:: ge
+      :value: 5
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _matchcmpipredicateattr(x, context)
+
+.. py:function:: _ods_equally_sized_accessor(elements, n_simple, n_variadic, n_preceding_simple, n_preceding_variadic)
+
+   
+   Returns a starting position and a number of elements per variadic group
+   assuming equally-sized groups and the given numbers of preceding groups.
+
+   elements: a sequential container.
+   n_simple: the number of non-variadic groups in the container.
+   n_variadic: the number of variadic groups in the container.
+   n_preceding_simple: the number of non-variadic groups preceding the current
+   group.
+   n_preceding_variadic: the number of variadic groups preceding the current
+   group.
+
+
+.. py:function:: _ods_get_default_loc_context(location=None)
+
+   
+   Returns a context in which the defaulted location is created. If the location
+   is None, takes the current location from the stack.
+
+
+.. py:function:: _get_op_results_or_values(arg: Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, Sequence[Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.Value]]]) -> Union[Sequence[Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.Value]], mlir._mlir_libs._mlir.ir.OpResultList]
+
+   
+   Returns the given sequence of values or the results of the given op.
+
+   This is useful to implement op constructors so that they can take other ops as
+   lists of arguments instead of requiring the caller to extract results for
+   every op.
+
+
+.. py:function:: _ods_segmented_accessor(elements, raw_segments, idx)
+
+   
+   Returns a slice of elements corresponding to the idx-th segment.
+
+   elements: a sliceable container (operands or results).
+   raw_segments: an mlir.ir.Attribute, of DenseI32Array subclass containing
+   sizes of the segments.
+   idx: index of the segment.
+
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'transform'
+
+
+
+.. py:class:: AlternativesOp(results_, num_alternatives, *, scope=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op may have an arbitrary number of regions, each of which represents a
+   sequence of transform operations to be applied to the same payload IR. The
+   regions are visited in order of appearance, and transforms in them are
+   applied in their respective order of appearance. If one of these transforms
+   fails to apply, the remaining ops in the same region are skipped an the next
+   region is attempted. If all transformations in a region succeed, the
+   remaining regions are skipped and the entire "alternatives" transformation
+   succeeds. If all regions contained a failing transformation, the entire
+   "alternatives" transformation fails.
+
+   It is up to the nested operations to define which errors are "recoverable"
+   (or "silenceable") and allow another alternatives to be attempted, and which
+   errors should be propagated without attempting the other alternatives.
+
+   The single operand of this operation is the scope in which the alternative
+   transformation sequences are attempted, that is, an operation in the payload
+   IR that contains all the other operations that may be modified by the
+   transformations. The scope operation must be isolated from above. There is
+   no check that the transforms are indeed scoped as their "apply" methods can
+   be arbitrarily complex. Therefore it is the responsibility of the user to
+   ensure that the transforms are scoped correctly, or to produce an
+   irrecoverable error and thus abort the execution without attempting the
+   remaining alternatives. Note that the payload IR outside of the given scope
+   is not necessarily in the valid state, or even accessible to the
+   transformation.
+
+   The changes to the IR within the scope performed by transforms in the failed
+   alternative region are reverted before attempting the next region.
+   Practically, this is achieved by cloning the scope. Therefore it is advised
+   to limit the scope as much as possible and place the most likely
+   alternatives early in the region list. The operation is also isolated from
+   above and requires rediscovering the operations within the given scope to
+   avoid additional handle invalidation. The latter restriction may be lifted
+   in the future.
+
+   Each of the regions may yield transform IR handles. The handles of the first
+   successful alternative region are returned as the results of the
+   "alternatives" op. Therefore, each alternative region must yield the same
+   number of results, which should also match the number and the types of the
+   "alternatives" op results.
+
+   Remark: this op allows one to implement a simple "try" construct as follows:
+
+   .. code:: mlir
+
+       %result = transform.alternatives %scope {
+       ^bb0(%arg0: !transform.any_op):
+         // Try a fallible transformation.
+         %0 = transform.fallible %arg0 // ...
+         // If succeeded, yield the the result of the transformation.
+         transform.yield %0 : !transform.any_op
+       }, {
+       ^bb0(%arg0: !transform.any_op):
+         // Otherwise, the second alternative is tried and it always succeeds by
+         // returning the original handle.
+         transform.yield %arg0 : !transform.any_op
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.alternatives'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, False)
+
+
+
+   .. py:method:: scope() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: alternatives() -> _ods_ir
+
+
+.. py:function:: alternatives(results_, num_alternatives, *, scope=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, AlternativesOp]
+
+.. py:class:: AnnotateOp(target, name, *, param=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Adds an attribute with the given ``name`` to the ``target`` operation. An
+   optional ``param`` handle can be provided to give the attribute a specific
+   value, else a UnitAttr is added. A single attribute will be broadcasted to
+   all target operations, otherwise the attributes will be mapped 1:1 based on
+   the order within the handles.
+
+   Produces a silenceable failure if the length of the parameter payload does
+   not match the length of the target payload. Does not consume the provided
+   handles.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.annotate'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+.. py:function:: annotate(target, name, *, param=None, loc=None, ip=None) -> AnnotateOp
+
+.. py:class:: ApplyCanonicalizationPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op populates all canonicalization patterns of all loaded dialects in
+   an ``apply_patterns`` transform.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.canonicalization'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_canonicalization(*, loc=None, ip=None) -> ApplyCanonicalizationPatternsOp
+
+.. py:class:: ApplyCommonSubexpressionEliminationOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform applies common subexpression elimination (CSE) to the body
+   of the targeted op.
+
+   This transform reads the target handle and modifies the payload. Existing
+   handles to operations inside of the targeted op are retained and updated if
+   necessary. Note that this can lead to situations where a handle, that was
+   previously mapped to multiple distinct (but equivalent) operations, is now
+   mapped to the same operation multiple times.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_cse'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: apply_cse(target, *, loc=None, ip=None) -> ApplyCommonSubexpressionEliminationOp
+
+.. py:class:: ApplyConversionPatternsOp(target, num_default_type_converter_region, *, legal_ops=None, illegal_ops=None, legal_dialects=None, illegal_dialects=None, partial_conversion=None, preserve_handles=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform applies the specified conversion patterns to the targeted op
+   and all nested ops. By default, this transform applies a "full" dialect
+   conversion. If the ``partial_conversion`` unit attribute is present, this
+   transform applies a partial dialect conversion.
+
+   The patterns that should be applied are specified in the first graph region
+   of this op. They must implement the
+   ``ConversionPatternDescriptorOpInterface``. The order in which patterns are
+   applied is unspecified; i.e., the ordering of ops in the region of this op
+   is irrelevant.
+
+   The second, optional graph region contains exactly one op that specifies
+   default type converter that should be used with this dialect conversion. If
+   provided, this op must implement the ``TypeConverterBuilderOpInterface``.
+   Type converters are a property of conversion patterns: each conversion
+   pattern stores the type converter that should be used in its C++ class. Each
+   conversion pattern descriptor can optionally specify a type converter in its
+   ``getTypeConverter`` interface method. If no type converter is specified in
+   this method, the default type converter of the dialect conversion is used.
+   Default type converters are useful if the same type converter should be used
+   for multiple sets of conversion patterns. (Patterns that should not use this
+   default type converter specify their own type converter.)
+
+   The ``legal_ops``, ``illegal_ops``, ``legal_dialects``, ``illegal_dialects``
+   attributes specify the conversion target.
+
+   This transform modifies the payload. By default, it consumes the ``target``
+   handle. It does not produce any handles.
+
+   If the ``preserve_handles`` attribute is set, this transform does not consume
+   the ``target`` handle and instead updates handles based on notifications from
+   a tracking listener that is attached to the dialect conversion, similar to
+   ``transform.apply_patterns``. Only replacements via ``RewriterBase::replaceOp``
+   or ``replaceOpWithNewOp`` are considered "payload op replacements". In
+   contrast to ``transform.apply_patterns``, we allow replacement ops even if the
+   op name has changed. This is because conversion patterns are expected to
+   lower ops to different ops (from a different dialect). More details can be
+   found at the documentation site of ``TrackingListener``.
+
+   This transform produces a silenceable failure if the dialect conversion was
+   unsuccessful or the tracking listener failed to find a replacement op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, False)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: legal_ops() -> Optional[_ods_ir]
+
+
+   .. py:method:: illegal_ops() -> Optional[_ods_ir]
+
+
+   .. py:method:: legal_dialects() -> Optional[_ods_ir]
+
+
+   .. py:method:: illegal_dialects() -> Optional[_ods_ir]
+
+
+   .. py:method:: partial_conversion() -> bool
+
+
+   .. py:method:: preserve_handles() -> bool
+
+
+   .. py:method:: patterns() -> _ods_ir
+
+
+   .. py:method:: default_type_converter_region() -> _ods_ir
+
+
+.. py:function:: apply_conversion_patterns(target, num_default_type_converter_region, *, legal_ops=None, illegal_ops=None, legal_dialects=None, illegal_dialects=None, partial_conversion=None, preserve_handles=None, loc=None, ip=None) -> ApplyConversionPatternsOp
+
+.. py:class:: ApplyDeadCodeEliminationOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform applies dead code elimination (DCE) to the body of the
+   targeted op.
+
+   Note: "transform.apply_patterns" with an empty region can also be used to
+   remove dead ops. However, that op applies additional simplifications such as
+   op folding and region simplification.
+
+   This transform reads the target handle and modifies the payload. Note that
+   this transform may silently remove payload ops from handles.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_dce'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: apply_dce(target, *, loc=None, ip=None) -> ApplyDeadCodeEliminationOp
+
+.. py:class:: ApplyLoopInvariantCodeMotionOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform moves side-effect free, loop invariant code out of the
+   targeted loop-like op. The targeted op must implement the
+   ``LoopLikeOpInterface``.
+
+   Note: To move invariant ops from a loop nest, this transform must be applied
+   to each loop of the loop nest, starting with the inner-most loop.
+
+   This transform reads the target handle and modifies the payload.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_licm'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: apply_licm(target, *, loc=None, ip=None) -> ApplyLoopInvariantCodeMotionOp
+
+.. py:class:: ApplyPatternsOp(target, *, apply_cse=None, max_iterations=None, max_num_rewrites=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform greedily applies the specified patterns to the body of the
+   targeted op until a fixpoint was reached. Patterns are not applied to the
+   targeted op itself.
+
+   The patterns that should be applied are specified in the graph region of
+   this op. They must implement the ``PatternDescriptorOpInterface``. The order
+   in which patterns are applied is unspecified; i.e., the ordering of ops in
+   the region of this op is irrelevant.
+
+   If ``apple_cse`` is set, the greedy pattern rewrite is interleaved with
+   common subexpression elimination (CSE): both are repeated until a fixpoint
+   is reached.
+
+   This transform only reads the target handle and modifies the payload. If a
+   pattern erases or replaces a tracked op, the mapping is updated accordingly.
+
+   Only replacements via ``RewriterBase::replaceOp`` or ``replaceOpWithNewOp`` are
+   considered "payload op replacements". Furthermore, only if the replacement
+   values are defined by the same op and that op has the same type as the
+   original op, the mapping is updated. Otherwise, this transform produces a
+   silenceable failure. More details can be found at the documentation site of
+   ``TrackingListener``.
+
+   This transform also produces a silenceable failure if the pattern
+   application did not converge within the default number of
+   iterations/rewrites of the greedy pattern rewrite driver.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: apply_cse() -> bool
+
+
+   .. py:method:: max_iterations() -> _ods_ir
+
+
+   .. py:method:: max_num_rewrites() -> _ods_ir
+
+
+   .. py:method:: patterns() -> _ods_ir
+
+
+.. py:function:: apply_patterns(target, *, apply_cse=None, max_iterations=None, max_num_rewrites=None, loc=None, ip=None) -> ApplyPatternsOp
+
+.. py:class:: ApplyRegisteredPassOp(result, target, pass_name, dynamic_options, *, options=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform applies the specified pass or pass pipeline to the targeted
+   ops. The name of the pass/pipeline is specified as a string attribute, as
+   set during pass/pipeline registration.
+
+   Optionally, pass options may be specified via a DictionaryAttr. This
+   dictionary is converted to a string -- formatted ``key=value ...`` -- which
+   is expected to be in the exact format used by the pass on the commandline.
+   Values are either attributes or (SSA-values of) Transform Dialect params.
+   For example:
+
+   .. code:: mlir
+
+       transform.apply_registered_pass "canonicalize"
+           with options = { "top-down" = false,
+                            "max-iterations" = %max_iter,
+                            "test-convergence" = true,
+                            "max-num-rewrites" = %max_rewrites }
+           to %module
+       : (!transform.any_param, !transform.any_param, !transform.any_op) -> !transform.any_op
+
+   Options' values which are ``ArrayAttr``s are converted to comma-separated
+   lists of options. Likewise for params which associate multiple values.
+
+   This op first looks for a pass pipeline with the specified name. If no such
+   pipeline exists, it looks for a pass with the specified name. If no such
+   pass exists either, this op fails definitely.
+
+   This transform consumes the target handle and produces a new handle that is
+   mapped to the same op. Passes are not allowed to remove/modify the operation
+   that they operate on, so the target op is guaranteed to still exist. The
+   target handle is invalidated because a pass may arbitrarily modify the body
+   of targeted ops.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_registered_pass'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: dynamic_options() -> _ods_ir
+
+
+   .. py:method:: pass_name() -> _ods_ir
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: apply_registered_pass(result, target, pass_name, dynamic_options, *, options=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ApplyToLLVMConversionPatternsOp(dialect_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns that convert ops from the specified dialect to LLVM
+   dialect ops. These patterns require an "LLVMTypeConverter".
+
+   Note: Only dialects that implement the ``ConvertToLLVMPatternInterface`` are
+   supported. Any conversion target modifications by interface implementations
+   are currently ignored. The conversion target is fully specified by the
+   enclosing "apply_conversion_patterns" op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.dialect_to_llvm'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: dialect_name() -> _ods_ir
+
+
+.. py:function:: apply_conversion_patterns_dialect_to_llvm(dialect_name, *, loc=None, ip=None) -> ApplyToLLVMConversionPatternsOp
+
+.. py:class:: CastOp(output, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:function:: cast(output, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CollectMatchingOp(results_, root, matcher, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects operations or other payload IR objects nested under ``root``
+   (inclusive) that match the given matcher expressed as a named sequence. The
+   matcher sequence must accept exactly one argument that it is not allowed to
+   modify. It must yield as many values as this op has results. Each of the
+   yielded values must be associated with exactly one payload object. If any
+   operation in the matcher sequence produces a silenceable failure, the
+   matcher advances to the next payload operation in the walk order without
+   finishing the sequence.
+
+   The i-th result of this operation is constructed by concatenating the i-th
+   yielded payload IR objects of all successful matcher sequence applications.
+   All results are guaranteed to be mapped to the same number of payload IR
+   objects.
+
+   The operation succeeds unless the matcher sequence produced a definite
+   failure for any invocation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.collect_matching'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: root() -> _ods_ir
+
+
+   .. py:method:: matcher() -> _ods_ir
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+.. py:function:: collect_matching(results_, root, matcher, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CollectMatchingOp]
+
+.. py:class:: ForeachMatchOp(updated, forwarded_outputs, root, forwarded_inputs, matchers, actions, *, restrict_root=None, flatten_results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given a pair of co-indexed lists of transform dialect symbols (such as
+   ``transform.named_sequence``), walks the payload IR associated with the root
+   handle and interprets the symbols as matcher/action pairs by applying the
+   body of the corresponding symbol definition. The symbol from the first list
+   is the matcher part: if it results in a silenceable error, the error is
+   silenced and the next matcher is attempted. Definite failures from any
+   matcher stop the application immediately and are propagated unconditionally.
+   If none of the matchers succeeds, the next payload operation in walk order
+   (post-order at the moment of writing, double check ``Operation::walk``) is
+   matched. If a matcher succeeds, the co-indexed action symbol is applied and
+   the following matchers are not applied to the same payload operation. If the
+   action succeeds, the next payload operation in walk order is matched. If it
+   fails, both silenceable and definite errors are propagated as the result of
+   this op; propagation of silenceable errors is postponed until the end of the
+   walk.
+
+   The matcher symbol must take at least one operand of a type that implements
+   the same transform dialect interface as the ``root`` operand (a check is
+   performed at application time to see if the associated payload satisfies the
+   constraints of the actual type), and may take additional operands with a
+   similar type requirement. It must not consume operands as multiple matchers
+   may be applied. The matcher may produce any number of results. The action
+   symbol paired with the matcher must take the same number of arguments as the
+   matcher has results, and these arguments must implement the same transform
+   dialect interfaces, but not necessarily have the exact same type (again, a
+   check is performed at application time to see if the associated payload
+   satisfies the constraints of actual types on both sides).
+
+   The action symbol may have results that are accumulated from all actions and
+   returned from the ``foreach_match`` operation on success. Unless the
+   ``flatten_results`` attribute is present, each action result must be
+   associated with exactly one payload entity. The actions are expected to only
+   modify payload operations nested in the ``root`` payload operations associated
+   with the operand of this transform operation. Furthermore, the actions may
+   not modify operations outside of the currently matched payload operation,
+   e.g., they may not modify sibling or parent operations. If such behavior is
+   desired, the parent must be matched first and the nested operations obtained
+   by traversing the IR from the parent. This is due to the matching being
+   performed as a post-order IR walk.
+
+   This operation consumes the operand and produces a new handle associated
+   with the same payload. This is necessary to trigger invalidation of handles
+   to any of the payload operations nested in the payload operations associated
+   with the operand, as those are likely to be modified by actions.
+
+   By default, the root payload operation associated with the operand is not
+   matched. This is to support the conservative case where applied actions may
+   invalidate the root payload operation. If the optional ``restrict_root``
+   attribute is set, the root operand is guaranteed to not be invalidated by any
+   of the applied actions. In such cases, the root payload operation is also
+   matched. This is useful because matching the root payload operation is a
+   common idiom, when e.g. matching a func.func directly and operations nested
+   under it.
+
+   The operation succeeds if none of the matchers produced a definite failure
+   during application and if all of the applied actions produced success. Note
+   that it also succeeds if all the matchers failed on all payload operations,
+   i.e. failure to apply is not an error. The operation produces a silenceable
+   failure if any applied action produced a silenceable failure. In this case,
+   the resulting handle is associated with an empty payload. The operation
+   produces a definite failure if any of the applied matchers or actions
+   produced a definite failure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.foreach_match'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: root() -> _ods_ir
+
+
+   .. py:method:: forwarded_inputs() -> _ods_ir
+
+
+   .. py:method:: restrict_root() -> bool
+
+
+   .. py:method:: flatten_results() -> bool
+
+
+   .. py:method:: matchers() -> _ods_ir
+
+
+   .. py:method:: actions() -> _ods_ir
+
+
+   .. py:method:: updated() -> _ods_ir
+
+
+   .. py:method:: forwarded_outputs() -> _ods_ir
+
+
+.. py:function:: foreach_match(updated, forwarded_outputs, root, forwarded_inputs, matchers, actions, *, restrict_root=None, flatten_results=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ForeachMatchOp]
+
+.. py:class:: ForeachOp(results_, targets, *, with_zip_shortest=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Execute the op's body - its single region block - exactly once per
+   element of the payload associated to a target handle. The body's
+   transformations are applied in order of appearance until reaching the
+   (implicit) YieldOp terminator.
+
+   Each iteration gets executed by co-indexing the payloads of the arguments
+   and mapping the body's arguments to these tuples, as though iterating over
+   the zipped together ``targets``. As such, in each iteration, the size of the
+   payload of each of the body's block arguments is exactly one. The attribute
+   ``zip_shortest`` can be used if the targets vary in their number of payloads;
+   this will limit the iterations to only the number of payloads found in the
+   shortest target.
+
+   This op always reads the target handles. Furthermore, it consumes a handle
+   if there is a transform op in the body that consumes the corresponding
+   block argument. Handles can point to ops, values, or parameters.
+
+   Return Modes
+   ------------
+
+   This op produces as many result handles as the body's terminating YieldOp
+   has operands. For each result, the payloads of the corresponding YieldOp
+   operand are merged and mapped to the same resulting handle.
+
+   If the target handles do not associate payloads of the same size, a
+   silencable failure will be generated.
+
+   During application, if any transformation in the sequence fails, the entire
+   sequence fails immediately with the same failure, leaving the payload IR in
+   a potentially invalid state, i.e., this operation offers no transformation
+   rollback capabilities.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.foreach'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: targets() -> _ods_ir
+
+
+   .. py:method:: with_zip_shortest() -> bool
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: foreach(results_, targets, *, with_zip_shortest=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ForeachOp]
+
+.. py:class:: GetConsumersOfResult(consumers, target, result_number, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to all operations that
+   consume the SSA value defined by the ``target`` and ``result_number``
+   arguments.
+   This operation applies to a single payload operation, otherwise it produces
+   a definite failure.
+   The return handle points to the consuming operations operations, which can
+   be empty.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_consumers_of_result'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: result_number() -> _ods_ir
+
+
+   .. py:method:: consumers() -> _ods_ir
+
+
+.. py:function:: get_consumers_of_result(consumers, target, result_number, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetDefiningOp(result, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to the defining op of
+   the targeted value.
+
+   This transform produces a silenceable failure if the targeted value is a
+   block argument.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_defining_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_defining_op(result, target, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetOperandOp(result, target, raw_position_list, *, is_inverted=None, is_all=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to the operands of the
+   given ``target`` operation specified by the given set of positions. There are
+   three possible modes:
+
+   * Position list directly, i.e. ``%target[0, 1, 2]``. This will return the
+   operands at the specified positions.
+   * Inverted position list, i.e. ``%target[except(0, 1, 2)]``. This will return
+   all operands except those at the given positions.
+   * All, i.e. ``%target[all]``. This will return all operands of the operation.
+
+   This transform produces a silenceable failure if any of the operand indices
+   exceeds the number of operands in the target. It reads the target handle and
+   produces the result handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_operand'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: raw_position_list() -> _ods_ir
+
+
+   .. py:method:: is_inverted() -> bool
+
+
+   .. py:method:: is_all() -> bool
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_operand(result, target, raw_position_list, *, is_inverted=None, is_all=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetParentOp(parent, target, *, isolated_from_above=None, allow_empty_results=None, op_name=None, deduplicate=None, nth_parent=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to the parents of the
+   targeted payload ops (in the same order).
+
+   Requirements that parent ops must fulfill can be optionally specified. In
+   that case for each target op, the closest parent op that fulfills all
+   requirements, is returned.
+
+   * ``isolated_from_above``: the parent op must be isolated from above
+   * ``allow_empty_results``: get_parent_op is allowed to return an empty list
+   and still succeeds. In such a case, if ``get_parent_op`` fails for any
+   operation in the list, the entire transform returns an empty handle.
+   * ``op_name``: the parent op must have the specified name
+   * ``nth_parent``: get the n-th parent of that satisfies the above requirements
+
+   If ``deduplicate`` is set, the result handle does not contain any duplicate
+   ops. For example, given the list
+   "(childof(A), childof(B), childof(B), childof(A), childof(B))", the
+   resulting list will be just "(A, B)". Note that no other semantic ordering
+   is applied, e.g., "B" may itself be a parent of "A". This may have an impact
+   on the further transformation applied to the handle produced here.
+
+   If any of the given Payload IR ops has no such suitable parent, then:
+
+   * if ``allow_empty_results`` is set, the result handle is empty
+   * otherwise, the transformation produces a silenceable failure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_parent_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: isolated_from_above() -> bool
+
+
+   .. py:method:: allow_empty_results() -> bool
+
+
+   .. py:method:: op_name() -> Optional[_ods_ir]
+
+
+   .. py:method:: deduplicate() -> bool
+
+
+   .. py:method:: nth_parent() -> _ods_ir
+
+
+   .. py:method:: parent() -> _ods_ir
+
+      
+      Returns the parent operation, or ``None`` if at top level.
+
+
+
+.. py:function:: get_parent_op(parent, target, *, isolated_from_above=None, allow_empty_results=None, op_name=None, deduplicate=None, nth_parent=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetProducerOfOperand(producer, target, operand_number, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to operation that
+   produces the SSA value defined by the ``target`` and ``operand_number``
+   arguments. If the origin of the SSA value is not an operations (i.e. it is
+   a block argument), the transform produces a silenceable failure.
+   The return handle points to only the subset of successfully produced
+   computational operations, which can be empty.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_producer_of_operand'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: operand_number() -> _ods_ir
+
+
+   .. py:method:: producer() -> _ods_ir
+
+
+.. py:function:: get_producer_of_operand(producer, target, operand_number, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetResultOp(result, target, raw_position_list, *, is_inverted=None, is_all=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op correspond to the OpResults of the
+   given ``target`` operation. Optionally ``result_number`` can be specified to
+   select a specific result.
+
+   This transform fails silently if the targeted operation does not have enough
+   results. It reads the target handle and produces the result handle.
+
+   The handle defined by this Transform op corresponds to the results of the
+   given ``target`` operation specified by the given set of positions. There are
+   three possible modes:
+
+   * Position list directly, i.e. ``%target[0, 1, 2]``. This will return the
+   results at the specified positions.
+   * Inverted position list, i.e. ``%target[except(0, 1, 2)]``. This will return
+   all results except those at the given positions.
+   * All, i.e. ``%target[all]``. This will return all results of the operation.
+
+   This transform produces a silenceable failure if any of the result indices
+   exceeds the number of results returned by the target. It reads the target
+   handle and produces the result handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_result'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: raw_position_list() -> _ods_ir
+
+
+   .. py:method:: is_inverted() -> bool
+
+
+   .. py:method:: is_all() -> bool
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_result(result, target, raw_position_list, *, is_inverted=None, is_all=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetTypeOp(type_param, value, *, elemental=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation creates a new Transform parameter containing the
+   type(s) of the value(s) associated with the operand handle.
+
+   This transform never fails.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.get_type'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: elemental() -> bool
+
+
+   .. py:method:: type_param() -> _ods_ir
+
+
+.. py:function:: get_type(type_param, value, *, elemental=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IncludeOp(results_, target, failure_propagation_mode, operands_, *, arg_attrs=None, res_attrs=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The application of this transform operation is equivalent to applying the
+   operations contained in the named transform sequence with operands being
+   remapped to block arguments. The behavior of the operation when a
+   transformation in the included named sequence produces a silenceable error
+   is controlled by the ``failure_propagation_mode`` attribute. When set to
+   ``propagate``, the failure of any nested transformation in the sequence
+   implies immediate failure of the entire sequence with a silenceable error,
+   and no further transformation is attempted. When set to ``suppress``,
+   silenceable errors in nested operations are ignored and further
+   transformations are applied. Beware that even silenceable errors may leave
+   the payload IR in a state unsuitable for further transformations. It is the
+   responsibility of the user to ensure the following transformations are
+   robust enough when errors are suppressed. Definite errors are propagated
+   immediately regardless of the mode. The objects associated with the results
+   of this operation are the same as those associated with the operands of the
+   ``transform.yield`` in the referenced named sequence.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.include'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: failure_propagation_mode() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+.. py:function:: include(results_, target, failure_propagation_mode, operands_, *, arg_attrs=None, res_attrs=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, IncludeOp]
+
+.. py:class:: MatchOperationEmptyOp(operand_handle, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Succeeds if the handle is not associated to any op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.match.operation_empty'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand_handle() -> _ods_ir
+
+
+.. py:function:: match_operation_empty(operand_handle, *, loc=None, ip=None) -> MatchOperationEmptyOp
+
+.. py:class:: MatchOperationNameOp(operand_handle, op_names, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Succeeds if the operation associated with the operand handle has one of the
+   given operation names. Produces a silenceable failure otherwise.
+
+   If more than one payload operation is associated with the operand handle,
+   produces a definite failure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.match.operation_name'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand_handle() -> _ods_ir
+
+
+   .. py:method:: op_names() -> _ods_ir
+
+
+.. py:function:: match_operation_name(operand_handle, op_names, *, loc=None, ip=None) -> MatchOperationNameOp
+
+.. py:class:: MatchParamCmpIOp(param, reference, predicate, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Succeeds if all of the co-indexed values associated with the given
+   parameters relate as specified by the predicate (greater than, less than,
+   equal to, or their combinations). Comparison treats all values as signed.
+   Produces a silenceable failure otherwise.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.match.param.cmpi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+   .. py:method:: reference() -> _ods_ir
+
+
+   .. py:method:: predicate() -> _ods_ir
+
+
+.. py:function:: match_param_cmpi(param, reference, predicate, *, loc=None, ip=None) -> MatchParamCmpIOp
+
+.. py:class:: MergeHandlesOp(handles, *, deduplicate=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Creates a new Transform IR handle value that points to the same Payload IR
+   operations/values/parameters as the operand handles. The Payload IR elements
+   are listed in the same order as they are in the operand handles, grouped by
+   operand handle, e.g., all Payload IR associated with the first handle comes
+   first, then all Payload IR associated with the second handle and so on. If
+   ``deduplicate`` is set, do not add the given Payload IR operation, value, or
+   parameter more than once to the final list regardless of it coming from the
+   same or different handles. Consumes the operands and produces a new handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.merge_handles'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handles() -> _ods_ir
+
+
+   .. py:method:: deduplicate() -> bool
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: merge_handles(handles, *, deduplicate=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: NamedSequenceOp(sym_name, function_type, *, sym_visibility=None, arg_attrs=None, res_attrs=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Defines a named (callable, function-like) sequence of other Transform
+   dialect operations that can be included using ``transform.include`` as part of
+   another Transform dialect construct. This sequence is not processed
+   immediately but rather dispatched to when the inclusion is processed. The
+   arguments and results can be used to communicate a subset of mapping into
+   the named sequence. The sequence must consist of a single block and end with
+   a ``transform.yield`` terminator. The operands of the terminator become the
+   results of the ``transform.include``.
+
+   When dispatched to, the operations in the named sequence are executed one by
+   one, similarly to the regular unnamed sequence. The failure propagation mode
+   is specified on the ``transform.include``. Different inclusions may use
+   different failure propagation modes. This transform operation always
+   succeeds by itself, but the inclusion may fail if any of the operations
+   fail.
+
+   Named sequences can only appear at the top-level of the Transform dialect
+   nesting structure. That is, they cannot be nested in other Transform dialect
+   operations. Furthermore, one of the ancestors must have the ``SymbolTable``
+   trait and have the ``transform.with_named_sequence`` attribute attached.
+
+   Named sequences may include other named sequences via ``transform.include``,
+   but recursion is *not* allowed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.named_sequence'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: named_sequence(sym_name, function_type, *, sym_visibility=None, arg_attrs=None, res_attrs=None, loc=None, ip=None) -> NamedSequenceOp
+
+.. py:class:: NumAssociationsOp(num, handle, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given an argument, handle or parameter, returns a new parameter associated
+   with a single 64-bit number that corresponds to the number of payload
+   objects (operations or values for a handle, attributes for a parameter)
+   associated with the argument.
+
+   Always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.num_associations'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+   .. py:method:: num() -> _ods_ir
+
+
+.. py:function:: num_associations(num, handle, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ParamConstantOp(param, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Produces a new transform dialect parameter associated with the singleton
+   list containing the given attribute. The operation itself always succeeds,
+   but the general association check may fail if the parameter type does not
+   accept the given kind of attribute as valid.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.param.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+.. py:function:: param_constant(param, value, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PrintOp(*, target=None, name=None, assume_verified=None, use_local_scope=None, skip_regions=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Prints each payload op that is associated with the ``target`` operand to
+   ``stdout``. It also prints the ``name`` string attribute. If no target is
+   specified, the top-level op is dumped.
+
+   This op is useful for printf-style debugging.
+
+   Supported printing flag attributes:
+
+   * ``assume_verified`` -- skips verification when the unit attribute is
+   specified. This improves performace but may lead to crashes and
+   unexpected behavior when the printed payload op is invalid.
+   * ``use_local_scope`` -- prints in local scope when the unit attribute is
+   specified. This improves performance but may not be identical to
+   printing within the full module.
+   * ``skip_regions`` -- does not print regions of operations when the unit
+   attribute is specified.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.print'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: assume_verified() -> bool
+
+
+   .. py:method:: use_local_scope() -> bool
+
+
+   .. py:method:: skip_regions() -> bool
+
+
+.. py:function:: print_(*, target=None, name=None, assume_verified=None, use_local_scope=None, skip_regions=None, loc=None, ip=None) -> PrintOp
+
+.. py:class:: ReplicateOp(replicated, pattern, handles, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Produces a new handle associated with a list of payload IR ops that is
+   computed by repeating the list of payload IR ops associated with the
+   operand handle as many times as the "pattern" handle has associated
+   operations. For example, if pattern is associated with [op1, op2] and the
+   operand handle is associated with [op3, op4, op5], the resulting handle
+   will be associated with [op3, op4, op5, op3, op4, op5].
+
+   This transformation is useful to "align" the sizes of payload IR lists
+   before a transformation that expects, e.g., identically-sized lists. For
+   example, a transformation may be parameterized by same notional per-target
+   size computed at runtime and supplied as another handle, the replication
+   allows this size to be computed only once and used for every target instead
+   of replicating the computation itself.
+
+   Note that it is undesirable to pass a handle with duplicate operations to
+   an operation that consumes the handle. Handle consumption often indicates
+   that the associated payload IR ops are destroyed, so having the same op
+   listed more than once will lead to double-free. Single-operand
+   MergeHandlesOp may be used to deduplicate the associated list of payload IR
+   ops when necessary. Furthermore, a combination of ReplicateOp and
+   MergeHandlesOp can be used to construct arbitrary lists with repetitions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.replicate'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: pattern() -> _ods_ir
+
+
+   .. py:method:: handles() -> _ods_ir
+
+
+   .. py:method:: replicated() -> _ods_ir
+
+
+.. py:function:: replicate(replicated, pattern, handles, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ReplicateOp]
+
+.. py:class:: SelectOp(result, target, op_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The handle defined by this Transform op corresponds to all operations among
+   ``target`` that have the specified properties. Currently the following
+   properties are supported:
+
+   * ``op_name``: The op must have the specified name.
+
+   The result payload ops are in the same relative order as the targeted ops.
+   This transform op reads the ``target`` handle and produces the ``result``
+   handle. It reads the payload, but does not modify it.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.select'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: op_name() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: select(result, target, op_name, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SequenceOp(results_, failure_propagation_mode, extra_bindings, *, root=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The transformations indicated by the sequence are applied in order of their
+   appearance. Each value produced by a transformation within the sequence
+   corresponds to a group of operations or values in the payload IR, or to a
+   group of parameters, depending on the type of the value. The behavior of the
+   operation when a nested transformation produces a silenceable error is
+   controlled by the ``failure_propagation_mode`` attribute. When set to
+   ``propagate``, the failure of any nested transformation in the sequence
+   implies immediate failure of the entire sequence with a silenceable error,
+   and no further transformation is attempted. When set to ``suppress``,
+   silenceable errors in nested operations are ignored and further
+   transformations are applied. Beware that even silenceable errors may leave
+   the payload IR in a state unsuitable for further transformations. It is the
+   responsibility of the caller to ensure the following transformations are
+   robust enough when errors are suppressed. Definite errors reported by nested
+   transformations abort the sequence regardless of the propagation mode. The
+   set of modes may be extended in the future, e.g., to collect silenceable
+   errors and report them after attempting all transformations in the sequence.
+
+   The entry block of this operation has a single argument that maps to either
+   the operand if provided or the top-level container operation of the payload
+   IR, typically the root operation of the pass interpreting the transform
+   dialect. Operand omission is only allowed for sequences not contained in
+   another sequence.
+
+   The type of the block argument must match the type of the operand. If the
+   sequence is a top-level transform (without an operand), it can be used for
+   matching operations if the specified type within the top-level container
+   payload IR (including the container op itself). E.g.:
+
+   .. code:: mlir
+
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.any_op):
+         // %arg1 is mapped to the top-level container of the payload IR, which is
+         // typically a module
+       }
+       
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.op<"func.func>"):
+         // %arg1 is mapped to all "func.func" ops within and including the
+         // top-level container of the payload IR. Nested operations that have the
+         // specified op type are not included.
+       }
+
+   The body of the sequence terminates with an implicit or explicit
+   ``transform.yield`` op. The operands of the terminator are returned as the
+   results of the sequence op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.sequence'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: root() -> Optional[_ods_ir]
+
+
+   .. py:method:: extra_bindings() -> _ods_ir
+
+
+   .. py:method:: failure_propagation_mode() -> _ods_ir
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: sequence(results_, failure_propagation_mode, extra_bindings, *, root=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SequenceOp]
+
+.. py:class:: SplitHandleOp(results_, handle, *, pass_through_empty_handle=None, fail_on_payload_too_small=None, overflow_result=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Splits ``handle`` into one or multiple handles, as specified by the number
+   of results of this operation. ``handle`` should be mapped to as many payload
+   ops, values or parameteres as there are results. Otherwise, this transform
+   will fail producing a silenceable failure by default. Each result handle
+   is mapped to exactly one payload unless specified otherwise by attributes
+   described below. The order of the payloads is preserved,  i.e., the i-th
+   payload is mapped to the i-th result handle.
+
+   This operation is useful for ensuring a statically known number of
+   payloads are tracked by the source ``handle`` and to extract them into
+   individual handles that can be further manipulated in isolation.
+
+   If there are more payloads than results, the remaining payloads are mapped to
+   the result with index ``overflow_result``. If no ``overflow_result`` is
+   specified, the transform produces a silenceable failure.
+
+   If there are fewer payload ops than results, the transform produces a
+   silenceable failure if ``fail_on_payload_too_small`` is set to "true".
+   Otherwise, it succeeds and the remaining result handles are not mapped to
+   anything. It also succeeds if ``handle`` is empty and
+   ``pass_through_empty_handle`` is set to "true", regardless of
+   ``fail_on_payload_too_small``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.split_handle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+   .. py:method:: pass_through_empty_handle() -> _ods_ir
+
+
+   .. py:method:: fail_on_payload_too_small() -> _ods_ir
+
+
+   .. py:method:: overflow_result() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+.. py:function:: split_handle(results_, handle, *, pass_through_empty_handle=None, fail_on_payload_too_small=None, overflow_result=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SplitHandleOp]
+
+.. py:class:: VerifyOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform verifies the targeted ops. If at least one op fails to
+   verify, the transform produces a definite failure.
+
+   Note: This op was designed for debugging purposes and should be used like an
+   assertion. It is intentional that this op produces a definite failure and
+   not a silenceable one. Correctness of the program should not depend on this
+   op.
+
+   This transform reads the target handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.verify'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: verify_(target, *, loc=None, ip=None) -> VerifyOp
+
+.. py:class:: YieldOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This terminator operation yields operation handles from regions of the
+   transform IR ops back to the containing op. It is not itself associated with
+   any transformation on the payload IR and is used for flow purposes only.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: yield_(operands_, *, loc=None, ip=None) -> YieldOp
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'transform'
+
+
+
+.. py:function:: _paramOperandAttr(x: int, context) -> Attribute
+
+.. py:class:: CastOp(result_type: Type, target: Union[Operation, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`CastOp`
+
+
+.. py:function:: cast(result_type: Type, target: Union[Operation, Value], *, loc=None, ip=None) -> OpResult
+
+.. py:class:: ApplyPatternsOp(target: Union[Operation, Value, OpView], apply_cse: bool = False, max_iterations: Optional[Union[IntegerAttr, int]] = None, max_num_rewrites: Optional[Union[IntegerAttr, int]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`ApplyPatternsOp`
+
+
+   
+   This transform greedily applies the specified patterns to the body of the
+   targeted op until a fixpoint was reached. Patterns are not applied to the
+   targeted op itself.
+
+   The patterns that should be applied are specified in the graph region of
+   this op. They must implement the ``PatternDescriptorOpInterface``. The order
+   in which patterns are applied is unspecified; i.e., the ordering of ops in
+   the region of this op is irrelevant.
+
+   If ``apple_cse`` is set, the greedy pattern rewrite is interleaved with
+   common subexpression elimination (CSE): both are repeated until a fixpoint
+   is reached.
+
+   This transform only reads the target handle and modifies the payload. If a
+   pattern erases or replaces a tracked op, the mapping is updated accordingly.
+
+   Only replacements via ``RewriterBase::replaceOp`` or ``replaceOpWithNewOp`` are
+   considered "payload op replacements". Furthermore, only if the replacement
+   values are defined by the same op and that op has the same type as the
+   original op, the mapping is updated. Otherwise, this transform produces a
+   silenceable failure. More details can be found at the documentation site of
+   ``TrackingListener``.
+
+   This transform also produces a silenceable failure if the pattern
+   application did not converge within the default number of
+   iterations/rewrites of the greedy pattern rewrite driver.
+
+
+   .. py:property:: patterns
+      :type: Block
+
+
+
+.. py:function:: apply_patterns(target: Union[Operation, Value, OpView], apply_cse: bool = False, max_iterations: Optional[Union[IntegerAttr, int]] = None, max_num_rewrites: Optional[Union[IntegerAttr, int]] = None, *, loc=None, ip=None) -> ApplyPatternsOp
+
+.. py:class:: GetParentOp(result_type: Type, target: Union[Operation, Value], *, isolated_from_above: bool = False, allow_empty_results: bool = False, op_name: Optional[str] = None, deduplicate: bool = False, nth_parent: int = 1, loc=None, ip=None)
+
+   Bases: :py:obj:`GetParentOp`
+
+
+   
+   The handle defined by this Transform op corresponds to the parents of the
+   targeted payload ops (in the same order).
+
+   Requirements that parent ops must fulfill can be optionally specified. In
+   that case for each target op, the closest parent op that fulfills all
+   requirements, is returned.
+
+   * ``isolated_from_above``: the parent op must be isolated from above
+   * ``allow_empty_results``: get_parent_op is allowed to return an empty list
+   and still succeeds. In such a case, if ``get_parent_op`` fails for any
+   operation in the list, the entire transform returns an empty handle.
+   * ``op_name``: the parent op must have the specified name
+   * ``nth_parent``: get the n-th parent of that satisfies the above requirements
+
+   If ``deduplicate`` is set, the result handle does not contain any duplicate
+   ops. For example, given the list
+   "(childof(A), childof(B), childof(B), childof(A), childof(B))", the
+   resulting list will be just "(A, B)". Note that no other semantic ordering
+   is applied, e.g., "B" may itself be a parent of "A". This may have an impact
+   on the further transformation applied to the handle produced here.
+
+   If any of the given Payload IR ops has no such suitable parent, then:
+
+   * if ``allow_empty_results`` is set, the result handle is empty
+   * otherwise, the transformation produces a silenceable failure.
+
+
+.. py:function:: get_parent_op(result_type: Type, target: Union[Operation, Value], *, isolated_from_above: bool = False, allow_empty_results: bool = False, op_name: Optional[str] = None, deduplicate: bool = False, nth_parent: int = 1, loc=None, ip=None) -> OpResult
+
+.. py:class:: MergeHandlesOp(handles: Sequence[Union[Operation, Value]], *, deduplicate: bool = False, results: Optional[Sequence[Type]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MergeHandlesOp`
+
+
+   
+   Creates a new Transform IR handle value that points to the same Payload IR
+   operations/values/parameters as the operand handles. The Payload IR elements
+   are listed in the same order as they are in the operand handles, grouped by
+   operand handle, e.g., all Payload IR associated with the first handle comes
+   first, then all Payload IR associated with the second handle and so on. If
+   ``deduplicate`` is set, do not add the given Payload IR operation, value, or
+   parameter more than once to the final list regardless of it coming from the
+   same or different handles. Consumes the operands and produces a new handle.
+
+
+.. py:function:: merge_handles(handles: Sequence[Union[Operation, Value]], *, deduplicate: bool = False, results: Optional[Sequence[Type]] = None, loc=None, ip=None) -> OpResult
+
+.. py:class:: ReplicateOp(pattern: Union[Operation, Value], handles: Sequence[Union[Operation, Value]], *, loc=None, ip=None)
+
+   Bases: :py:obj:`ReplicateOp`
+
+
+   
+   Produces a new handle associated with a list of payload IR ops that is
+   computed by repeating the list of payload IR ops associated with the
+   operand handle as many times as the "pattern" handle has associated
+   operations. For example, if pattern is associated with [op1, op2] and the
+   operand handle is associated with [op3, op4, op5], the resulting handle
+   will be associated with [op3, op4, op5, op3, op4, op5].
+
+   This transformation is useful to "align" the sizes of payload IR lists
+   before a transformation that expects, e.g., identically-sized lists. For
+   example, a transformation may be parameterized by same notional per-target
+   size computed at runtime and supplied as another handle, the replication
+   allows this size to be computed only once and used for every target instead
+   of replicating the computation itself.
+
+   Note that it is undesirable to pass a handle with duplicate operations to
+   an operation that consumes the handle. Handle consumption often indicates
+   that the associated payload IR ops are destroyed, so having the same op
+   listed more than once will lead to double-free. Single-operand
+   MergeHandlesOp may be used to deduplicate the associated list of payload IR
+   ops when necessary. Furthermore, a combination of ReplicateOp and
+   MergeHandlesOp can be used to construct arbitrary lists with repetitions.
+
+
+.. py:function:: replicate(pattern: Union[Operation, Value], handles: Sequence[Union[Operation, Value]], *, loc=None, ip=None) -> Union[OpResult, OpResultList, ReplicateOp]
+
+.. py:class:: SequenceOp(failure_propagation_mode: mlir.dialects._transform_enum_gen.FailurePropagationMode, results: Sequence[Type], target: Union[Operation, Value, Type], extra_bindings: Optional[Union[Sequence[Value], Sequence[Type], Operation, OpView]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`SequenceOp`
+
+
+   
+   The transformations indicated by the sequence are applied in order of their
+   appearance. Each value produced by a transformation within the sequence
+   corresponds to a group of operations or values in the payload IR, or to a
+   group of parameters, depending on the type of the value. The behavior of the
+   operation when a nested transformation produces a silenceable error is
+   controlled by the ``failure_propagation_mode`` attribute. When set to
+   ``propagate``, the failure of any nested transformation in the sequence
+   implies immediate failure of the entire sequence with a silenceable error,
+   and no further transformation is attempted. When set to ``suppress``,
+   silenceable errors in nested operations are ignored and further
+   transformations are applied. Beware that even silenceable errors may leave
+   the payload IR in a state unsuitable for further transformations. It is the
+   responsibility of the caller to ensure the following transformations are
+   robust enough when errors are suppressed. Definite errors reported by nested
+   transformations abort the sequence regardless of the propagation mode. The
+   set of modes may be extended in the future, e.g., to collect silenceable
+   errors and report them after attempting all transformations in the sequence.
+
+   The entry block of this operation has a single argument that maps to either
+   the operand if provided or the top-level container operation of the payload
+   IR, typically the root operation of the pass interpreting the transform
+   dialect. Operand omission is only allowed for sequences not contained in
+   another sequence.
+
+   The type of the block argument must match the type of the operand. If the
+   sequence is a top-level transform (without an operand), it can be used for
+   matching operations if the specified type within the top-level container
+   payload IR (including the container op itself). E.g.:
+
+   .. code:: mlir
+
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.any_op):
+         // %arg1 is mapped to the top-level container of the payload IR, which is
+         // typically a module
+       }
+       
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.op<"func.func>"):
+         // %arg1 is mapped to all "func.func" ops within and including the
+         // top-level container of the payload IR. Nested operations that have the
+         // specified op type are not included.
+       }
+
+   The body of the sequence terminates with an implicit or explicit
+   ``transform.yield`` op. The operands of the terminator are returned as the
+   results of the sequence op.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+
+   .. py:property:: bodyTarget
+      :type: Value
+
+
+
+   .. py:property:: bodyExtraArgs
+      :type: BlockArgumentList
+
+
+
+.. py:function:: sequence(failure_propagation_mode: mlir.dialects._transform_enum_gen.FailurePropagationMode, results: Sequence[Type], target: Union[Operation, Value, Type], extra_bindings: Optional[Union[Sequence[Value], Sequence[Type], Operation, OpView]] = None, *, loc=None, ip=None) -> Union[OpResult, OpResultList, SequenceOp]
+
+.. py:class:: NamedSequenceOp(sym_name: Union[str, SymbolRefAttr], input_types: Sequence[Type], result_types: Sequence[Type], *, sym_visibility: Optional[Union[str, StringAttr]] = None, arg_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, res_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`NamedSequenceOp`
+
+
+   
+   Defines a named (callable, function-like) sequence of other Transform
+   dialect operations that can be included using ``transform.include`` as part of
+   another Transform dialect construct. This sequence is not processed
+   immediately but rather dispatched to when the inclusion is processed. The
+   arguments and results can be used to communicate a subset of mapping into
+   the named sequence. The sequence must consist of a single block and end with
+   a ``transform.yield`` terminator. The operands of the terminator become the
+   results of the ``transform.include``.
+
+   When dispatched to, the operations in the named sequence are executed one by
+   one, similarly to the regular unnamed sequence. The failure propagation mode
+   is specified on the ``transform.include``. Different inclusions may use
+   different failure propagation modes. This transform operation always
+   succeeds by itself, but the inclusion may fail if any of the operations
+   fail.
+
+   Named sequences can only appear at the top-level of the Transform dialect
+   nesting structure. That is, they cannot be nested in other Transform dialect
+   operations. Furthermore, one of the ancestors must have the ``SymbolTable``
+   trait and have the ``transform.with_named_sequence`` attribute attached.
+
+   Named sequences may include other named sequences via ``transform.include``,
+   but recursion is *not* allowed.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+
+   .. py:property:: bodyTarget
+      :type: Value
+
+
+
+   .. py:property:: bodyExtraArgs
+      :type: BlockArgumentList
+
+
+
+   .. py:method:: apply(payload: Module, transform_options: Optional[interpreter.TransformOptions] = None) -> Module
+
+
+.. py:function:: named_sequence(sym_name: Union[str, SymbolRefAttr], input_types: Sequence[Type], result_types: Sequence[Type], *, sym_visibility: Optional[Union[str, StringAttr]] = None, arg_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, res_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, loc=None, ip=None) -> NamedSequenceOp
+
+.. py:class:: YieldOp(operands: Optional[Union[Operation, Sequence[Value]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`YieldOp`
+
+
+   
+   This terminator operation yields operation handles from regions of the
+   transform IR ops back to the containing op. It is not itself associated with
+   any transformation on the payload IR and is used for flow purposes only.
+
+
+.. py:function:: yield_(operands: Optional[Union[Operation, Sequence[Value]]] = None, *, loc=None, ip=None) -> YieldOp
+
+.. py:data:: OptionValueTypes
+
+.. py:class:: ApplyRegisteredPassOp(result: Type, target: Union[Operation, Value, OpView], pass_name: Union[str, StringAttr], *, options: Optional[Dict[Union[str, StringAttr], OptionValueTypes]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`ApplyRegisteredPassOp`
+
+
+   
+   This transform applies the specified pass or pass pipeline to the targeted
+   ops. The name of the pass/pipeline is specified as a string attribute, as
+   set during pass/pipeline registration.
+
+   Optionally, pass options may be specified via a DictionaryAttr. This
+   dictionary is converted to a string -- formatted ``key=value ...`` -- which
+   is expected to be in the exact format used by the pass on the commandline.
+   Values are either attributes or (SSA-values of) Transform Dialect params.
+   For example:
+
+   .. code:: mlir
+
+       transform.apply_registered_pass "canonicalize"
+           with options = { "top-down" = false,
+                            "max-iterations" = %max_iter,
+                            "test-convergence" = true,
+                            "max-num-rewrites" = %max_rewrites }
+           to %module
+       : (!transform.any_param, !transform.any_param, !transform.any_op) -> !transform.any_op
+
+   Options' values which are ``ArrayAttr``s are converted to comma-separated
+   lists of options. Likewise for params which associate multiple values.
+
+   This op first looks for a pass pipeline with the specified name. If no such
+   pipeline exists, it looks for a pass with the specified name. If no such
+   pass exists either, this op fails definitely.
+
+   This transform consumes the target handle and produces a new handle that is
+   mapped to the same op. Passes are not allowed to remove/modify the operation
+   that they operate on, so the target op is guaranteed to still exist. The
+   target handle is invalidated because a pass may arbitrarily modify the body
+   of targeted ops.
+
+
+.. py:function:: apply_registered_pass(result: Type, target: Union[Operation, Value, OpView], pass_name: Union[str, StringAttr], *, options: Optional[Dict[Union[str, StringAttr], OptionValueTypes]] = None, loc=None, ip=None) -> Value
+
+.. py:data:: AnyOpTypeT
+
+.. py:function:: any_op_t() -> AnyOpTypeT
+

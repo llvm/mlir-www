@@ -1,0 +1,1218 @@
+mlir.dialects._index_ops_gen
+============================
+
+.. py:module:: mlir.dialects._index_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._index_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._index_ops_gen._Dialect
+   mlir.dialects._index_ops_gen.AddOp
+   mlir.dialects._index_ops_gen.AndOp
+   mlir.dialects._index_ops_gen.BoolConstantOp
+   mlir.dialects._index_ops_gen.CastSOp
+   mlir.dialects._index_ops_gen.CastUOp
+   mlir.dialects._index_ops_gen.CeilDivSOp
+   mlir.dialects._index_ops_gen.CeilDivUOp
+   mlir.dialects._index_ops_gen.CmpOp
+   mlir.dialects._index_ops_gen.ConstantOp
+   mlir.dialects._index_ops_gen.DivSOp
+   mlir.dialects._index_ops_gen.DivUOp
+   mlir.dialects._index_ops_gen.FloorDivSOp
+   mlir.dialects._index_ops_gen.MaxSOp
+   mlir.dialects._index_ops_gen.MaxUOp
+   mlir.dialects._index_ops_gen.MinSOp
+   mlir.dialects._index_ops_gen.MinUOp
+   mlir.dialects._index_ops_gen.MulOp
+   mlir.dialects._index_ops_gen.OrOp
+   mlir.dialects._index_ops_gen.RemSOp
+   mlir.dialects._index_ops_gen.RemUOp
+   mlir.dialects._index_ops_gen.ShlOp
+   mlir.dialects._index_ops_gen.ShrSOp
+   mlir.dialects._index_ops_gen.ShrUOp
+   mlir.dialects._index_ops_gen.SizeOfOp
+   mlir.dialects._index_ops_gen.SubOp
+   mlir.dialects._index_ops_gen.XOrOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._index_ops_gen.add
+   mlir.dialects._index_ops_gen.and_
+   mlir.dialects._index_ops_gen.bool_constant
+   mlir.dialects._index_ops_gen.casts
+   mlir.dialects._index_ops_gen.castu
+   mlir.dialects._index_ops_gen.ceildivs
+   mlir.dialects._index_ops_gen.ceildivu
+   mlir.dialects._index_ops_gen.cmp
+   mlir.dialects._index_ops_gen.constant
+   mlir.dialects._index_ops_gen.divs
+   mlir.dialects._index_ops_gen.divu
+   mlir.dialects._index_ops_gen.floordivs
+   mlir.dialects._index_ops_gen.maxs
+   mlir.dialects._index_ops_gen.maxu
+   mlir.dialects._index_ops_gen.mins
+   mlir.dialects._index_ops_gen.minu
+   mlir.dialects._index_ops_gen.mul
+   mlir.dialects._index_ops_gen.or_
+   mlir.dialects._index_ops_gen.rems
+   mlir.dialects._index_ops_gen.remu
+   mlir.dialects._index_ops_gen.shl
+   mlir.dialects._index_ops_gen.shrs
+   mlir.dialects._index_ops_gen.shru
+   mlir.dialects._index_ops_gen.sizeof
+   mlir.dialects._index_ops_gen.sub
+   mlir.dialects._index_ops_gen.xor
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'index'
+
+
+
+.. py:class:: AddOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.add`` operation takes two index values and computes their sum.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a + b
+       %c = index.add %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: add(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AndOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.and`` operation takes two index values and computes their bitwise
+   and.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a & b
+       %c = index.and %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.and'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: and_(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BoolConstantOp(value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.bool.constant`` operation produces an bool-typed SSA value equal
+   to either ``true`` or ``false``.
+
+   This operation is used to materialize bool constants that arise when folding
+   ``index.cmp``.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = index.bool.constant true
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.bool.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bool_constant(value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CastSOp(output, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.casts`` operation enables conversions between values of index type
+   and concrete fixed-width integer types. If casting to a wider integer, the
+   value is sign-extended. If casting to a narrower integer, the value is
+   truncated.
+
+   Example:
+
+   .. code:: mlir
+
+       // Cast to i32
+       %0 = index.casts %a : index to i32
+       
+       // Cast from i64
+       %1 = index.casts %b : i64 to index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.casts'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:function:: casts(output, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CastUOp(output, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.castu`` operation enables conversions between values of index type
+   and concrete fixed-width integer types. If casting to a wider integer, the
+   value is zero-extended. If casting to a narrower integer, the value is
+   truncated.
+
+   Example:
+
+   .. code:: mlir
+
+       // Cast to i32
+       %0 = index.castu %a : index to i32
+       
+       // Cast from i64
+       %1 = index.castu %b : i64 to index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.castu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:function:: castu(output, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CeilDivSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.ceildivs`` operation takes two index values and computes their
+   signed quotient. Treats the leading bit as the sign and rounds towards
+   positive infinity, i.e. ``7 / -2 = -3``.
+
+   Note: division by zero and signed division overflow are undefined behaviour.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = ceil(a / b)
+       %c = index.ceildivs %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.ceildivs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ceildivs(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CeilDivUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.ceildivu`` operation takes two index values and computes their
+   unsigned quotient. Treats the leading bit as the most significant and rounds
+   towards positive infinity, i.e. ``6 / -2 = 1``.
+
+   Note: division by zero is undefined behaviour.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = ceil(a / b)
+       %c = index.ceildivu %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.ceildivu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ceildivu(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CmpOp(pred, lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.cmp`` operation takes two index values and compares them according
+   to the comparison predicate and returns an ``i1``. The following comparisons
+   are supported:
+
+   * ``eq``:  equal
+   * ``ne``:  not equal
+   * ``slt``: signed less than
+   * ``sle``: signed less than or equal
+   * ``sgt``: signed greater than
+   * ``sge``: signed greater than or equal
+   * ``ult``: unsigned less than
+   * ``ule``: unsigned less than or equal
+   * ``ugt``: unsigned greater than
+   * ``uge``: unsigned greater than or equal
+
+   The result is ``1`` if the comparison is true and ``0`` otherwise.
+
+   Example:
+
+   .. code:: mlir
+
+       // Signed less than comparison.
+       %0 = index.cmp slt(%a, %b)
+       
+       // Unsigned greater than or equal comparison.
+       %1 = index.cmp uge(%a, %b)
+       
+       // Not equal comparison.
+       %2 = index.cmp ne(%a, %b)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.cmp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pred() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cmp(pred, lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ConstantOp(value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.constant`` operation produces an index-typed SSA value equal to
+   some index-typed integer constant.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = index.constant 42
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: constant(value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DivSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.divs`` operation takes two index values and computes their signed
+   quotient. Treats the leading bit as the sign and rounds towards zero, i.e.
+   ``6 / -2 = -3``.
+
+   Note: division by zero and signed division overflow are undefined behaviour.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a / b
+       %c = index.divs %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.divs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: divs(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DivUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.divu`` operation takes two index values and computes their
+   unsigned quotient. Treats the leading bit as the most significant and rounds
+   towards zero, i.e. ``6 / -2 = 0``.
+
+   Note: division by zero is undefined behaviour.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a / b
+       %c = index.divu %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.divu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: divu(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FloorDivSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.floordivs`` operation takes two index values and computes their
+   signed quotient. Treats the leading bit as the sign and rounds towards
+   negative infinity, i.e. ``5 / -2 = -3``.
+
+   Note: division by zero and signed division overflow are undefined behaviour.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = floor(a / b)
+       %c = index.floordivs %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.floordivs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: floordivs(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MaxSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.maxs`` operation takes two index values and computes their signed
+   maximum value. Treats the leading bit as the sign, i.e. ``max(-2, 6) = 6``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = max(a, b)
+       %c = index.maxs %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.maxs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: maxs(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MaxUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.maxu`` operation takes two index values and computes their
+   unsigned maximum value. Treats the leading bit as the most significant, i.e.
+   ``max(15, 6) = 15`` or ``max(-2, 6) = -2``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = max(a, b)
+       %c = index.maxu %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.maxu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: maxu(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MinSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.mins`` operation takes two index values and computes their signed
+   minimum value. Treats the leading bit as the sign, i.e. ``min(-2, 6) = -2``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = min(a, b)
+       %c = index.mins %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.mins'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: mins(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MinUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.minu`` operation takes two index values and computes their
+   unsigned minimum value. Treats the leading bit as the most significant, i.e.
+   ``min(15, 6) = 6`` or ``min(-2, 6) = 6``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = min(a, b)
+       %c = index.minu %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.minu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: minu(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MulOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.mul`` operation takes two index values and computes their product.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a * b
+       %c = index.mul %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: mul(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: OrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.or`` operation takes two index values and computes their bitwise
+   or.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a | b
+       %c = index.or %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.or'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: or_(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RemSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.rems`` operation takes two index values and computes their signed
+   remainder. Treats the leading bit as the sign, i.e. ``6 % -2 = 0``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a % b
+       %c = index.rems %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.rems'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: rems(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RemUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.remu`` operation takes two index values and computes their
+   unsigned remainder. Treats the leading bit as the most significant, i.e.
+   ``6 % -2 = 6``.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a % b
+       %c = index.remu %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.remu'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: remu(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ShlOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.shl`` operation shifts an index value to the left by a variable
+   amount. The low order bits are filled with zeroes. The RHS operand is always
+   treated as unsigned. If the RHS operand is equal to or greater than the
+   index bitwidth, the result is a poison value.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a << b
+       %c = index.shl %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.shl'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: shl(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ShrSOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.shrs`` operation shifts an index value to the right by a variable
+   amount. The LHS operand is treated as signed. The high order bits are filled
+   with copies of the most significant bit. If the RHS operand is equal to or
+   greater than the index bitwidth, the result is a poison value.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a >> b
+       %c = index.shrs %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.shrs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: shrs(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ShrUOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.shru`` operation shifts an index value to the right by a variable
+   amount. The LHS operand is treated as unsigned. The high order bits are
+   filled with zeroes. If the RHS operand is equal to or greater than the index
+   bitwidth, the result is a poison value.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a >> b
+       %c = index.shru %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.shru'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: shru(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SizeOfOp(*, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.sizeof`` operation produces an index-typed SSA value equal to the
+   size in bits of the ``index`` type. For example, on 32-bit systems, the result
+   is ``32 : index``, and on 64-bit systems, the result is ``64 : index``.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = index.sizeof
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.sizeof'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sizeof(*, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SubOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.sub`` operation takes two index values and computes the difference
+   of the first from the second operand.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a - b
+       %c = index.sub %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.sub'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sub(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: XOrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``index.xor`` operation takes two index values and computes their bitwise
+   xor.
+
+   Example:
+
+   .. code:: mlir
+
+       // c = a ^ b
+       %c = index.xor %a, %b
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'index.xor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: xor(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+

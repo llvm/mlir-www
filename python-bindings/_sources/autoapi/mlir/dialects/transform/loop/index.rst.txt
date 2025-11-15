@@ -1,0 +1,56 @@
+mlir.dialects.transform.loop
+============================
+
+.. py:module:: mlir.dialects.transform.loop
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.loop.LoopOutlineOp
+   mlir.dialects.transform.loop.LoopPeelOp
+   mlir.dialects.transform.loop.LoopPipelineOp
+   mlir.dialects.transform.loop.LoopUnrollOp
+
+
+Module Contents
+---------------
+
+.. py:class:: LoopOutlineOp(function_type: Type, call_type: Type, target: Union[Operation, Value], *, func_name: Union[str, StringAttr], ip=None, loc=None)
+
+   Bases: :py:obj:`LoopOutlineOp`
+
+
+   
+   Extension for LoopOutlineOp.
+
+
+.. py:class:: LoopPeelOp(main_loop_type: Type, remainder_loop_type: Type, target: Union[Operation, Value], *, peel_front: Union[bool, BoolAttr] = False, fail_if_already_divisible: Union[bool, BoolAttr] = False, ip=None, loc=None)
+
+   Bases: :py:obj:`LoopPeelOp`
+
+
+   
+   Extension for LoopPeelOp.
+
+
+.. py:class:: LoopPipelineOp(result_type: Type, target: Union[Operation, Value], *, iteration_interval: Optional[Union[int, IntegerAttr]] = None, read_latency: Optional[Union[int, IntegerAttr]] = None, ip=None, loc=None)
+
+   Bases: :py:obj:`LoopPipelineOp`
+
+
+   
+   Extension for LoopPipelineOp.
+
+
+.. py:class:: LoopUnrollOp(target: Union[Operation, Value], *, factor: Union[int, IntegerAttr], ip=None, loc=None)
+
+   Bases: :py:obj:`LoopUnrollOp`
+
+
+   
+   Extension for LoopUnrollOp.
+
+

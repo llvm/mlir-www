@@ -1,0 +1,196 @@
+mlir.dialects.irdl
+==================
+
+.. py:module:: mlir.dialects.irdl
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.irdl._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.irdl.DialectOp
+   mlir.dialects.irdl.OperationOp
+   mlir.dialects.irdl.TypeOp
+   mlir.dialects.irdl.AttributeOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.irdl.dialect
+   mlir.dialects.irdl.operation_
+   mlir.dialects.irdl.type_
+   mlir.dialects.irdl.attribute
+   mlir.dialects.irdl._variadicity_array_attr
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: DialectOp(sym_name: Union[str, _ods_ir], *, loc=None, ip=None)
+
+   Bases: :py:obj:`DialectOp`
+
+
+   
+   The ``irdl.dialect`` operation defines a dialect. All operations, attributes,
+   and types defined inside its region will be part of the dialect.
+
+   Example:
+
+   .. code:: mlir
+
+       irdl.dialect @cmath {
+         ...
+       }
+
+   The above program defines a ``cmath`` dialect.
+
+
+   .. py:attribute:: __doc__
+
+
+   .. py:property:: body
+      :type: _ods_ir
+
+
+
+.. py:function:: dialect(sym_name: Union[str, _ods_ir], *, loc=None, ip=None) -> DialectOp
+
+.. py:class:: OperationOp(sym_name: Union[str, _ods_ir], *, loc=None, ip=None)
+
+   Bases: :py:obj:`OperationOp`
+
+
+   
+   ``irdl.operation`` defines a new operation belonging to the ``irdl.dialect``
+   parent.
+
+   Operations can define constraints on their operands and results with the
+   ``irdl.results`` and ``irdl.operands`` operations. If these operations are not
+   present in the region, the results or operands are expected to be empty.
+
+   Example:
+
+   .. code:: mlir
+
+       irdl.dialect @cmath {
+       
+         irdl.type @complex { /* ... */ }
+       
+         irdl.operation @norm {
+           %0 = irdl.any
+           %1 = irdl.parametric @cmath::@complex<%0>
+           irdl.results(%0)
+           irdl.operands(%1)
+         }
+       }
+
+   The above program defines an operation ``norm`` inside the dialect ``cmath``.
+   The operation expects a single operand of base type ``cmath.complex``, and
+   returns a single result of the element type of the operand.
+
+
+   .. py:attribute:: __doc__
+
+
+   .. py:property:: body
+      :type: _ods_ir
+
+
+
+.. py:function:: operation_(sym_name: Union[str, _ods_ir], *, loc=None, ip=None) -> OperationOp
+
+.. py:class:: TypeOp(sym_name: Union[str, _ods_ir], *, loc=None, ip=None)
+
+   Bases: :py:obj:`TypeOp`
+
+
+   
+   ``irdl.type`` defines a new type belonging to the ``irdl.dialect`` parent.
+
+   The type parameters can be defined with an ``irdl.parameters`` operation in
+   the optional region.
+
+   Example:
+
+   .. code:: mlir
+
+       irdl.dialect @cmath {
+         irdl.type @complex {
+           %0 = irdl.is i32
+           %1 = irdl.is i64
+           %2 = irdl.any_of(%0, %1)
+           irdl.parameters(%2)
+         }
+       }
+
+   The above program defines a type ``complex`` inside the dialect ``cmath``. The
+   type has a single parameter that should be either ``i32`` or ``i64``.
+
+
+   .. py:attribute:: __doc__
+
+
+   .. py:property:: body
+      :type: _ods_ir
+
+
+
+.. py:function:: type_(sym_name: Union[str, _ods_ir], *, loc=None, ip=None) -> TypeOp
+
+.. py:class:: AttributeOp(sym_name: Union[str, _ods_ir], *, loc=None, ip=None)
+
+   Bases: :py:obj:`AttributeOp`
+
+
+   
+   ``irdl.attribute`` defines a new attribute belonging to the ``irdl.dialect``
+   parent.
+
+   The attribute parameters can be defined with an ``irdl.parameters`` operation
+   in the optional region.
+
+   Example:
+
+   .. code:: mlir
+
+       irdl.dialect @testd {
+         irdl.attribute @enum_attr {
+           %0 = irdl.is "foo"
+           %1 = irdl.is "bar"
+           %2 = irdl.any_of(%0, %1)
+           irdl.parameters(%2)
+         }
+       }
+
+   The above program defines an ``enum_attr`` attribute inside the ``testd``
+   dialect. The attribute has one ``StringAttr`` parameter that should be
+   either a ``"foo"`` or a ``"bar"``.
+
+
+   .. py:attribute:: __doc__
+
+
+   .. py:property:: body
+      :type: _ods_ir
+
+
+
+.. py:function:: attribute(sym_name: Union[str, _ods_ir], *, loc=None, ip=None) -> AttributeOp
+
+.. py:function:: _variadicity_array_attr(x: Sequence[mlir.dialects._irdl_enum_gen.Variadicity], context) -> _ods_ir
+

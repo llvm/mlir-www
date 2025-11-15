@@ -1,0 +1,27 @@
+mlir.dialects.transform.tensor
+==============================
+
+.. py:module:: mlir.dialects.transform.tensor
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tensor.MakeLoopIndependentOp
+
+
+Module Contents
+---------------
+
+.. py:class:: MakeLoopIndependentOp(transformed_type: Type, target: Union[Operation, OpView, Value], num_loops: Union[int, IntegerAttr], *, loc=None, ip=None)
+              MakeLoopIndependentOp(target: Union[Operation, OpView, Value], num_loops: Union[int, IntegerAttr], *, loc=None, ip=None)
+
+   Bases: :py:obj:`MakeLoopIndependentOp`
+
+
+   
+   Specialization for MakeLoopIndependentOp class.
+
+
