@@ -54,6 +54,12 @@ constantly evolving, aiming to deliver execution on heterogenous architectures w
 The CIRCT project is an (experimental!) effort looking to apply MLIR and the LLVM
 development methodology to the domain of hardware design tools.
 
+## [ClangIR](https://llvm.github.io/clangir/)
+
+ClangIR is a high-level representation in Clang that reflects aspects of the
+C/C++ languages and their extensions. It is implemented using MLIR and occupies
+a position between Clang’s AST and LLVM IR.
+
 ## [Concrete](https://github.com/zama-ai/concrete): TFHE Compiler that converts python programs into FHE equivalent
 
 Concrete is an open-source framework that simplifies the use of
