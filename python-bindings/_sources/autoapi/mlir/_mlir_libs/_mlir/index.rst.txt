@@ -1,0 +1,127 @@
+mlir._mlir_libs._mlir
+=====================
+
+.. py:module:: mlir._mlir_libs._mlir
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/_mlir_libs/_mlir/ir/index
+   /autoapi/mlir/_mlir_libs/_mlir/passmanager/index
+   /autoapi/mlir/_mlir_libs/_mlir/rewrite/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.T
+   mlir._mlir_libs._mlir.U
+   mlir._mlir_libs._mlir.globals
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir._Globals
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.register_dialect
+   mlir._mlir_libs._mlir.register_operation
+   mlir._mlir_libs._mlir.register_type_caster
+   mlir._mlir_libs._mlir.register_value_caster
+
+
+Package Contents
+----------------
+
+.. py:data:: T
+
+.. py:data:: U
+
+.. py:class:: _Globals
+
+   .. py:property:: dialect_search_modules
+      :type: list[str]
+
+
+
+   .. py:method:: append_dialect_search_prefix(module_name: str) -> None
+
+
+   .. py:method:: _check_dialect_module_loaded(dialect_namespace: str) -> bool
+
+
+   .. py:method:: _register_dialect_impl(dialect_namespace: str, dialect_class: object) -> None
+
+      
+      Testing hook for directly registering a dialect
+
+
+
+   .. py:method:: _register_operation_impl(operation_name: str, operation_class: object, *, replace: bool = False) -> None
+
+      
+      Testing hook for directly registering an operation
+
+
+
+   .. py:method:: loc_tracebacks_enabled() -> bool
+
+
+   .. py:method:: set_loc_tracebacks_enabled(arg: bool, /) -> None
+
+
+   .. py:method:: loc_tracebacks_frame_limit() -> int
+
+
+   .. py:method:: set_loc_tracebacks_frame_limit(arg: int, /) -> None
+
+
+   .. py:method:: register_traceback_file_inclusion(arg: str, /) -> None
+
+
+   .. py:method:: register_traceback_file_exclusion(arg: str, /) -> None
+
+
+.. py:data:: globals
+   :type:  _Globals
+   :value: Ellipsis
+
+
+.. py:function:: register_dialect(dialect_class: type) -> type
+
+   
+   Class decorator for registering a custom Dialect wrapper
+
+
+.. py:function:: register_operation(dialect_class: type, *, replace: bool = False) -> collections.abc.Callable[[type[T]], type[T]]
+
+   
+   Produce a class decorator for registering an Operation class as part of a dialect
+
+
+.. py:function:: register_type_caster(typeid: ir.TypeID, *, replace: bool = False) -> collections.abc.Callable[[collections.abc.Callable[[T], U]], collections.abc.Callable[[T], U]]
+
+   
+   Register a type caster for casting MLIR types to custom user types.
+
+
+.. py:function:: register_value_caster(typeid: ir.TypeID, *, replace: bool = False) -> collections.abc.Callable[[collections.abc.Callable[[T], U]], collections.abc.Callable[[T], U]]
+
+   
+   Register a value caster for casting MLIR values to custom user values.
+
+

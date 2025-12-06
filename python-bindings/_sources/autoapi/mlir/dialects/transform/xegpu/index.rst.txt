@@ -1,0 +1,101 @@
+mlir.dialects.transform.xegpu
+=============================
+
+.. py:module:: mlir.dialects.transform.xegpu
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.xegpu.GetDescOp
+   mlir.dialects.transform.xegpu.SetDescLayoutOp
+   mlir.dialects.transform.xegpu.SetOpLayoutAttrOp
+   mlir.dialects.transform.xegpu.SetGPULaunchThreadsOp
+   mlir.dialects.transform.xegpu.InsertPrefetchOp
+   mlir.dialects.transform.xegpu.ConvertLayoutOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.xegpu.get_desc_op
+   mlir.dialects.transform.xegpu.set_desc_layout
+   mlir.dialects.transform.xegpu.set_op_layout_attr
+   mlir.dialects.transform.xegpu.set_gpu_launch_threads
+   mlir.dialects.transform.xegpu.insert_prefetch
+   mlir.dialects.transform.xegpu.convert_layout
+
+
+Module Contents
+---------------
+
+.. py:class:: GetDescOp(target: Value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`GetDescOp`
+
+
+   
+   Specialization for GetDescOp class.
+
+
+.. py:function:: get_desc_op(target: Value, *, loc=None, ip=None) -> OpResult
+
+.. py:class:: SetDescLayoutOp(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`SetDescLayoutOp`
+
+
+   
+   Specialization for SetDescLayoutOp class.
+
+
+.. py:function:: set_desc_layout(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, loc=None, ip=None) -> OpResult
+
+.. py:class:: SetOpLayoutAttrOp(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, index: Optional[Union[int, Attribute]] = None, result: Optional[Union[bool, Attribute]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`SetOpLayoutAttrOp`
+
+
+   
+   Specialization for SetOpLayoutAttrOp class.
+
+
+.. py:function:: set_op_layout_attr(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, index: Optional[Union[int, Attribute]] = None, result: Optional[Union[bool, Attribute]] = None, loc=None, ip=None) -> SetOpLayoutAttrOp
+
+.. py:class:: SetGPULaunchThreadsOp(launch_op: Union[Operation, Value], threads: mlir.dialects._ods_common.MixedValues, *, loc=None, ip=None)
+
+   Bases: :py:obj:`SetGPULaunchThreadsOp`
+
+
+   
+   Specialization for SetGPULaunchThreadsOp class.
+
+
+.. py:function:: set_gpu_launch_threads(launch_op: Union[Operation, Value], threads: mlir.dialects._ods_common.MixedValues, *, loc=None, ip=None) -> SetGPULaunchThreadsOp
+
+.. py:class:: InsertPrefetchOp(target: Value, *, nb_prefetch: Optional[mlir.dialects._ods_common.MixedInt] = 1, loc=None, ip=None)
+
+   Bases: :py:obj:`InsertPrefetchOp`
+
+
+   
+   Specialization for InsertPrefetchOp class.
+
+
+.. py:function:: insert_prefetch(target: Value, *, nb_prefetch: Optional[mlir.dialects._ods_common.MixedInt] = 1, loc=None, ip=None) -> OpResult
+
+.. py:class:: ConvertLayoutOp(target: Value, input_sg_layout: mlir.dialects._ods_common.MixedValues, input_sg_data: mlir.dialects._ods_common.MixedValues, target_sg_layout: mlir.dialects._ods_common.MixedValues, target_sg_data: mlir.dialects._ods_common.MixedValues, *, input_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, target_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`ConvertLayoutOp`
+
+
+   
+   Specialization for ConvertLayoutOp class.
+
+
+.. py:function:: convert_layout(target: Value, input_sg_layout: mlir.dialects._ods_common.MixedValues, input_sg_data: mlir.dialects._ods_common.MixedValues, target_sg_layout: mlir.dialects._ods_common.MixedValues, target_sg_data: mlir.dialects._ods_common.MixedValues, *, input_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, target_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, loc=None, ip=None) -> ConvertLayoutOp
+

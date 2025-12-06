@@ -1,0 +1,4985 @@
+mlir.dialects._linalg_ops_gen
+=============================
+
+.. py:module:: mlir.dialects._linalg_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_ops_gen._Dialect
+   mlir.dialects._linalg_ops_gen.AbsOp
+   mlir.dialects._linalg_ops_gen.AddOp
+   mlir.dialects._linalg_ops_gen.BatchMatmulOp
+   mlir.dialects._linalg_ops_gen.BatchMatvecOp
+   mlir.dialects._linalg_ops_gen.BatchMmt4DOp
+   mlir.dialects._linalg_ops_gen.BatchReduceMatmulOp
+   mlir.dialects._linalg_ops_gen.BatchVecmatOp
+   mlir.dialects._linalg_ops_gen.BroadcastOp
+   mlir.dialects._linalg_ops_gen.CeilOp
+   mlir.dialects._linalg_ops_gen.ContractOp
+   mlir.dialects._linalg_ops_gen.Conv1DNcwFcwOp
+   mlir.dialects._linalg_ops_gen.Conv1DNwcWcfOp
+   mlir.dialects._linalg_ops_gen.Conv1DOp
+   mlir.dialects._linalg_ops_gen.Conv2DNchwFchwOp
+   mlir.dialects._linalg_ops_gen.Conv2DNchwFchwQOp
+   mlir.dialects._linalg_ops_gen.Conv2DNgchwFgchwOp
+   mlir.dialects._linalg_ops_gen.Conv2DNgchwGfchwOp
+   mlir.dialects._linalg_ops_gen.Conv2DNgchwGfchwQOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwcFhwcOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwcFhwcQOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwcHwcfOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwcHwcfQOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwgcGfhwcOp
+   mlir.dialects._linalg_ops_gen.Conv2DNhwgcGfhwcQOp
+   mlir.dialects._linalg_ops_gen.Conv2DOp
+   mlir.dialects._linalg_ops_gen.Conv3DNcdhwFcdhwOp
+   mlir.dialects._linalg_ops_gen.Conv3DNdhwcDhwcfOp
+   mlir.dialects._linalg_ops_gen.Conv3DNdhwcDhwcfQOp
+   mlir.dialects._linalg_ops_gen.Conv3DOp
+   mlir.dialects._linalg_ops_gen.CopyOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv1DNcwCwOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv1DNwcWcOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv1DNwcWcmOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv2DNchwChwOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv2DNhwcHwcOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv2DNhwcHwcQOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv2DNhwcHwcmOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv2DNhwcHwcmQOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv3DNcdhwCdhwOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv3DNdhwcDhwcOp
+   mlir.dialects._linalg_ops_gen.DepthwiseConv3DNdhwcDhwcmOp
+   mlir.dialects._linalg_ops_gen.DivOp
+   mlir.dialects._linalg_ops_gen.DivUnsignedOp
+   mlir.dialects._linalg_ops_gen.DotOp
+   mlir.dialects._linalg_ops_gen.ElementwiseOp
+   mlir.dialects._linalg_ops_gen.ErfOp
+   mlir.dialects._linalg_ops_gen.ExpOp
+   mlir.dialects._linalg_ops_gen.FillOp
+   mlir.dialects._linalg_ops_gen.FillRng2DOp
+   mlir.dialects._linalg_ops_gen.FloorOp
+   mlir.dialects._linalg_ops_gen.GenericOp
+   mlir.dialects._linalg_ops_gen.IndexOp
+   mlir.dialects._linalg_ops_gen.PackOp
+   mlir.dialects._linalg_ops_gen.SoftmaxOp
+   mlir.dialects._linalg_ops_gen.UnPackOp
+   mlir.dialects._linalg_ops_gen.WinogradFilterTransformOp
+   mlir.dialects._linalg_ops_gen.WinogradInputTransformOp
+   mlir.dialects._linalg_ops_gen.WinogradOutputTransformOp
+   mlir.dialects._linalg_ops_gen.YieldOp
+   mlir.dialects._linalg_ops_gen.LogOp
+   mlir.dialects._linalg_ops_gen.MapOp
+   mlir.dialects._linalg_ops_gen.MatmulOp
+   mlir.dialects._linalg_ops_gen.MatvecOp
+   mlir.dialects._linalg_ops_gen.MaxOp
+   mlir.dialects._linalg_ops_gen.MinOp
+   mlir.dialects._linalg_ops_gen.Mmt4DOp
+   mlir.dialects._linalg_ops_gen.MulOp
+   mlir.dialects._linalg_ops_gen.NegFOp
+   mlir.dialects._linalg_ops_gen.PoolingNchwMaxOp
+   mlir.dialects._linalg_ops_gen.PoolingNchwSumOp
+   mlir.dialects._linalg_ops_gen.PoolingNcwMaxOp
+   mlir.dialects._linalg_ops_gen.PoolingNcwSumOp
+   mlir.dialects._linalg_ops_gen.PoolingNdhwcMaxOp
+   mlir.dialects._linalg_ops_gen.PoolingNdhwcMinOp
+   mlir.dialects._linalg_ops_gen.PoolingNdhwcSumOp
+   mlir.dialects._linalg_ops_gen.PoolingNhwcMaxOp
+   mlir.dialects._linalg_ops_gen.PoolingNhwcMaxUnsignedOp
+   mlir.dialects._linalg_ops_gen.PoolingNhwcMinOp
+   mlir.dialects._linalg_ops_gen.PoolingNhwcMinUnsignedOp
+   mlir.dialects._linalg_ops_gen.PoolingNhwcSumOp
+   mlir.dialects._linalg_ops_gen.PoolingNwcMaxOp
+   mlir.dialects._linalg_ops_gen.PoolingNwcMaxUnsignedOp
+   mlir.dialects._linalg_ops_gen.PoolingNwcMinOp
+   mlir.dialects._linalg_ops_gen.PoolingNwcMinUnsignedOp
+   mlir.dialects._linalg_ops_gen.PoolingNwcSumOp
+   mlir.dialects._linalg_ops_gen.PowFOp
+   mlir.dialects._linalg_ops_gen.QuantizedBatchMatmulOp
+   mlir.dialects._linalg_ops_gen.QuantizedMatmulOp
+   mlir.dialects._linalg_ops_gen.ReciprocalOp
+   mlir.dialects._linalg_ops_gen.ReduceOp
+   mlir.dialects._linalg_ops_gen.RoundOp
+   mlir.dialects._linalg_ops_gen.RsqrtOp
+   mlir.dialects._linalg_ops_gen.SelectOp
+   mlir.dialects._linalg_ops_gen.SqrtOp
+   mlir.dialects._linalg_ops_gen.SquareOp
+   mlir.dialects._linalg_ops_gen.SubOp
+   mlir.dialects._linalg_ops_gen.TanhOp
+   mlir.dialects._linalg_ops_gen.TransposeOp
+   mlir.dialects._linalg_ops_gen.VecmatOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_ops_gen.abs
+   mlir.dialects._linalg_ops_gen.add
+   mlir.dialects._linalg_ops_gen.batch_matmul
+   mlir.dialects._linalg_ops_gen.batch_matvec
+   mlir.dialects._linalg_ops_gen.batch_mmt4d
+   mlir.dialects._linalg_ops_gen.batch_reduce_matmul
+   mlir.dialects._linalg_ops_gen.batch_vecmat
+   mlir.dialects._linalg_ops_gen.broadcast
+   mlir.dialects._linalg_ops_gen.ceil
+   mlir.dialects._linalg_ops_gen.contract
+   mlir.dialects._linalg_ops_gen.conv_1d_ncw_fcw
+   mlir.dialects._linalg_ops_gen.conv_1d_nwc_wcf
+   mlir.dialects._linalg_ops_gen.conv_1d
+   mlir.dialects._linalg_ops_gen.conv_2d_nchw_fchw
+   mlir.dialects._linalg_ops_gen.conv_2d_nchw_fchw_q
+   mlir.dialects._linalg_ops_gen.conv_2d_ngchw_fgchw
+   mlir.dialects._linalg_ops_gen.conv_2d_ngchw_gfchw
+   mlir.dialects._linalg_ops_gen.conv_2d_ngchw_gfchw_q
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwc_fhwc
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwc_fhwc_q
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwc_hwcf
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwc_hwcf_q
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwgc_gfhwc
+   mlir.dialects._linalg_ops_gen.conv_2d_nhwgc_gfhwc_q
+   mlir.dialects._linalg_ops_gen.conv_2d
+   mlir.dialects._linalg_ops_gen.conv_3d_ncdhw_fcdhw
+   mlir.dialects._linalg_ops_gen.conv_3d_ndhwc_dhwcf
+   mlir.dialects._linalg_ops_gen.conv_3d_ndhwc_dhwcf_q
+   mlir.dialects._linalg_ops_gen.conv_3d
+   mlir.dialects._linalg_ops_gen.copy
+   mlir.dialects._linalg_ops_gen.depthwise_conv_1d_ncw_cw
+   mlir.dialects._linalg_ops_gen.depthwise_conv_1d_nwc_wc
+   mlir.dialects._linalg_ops_gen.depthwise_conv_1d_nwc_wcm
+   mlir.dialects._linalg_ops_gen.depthwise_conv_2d_nchw_chw
+   mlir.dialects._linalg_ops_gen.depthwise_conv_2d_nhwc_hwc
+   mlir.dialects._linalg_ops_gen.depthwise_conv_2d_nhwc_hwc_q
+   mlir.dialects._linalg_ops_gen.depthwise_conv_2d_nhwc_hwcm
+   mlir.dialects._linalg_ops_gen.depthwise_conv_2d_nhwc_hwcm_q
+   mlir.dialects._linalg_ops_gen.depthwise_conv_3d_ncdhw_cdhw
+   mlir.dialects._linalg_ops_gen.depthwise_conv_3d_ndhwc_dhwc
+   mlir.dialects._linalg_ops_gen.depthwise_conv_3d_ndhwc_dhwcm
+   mlir.dialects._linalg_ops_gen.div
+   mlir.dialects._linalg_ops_gen.div_unsigned
+   mlir.dialects._linalg_ops_gen.dot
+   mlir.dialects._linalg_ops_gen.elementwise
+   mlir.dialects._linalg_ops_gen.erf
+   mlir.dialects._linalg_ops_gen.exp
+   mlir.dialects._linalg_ops_gen.fill
+   mlir.dialects._linalg_ops_gen.fill_rng_2d
+   mlir.dialects._linalg_ops_gen.floor
+   mlir.dialects._linalg_ops_gen.generic
+   mlir.dialects._linalg_ops_gen.index
+   mlir.dialects._linalg_ops_gen.pack
+   mlir.dialects._linalg_ops_gen.softmax
+   mlir.dialects._linalg_ops_gen.unpack
+   mlir.dialects._linalg_ops_gen.winograd_filter_transform
+   mlir.dialects._linalg_ops_gen.winograd_input_transform
+   mlir.dialects._linalg_ops_gen.winograd_output_transform
+   mlir.dialects._linalg_ops_gen.yield_
+   mlir.dialects._linalg_ops_gen.log
+   mlir.dialects._linalg_ops_gen.map
+   mlir.dialects._linalg_ops_gen.matmul
+   mlir.dialects._linalg_ops_gen.matvec
+   mlir.dialects._linalg_ops_gen.max
+   mlir.dialects._linalg_ops_gen.min
+   mlir.dialects._linalg_ops_gen.mmt4d
+   mlir.dialects._linalg_ops_gen.mul
+   mlir.dialects._linalg_ops_gen.negf
+   mlir.dialects._linalg_ops_gen.pooling_nchw_max
+   mlir.dialects._linalg_ops_gen.pooling_nchw_sum
+   mlir.dialects._linalg_ops_gen.pooling_ncw_max
+   mlir.dialects._linalg_ops_gen.pooling_ncw_sum
+   mlir.dialects._linalg_ops_gen.pooling_ndhwc_max
+   mlir.dialects._linalg_ops_gen.pooling_ndhwc_min
+   mlir.dialects._linalg_ops_gen.pooling_ndhwc_sum
+   mlir.dialects._linalg_ops_gen.pooling_nhwc_max
+   mlir.dialects._linalg_ops_gen.pooling_nhwc_max_unsigned
+   mlir.dialects._linalg_ops_gen.pooling_nhwc_min
+   mlir.dialects._linalg_ops_gen.pooling_nhwc_min_unsigned
+   mlir.dialects._linalg_ops_gen.pooling_nhwc_sum
+   mlir.dialects._linalg_ops_gen.pooling_nwc_max
+   mlir.dialects._linalg_ops_gen.pooling_nwc_max_unsigned
+   mlir.dialects._linalg_ops_gen.pooling_nwc_min
+   mlir.dialects._linalg_ops_gen.pooling_nwc_min_unsigned
+   mlir.dialects._linalg_ops_gen.pooling_nwc_sum
+   mlir.dialects._linalg_ops_gen.powf
+   mlir.dialects._linalg_ops_gen.quantized_batch_matmul
+   mlir.dialects._linalg_ops_gen.quantized_matmul
+   mlir.dialects._linalg_ops_gen.reciprocal
+   mlir.dialects._linalg_ops_gen.reduce
+   mlir.dialects._linalg_ops_gen.round
+   mlir.dialects._linalg_ops_gen.rsqrt
+   mlir.dialects._linalg_ops_gen.select
+   mlir.dialects._linalg_ops_gen.sqrt
+   mlir.dialects._linalg_ops_gen.square
+   mlir.dialects._linalg_ops_gen.sub
+   mlir.dialects._linalg_ops_gen.tanh
+   mlir.dialects._linalg_ops_gen.transpose
+   mlir.dialects._linalg_ops_gen.vecmat
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'linalg'
+
+
+
+.. py:class:: AbsOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.abs'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: abs(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, AbsOp]
+
+.. py:class:: AddOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.add`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.add'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: add(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, AddOp]
+
+.. py:class:: BatchMatmulOp(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+   .. code::
+
+       Broadcast and Transpose semantics can be appiled by specifying the explicit attribute
+       'indexing_maps' as shown below. This is a list attribute, so must include maps for all
+       arguments if specified.
+       
+       Example Transpose:
+       ```mlir
+       linalg.batch_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (batch, k, m)>, // transpose
+                            affine_map<(batch, m, n, k) -> (batch, k, n)>,
+                            affine_map<(batch, m, n, k) -> (batch, m, n)>]
+           ins(%arg0, %arg1 : memref<2x5x3xf32>,memref<2x5x7xf32>)
+           outs(%arg2: memref<2x3x7xf32>)
+       ```
+       
+       Example Broadcast:
+       ```mlir
+       linalg.batch_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (k)>,           // broadcast
+                            affine_map<(batch, m, n, k) -> (batch, k, n)>,
+                            affine_map<(batch, m, n, k) -> (batch, m, n)>]
+           ins(%arg0, %arg1 : memref<5xf32>, memref<2x5x7xf32>)
+           outs(%arg2: memref<2x3x7xf32>)
+       ```
+       
+       Example Broadcast and Transpose:
+       ```mlir
+       linalg.batch_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (m, k)>,        // broadcast
+                            affine_map<(batch, m, n, k) -> (batch, n, k)>, // transpose
+                            affine_map<(batch, m, n, k) -> (batch, m, n)>]
+           ins(%arg0, %arg1 : memref<3x5xf32>, memref<2x7x5xf32>)
+           outs(%arg2: memref<2x3x7xf32>)
+       ```
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.batch_matmul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> Optional[_ods_ir]
+
+
+   .. py:method:: cast() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: batch_matmul(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BatchMatmulOp]
+
+.. py:class:: BatchMatvecOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.batch_matvec'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: batch_matvec(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BatchMatvecOp]
+
+.. py:class:: BatchMmt4DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Besides the outermost batch dimension has the same semantic as
+   linalg.batch_matmul, the differences from linalg.batch_matmul in the
+   non-batch dimensions are the same as linalg.mmt4d vs. linalg.matmul. See the
+   description of lingalg.mmt4d.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.batch_mmt4d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: batch_mmt4d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BatchMmt4DOp]
+
+.. py:class:: BatchReduceMatmulOp(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply,
+   promoting them to the same data type as the accumulator/output.
+
+   Broadcast and Transpose semantics can be applied by specifying the explicit attribute
+   'indexing_maps' as shown below. This is a list attribute, so must include maps for all
+   arguments if specified.
+
+   Example Transpose:
+
+   .. code:: mlir
+
+       linalg.batch_reduce_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (batch, k, m)>, // transpose
+                            affine_map<(batch, m, n, k) -> (batch, k, n)>,
+                            affine_map<(batch, m, n, k) -> (m, n)>]
+           ins(%arg0, %arg1 : memref<2x5x3xf32>,memref<2x5x7xf32>)
+           outs(%arg2: memref<3x7xf32>)
+
+   Example Broadcast:
+
+   .. code:: mlir
+
+       linalg.batch_reduce_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (k)>,         // broadcast
+                            affine_map<(batch, m, n, k) -> (batch, k, n)>,
+                            affine_map<(batch, m, n, k) -> (m, n)>]
+           ins(%arg0, %arg1 : memref<5xf32>, memref<2x5x7xf32>)
+           outs(%arg2: memref<3x7xf32>)
+
+   Example Broadcast and Transpose:
+
+   .. code:: mlir
+
+       linalg.batch_reduce_matmul
+           indexing_maps = [affine_map<(batch, m, n, k) -> (m, k)>,        // broadcast
+                            affine_map<(batch, m, n, k) -> (batch, n, k)>, // transpose
+                            affine_map<(batch, m, n, k) -> (m, n)>]
+           ins(%arg0, %arg1 : memref<3x5xf32>, memref<2x7x5xf32>)
+           outs(%arg2: memref<3x7xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.batch_reduce_matmul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> Optional[_ods_ir]
+
+
+   .. py:method:: cast() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: batch_reduce_matmul(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BatchReduceMatmulOp]
+
+.. py:class:: BatchVecmatOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.batch_vecmat'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: batch_vecmat(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BatchVecmatOp]
+
+.. py:class:: BroadcastOp(result, input, init, dimensions, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Broadcast the input into the given shape by adding ``dimensions``.
+
+   Example:
+
+   .. code:: mlir
+
+         %bcast = linalg.broadcast
+             ins(%input:tensor<16xf32>)
+             outs(%init:tensor<16x64xf32>)
+             dimensions = [1]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.broadcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: init() -> _ods_ir
+
+
+   .. py:method:: dimensions() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: broadcast(result, input, init, dimensions, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, BroadcastOp]
+
+.. py:class:: CeilOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.ceil'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: ceil(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CeilOp]
+
+.. py:class:: ContractOp(result_tensors, inputs, outputs, indexing_maps, *, cast=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The semantics of contracting inputs ``A`` and ``B`` on top of ``C`` to produce
+   output ``D`` is given by
+
+   ``D[H] = (SUM_{(I ∪ J) \ H} A[I] * B[J]) + C[H]``
+
+   where ``I``, ``J``, and ``H`` are tuples of (pairwise distinct) dimension
+   identifiers - meant to range over valid indices - corresponding to the
+   results of the mandatory (projected permutation) ``indexing_maps`` for ``A``,
+   ``B`` and ``C``. ``SUM_{dims}`` means reduce over all valid indices for the
+   dimensions in the set ``dims`` (with ``I``, ``J``, and ``K`` treated as *sets* of
+   dim identifiers).
+
+   The iteration space consists of all dimensions in ``I``, ``J`` and ``H``, i.e. the
+   domain of each of the ``affine_map``s. Like for einsums, the iteration type of
+   each dim is inferred and is either:
+
+   * reduction: the dim is used to index into ``A`` and ``B`` but not ``C``. Per the
+   above semantics, these dims will be contracted, i.e. reduced over.
+   * parallel: the dim is used to index into ``C`` and at least one of ``A`` and
+   ``B``, and - deriving from matmul terminology - is either an "M-like" dim
+   (if used on ``A`` and ``C``), an "N-like" dim (if used on ``B`` and ``C``) or a
+   "batch"-dim (if used to index into ``A``, ``B``, and ``C``).
+
+   For example, batch-matmul is given by ``I = ⟨ b, m, k ⟩``, ``J = ⟨ b, k, n ⟩``,
+   ``H = ⟨ b, m, n ⟩`` (with ``k`` as a contracting reduction-dimension while ``m``,
+   ``n`` and ``b`` have parallel iteration-type) and gets represented as:
+
+   .. code:: mlir
+
+       %D = linalg.contract
+           indexing_maps = [affine_map<(batch, m, n, k) -> (batch, m, k)>,
+                            affine_map<(batch, m, n, k) -> (batch, k, n)>,
+                            affine_map<(batch, m, n, k) -> (batch, m, n)>]
+           ins(%A, %B: tensor<?x?x?xf32>, tensor<?x?x?xf32>)
+           outs(%C: tensor<?x?x?xf32>) -> tensor<?x?x?xf32>
+
+   Note that by permuting dims in the ``affine_map``s' results, accesses to
+   to the inputs and output can be arbitrarily transposed. Similarly, arbitrary
+   broadcasts can be achieved through leaving out dims on either input operand.
+   For example, the following is a variant of batch-matmul with a transposition
+   applied to ``A`` while ``B``'s 2D-matrix gets broadcasted along the batch dim:
+
+   .. code:: mlir
+
+       linalg.contract
+           indexing_maps = [affine_map<(batch, m, n, k) -> (batch, k, m)>,
+                            affine_map<(batch, m, n, k) -> (k, n)>,
+                            affine_map<(batch, m, n, k) -> (batch, m, n)>]
+           ins(%A, %B: memref<?x?x?xf32>, memref<?x?xf32>)
+           outs(%C: memref<?x?x?xf32>)
+
+   Numeric casting is performed on the operands to the inner multiplication,
+   promoting/truncating them to the same data type as the accumulator/output.
+
+   TODO: Allow control over the combining/accumulating op and possibly the
+   multiplication op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.contract'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> _ods_ir
+
+
+   .. py:method:: cast() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: combiner() -> _ods_ir
+
+
+.. py:function:: contract(result_tensors, inputs, outputs, indexing_maps, *, cast=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ContractOp]
+
+.. py:class:: Conv1DNcwFcwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NCW.
+   * Kernel: FCW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_1d_ncw_fcw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_1d_ncw_fcw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv1DNcwFcwOp]
+
+.. py:class:: Conv1DNwcWcfOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_1d_nwc_wcf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_1d_nwc_wcf(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv1DNwcWcfOp]
+
+.. py:class:: Conv1DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_1d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_1d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv1DOp]
+
+.. py:class:: Conv2DNchwFchwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NCHW.
+   * Kernel: FCHW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nchw_fchw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nchw_fchw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNchwFchwOp]
+
+.. py:class:: Conv2DNchwFchwQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NCHW.
+   * Kernel: FCHW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nchw_fchw_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nchw_fchw_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNchwFchwQOp]
+
+.. py:class:: Conv2DNgchwFgchwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NGCHW.
+   * Kernel: FGCHW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_ngchw_fgchw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_ngchw_fgchw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNgchwFgchwOp]
+
+.. py:class:: Conv2DNgchwGfchwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NGCHW.
+   * Kernel: GFCHW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_ngchw_gfchw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_ngchw_gfchw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNgchwGfchwOp]
+
+.. py:class:: Conv2DNgchwGfchwQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NGCHW.
+   * Kernel: GFCHW.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_ngchw_gfchw_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_ngchw_gfchw_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNgchwGfchwQOp]
+
+.. py:class:: Conv2DNhwcFhwcOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWC.
+   * Kernel: FHWC.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwc_fhwc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwc_fhwc(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwcFhwcOp]
+
+.. py:class:: Conv2DNhwcFhwcQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWC.
+   * Kernel: FHWC.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwc_fhwc_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwc_fhwc_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwcFhwcQOp]
+
+.. py:class:: Conv2DNhwcHwcfOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWC.
+   * Kernel: HWCF.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwc_hwcf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwc_hwcf(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwcHwcfOp]
+
+.. py:class:: Conv2DNhwcHwcfQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWC.
+   * Kernel: HWCF.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwc_hwcf_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwc_hwcf_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwcHwcfQOp]
+
+.. py:class:: Conv2DNhwgcGfhwcOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWGC.
+   * Kernel: GFHWC.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwgc_gfhwc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwgc_gfhwc(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwgcGfhwcOp]
+
+.. py:class:: Conv2DNhwgcGfhwcQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWGC.
+   * Kernel: GFHWC.
+
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d_nhwgc_gfhwc_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d_nhwgc_gfhwc_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DNhwgcGfhwcQOp]
+
+.. py:class:: Conv2DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_2d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_2d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv2DOp]
+
+.. py:class:: Conv3DNcdhwFcdhwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_3d_ncdhw_fcdhw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_3d_ncdhw_fcdhw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv3DNcdhwFcdhwOp]
+
+.. py:class:: Conv3DNdhwcDhwcfOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_3d_ndhwc_dhwcf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_3d_ndhwc_dhwcf(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv3DNdhwcDhwcfOp]
+
+.. py:class:: Conv3DNdhwcDhwcfQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. This includes the zero
+   point offsets common to quantized operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_3d_ndhwc_dhwcf_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_3d_ndhwc_dhwcf_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv3DNdhwcDhwcfQOp]
+
+.. py:class:: Conv3DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.conv_3d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: conv_3d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Conv3DOp]
+
+.. py:class:: CopyOp(result_tensors, inputs, outputs, *, cast=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.copy'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: cast() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: copy(result_tensors, inputs, outputs, *, cast=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CopyOp]
+
+.. py:class:: DepthwiseConv1DNcwCwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_1d_ncw_cw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_1d_ncw_cw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv1DNcwCwOp]
+
+.. py:class:: DepthwiseConv1DNwcWcOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_1d_nwc_wc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_1d_nwc_wc(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv1DNwcWcOp]
+
+.. py:class:: DepthwiseConv1DNwcWcmOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_1d_nwc_wcm'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_1d_nwc_wcm(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv1DNwcWcmOp]
+
+.. py:class:: DepthwiseConv2DNchwChwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_2d_nchw_chw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_2d_nchw_chw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv2DNchwChwOp]
+
+.. py:class:: DepthwiseConv2DNhwcHwcOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_2d_nhwc_hwc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_2d_nhwc_hwc(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv2DNhwcHwcOp]
+
+.. py:class:: DepthwiseConv2DNhwcHwcQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_2d_nhwc_hwc_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_2d_nhwc_hwc_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv2DNhwcHwcQOp]
+
+.. py:class:: DepthwiseConv2DNhwcHwcmOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_2d_nhwc_hwcm'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_2d_nhwc_hwcm(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv2DNhwcHwcmOp]
+
+.. py:class:: DepthwiseConv2DNhwcHwcmQOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_2d_nhwc_hwcm_q'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_2d_nhwc_hwcm_q(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv2DNhwcHwcmQOp]
+
+.. py:class:: DepthwiseConv3DNcdhwCdhwOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_3d_ncdhw_cdhw'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_3d_ncdhw_cdhw(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv3DNcdhwCdhwOp]
+
+.. py:class:: DepthwiseConv3DNdhwcDhwcOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. Multiplier is set to 1
+   which is a special case for most depthwise convolutions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_3d_ndhwc_dhwc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_3d_ndhwc_dhwc(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv3DNdhwcDhwcOp]
+
+.. py:class:: DepthwiseConv3DNdhwcDhwcmOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.depthwise_conv_3d_ndhwc_dhwcm'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: depthwise_conv_3d_ndhwc_dhwcm(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DepthwiseConv3DNdhwcDhwcmOp]
+
+.. py:class:: DivOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.div`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.div'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: div(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DivOp]
+
+.. py:class:: DivUnsignedOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.div`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.div_unsigned'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: div_unsigned(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DivUnsignedOp]
+
+.. py:class:: DotOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.dot'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: dot(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, DotOp]
+
+.. py:class:: ElementwiseOp(result_tensors, inputs, outputs, kind, *, indexing_maps=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The attribute ``kind`` describes arithmetic operation to perform. The
+   operation kind can be unary (e.g. max), binary (e.g. add) or ternary
+   (e.g. select).
+
+   By default, all indexing maps are identities. In the case of default
+   indexing map, all input and output shapes must match. The number of dims in
+   each of the identity maps is equal to the rank of the output type.
+
+   Affine-maps for operands and result are required to be provided by the user
+   when a transpose and/or broadcast is needed on any operand. When a map is not
+   provided, default identity maps are inferred for each operand.
+
+   Iterator-types are always all ``parallel``.
+   Iterator-types are needed for constructing the underlying structured op.
+
+   The number of dims of the iterator-types are inferred from the rank of
+   the result type.
+
+   Example:
+
+   Defining a unary linalg.elementwise with default indexing-map:
+
+   .. code:: mlir
+
+       %exp = linalg.elementwise
+           kind=#linalg.elementwise_kind<exp>
+           ins(%x : tensor<4x16x8xf32>)
+           outs(%y: tensor<4x16x8xf32>) -> tensor<4x16x8xf32>
+
+   Defining a binary linalg.elementwise with user-defined indexing-map:
+
+   .. code:: mlir
+
+       %add = linalg.elementwise
+           kind=#linalg.elementwise_kind<add>
+           indexing_maps = [#transpose, #broadcast, #identity]
+           ins(%exp, %arg1 : tensor<4x16x8xf32>, tensor<4x16xf32>)
+           outs(%arg2: tensor<4x8x16xf32>) -> tensor<4x8x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.elementwise'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: elementwise(result_tensors, inputs, outputs, kind, *, indexing_maps=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ElementwiseOp]
+
+.. py:class:: ErfOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.erf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: erf(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ErfOp]
+
+.. py:class:: ExpOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.exp'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: exp(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ExpOp]
+
+.. py:class:: FillOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Works for arbitrary ranked output tensors since the operation performs
+   scalar accesses only and is thus rank polymorphic. The value operand
+   type must match the element type of the output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.fill'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: fill(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, FillOp]
+
+.. py:class:: FillRng2DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The operation generations pseudo random numbers using a linear congruential
+   generator. It provides no guarantees regarding the distribution of the
+   generated random numbers. Instead of generating the random numbers
+   sequentially, it instantiates one random number generator per data element
+   and runs them in parallel. The seed operand and the indices of the data
+   element seed the random number generation. The min and max operands limit
+   the range of the generated random numbers.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.fill_rng_2d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: fill_rng_2d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, FillRng2DOp]
+
+.. py:class:: FloorOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.floor'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: floor(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, FloorOp]
+
+.. py:class:: GenericOp(result_tensors, inputs, outputs, indexing_maps, iterator_types, *, doc=None, library_call=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Generic Linalg op form where the key properties of the computation are
+   specified as attributes. In pretty form, a ``linalg.generic`` op is written
+   as:
+
+   .. code:: mlir
+
+       linalg.generic #trait_attribute
+           ins(%A, %B : memref<?x?xf32, stride_specification>,
+                        memref<?x?xf32, stride_specification>)
+           outs(%C : memref<?x?xf32, stride_specification>)
+           attrs = {other-optional-attributes}
+           {region}
+
+   Where #trait_attributes is an alias of a dictionary attribute containing:
+
+   * doc [optional]: a documentation string
+   * indexing_maps: a list of AffineMapAttr, one AffineMapAttr per each input
+   and output view. Such AffineMapAttr specifies the mapping between the
+   loops and the indexing within each view.
+   * library_call [optional]: a StringAttr containing the name of an
+   external library function that the linalg.generic operation maps to.
+   The external library is assumed to be dynamically linked and no strong
+   compile-time guarantees are provided. In the absence of such a library
+   call, linalg.generic will always lower to loops.
+   * iterator_types: an ArrayAttr specifying the type of the enclosing loops.
+   Each element of the list represents and iterator of one of the following
+   types:
+   parallel, reduction, window
+
+   Example:
+   Defining a #matmul_trait attribute in MLIR can be done as follows:
+
+   .. code:: mlir
+
+       #matmul_accesses = [
+         (m, n, k) -> (m, k),
+         (m, n, k) -> (k, n),
+         (m, n, k) -> (m, n)
+       ]
+       #matmul_trait = {
+         doc = "C(m, n) += A(m, k) * B(k, n)",
+         indexing_maps = #matmul_accesses,
+         library_call = "linalg_matmul",
+         iterator_types = ["parallel", "parallel", "reduction"]
+       }
+
+   And can be reused in multiple places as:
+
+   .. code:: mlir
+
+       linalg.generic #matmul_trait
+         ins(%A, %B : memref<?x?xf32, stride_specification>,
+                      memref<?x?xf32, stride_specification>)
+         outs(%C : memref<?x?xf32, stride_specification>)
+         {other-optional-attributes} {
+         ^bb0(%a: f32, %b: f32, %c: f32) :
+           %d = arith.mulf %a, %b: f32
+           %e = arith.addf %c, %d: f32
+           linalg.yield %e : f32
+       }
+
+   This may lower to either:
+
+   .. code:: mlir
+
+       call @linalg_matmul(%A, %B, %C) :
+         (memref<?x?xf32, stride_specification>,
+          memref<?x?xf32, stride_specification>,
+          memref<?x?xf32, stride_specification>)
+         -> ()
+
+   or IR resembling:
+
+   .. code:: mlir
+
+       scf.for %m = %c0 to %M step %c1 {
+         scf.for %n = %c0 to %N step %c1 {
+           scf.for %k = %c0 to %K step %c1 {
+             %a = load %A[%m, %k] : memref<?x?xf32, stride_specification>
+             %b = load %B[%k, %n] : memref<?x?xf32, stride_specification>
+             %c = load %C[%m, %n] : memref<?x?xf32, stride_specification>
+             %d = arith.mulf %a, %b: f32
+             %e = arith.addf %c, %d: f32
+             store %e, %C[%m, %n] : memref<?x?x?xf32, stride_specification>
+           }
+         }
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.generic'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> _ods_ir
+
+
+   .. py:method:: iterator_types() -> _ods_ir
+
+
+   .. py:method:: doc() -> Optional[_ods_ir]
+
+
+   .. py:method:: library_call() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: generic(result_tensors, inputs, outputs, indexing_maps, iterator_types, *, doc=None, library_call=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, GenericOp]
+
+.. py:class:: IndexOp(dim, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``linalg.index`` operation returns the iteration index of the immediately
+   enclosing linalg structured operation for the iteration dimension ``dim``. The
+   ``dim`` attribute specifies the position of the accessed dimension in the
+   indexing map domain.
+
+   Example:
+
+   .. code:: mlir
+
+       #map = affine_map<(i, j) -> (i, j)>
+       linalg.generic {indexing_maps = [#map, #map],
+                       iterator_types = ["parallel", "parallel"]}
+         outs(%I, %J : memref<?x?xindex>, memref<?x?xindex>) {
+         ^bb0(%arg0 : index, %arg1 : index):
+         // Access the outer iteration dimension i
+         %i = linalg.index 0 : index
+         // Access the inner iteration dimension j
+         %j = linalg.index 1 : index
+         linalg.yield %i, %j : index, index
+       }
+
+   This may lower to IR resembling:
+
+   .. code:: mlir
+
+       %0 = dim %I, %c0 : memref<?x?xindex>
+       %1 = dim %I, %c1 : memref<?x?xindex>
+       scf.for %i = %c0 to %0 step %c1 {
+         scf.for %j = %c0 to %1 step %c1 {
+           store %i, %I[%i, %j] : memref<?x?xindex>
+           store %j, %J[%i, %j] : memref<?x?xindex>
+         }
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.index'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: dim() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: index(dim, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PackOp(source, dest, inner_dims_pos, inner_tiles, static_inner_tiles, *, padding_value=None, outer_dims_perm=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "pack" operation converts a source tensor of rank ``n`` into a result
+   tensor of rank ``n + k`` with a tiled and packed layout (maybe with padding)
+   and optionally transposes the tiled source tensor dimensions.
+
+   ``inner_tiles`` (mandatory) specifies ``k`` tile sizes. These tile sizes
+   correspond to the least significant ("inner") result tensor dimension sizes,
+   in the same order. Tile sizes can be static or dynamic.
+
+   ``inner_dims_pos`` (mandatory) specifies ``k`` source tensor dimensions that are
+   being tiled, where ``0 <= k <= n``.
+
+   * ``inner_dims_pos[i]`` specifies the source tensor dimension tiled by
+   ``inner_tiles[i]`` where ``0 <= i < k``. All the values in ``inner_dims_pos`` are
+   within [0, n).
+   * The tiled dimensions (of size ``inner_tiles``) are added to the end of the
+   result tensor in the order in which they appear, i.e.
+   ``shape(result)[rank(source) + i] = inner_tiles[i]`` for ``0 <= i < k``.
+   * The following relationship for the tiled dimensions holds:
+   ``shape(result)[inner_dims_pos[i]] = shape(source)[inner_dims_pos[i]] / inner_tiles[i]``,
+   where (⌈/⌉ indicates CeilDiv).
+
+   Example: If ``inner_tiles = [16, 32]``, the result tensor has a shape of
+   ``...x16x32``. If ``inner_dims_pos = [0, 1]``, the 0th source dimension is tiled
+   by 16 and the 1st source dimension is tiled by 32. Other source dimensions
+   (if any) are not tiled. If ``inner_dims_pos = [1, 0]``, the 1st dimension is
+   tiled by 16 and the 0th dimension is tiled by 32.
+
+   Example:
+
+   .. code:: mlir
+
+       // NC to NCnc
+       %0 = linalg.pack %source inner_dims_pos = [0, 1] inner_tiles = [8, 32]
+           into %dest : tensor<128x256xf32> -> tensor<16x8 x 8x32 xf32>
+       //                                             \  /   \  /
+       //                                 Outer Dims: 16x8   Inner Dims: 8x32
+       
+       // CHW to CHWhw
+       %0 = linalg.pack %source inner_dims_pos = [2, 1] inner_tiles = [4, 2]
+           into %dest : tensor<3x20x24xf32> -> tensor<3x10x6 x 4x2 xf32>
+       //                                              \  /    \ /
+       //                                 Outer Dims: 3x10x6  Inner Dims: 4x2
+       
+       // HCW to HCWhw
+       %0 = linalg.pack %source inner_dims_pos = [2, 0] inner_tiles = [4, 2]
+           into %dest : tensor<18x3x32xf32> -> tensor<9x3x8 x 4x2 xf32>
+       //                                              \  /   \ /
+       //                                 Outer Dims: 9x3x8  Inner Dims: 4x2
+
+   ``outer_dims_perm`` (optional) specifies a permutation for the outer
+   dimensions. If specified, it must have ``n`` elements.
+
+   Example:
+
+   .. code:: mlir
+
+       // CK to KCck
+       %0 = linalg.pack %source outer_dims_perm = [1, 0] inner_dims_pos = [0, 1]
+           inner_tiles = [8, 32] into %dest
+           : tensor<128x256xf32> -> tensor<8x16 x 8x32 xf32>
+       //                                  \  /
+       //            compare with "NC to NCnc": outer dims are transposed
+
+   ``padding_value`` specifies a padding value at the boundary on non-perfectly
+   divisible dimensions. Padding is optional:
+
+   * If absent, it is assumed that for all inner tiles,
+   ``shape(source)[inner_dims_pos[i]] % inner_tiles[i] == 0``, i.e. all inner
+   tiles divide perfectly the corresponding outer dimension in the result
+   tensor. It is UB if the tile does not perfectly divide the dimension.
+   * If present, it will pad along high dimensions (high-padding) to make the
+   tile complete. Note that it is not allowed to have artificial padding that
+   is not strictly required by linalg.pack (i.e., padding past what is needed
+   to complete the last tile along each packed dimension). It is UB if extra
+   padding is requested.
+   It is not possible to verify the requirements statically with dynamic
+   shapes, so they are treated as UB.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = linalg.pack %arg0 padding_value(%pad : f32) outer_dims_perm = [2, 1, 0]
+           inner_dims_pos = [1] inner_tiles = [2] into %arg1
+           : tensor<200x127x256xf32> -> tensor<256x64x200x2xf32>
+       //                 \
+       //                padded and tiled dim
+       //
+       // Source dimension 1 is tiled. 64 does not divide 127 evenly, so 1 padded
+       // element is added at the end.
+       //
+       // Note: Only tiled dimensions can be padded.
+
+   Invalid example that has artificial padding:
+
+   .. code:: mlir
+
+       %0 = linalg.pack %src padding_value(%cst : f32) inner_dims_pos = [0]
+           inner_tiles = [8] into %dest
+           : tensor<9xf32> -> tensor<3x8xf32>
+       //                             \
+       //            expect tensor<2x8xf32> because CeilDiv(9, 8) = 2
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pack'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: padding_value() -> Optional[_ods_ir]
+
+
+   .. py:method:: inner_tiles() -> _ods_ir
+
+
+   .. py:method:: outer_dims_perm() -> Optional[_ods_ir]
+
+
+   .. py:method:: inner_dims_pos() -> _ods_ir
+
+
+   .. py:method:: static_inner_tiles() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: pack(source, dest, inner_dims_pos, inner_tiles, static_inner_tiles, *, padding_value=None, outer_dims_perm=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SoftmaxOp(result, input, output, dimension, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   linalg.softmax computes a numerically stable version of softmax.
+
+   For a given input tensor and a specified dimension ``d``, compute:
+
+   #. the max ``m`` along that dimension ``d``
+   #. f(x) = exp(x - m)
+   #. sum f(x) along dimension d to get l(x).
+   #. compute the final result f(x) / l(x).
+
+   This is an aggregate linalg operation that further reduces to a small DAG of
+   structured operations.
+
+   Warning: Regarding the tiling capabilities, the implementation doesn't
+   check that the provided dimensions make sense. This is the responsability
+   of the transformation calling the tiling to ensure that the provided
+   sizes for each dimension make sense with respect to the semantic of
+   softmax.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.softmax'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+   .. py:method:: dimension() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: softmax(result, input, output, dimension, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SoftmaxOp]
+
+.. py:class:: UnPackOp(source, dest, inner_dims_pos, inner_tiles, static_inner_tiles, *, outer_dims_perm=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "unpack" operation converts a source tensor of rank ``n`` with a tiled and
+   packed layout to a result tensor of rank ``n - k``.
+
+   ``inner_tiles`` (mandatory) specifies ``k`` tile sizes. These tile sizes
+   correspond to the least significant ("inner") source tensor dimension sizes.
+   The behavior of this op is undefined if:
+
+   * ``inner_tiles`` do not exactly match with the corresponding source tensor
+   dimension sizes.
+   * Or, ``inner_tiles[i]`` does not divide the size of dimension
+   ``inner_dims_pos[i]`` (assuming that ``outer_dims_perm`` is not specified)
+   evenly.
+
+   ``inner_dims_pos`` (mandatory) specifies ``k`` result tensor (i.e. unpacked
+   tensor) dimensions that were tiled with the ``inner_tiles`` to create the
+   packed source tensor. The source tensor (i.e. packed tensor) dimensions can
+   be unpacked given ``inner_dims_pos`` as follows.
+
+   * For ``0 <= i < k`` the following relationship holds:
+   ``shape(result)[inner_dims_pos[i]] <= shape(source)[n-k+i] * shape(source)[inner_dims_pos[i]]``.
+   * For ``0 <= j < n-k`` and ``j`` not in ``inner_dims_pos`` the following relationship holds:
+   ``shape(result)[j] = shape(source)[j]``.
+
+   ``outer_dims_perm`` (optional) specifies a permutation for the outer
+   dimensions. If specified, it must have ``n - k`` elements. If specified, this
+   permutation is applied before combining any dimensions.
+
+   Note, the unpack operation may drop any padding introduced by the pack
+   operation and hence the following holds
+   ``NumElementsOf(source) >= NumElementsOf(result)``.
+
+   Examples:
+
+   .. code:: mlir
+
+       // NCnc to NC:
+       %0 = linalg.unpack %source inner_dims_pos = [0, 1] inner_tiles = [8, 32]
+           into %dest : tensor<16x8 x 8x32 xf32> -> tensor<128x256xf32>
+       //                      \  /   \  /
+       //          Outer Dims: 16x8  Inner Dims: 8x32
+       
+       // CK to KCck:
+       %0 = linalg.unpack %source outer_dims_perm = [1, 0] inner_dims_pos = [0, 1]
+           inner_tiles = [8, 32]
+           into %dest : tensor<8x16 x 8x32 xf32> -> tensor<128x256xf32>
+       //                      \  /   \  /
+       //          Outer Dims: 8x16  Inner Dims: 8x32
+       
+       // CHW to CHWhw:
+       %0 = linalg.unpack %source inner_dims_pos = [2, 1] inner_tiles = [4, 2]
+           into %dest : tensor<3x10x6 x 4x2 xf32> -> tensor<3x20x24xf32>
+       //                       \  /    \ /
+       //          Outer Dims: 3x10x6  Inner Dims: 4x2
+       
+       // HCW to HCWhw
+       %0 = linalg.unpack %source inner_dims_pos = [2, 0] inner_tiles = [4, 2]
+           into %dest : tensor<9x3x8 x 4x2 xf32> -> tensor<18x3x32xf32>
+       //                       \  /   \ /
+       //          Outer Dims: 9x3x8   Inner Dims: 4x2
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.unpack'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: inner_tiles() -> _ods_ir
+
+
+   .. py:method:: outer_dims_perm() -> Optional[_ods_ir]
+
+
+   .. py:method:: inner_dims_pos() -> _ods_ir
+
+
+   .. py:method:: static_inner_tiles() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: unpack(source, dest, inner_dims_pos, inner_tiles, static_inner_tiles, *, outer_dims_perm=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WinogradFilterTransformOp(result, filter, output, fmr, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Winograd Conv2D algorithm will convert linalg Conv2D operator into batched
+   matrix multiply. Before the matrix multiply, it will convert filter and
+   input into a format suitable for batched matrix multiply. After the matrix
+   multiply, it will convert output to the final result tensor.
+
+   The algorithm F(m x m, r x r) is
+
+   Y = A^T x [(G x g x G^T) @ (B^T x d x B)] x A
+
+   The size of output Y is m x m. The size of filter g is r x r. The size of
+   input d is (m + r - 1) x (m + r - 1). A^T, A, G^T, G, B^T, and B are
+   transformation matrices.
+
+   This operator is defined to represent the high level concept of filter
+   transformation (G x g x G^T) in the Winograd Conv2D algorithm.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.winograd_filter_transform'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: filter() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fmr() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: winograd_filter_transform(result, filter, output, fmr, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WinogradInputTransformOp(result, input, output, fmr, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Winograd Conv2D algorithm will convert linalg Conv2D operator into batched
+   matrix multiply. Before the matrix multiply, it will convert filter and
+   input into a format suitable for batched matrix multiply. After the matrix
+   multiply, it will convert output to the final result tensor.
+
+   The algorithm F(m x m, r x r) is
+
+   Y = A^T x [(G x g x G^T) @ (B^T x d x B)] x A
+
+   The size of output Y is m x m. The size of filter g is r x r. The size of
+   input d is (m + r - 1) x (m + r - 1). A^T, A, G^T, G, B^T, and B are
+   transformation matrices.
+
+   This operator is defined to represent the high level concept of input
+   transformation (B^T x d x B) in the Winograd Conv2D algorithm.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.winograd_input_transform'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fmr() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: winograd_input_transform(result, input, output, fmr, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WinogradOutputTransformOp(result, value, output, fmr, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Winograd Conv2D algorithm will convert linalg Conv2D operator into batched
+   matrix multiply. Before the matrix multiply, it will convert filter and
+   input into a format suitable for batched matrix multiply. After the matrix
+   multiply, it will convert output to the final result tensor.
+
+   The algorithm F(m x m, r x r) is
+
+   Y = A^T x [(G x g x G^T) @ (B^T x d x B)] x A
+
+   The size of output Y is m x m. The size of filter g is r x r. The size of
+   input d is (m + r - 1) x (m + r - 1). A^T, A, G^T, G, B^T, and B are
+   transformation matrices.
+
+   This operator is defined to represent the high level concept of output
+   transformation (A^T x y x A) in the Winograd Conv2D algorithm.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.winograd_output_transform'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fmr() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: winograd_output_transform(result, value, output, fmr, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: YieldOp(values, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``linalg.yield`` is a special terminator operation for blocks inside regions
+   in ``linalg`` generic ops. It returns values to the immediately enclosing
+   ``linalg`` generic op.
+
+   Example:
+
+   .. code:: mlir
+
+       linalg.yield %f0, %f1 : f32, f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+.. py:function:: yield_(values, *, loc=None, ip=None) -> YieldOp
+
+.. py:class:: LogOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.log'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: log(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, LogOp]
+
+.. py:class:: MapOp(result, inputs, init, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Models elementwise operations on tensors in terms of arithmetic operations
+   on the corresponding elements.
+
+   Example:
+
+   .. code:: mlir
+
+         %add = linalg.map
+             ins(%lhs, %rhs : tensor<64xf32>, tensor<64xf32>)
+             outs(%init: tensor<64xf32>)
+             (%lhs_elem: f32, %rhs_elem: f32) {
+               %0 = arith.addf %lhs_elem, %rhs_elem: f32
+               linalg.yield %0: f32
+             }
+
+   Shortened print form is available for simple maps where the body contains exactly
+   two operations (the payload operation and a yield), the payload operation has
+   the same number of operands as block arguments with operands matching block
+   arguments in order, and the yield operand is the result of the payload operation.
+
+   The example above will be printed using the shortened form as:
+
+   .. code:: mlir
+
+         %add = linalg.map { arith.addf }
+             ins(%lhs, %rhs : tensor<64xf32>, tensor<64xf32>)
+             outs(%init: tensor<64xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.map'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: init() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: mapper() -> _ods_ir
+
+
+.. py:function:: map(result, inputs, init, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MapOp]
+
+.. py:class:: MatmulOp(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply,
+   promoting them to the same data type as the accumulator/output.
+
+   Broadcast and Transpose semantics can be appiled by specifying the explicit attribute
+   'indexing_maps' as shown below.This is a list attribute, so the list must include all
+   the maps if specified.
+
+   Example Transpose:
+
+   .. code:: mlir
+
+       linalg.matmul
+           indexing_maps = [affine_map<(m, n, k) -> (k, m)>, // transpose
+                            affine_map<(m, n, k) -> (k, n)>,
+                            affine_map<(m, n, k) -> (m, n)>]
+           ins(%arg0, %arg1 : memref<5x3xf32>,memref<5x7xf32>)
+           outs(%arg2: memref<3x7xf32>)
+
+   Example Broadcast:
+
+   .. code:: mlir
+
+       linalg.matmul
+          indexing_maps = [affine_map<(m, n, k) -> (k)>,     // broadcast
+                           affine_map<(m, n, k) -> (k, n)>,
+                           affine_map<(m, n, k) -> (m, n)>]
+          ins(%arg0, %arg1 : memref<3xf32>, memref<5x7xf32>)
+          outs(%arg2: memref<3x7xf32>)
+
+   Example Broadcast and transpose:
+
+   .. code:: mlir
+
+       linalg.matmul
+           indexing_maps = [affine_map<(m, n, k) -> (k, m)>, // transpose
+                            affine_map<(m, n, k) -> (k)>,    // broadcast
+                            affine_map<(m, n, k) -> (m, n)>]
+           ins(%arg0, %arg1 : memref<5x3xf32>, memref<7xf32>)
+           outs(%arg2: memref<3x7xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.matmul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> Optional[_ods_ir]
+
+
+   .. py:method:: cast() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: matmul(result_tensors, inputs, outputs, *, indexing_maps=None, cast=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MatmulOp]
+
+.. py:class:: MatvecOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.matvec'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: matvec(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MatvecOp]
+
+.. py:class:: MaxOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.max`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: max(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MaxOp]
+
+.. py:class:: MinOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.min`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.min'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: min(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MinOp]
+
+.. py:class:: Mmt4DOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Differences from linalg.matmul:
+
+   * The right hand side is transposed, whence the 't' in 'mmt'.
+   * The input and output tensors have a 4D shape instead of a 2D shape. They
+   are interpreted as 2D matrices with one level of 2D tile subdivision,
+   whence the 2+2=4 dimensions. The inner tile dimensions are identified with
+   '0' suffixes below, for instance the LHS matrix shape (M, K, M0, K0) reads
+   as: MxK tiles, each of shape M0xK0.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.mmt4d'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: mmt4d(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, Mmt4DOp]
+
+.. py:class:: MulOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.mul`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.mul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: mul(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MulOp]
+
+.. py:class:: NegFOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.negf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: negf(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, NegFOp]
+
+.. py:class:: PoolingNchwMaxOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nchw_max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nchw_max(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNchwMaxOp]
+
+.. py:class:: PoolingNchwSumOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NCHW.
+   * Kernel: HW.
+
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nchw_sum'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nchw_sum(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNchwSumOp]
+
+.. py:class:: PoolingNcwMaxOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_ncw_max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_ncw_max(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNcwMaxOp]
+
+.. py:class:: PoolingNcwSumOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NCW.
+   * Kernel: W.
+
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_ncw_sum'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_ncw_sum(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNcwSumOp]
+
+.. py:class:: PoolingNdhwcMaxOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_ndhwc_max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_ndhwc_max(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNdhwcMaxOp]
+
+.. py:class:: PoolingNdhwcMinOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_ndhwc_min'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_ndhwc_min(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNdhwcMinOp]
+
+.. py:class:: PoolingNdhwcSumOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_ndhwc_sum'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_ndhwc_sum(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNdhwcSumOp]
+
+.. py:class:: PoolingNhwcMaxOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nhwc_max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nhwc_max(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNhwcMaxOp]
+
+.. py:class:: PoolingNhwcMaxUnsignedOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nhwc_max_unsigned'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nhwc_max_unsigned(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNhwcMaxUnsignedOp]
+
+.. py:class:: PoolingNhwcMinOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nhwc_min'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nhwc_min(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNhwcMinOp]
+
+.. py:class:: PoolingNhwcMinUnsignedOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nhwc_min_unsigned'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nhwc_min_unsigned(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNhwcMinUnsignedOp]
+
+.. py:class:: PoolingNhwcSumOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NHWC.
+   * Kernel: HW.
+
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nhwc_sum'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nhwc_sum(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNhwcSumOp]
+
+.. py:class:: PoolingNwcMaxOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nwc_max'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nwc_max(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNwcMaxOp]
+
+.. py:class:: PoolingNwcMaxUnsignedOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nwc_max_unsigned'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nwc_max_unsigned(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNwcMaxUnsignedOp]
+
+.. py:class:: PoolingNwcMinOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nwc_min'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nwc_min(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNwcMinOp]
+
+.. py:class:: PoolingNwcMinUnsignedOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nwc_min_unsigned'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nwc_min_unsigned(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNwcMinUnsignedOp]
+
+.. py:class:: PoolingNwcSumOp(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Layout:
+
+   * Input: NWC.
+   * Kernel: W.
+
+   Numeric casting is performed on the input operand, promoting it to the same
+   data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.pooling_nwc_sum'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: dilations() -> Optional[_ods_ir]
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: pooling_nwc_sum(result_tensors, inputs, outputs, *, strides=None, dilations=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PoolingNwcSumOp]
+
+.. py:class:: PowFOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Only applies to floating point values.
+
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.powf`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.powf'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: powf(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, PowFOp]
+
+.. py:class:: QuantizedBatchMatmulOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. The quantized variant
+   includes zero-point adjustments for the left and right operands of the
+   matmul.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.quantized_batch_matmul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: quantized_batch_matmul(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, QuantizedBatchMatmulOp]
+
+.. py:class:: QuantizedMatmulOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output. The quantized variant
+   includes zero-point adjustments for the left and right operands of the
+   matmul.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.quantized_matmul'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: quantized_matmul(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, QuantizedMatmulOp]
+
+.. py:class:: ReciprocalOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.reciprocal'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: reciprocal(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ReciprocalOp]
+
+.. py:class:: ReduceOp(result, inputs, inits, dimensions, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Executes ``combiner`` on the ``dimensions`` of ``inputs`` and returns the
+   reduced result. The ``dimensions`` attribute needs to list the reduction
+   dimensions in increasing order.
+
+   Example:
+
+   .. code:: mlir
+
+         %reduce = linalg.reduce
+             ins(%input:tensor<16x32x64xf32>)
+             outs(%init:tensor<16x64xf32>)
+             dimensions = [1]
+             (%in: f32, %out: f32) {
+               %0 = arith.addf %out, %in: f32
+               linalg.yield %0: f32
+             }
+
+   Shortened print form is available for simple reduces where the body contains exactly
+   two operations (the payload operation and a yield), the payload operation has the
+   same number of operands as block arguments, the first block argument (init) is the
+   last operand of the payload operation with remaining operands matching remaining
+   block arguments in order, and the yield operand is the result of the payload operation.
+
+   The example above will be printed using the shortened form as:
+
+   .. code:: mlir
+
+         %reduce = linalg.reduce { arith.addf }
+             ins(%input:tensor<16x32x64xf32>)
+             outs(%init:tensor<16x64xf32>)
+             dimensions = [1]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.reduce'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: inits() -> _ods_ir
+
+
+   .. py:method:: dimensions() -> _ods_ir
+
+
+   .. py:method:: combiner() -> _ods_ir
+
+
+.. py:function:: reduce(result, inputs, inits, dimensions, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ReduceOp]
+
+.. py:class:: RoundOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.round'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: round(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, RoundOp]
+
+.. py:class:: RsqrtOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: rsqrt(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, RsqrtOp]
+
+.. py:class:: SelectOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.select`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.select'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: select(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SelectOp]
+
+.. py:class:: SqrtOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.sqrt'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: sqrt(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SqrtOp]
+
+.. py:class:: SquareOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.square'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: square(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SquareOp]
+
+.. py:class:: SubOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shapes and element types must be identical. The appropriate casts,
+   broadcasts and reductions should be done previously to calling this op.
+
+   This means reduction/broadcast/element cast semantics is explicit. Further
+   passes can take that into account when lowering this code. For example,
+   a ``linalg.broadcast`` + ``linalg.sub`` sequence can be lowered to a
+   ``linalg.generic`` with different affine maps for the two operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.sub'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: sub(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SubOp]
+
+.. py:class:: TanhOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   No numeric casting is performed on the input operand.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.tanh'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: tanh(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, TanhOp]
+
+.. py:class:: TransposeOp(result, input, init, permutation, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Permutes the dimensions of ``input`` according to the given ``permutation``.
+   ``dim(result, i) = dim(input, permutation[i])``
+
+   This op actually moves data, unlike ``memref.transpose`` which is a metadata
+   operation only that produces a transposed "view".
+
+   Example:
+
+   .. code:: mlir
+
+         %transpose = linalg.transpose
+             ins(%input:tensor<16x64xf32>)
+             outs(%init:tensor<64x16xf32>)
+             permutation = [1, 0]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.transpose'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: init() -> _ods_ir
+
+
+   .. py:method:: permutation() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: transpose(result, input, init, permutation, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, TransposeOp]
+
+.. py:class:: VecmatOp(result_tensors, inputs, outputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Numeric casting is performed on the operands to the inner multiply, promoting
+   them to the same data type as the accumulator/output.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'linalg.vecmat'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+   .. py:method:: result_tensors() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: vecmat(result_tensors, inputs, outputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, VecmatOp]
+

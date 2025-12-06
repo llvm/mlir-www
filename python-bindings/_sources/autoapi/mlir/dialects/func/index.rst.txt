@@ -1,0 +1,148 @@
+mlir.dialects.func
+==================
+
+.. py:module:: mlir.dialects.func
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.func.ARGUMENT_ATTRIBUTE_NAME
+   mlir.dialects.func.RESULT_ATTRIBUTE_NAME
+   mlir.dialects.func.func
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.func.ConstantOp
+   mlir.dialects.func.FuncOp
+   mlir.dialects.func.CallOp
+
+
+Module Contents
+---------------
+
+.. py:data:: ARGUMENT_ATTRIBUTE_NAME
+   :value: 'arg_attrs'
+
+
+.. py:data:: RESULT_ATTRIBUTE_NAME
+   :value: 'res_attrs'
+
+
+.. py:class:: ConstantOp(result, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`ConstantOp`
+
+
+   
+   Specialization for the constant op class.
+
+
+   .. py:property:: type
+
+
+.. py:class:: FuncOp(name, type, *, visibility=None, body_builder=None, loc=None, ip=None)
+
+   Bases: :py:obj:`FuncOp`
+
+
+   
+   Specialization for the func op class.
+
+
+   .. py:property:: is_external
+
+
+   .. py:property:: body
+
+
+   .. py:property:: type
+
+
+   .. py:property:: visibility
+
+
+   .. py:property:: name
+      :type: StringAttr
+
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:property:: entry_block
+
+
+   .. py:method:: add_entry_block(arg_locs: Optional[Sequence[Location]] = None)
+
+      
+      Add an entry block to the function body using the function signature to
+      infer block arguments.
+      Returns the newly created block
+
+
+
+   .. py:property:: arg_attrs
+
+
+   .. py:property:: arguments
+
+
+   .. py:property:: result_attrs
+
+
+   .. py:method:: from_py_func(*inputs: Type, results: Optional[Sequence[Type]] = None, name: Optional[str] = None)
+      :classmethod:
+
+
+      
+      Decorator to define an MLIR FuncOp specified as a python function.
+
+      Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+      active for the current thread (i.e. established in a ``with`` block).
+
+      When applied as a decorator to a Python function, an entry block will
+      be constructed for the FuncOp with types as specified in ``*inputs``. The
+      block arguments will be passed positionally to the Python function. In
+      addition, if the Python function accepts keyword arguments generally or
+      has a corresponding keyword argument, the following will be passed:
+
+      * ``func_op``: The ``func`` op being defined.
+
+      By default, the function name will be the Python function ``__name__``. This
+      can be overriden by passing the ``name`` argument to the decorator.
+
+      If ``results`` is not specified, then the decorator will implicitly
+      insert a ``ReturnOp`` with the ``Value``'s returned from the decorated
+      function. It will also set the ``FuncOp`` type with the actual return
+      value types. If ``results`` is specified, then the decorated function
+      must return ``None`` and no implicit ``ReturnOp`` is added (nor are the result
+      types updated). The implicit behavior is intended for simple, single-block
+      cases, and users should specify result types explicitly for any complicated
+      cases.
+
+      The decorated function can further be called from Python and will insert
+      a ``CallOp`` at the then-current insertion point, returning either None (
+      if no return values), a unary Value (for one result), or a list of Values).
+      This mechanism cannot be used to emit recursive calls (by construction).
+
+
+
+.. py:data:: func
+
+.. py:class:: CallOp(calleeOrResults: Union[FuncOp, List[Type]], argumentsOrCallee: Union[List, FlatSymbolRefAttr, str], arguments: Optional[List] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`CallOp`
+
+
+   
+   Specialization for the call op class.
+
+

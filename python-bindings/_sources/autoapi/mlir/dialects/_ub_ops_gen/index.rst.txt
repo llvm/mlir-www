@@ -1,0 +1,120 @@
+mlir.dialects._ub_ops_gen
+=========================
+
+.. py:module:: mlir.dialects._ub_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._ub_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._ub_ops_gen._Dialect
+   mlir.dialects._ub_ops_gen.PoisonOp
+   mlir.dialects._ub_ops_gen.UnreachableOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._ub_ops_gen.poison
+   mlir.dialects._ub_ops_gen.unreachable
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'ub'
+
+
+
+.. py:class:: PoisonOp(result, *, value=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``poison`` operation materializes a compile-time poisoned constant value
+   to indicate deferred undefined behavior.
+   ``value`` attribute is needed to indicate an optional additional poison
+   semantics (e.g. partially poisoned vectors), default value indicates results
+   is fully poisoned.
+
+   Examples:
+
+   .. code::
+
+       // Short form
+       %0 = ub.poison : i32
+       // Long form
+       %1 = ub.poison <#custom_poison_elements_attr> : vector<4xi64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.poison'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: poison(result, *, value=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: UnreachableOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``unreachable`` operation triggers immediate undefined behavior if
+   executed.
+
+   Example:
+
+   .. code::
+
+       ub.unreachable
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.unreachable'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: unreachable(*, loc=None, ip=None) -> UnreachableOp
+

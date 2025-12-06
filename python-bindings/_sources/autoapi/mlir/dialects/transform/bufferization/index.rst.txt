@@ -1,0 +1,38 @@
+mlir.dialects.transform.bufferization
+=====================================
+
+.. py:module:: mlir.dialects.transform.bufferization
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.bufferization.EmptyTensorToAllocTensorOp
+   mlir.dialects.transform.bufferization.OneShotBufferizeOp
+
+
+Module Contents
+---------------
+
+.. py:class:: EmptyTensorToAllocTensorOp(transformed_type: Type, target: Union[Operation, OpView, Value], *, loc=None, ip=None)
+              EmptyTensorToAllocTensorOp(target: Union[Operation, OpView, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`EmptyTensorToAllocTensorOp`
+
+
+   
+   Specialization for EmptyTensorToAllocTensorOp class.
+
+
+.. py:class:: OneShotBufferizeOp(transformed_type: Type, target: Union[Operation, OpView, Value], *, allow_return_allocs_from_loops: Optional[bool] = None, allow_unknown_ops: Optional[bool] = None, bufferize_function_boundaries: Optional[bool] = None, function_boundary_type_conversion: Optional[enum.Enum] = None, memcpy_op: Optional[str] = None, print_conflicts: Optional[bool] = None, test_analysis_only: Optional[bool] = None, loc=None, ip=None)
+              OneShotBufferizeOp(target: Union[Operation, OpView, Value], *, allow_return_allocs_from_loops: Optional[bool] = None, allow_unknown_ops: Optional[bool] = None, bufferize_function_boundaries: Optional[bool] = None, function_boundary_type_conversion: Optional[enum.Enum] = None, memcpy_op: Optional[str] = None, print_conflicts: Optional[bool] = None, test_analysis_only: Optional[bool] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`OneShotBufferizeOp`
+
+
+   
+   Specialization for OneShotBufferizeOp class.
+
+

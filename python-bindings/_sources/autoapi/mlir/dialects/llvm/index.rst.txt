@@ -1,0 +1,19 @@
+mlir.dialects.llvm
+==================
+
+.. py:module:: mlir.dialects.llvm
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.llvm.mlir_constant
+
+
+Module Contents
+---------------
+
+.. py:function:: mlir_constant(value, *, loc=None, ip=None) -> mlir.ir.Value
+

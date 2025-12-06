@@ -1,0 +1,54 @@
+mlir.dialects.linalg.opdsl.dump_oplib
+=====================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.dump_oplib
+
+.. autoapi-nested-parse::
+
+   
+   Loads one or more modules containing op definitions and dumps them.
+
+   The dump format can be:
+
+   * ``--dump_format=yaml`` (default)
+   * ``--dump_format=repr``
+
+   Positional arguments are interpreted as module names (optionally, relative to
+   this module). Loose module files can be specified via ``--file <filepath>``.
+
+   Sample usage:
+
+   Dump the YAML op definitions for the core named ops (as in the dialect
+   ######################################################################
+
+   source tree).
+   #############
+
+   python -m mlir.dialects.linalg.opdsl.dump_oplib .ops.core_named_ops
+
+   Note: YAML output is emitted in "document list" format with each operation
+   as its own "document". Practically, this means that each operation (or group
+   of composite ops) is emitted with a "---" preceding it, which can be useful
+   for testing.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.dump_oplib.create_arg_parser
+   mlir.dialects.linalg.opdsl.dump_oplib.load_module_from_file
+   mlir.dialects.linalg.opdsl.dump_oplib.main
+
+
+Module Contents
+---------------
+
+.. py:function:: create_arg_parser() -> argparse.ArgumentParser
+
+.. py:function:: load_module_from_file(module_name, file_path)
+
+.. py:function:: main(args)
+

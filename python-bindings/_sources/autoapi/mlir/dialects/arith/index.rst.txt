@@ -1,0 +1,69 @@
+mlir.dialects.arith
+===================
+
+.. py:module:: mlir.dialects.arith
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.arith.ConstantOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.arith._isa
+   mlir.dialects.arith._is_any_of
+   mlir.dialects.arith._is_integer_like_type
+   mlir.dialects.arith._is_float_type
+   mlir.dialects.arith.constant
+
+
+Module Contents
+---------------
+
+.. py:function:: _isa(obj: Any, cls: type)
+
+.. py:function:: _is_any_of(obj: Any, classes: List[type])
+
+.. py:function:: _is_integer_like_type(type: Type)
+
+.. py:function:: _is_float_type(type: Type)
+
+.. py:class:: ConstantOp(value: Attribute, *, loc=None, ip=None)
+              ConstantOp(result: Type, value: Union[int, float, array.array], *, loc=None, ip=None)
+
+   Bases: :py:obj:`ConstantOp`
+
+
+   
+   Specialization for the constant op class.
+
+
+   .. py:method:: create_index(value: int, *, loc=None, ip=None)
+      :classmethod:
+
+
+      
+      Create an index-typed constant.
+
+
+
+   .. py:property:: type
+
+
+   .. py:property:: value
+
+
+   .. py:property:: literal_value
+      :type: Union[int, float]
+
+
+
+.. py:function:: constant(result: Type, value: Union[int, float, Attribute, array.array], *, loc=None, ip=None) -> Value
+

@@ -1,0 +1,85 @@
+mlir.dialects.ml_program
+========================
+
+.. py:module:: mlir.dialects.ml_program
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.ml_program.ARGUMENT_ATTRIBUTE_NAME
+   mlir.dialects.ml_program.RESULT_ATTRIBUTE_NAME
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.ml_program.FuncOp
+
+
+Module Contents
+---------------
+
+.. py:data:: ARGUMENT_ATTRIBUTE_NAME
+   :value: 'arg_attrs'
+
+
+.. py:data:: RESULT_ATTRIBUTE_NAME
+   :value: 'res_attrs'
+
+
+.. py:class:: FuncOp(name, type, *, visibility=None, body_builder=None, loc=None, ip=None)
+
+   Bases: :py:obj:`FuncOp`
+
+
+   
+   Specialization for the func op class.
+
+
+   .. py:property:: is_external
+
+
+   .. py:property:: body
+
+
+   .. py:property:: type
+
+
+   .. py:property:: visibility
+
+
+   .. py:property:: name
+      :type: StringAttr
+
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:property:: entry_block
+
+
+   .. py:method:: add_entry_block()
+
+      
+      Add an entry block to the function body using the function signature to
+      infer block arguments.
+      Returns the newly created block
+
+
+
+   .. py:property:: arg_attrs
+
+
+   .. py:property:: arguments
+
+
+   .. py:property:: result_attrs
+
+

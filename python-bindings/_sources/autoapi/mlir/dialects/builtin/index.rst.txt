@@ -1,0 +1,39 @@
+mlir.dialects.builtin
+=====================
+
+.. py:module:: mlir.dialects.builtin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.builtin.ModuleOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.builtin.module
+
+
+Module Contents
+---------------
+
+.. py:class:: ModuleOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`ModuleOp`
+
+
+   
+   Specialization for the module op class.
+
+
+   .. py:property:: body
+
+
+.. py:function:: module(*, sym_name=None, sym_visibility=None, attrs: Optional[Dict[str, Attribute]] = None, loc=None, ip=None)
+

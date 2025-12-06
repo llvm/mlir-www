@@ -1,0 +1,330 @@
+mlir.dialects._xegpu_transform_ops_gen
+======================================
+
+.. py:module:: mlir.dialects._xegpu_transform_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_transform_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_transform_ops_gen.ConvertLayoutOp
+   mlir.dialects._xegpu_transform_ops_gen.GetDescOp
+   mlir.dialects._xegpu_transform_ops_gen.InsertPrefetchOp
+   mlir.dialects._xegpu_transform_ops_gen.SetDescLayoutOp
+   mlir.dialects._xegpu_transform_ops_gen.SetGPULaunchThreadsOp
+   mlir.dialects._xegpu_transform_ops_gen.SetOpLayoutAttrOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_convert_layout
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_get_desc_op
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_insert_prefetch
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_set_desc_layout
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_set_gpu_launch_threads
+   mlir.dialects._xegpu_transform_ops_gen.xegpu_set_op_layout_attr
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: ConvertLayoutOp(newConvertOp, target, input_sg_layout, input_sg_data, input_inst_data, target_sg_layout, target_sg_data, target_inst_data, *, static_input_sg_layout=None, static_input_sg_data=None, static_input_inst_data=None, static_target_sg_layout=None, static_target_sg_data=None, static_target_inst_data=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Adds an ``xegpu.convert_layout`` op to convert the ``xegpu.layout`` attribute
+   of a value. The input and target layouts are defined by the ``*sg_layout``,
+   ``*sg_data`` and optional ``*inst_data`` attributes. Returns a handle to the
+   emitted ``xegpu.convert_layout`` op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.convert_layout'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: input_sg_layout() -> _ods_ir
+
+
+   .. py:method:: input_sg_data() -> _ods_ir
+
+
+   .. py:method:: input_inst_data() -> _ods_ir
+
+
+   .. py:method:: target_sg_layout() -> _ods_ir
+
+
+   .. py:method:: target_sg_data() -> _ods_ir
+
+
+   .. py:method:: target_inst_data() -> _ods_ir
+
+
+   .. py:method:: static_input_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: newConvertOp() -> _ods_ir
+
+
+.. py:function:: xegpu_convert_layout(new_convert_op, target, input_sg_layout, input_sg_data, input_inst_data, target_sg_layout, target_sg_data, target_inst_data, *, static_input_sg_layout=None, static_input_sg_data=None, static_input_inst_data=None, static_target_sg_layout=None, static_target_sg_data=None, static_target_inst_data=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetDescOp(descHandle, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Traces the producers of the given value until an ``xegpu.create_nd_tdesc``
+   descriptor op is found. Returns a handle to it. Currently traces
+   producers by following only the first operand of producer ops.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.get_desc_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: descHandle() -> _ods_ir
+
+
+.. py:function:: xegpu_get_desc_op(desc_handle, target, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: InsertPrefetchOp(desc_op, target, *, dynamic_nb_prefetch=None, static_nb_prefetch=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given a target value (e.g., ``vector``) residing in a ``scf.for`` loop, this
+   transform finds the corresponding ``xegpu.load_nd`` op and inserts
+   ``xegpu.prefetch_nd`` operations for the tile. The load op must reside within
+   the ``scf.for`` loop. Number of prefetch steps is set by the ``nb_prefetch``
+   argument (default value is 1). Returns a handle to the created
+   ``xegpu.create_nd_desc`` op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.insert_prefetch'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: dynamic_nb_prefetch() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_nb_prefetch() -> Optional[_ods_ir]
+
+
+   .. py:method:: desc_op() -> _ods_ir
+
+
+.. py:function:: xegpu_insert_prefetch(desc_op, target, *, dynamic_nb_prefetch=None, static_nb_prefetch=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SetDescLayoutOp(transformed, target, sg_layout, sg_data, inst_data, *, static_sg_layout=None, static_sg_data=None, static_inst_data=None, slice_dims=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given an ``xegpu.create_nd_desc`` operation, this transform adds
+   ``xegpu.layout`` attribute to the result tensor descriptor. The layout is
+   defined by the ``sg_layout``, and ``sg_data`` and optional ``inst_data``
+   attributes. If ``slice_dims`` is provided, the ``xegpu.layout`` attribute is
+   wrapped in an ``xegpu.slice<..., dims=slice_dims>`` attribute. Returns a handle to
+   the transformed op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_desc_layout'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: sg_layout() -> _ods_ir
+
+
+   .. py:method:: sg_data() -> _ods_ir
+
+
+   .. py:method:: inst_data() -> _ods_ir
+
+
+   .. py:method:: static_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: slice_dims() -> Optional[_ods_ir]
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: xegpu_set_desc_layout(transformed, target, sg_layout, sg_data, inst_data, *, static_sg_layout=None, static_sg_data=None, static_inst_data=None, slice_dims=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SetGPULaunchThreadsOp(target, threads, *, static_threads=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Overrides the x,y,z threads operands of a given ``gpu.launch`` operation in-place.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_gpu_launch_threads'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: threads() -> _ods_ir
+
+
+   .. py:method:: static_threads() -> Optional[_ods_ir]
+
+
+.. py:function:: xegpu_set_gpu_launch_threads(target, threads, *, static_threads=None, loc=None, ip=None) -> SetGPULaunchThreadsOp
+
+.. py:class:: SetOpLayoutAttrOp(target, sg_layout, sg_data, inst_data, *, index=None, static_sg_layout=None, static_sg_data=None, static_inst_data=None, slice_dims=None, result=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Sets the ``xegpu.layout`` attribute of an op. If ``result=true``, sets the
+   ``layout_result_{index}``, otherwise ``layout_operand_{index}`` attribute. The
+   target operand/result value is defined by the ``index`` argument. The layout
+   is defined by the ``sg_layout``, ``sg_data`` and optional ``inst_data``
+   attributes. If ``slice_dims`` is provided, the ``xegpu.layout`` attribute is
+   wrapped in an ``xegpu.slice<..., dims=slice_dims>`` attribute.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_op_layout_attr'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: sg_layout() -> _ods_ir
+
+
+   .. py:method:: sg_data() -> _ods_ir
+
+
+   .. py:method:: inst_data() -> _ods_ir
+
+
+   .. py:method:: index() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: slice_dims() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> bool
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: xegpu_set_op_layout_attr(target, sg_layout, sg_data, inst_data, *, index=None, static_sg_layout=None, static_sg_data=None, static_inst_data=None, slice_dims=None, result=None, loc=None, ip=None) -> SetOpLayoutAttrOp
+

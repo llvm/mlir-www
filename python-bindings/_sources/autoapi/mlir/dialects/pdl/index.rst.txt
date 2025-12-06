@@ -1,0 +1,163 @@
+mlir.dialects.pdl
+=================
+
+.. py:module:: mlir.dialects.pdl
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.pdl.pattern
+   mlir.dialects.pdl.rewrite
+   mlir.dialects.pdl.OperationTypeT
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.pdl.AttributeOp
+   mlir.dialects.pdl.OperandOp
+   mlir.dialects.pdl.OperandsOp
+   mlir.dialects.pdl.OperationOp
+   mlir.dialects.pdl.PatternOp
+   mlir.dialects.pdl.ReplaceOp
+   mlir.dialects.pdl.ResultOp
+   mlir.dialects.pdl.RewriteOp
+   mlir.dialects.pdl.TypeOp
+   mlir.dialects.pdl.TypesOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.pdl.op_t
+
+
+Module Contents
+---------------
+
+.. py:class:: AttributeOp(valueType: Optional[Union[OpView, Operation, Value]] = None, value: Optional[Attribute] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`AttributeOp`
+
+
+   
+   Specialization for PDL attribute op class.
+
+
+.. py:class:: OperandOp(type: Optional[Union[OpView, Operation, Value]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`OperandOp`
+
+
+   
+   Specialization for PDL operand op class.
+
+
+.. py:class:: OperandsOp(types: Optional[Union[OpView, Operation, Value]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`OperandsOp`
+
+
+   
+   Specialization for PDL operands op class.
+
+
+.. py:class:: OperationOp(name: Optional[Union[str, StringAttr]] = None, args: Optional[Sequence[Union[OpView, Operation, Value]]] = None, attributes: Optional[Mapping[str, Union[OpView, Operation, Value]]] = None, types: Optional[Sequence[Union[OpView, Operation, Value]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`OperationOp`
+
+
+   
+   Specialization for PDL operand op class.
+
+
+.. py:class:: PatternOp(benefit: Union[IntegerAttr, int], name: Optional[Union[StringAttr, str]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`PatternOp`
+
+
+   
+   Specialization for PDL pattern op class.
+
+
+   .. py:property:: body
+
+      
+      Return the body (block) of the pattern.
+
+
+
+.. py:data:: pattern
+
+.. py:class:: ReplaceOp(op: Union[OpView, Operation, Value], *, with_op: Optional[Union[OpView, Operation, Value]] = None, with_values: Optional[Sequence[Union[OpView, Operation, Value]]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`ReplaceOp`
+
+
+   
+   Specialization for PDL replace op class.
+
+
+.. py:class:: ResultOp(parent: Union[OpView, Operation, Value], index: Union[IntegerAttr, int], *, loc=None, ip=None)
+
+   Bases: :py:obj:`ResultOp`
+
+
+   
+   Specialization for PDL result op class.
+
+
+.. py:class:: RewriteOp(root: Optional[Union[OpView, Operation, Value]] = None, name: Optional[Union[StringAttr, str]] = None, args: Optional[Sequence[Union[OpView, Operation, Value]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`RewriteOp`
+
+
+   
+   Specialization for PDL rewrite op class.
+
+
+   .. py:method:: add_body()
+
+      
+      Add body (block) to the rewrite.
+
+
+
+   .. py:property:: body
+
+      
+      Return the body (block) of the rewrite.
+
+
+
+.. py:data:: rewrite
+
+.. py:class:: TypeOp(constantType: Optional[Union[TypeAttr, Type]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`TypeOp`
+
+
+   
+   Specialization for PDL type op class.
+
+
+.. py:class:: TypesOp(constantTypes: Optional[Sequence[Union[TypeAttr, Type]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`TypesOp`
+
+
+   
+   Specialization for PDL types op class.
+
+
+.. py:data:: OperationTypeT
+
+.. py:function:: op_t() -> OperationTypeT
+

@@ -1,0 +1,125 @@
+mlir._mlir_libs._mlirPythonTestNanobind
+=======================================
+
+.. py:module:: mlir._mlir_libs._mlirPythonTestNanobind
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlirPythonTestNanobind.TestAttr
+   mlir._mlir_libs._mlirPythonTestNanobind.TestType
+   mlir._mlir_libs._mlirPythonTestNanobind.TestIntegerRankedTensorType
+   mlir._mlir_libs._mlirPythonTestNanobind.TestTensorValue
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlirPythonTestNanobind.register_python_test_dialect
+   mlir._mlir_libs._mlirPythonTestNanobind.register_dialect
+   mlir._mlir_libs._mlirPythonTestNanobind.test_diagnostics_with_errors_and_notes
+
+
+Module Contents
+---------------
+
+.. py:function:: register_python_test_dialect(context: mlir.ir.Context, load: bool = True) -> None
+
+.. py:function:: register_dialect(registry: mlir.ir.DialectRegistry) -> None
+
+.. py:function:: test_diagnostics_with_errors_and_notes(arg: mlir.ir.Context, /) -> None
+
+.. py:class:: TestAttr
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.Attribute`
+
+
+   .. py:method:: isinstance(other_attribute: mlir.ir.Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: __repr__() -> object
+
+
+   .. py:method:: get_static_typeid() -> mlir.ir.TypeID
+      :staticmethod:
+
+
+
+   .. py:method:: get(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      get(cls: object, context: mlir.ir.Context | None = None) -> object
+
+
+
+.. py:class:: TestType
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.Type`
+
+
+   .. py:method:: isinstance(other_type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: get_static_typeid() -> mlir.ir.TypeID
+      :staticmethod:
+
+
+
+   .. py:method:: get(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      get(cls: object, context: mlir.ir.Context | None = None) -> object
+
+
+
+.. py:class:: TestIntegerRankedTensorType
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.RankedTensorType`
+
+
+   .. py:method:: isinstance(other_type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: get(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      get(cls: object, shape: collections.abc.Sequence[int], width: int, context: mlir.ir.Context | None = None) -> object
+
+
+
+.. py:class:: TestTensorValue
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.Value`
+
+
+   .. py:method:: isinstance(other_value: mlir.ir.Value) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: is_null() -> bool
+
+

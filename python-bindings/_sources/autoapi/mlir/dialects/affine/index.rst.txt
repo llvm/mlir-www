@@ -1,0 +1,87 @@
+mlir.dialects.affine
+====================
+
+.. py:module:: mlir.dialects.affine
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.affine.AffineForOp
+   mlir.dialects.affine.AffineIfOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.affine.for_
+
+
+Module Contents
+---------------
+
+.. py:class:: AffineForOp(lower_bound: Union[int, mlir.dialects._ods_common.ResultValueT, AffineMap], upper_bound: Optional[Union[int, mlir.dialects._ods_common.ResultValueT, AffineMap]], step: Optional[Union[int, Attribute]] = None, iter_args: Optional[mlir.dialects._ods_common.ResultValueT] = None, *, lower_bound_operands: Optional[mlir.dialects._ods_common.VariadicResultValueT] = None, upper_bound_operands: Optional[mlir.dialects._ods_common.VariadicResultValueT] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`AffineForOp`
+
+
+   
+   Specialization for the Affine for op class.
+
+
+   .. py:property:: body
+
+      
+      Returns the body (block) of the loop.
+
+
+
+   .. py:property:: induction_variable
+
+      
+      Returns the induction variable of the loop.
+
+
+
+   .. py:property:: inner_iter_args
+
+      
+      Returns the loop-carried arguments usable within the loop.
+
+      To obtain the loop-carried operands, use ``iter_args``.
+
+
+
+.. py:function:: for_(start, stop, step=None, iter_args: Optional[Sequence[Value]] = None, *, loc=None, ip=None)
+
+.. py:class:: AffineIfOp(cond: IntegerSet, results_: Optional[Type] = None, *, cond_operands: Optional[mlir.dialects._ods_common.VariadicResultValueT] = None, has_else: bool = False, loc=None, ip=None)
+
+   Bases: :py:obj:`AffineIfOp`
+
+
+   
+   Specialization for the Affine if op class.
+
+
+   .. py:property:: then_block
+      :type: Block
+
+
+      
+      Returns the then block of the if operation.
+
+
+
+   .. py:property:: else_block
+      :type: Optional[Block]
+
+
+      
+      Returns the else block of the if operation.
+
+
+

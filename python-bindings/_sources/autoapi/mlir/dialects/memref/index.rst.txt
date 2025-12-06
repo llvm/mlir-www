@@ -1,0 +1,38 @@
+mlir.dialects.memref
+====================
+
+.. py:module:: mlir.dialects.memref
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.memref._generated_subview
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.memref._is_constant_int_like
+   mlir.dialects.memref._is_static_int_like
+   mlir.dialects.memref._infer_memref_subview_result_type
+   mlir.dialects.memref.subview
+
+
+Module Contents
+---------------
+
+.. py:function:: _is_constant_int_like(i)
+
+.. py:function:: _is_static_int_like(i)
+
+.. py:function:: _infer_memref_subview_result_type(source_memref_type, offsets, static_sizes, static_strides)
+
+.. py:data:: _generated_subview
+
+.. py:function:: subview(source: mlir.ir.Value, offsets: mlir.dialects._ods_common.MixedValues, sizes: mlir.dialects._ods_common.MixedValues, strides: mlir.dialects._ods_common.MixedValues, *, result_type: Optional[mlir.ir.MemRefType] = None, loc=None, ip=None)
+

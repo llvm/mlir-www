@@ -1,0 +1,27 @@
+<map id="mlir::AnalysisState" name="mlir::AnalysisState">
+<area shape="rect" id="Node000001" title="Base class for generic analysis states." alt="" coords="5,141,151,166"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1bufferization_1_1OneShotAnalysisState.html" title="State for analysis&#45;enabled bufferization." alt="" coords="212,5,387,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,129,144,91,199,55,225,43,227,48,201,60,147,96,104,133"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1dataflow_1_1AbstractDenseLattice.html" title="This class represents a dense lattice." alt="" coords="213,69,386,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,134,229,107,230,112,137,139"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1dataflow_1_1AbstractSparseLattice.html" title="This class represents an abstract lattice." alt="" coords="213,133,386,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,151,213,151,213,156,165,156"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1dataflow_1_1Executable.html" title="This is a simple analysis state that represents whether the associated lattice anchor (either a block..." alt="" coords="204,198,395,223"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="140,167,201,183,249,195,248,201,199,188,139,172"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1dataflow_1_1PredecessorState.html" title="This analysis state represents a set of live control&#45;flow &quot;predecessors&quot; of a program point (either a..." alt="" coords="200,248,399,288"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="108,173,151,203,201,232,232,245,230,250,199,237,148,207,105,177"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1dataflow_1_1Lattice.html" title=" " alt="" coords="873,45,1048,85"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="382,126,397,119,421,101,432,92,447,84,502,66,558,53,616,45,674,40,783,41,874,49,873,54,782,47,674,46,617,50,559,58,503,71,449,89,435,97,425,105,400,124,384,131"/>
+<area shape="rect" id="Node000007" href="$classmlir_1_1dataflow_1_1Lattice.html" title=" " alt="" coords="860,125,1061,165"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="400,150,624,148,860,144,860,150,624,153,400,155"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1dataflow_1_1Lattice.html" title="This class represents a lattice holding a specific value of type ValueT." alt="" coords="455,99,617,139"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="400,136,454,128,455,133,401,141"/>
+<area shape="rect" id="Node000010" href="$structmlir_1_1dataflow_1_1Liveness.html" title="This lattice represents, for a given value, whether or not it is &quot;live&quot;." alt="" coords="448,214,624,239"/>
+<area shape="poly" id="edge11_Node000004_Node000010" title=" " alt="" coords="378,175,400,183,424,192,487,211,486,216,422,197,398,188,376,180"/>
+<area shape="rect" id="Node000006" href="$classmlir_1_1dataflow_1_1IntegerValueRangeLattice.html" title="This lattice element represents the integer value range of an SSA value." alt="" coords="1123,45,1325,85"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1062,63,1123,63,1123,68,1062,68"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1dataflow_1_1StridedMetadataRangeLattice.html" title="This lattice element represents the strided metadata of an SSA value." alt="" coords="1111,125,1337,165"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1075,143,1110,143,1110,148,1075,148"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="631,104,873,74,873,79,632,109"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="631,127,648,128,860,140,860,145,648,133,631,132"/>
+</map>

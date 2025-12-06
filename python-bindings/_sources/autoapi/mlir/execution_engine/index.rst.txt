@@ -1,0 +1,49 @@
+mlir.execution_engine
+=====================
+
+.. py:module:: mlir.execution_engine
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.execution_engine.ExecutionEngine
+
+
+Module Contents
+---------------
+
+.. py:class:: ExecutionEngine
+
+   Bases: :py:obj:`_mlir_libs._mlirExecutionEngine.ExecutionEngine`
+
+
+   .. py:method:: lookup(name)
+
+      
+      Lookup a function emitted with the ``llvm.emit_c_interface``
+      attribute and returns a ctype callable.
+      Raise a RuntimeError if the function isn't found.
+
+
+
+   .. py:method:: invoke(name, *ctypes_args)
+
+      
+      Invoke a function with the list of ctypes arguments.
+      All arguments must be pointers.
+      Raise a RuntimeError if the function isn't found.
+
+
+
+   .. py:method:: register_runtime(name, ctypes_callback)
+
+      
+      Register a runtime function available to the jitted code
+      under the provided ``name``. The ``ctypes_callback`` must be a
+      ``CFuncType`` that outlives the execution engine.
+
+
+
