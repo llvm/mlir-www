@@ -1,0 +1,757 @@
+mlir.dialects.transform.loop
+============================
+
+.. py:module:: mlir.dialects.transform.loop
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.loop.ApplyForLoopCanonicalizationPatternsOp
+   mlir.dialects.transform.loop.ApplySCFStructuralConversionPatternsOp
+   mlir.dialects.transform.loop.ApplySCFToControlFlowPatternsOp
+   mlir.dialects.transform.loop.ForallToForOp
+   mlir.dialects.transform.loop.ForallToParallelOp
+   mlir.dialects.transform.loop.HoistLoopInvariantSubsetsOp
+   mlir.dialects.transform.loop.LoopCoalesceOp
+   mlir.dialects.transform.loop.LoopFuseSiblingOp
+   mlir.dialects.transform.loop.LoopOutlineOp
+   mlir.dialects.transform.loop.LoopPeelOp
+   mlir.dialects.transform.loop.LoopPipelineOp
+   mlir.dialects.transform.loop.LoopPromoteIfOneIterationOp
+   mlir.dialects.transform.loop.LoopUnrollAndJamOp
+   mlir.dialects.transform.loop.LoopUnrollOp
+   mlir.dialects.transform.loop.ParallelForToNestedForOps
+   mlir.dialects.transform.loop.TakeAssumedBranchOp
+   mlir.dialects.transform.loop.LoopOutlineOp
+   mlir.dialects.transform.loop.LoopPeelOp
+   mlir.dialects.transform.loop.LoopPipelineOp
+   mlir.dialects.transform.loop.LoopUnrollOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.loop.apply_patterns_scf_for_loop_canonicalization
+   mlir.dialects.transform.loop.apply_conversion_patterns_scf_structural_conversions
+   mlir.dialects.transform.loop.apply_conversion_patterns_scf_scf_to_control_flow
+   mlir.dialects.transform.loop.loop_forall_to_for
+   mlir.dialects.transform.loop.loop_forall_to_parallel
+   mlir.dialects.transform.loop.loop_hoist_loop_invariant_subsets
+   mlir.dialects.transform.loop.loop_coalesce
+   mlir.dialects.transform.loop.loop_fuse_sibling
+   mlir.dialects.transform.loop.loop_outline
+   mlir.dialects.transform.loop.loop_peel
+   mlir.dialects.transform.loop.loop_pipeline
+   mlir.dialects.transform.loop.loop_promote_if_one_iteration
+   mlir.dialects.transform.loop.loop_unroll_and_jam
+   mlir.dialects.transform.loop.loop_unroll
+   mlir.dialects.transform.loop.loop_parallel_for_to_nested_fors
+   mlir.dialects.transform.loop.scf_take_assumed_branch
+
+
+Module Contents
+---------------
+
+.. py:class:: ApplyForLoopCanonicalizationPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns for canonicalizing operations inside SCF loop bodies.
+   At the moment, only affine.min/max computations with iteration variables,
+   loop bounds and loop steps are canonicalized.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.scf.for_loop_canonicalization'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_scf_for_loop_canonicalization(*, loc=None, ip=None) -> ApplyForLoopCanonicalizationPatternsOp
+
+.. py:class:: ApplySCFStructuralConversionPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns for performing structural conversions of SCF operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.scf.structural_conversions'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_conversion_patterns_scf_structural_conversions(*, loc=None, ip=None) -> ApplySCFStructuralConversionPatternsOp
+
+.. py:class:: ApplySCFToControlFlowPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns that lower structured control flow ops to unstructured
+   control flow.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.scf.scf_to_control_flow'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_conversion_patterns_scf_scf_to_control_flow(*, loc=None, ip=None) -> ApplySCFToControlFlowPatternsOp
+
+.. py:class:: ForallToForOp(transformed, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Converts the ``scf.forall`` operation pointed to by the given handle into a
+   set of nested ``scf.for`` operations. Each new operation corresponds to one
+   induction variable of the original "multifor" loop.
+
+   The operand handle must be associated with exactly one payload operation.
+
+   Loops with shared outputs are currently not supported.
+
+   Return Modes
+   ------------
+
+   Consumes the operand handle. Produces a silenceable failure if the operand
+   is not associated with a single ``scf.forall`` payload operation.
+   Returns as many handles as the given ``forall`` op has induction variables
+   that are associated with the generated ``scf.for`` loops.
+   Produces a silenceable failure if another number of resulting handles is
+   requested.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.forall_to_for'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: loop_forall_to_for(transformed, target, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ForallToForOp]
+
+.. py:class:: ForallToParallelOp(transformed, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Converts the ``scf.forall`` operation pointed to by the given handle into an
+   ``scf.parallel`` operation.
+
+   The operand handle must be associated with exactly one payload operation.
+
+   Loops with outputs are not supported.
+
+   Return Modes
+   ------------
+
+   Consumes the operand handle. Produces a silenceable failure if the operand
+   is not associated with a single ``scf.forall`` payload operation.
+   Returns a handle to the new ``scf.parallel`` operation.
+   Produces a silenceable failure if another number of resulting handles is
+   requested.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.forall_to_parallel'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: loop_forall_to_parallel(transformed, target, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ForallToParallelOp]
+
+.. py:class:: HoistLoopInvariantSubsetsOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This transform hoists loop-invariant subset ops out of the targeted
+   loop-like op. It looks for matching subset extraction/insertion op pairs and
+   hoists them. The loop body operates on a newly introduced region iter_arg.
+
+   Subset ops are hoisted only from the targeted op. If subset ops should be
+   hoisted from an entire loop nest, this transformation must be applied to
+   each loop-like op of the loop nest, starting with the innermost loop and
+   ending with the outermost loop.
+
+   Example:
+
+   .. code::
+
+       %r = scf.for ... iter_args(%t = %a) -> (tensor<?xf32>) {
+         %0 = tensor.extract_slice %t[0][5][1] : tensor<?xf32> to tensor<5xf32>
+         %1 = "test.foo"(%0) : (tensor<5xf32>) -> (tensor<5xf32>)
+         %2 = tensor.insert_slice %1 into %t[0][5][1]
+             : tensor<5xf32> into tensor<?xf32>
+         scf.yield %2 : tensor<?xf32>
+       }
+
+   Is transformed to:
+
+   .. code::
+
+       %0 = tensor.extract_slice %a[0][5][1] : tensor<?xf32> to tensor<5xf32>
+       %new_loop:2 = scf.for ... iter_args(%t = %a, %h = %0) -> (tensor<?xf32>) {
+         %1 = "test.foo"(%h) : (tensor<5xf32>) -> (tensor<5xf32>)
+         scf.yield %t, %2 : tensor<?xf32>, tensor<5xf32>
+       }
+       %r = tensor.insert_slice %new_loop#1 into %new_loop#0
+           : tensor<5xf32> into tensor<?xf32>
+
+   Subset ops are hoisted only if there are no conflicting subset ops. E.g.,
+   if there were a second overlapping extraction in the above example, no ops
+   could be hoisted safely.
+
+   This transform reads the target handle and modifies the payload. This
+   transform does not invalidate any handles, but loop-like ops are replaced
+   with new loop-like ops when a subset op is hoisted. The transform rewriter
+   updates all handles accordingly.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.hoist_loop_invariant_subsets'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: loop_hoist_loop_invariant_subsets(target, *, loc=None, ip=None) -> HoistLoopInvariantSubsetsOp
+
+.. py:class:: LoopCoalesceOp(transformed, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given a perfect loop nest identified by the outermost loop,
+   perform loop coalescing in a bottom-up one-by-one manner.
+
+   Return modes
+   ------------
+
+   The return handle points to the coalesced loop if coalescing happens, or
+   the given input loop if coalescing does not happen.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.coalesce'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: loop_coalesce(transformed, target, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoopFuseSiblingOp(fused_loop, target, source, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Fuses the ``target`` loop into the ``source`` loop assuming they are
+   independent of each other. In the fused loop, the arguments, body and
+   results of ``target`` are placed *before* those of ``source``.
+
+   For fusion of two ``scf.for`` loops, the bounds and step size must match. For
+   fusion of two ``scf.forall`` loops, the bounds and the mapping must match.
+   Otherwise a silencable failure is produced.
+
+   The ``target`` and ``source`` handles must refer to exactly one operation,
+   otherwise a definite failure is produced. It is the responsibility of the
+   user to ensure that the ``target`` and ``source`` loops are independent of each
+   other -- this op will only perform rudimentary legality checks.
+
+   Return modes
+   ------------
+
+   This operation consumes the ``target`` and ``source`` handles and produces the
+   ``fused_loop`` handle, which points to the fused loop.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.fuse_sibling'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: fused_loop() -> _ods_ir
+
+
+.. py:function:: loop_fuse_sibling(fused_loop, target, source, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoopOutlineOp(function, call, target, func_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Moves the loop into a separate function with the specified name and replaces
+   the loop in the Payload IR with a call to that function. Takes care of
+   forwarding values that are used in the loop as function arguments. If the
+   operand is associated with more than one loop, each loop will be outlined
+   into a separate function. The provided name is used as a *base* for forming
+   actual function names following ``SymbolTable`` auto-renaming scheme to avoid
+   duplicate symbols. Expects that all ops in the Payload IR have a
+   ``SymbolTable`` ancestor (typically true because of the top-level module).
+
+   Return Modes
+   ------------
+
+   Returns a handle to the list of outlined functions and a handle to the
+   corresponding function call operations in the same order as the operand
+   handle.
+
+   Produces a definite failure if outlining failed for any of the targets.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.outline'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: func_name() -> _ods_ir
+
+
+   .. py:method:: function() -> _ods_ir
+
+
+   .. py:method:: call() -> _ods_ir
+
+
+.. py:function:: loop_outline(function, call, target, func_name, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoopPeelOp(peeled_loop, remainder_loop, target, *, peel_front=None, fail_if_already_divisible=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Rewrite the given loop with a main loop and a partial (first or last) loop.
+   When the ``peelFront`` option is set to true, the first iteration is peeled off.
+   Otherwise, updates the given loop so that its step evenly divides its range and puts
+   the remaining iteration into a separate loop or a conditional.
+
+   In the absence of sufficient static information, this op may peel a loop,
+   even if the step always divides the range evenly at runtime.
+
+   Return modes
+   ------------
+
+   This operation ignores non-scf::ForOp ops and drops them in the return.
+   The op returns two loops, the peeled loop which has trip count divisible
+   by the step, and the remainder loop.
+
+   When ``peelFront`` is true, the first result (remainder loop) executes all
+   but the first iteration of the target loop. The second result (peeled
+   loop) corresponds to the first iteration of the loop which can be
+   canonicalized away in the following optimizations.
+
+   When ``peelFront`` is false, the first result (peeled loop) is the portion
+   of the target loop with the highest upper bound that is divisible by the
+   step. The second result (remainder loop) contains the remaining iterations.
+
+   Note that even though the Payload IR modification may be performed
+   in-place, this operation consumes the operand handle and produces a new one.
+
+   Return Modes
+   ------------
+
+   Produces a definite failure if peeling fails.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.peel'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: peel_front() -> _ods_ir
+
+
+   .. py:method:: fail_if_already_divisible() -> _ods_ir
+
+
+   .. py:method:: peeled_loop() -> _ods_ir
+
+
+   .. py:method:: remainder_loop() -> _ods_ir
+
+
+.. py:function:: loop_peel(peeled_loop, remainder_loop, target, *, peel_front=None, fail_if_already_divisible=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoopPipelineOp(transformed, target, *, iteration_interval=None, read_latency=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Transforms the given loops one by one to achieve software pipelining for
+   each of them. That is, performs some amount of reads from memory before the
+   loop rather than inside the loop, the same amount of writes into memory
+   after the loop, and updates each iteration to read the data for a following
+   iteration rather than the current one.
+
+   The amount is specified by the attributes.
+
+   The values read and about to be stored are transferred as loop iteration
+   arguments. Currently supports memref and vector transfer operations as
+   memory reads/writes.
+
+   Return modes
+   ------------
+
+   This operation ignores non-scf::For ops and drops them in the return.
+   If all the operations referred to by the ``target`` PDLOperation pipeline
+   properly, the transform succeeds. Otherwise the transform produces a
+   silenceable failure.  The return handle points to only the subset of
+   successfully produced pipelined loops, which can be empty.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.pipeline'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: iteration_interval() -> _ods_ir
+
+
+   .. py:method:: read_latency() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: loop_pipeline(transformed, target, *, iteration_interval=None, read_latency=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoopPromoteIfOneIterationOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Promotes the given target loop op if it has a single iteration. I.e., the
+   loop op is removed and only the body remains.
+
+   Return modes
+   ------------
+
+   This transform fails if the target is mapped to ops that are loops. Ops are
+   considered loops if they implement the ``LoopLikeOpInterface``. Otherwise,
+   this transform always succeeds. The transform consumes the target handle and
+   modifies the payload.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.promote_if_one_iteration'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: loop_promote_if_one_iteration(target, *, loc=None, ip=None) -> LoopPromoteIfOneIterationOp
+
+.. py:class:: LoopUnrollAndJamOp(target, factor, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Unrolls & jams each loop associated with the given handle to have up to the given
+   number of loop body copies per iteration. If the unroll factor is larger
+   than the loop trip count, the latter is used as the unroll factor instead.
+
+   Return modes
+   ------------
+
+   This operation ignores non-``scf.for``, non-``affine.for`` ops and drops them
+   in the return. If all the operations referred to by the ``target`` operand
+   unroll properly, the transform succeeds. Otherwise the transform produces a
+   silenceable failure.
+
+   Does not return handles as the operation may result in the loop being
+   removed after a full unrolling.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.unroll_and_jam'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: factor() -> _ods_ir
+
+
+.. py:function:: loop_unroll_and_jam(target, factor, *, loc=None, ip=None) -> LoopUnrollAndJamOp
+
+.. py:class:: LoopUnrollOp(target, factor, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Unrolls each loop associated with the given handle to have up to the given
+   number of loop body copies per iteration. If the unroll factor is larger
+   than the loop trip count, the latter is used as the unroll factor instead.
+
+   Return modes
+   ------------
+
+   This operation ignores non-``scf.for``, non-``affine.for`` ops and drops them
+   in the return. If all the operations referred to by the ``target`` operand
+   unroll properly, the transform succeeds. Otherwise the transform produces a
+   silenceable failure.
+
+   Does not return handles as the operation may result in the loop being
+   removed after a full unrolling.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.unroll'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: factor() -> _ods_ir
+
+
+.. py:function:: loop_unroll(target, factor, *, loc=None, ip=None) -> LoopUnrollOp
+
+.. py:class:: ParallelForToNestedForOps(transformed, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Converts the ``scf.parallel`` operation pointed to by the given handle into a
+   set of nested ``scf.for`` operations. Each new operation corresponds to one
+   dimension of the original parallel loop.
+
+   The operand handle must be associated with exactly one payload operation.
+
+   Loops with shared outputs are currently not supported.
+
+   Return Modes
+   ------------
+
+   Consumes the operand handle. Produces a silenceable failure if the operand
+   is not associated with a single ``scf.parallel`` payload operation.
+   Returns as many handles as the given ``parallel`` op has dimensions that are
+   associated with the generated ``scf.for`` loops.
+   Produces a silenceable failure if another number of resulting handles is
+   requested.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.loop.parallel_for_to_nested_fors'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: loop_parallel_for_to_nested_fors(transformed, target, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ParallelForToNestedForOps]
+
+.. py:class:: TakeAssumedBranchOp(target, *, take_else_branch=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Given an scf.if conditional, inject user-defined information that it is
+   always safe to execute only the if or else branch.
+
+   This is achieved by just replacing the scf.if by the content of one of its
+   branches.
+
+   This is particularly useful for user-controlled rewriting of conditionals
+   that exist solely to guard against out-of-bounds behavior.
+
+   At the moment, no assume or assert operation is emitted as it is not always
+   desirable. In the future, this may be controlled by a dedicated attribute.
+
+   Return modes
+   ------------
+
+   The transform only consumes its operand and does not produce any result.
+   The transform definitely fails if ``take_else_branch`` is specified and the
+   ``else`` region is empty.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.scf.take_assumed_branch'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: take_else_branch() -> bool
+
+
+.. py:function:: scf_take_assumed_branch(target, *, take_else_branch=None, loc=None, ip=None) -> TakeAssumedBranchOp
+
+.. py:class:: LoopOutlineOp(function_type: Type, call_type: Type, target: Union[Operation, Value], *, func_name: Union[str, StringAttr], ip=None, loc=None)
+
+   Bases: :py:obj:`LoopOutlineOp`
+
+
+   
+   Extension for LoopOutlineOp.
+
+
+.. py:class:: LoopPeelOp(main_loop_type: Type, remainder_loop_type: Type, target: Union[Operation, Value], *, peel_front: Union[bool, BoolAttr] = False, fail_if_already_divisible: Union[bool, BoolAttr] = False, ip=None, loc=None)
+
+   Bases: :py:obj:`LoopPeelOp`
+
+
+   
+   Extension for LoopPeelOp.
+
+
+.. py:class:: LoopPipelineOp(result_type: Type, target: Union[Operation, Value], *, iteration_interval: Optional[Union[int, IntegerAttr]] = None, read_latency: Optional[Union[int, IntegerAttr]] = None, ip=None, loc=None)
+
+   Bases: :py:obj:`LoopPipelineOp`
+
+
+   
+   Extension for LoopPipelineOp.
+
+
+.. py:class:: LoopUnrollOp(target: Union[Operation, Value], *, factor: Union[int, IntegerAttr], ip=None, loc=None)
+
+   Bases: :py:obj:`LoopUnrollOp`
+
+
+   
+   Extension for LoopUnrollOp.
+
+

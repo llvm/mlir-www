@@ -1,0 +1,35 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classmlir_1_1Builder.html" title="This class is a general helper class for creating context&#45;global objects like types,..." alt="" coords="60,60,163,85"/>
+<area shape="rect" id="Node000001" href="$classmlir_1_1OpBuilder.html" title="This class helps build Operations." alt="" coords="295,60,415,85"/>
+<area shape="poly" id="edge696_Node000000_Node000001" title=" " alt="" coords="176,70,295,70,295,75,176,75"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1ImplicitLocOpBuilder.html" title="ImplicitLocOpBuilder maintains a &#39;current location&#39;, allowing use of the create&lt;&gt; method without spec..." alt="" coords="495,35,685,60"/>
+<area shape="poly" id="edge697_Node000001_Node000002" title=" " alt="" coords="429,62,494,55,495,60,429,67"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1RewriterBase.html" title="This class coordinates the application of a rewrite on a set of IR, providing a way for clients to tr..." alt="" coords="519,84,661,109"/>
+<area shape="poly" id="edge698_Node000001_Node000003" title=" " alt="" coords="430,78,519,87,518,92,429,83"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1IRRewriter.html" title="This class coordinates rewriting a piece of IR outside of a pattern rewrite, providing a way to keep ..." alt="" coords="791,5,915,31"/>
+<area shape="poly" id="edge699_Node000003_Node000004" title=" " alt="" coords="663,77,685,69,709,54,734,40,790,24,791,29,736,44,712,59,688,74,664,82"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1PatternRewriter.html" title="A special type of RewriterBase that coordinates the application of a rewrite pattern on the current I..." alt="" coords="774,55,931,80"/>
+<area shape="poly" id="edge700_Node000003_Node000005" title=" " alt="" coords="674,85,774,73,774,79,675,90"/>
+<area shape="rect" id="Node000006" href="$structmlir_1_1detail_1_1ConversionPatternRewriterImpl_1_1SingleEraseRewriter.html" title="A rewriter that keeps track of erased ops and blocks." alt="" coords="735,169,971,224"/>
+<area shape="poly" id="edge701_Node000003_Node000006" title=" " alt="" coords="634,112,736,154,770,167,768,172,734,159,631,117"/>
+<area shape="rect" id="Node000016" href="$classmlir_1_1transform_1_1TransformRewriter.html" title="This is a special rewriter to be used in transform op implementations, providing additional helper fu..." alt="" coords="756,105,949,145"/>
+<area shape="poly" id="edge702_Node000003_Node000016" title=" " alt="" coords="675,103,756,112,756,117,675,108"/>
+<area shape="rect" id="Node000013" href="$classmlir_1_1transform_1_1TransformState_1_1Extension.html" title="Base class for TransformState extensions that allow TransformState to contain user&#45;specified informat..." alt="" coords="493,249,687,289"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1transform_1_1TrackingListener.html" title="A listener that updates a TransformState based on IR modifications." alt="" coords="761,249,944,289"/>
+<area shape="poly" id="edge703_Node000013_Node000011" title=" " alt="" coords="701,266,761,266,761,271,701,271"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1transform_1_1ErrorCheckingTrackingListener.html" title="A specialized listener that keeps track of cases in which no replacement payload could be found." alt="" coords="1019,249,1237,289"/>
+<area shape="poly" id="edge704_Node000011_Node000012" title=" " alt="" coords="958,266,1018,266,1018,271,958,271"/>
+<area shape="rect" id="Node000015" href="$structmlir_1_1OpBuilder_1_1ListenerBase.html" title="Base class for listeners." alt="" coords="5,320,217,345"/>
+<area shape="rect" id="Node000014" href="$structmlir_1_1OpBuilder_1_1Listener.html" title="This class represents a listener that may be used to hook into various actions within an OpBuilder." alt="" coords="265,320,445,345"/>
+<area shape="poly" id="edge705_Node000015_Node000014" title=" " alt="" coords="231,330,265,330,265,335,231,335"/>
+<area shape="rect" id="Node000007" href="$structmlir_1_1RewriterBase_1_1Listener.html" title=" " alt="" coords="519,313,661,353"/>
+<area shape="poly" id="edge706_Node000014_Node000007" title=" " alt="" coords="459,330,519,330,519,335,459,335"/>
+<area shape="poly" id="edge710_Node000007_Node000006" title=" " alt="" coords="672,306,685,299,700,283,708,267,717,251,733,235,754,222,757,226,736,239,721,254,713,270,704,286,688,303,675,311"/>
+<area shape="poly" id="edge711_Node000007_Node000011" title=" " alt="" coords="674,310,769,286,770,291,675,315"/>
+<area shape="rect" id="Node000008" href="$structmlir_1_1RewriterBase_1_1ForwardingListener.html" title="A listener that forwards all notifications to another listener." alt="" coords="775,377,930,417"/>
+<area shape="poly" id="edge707_Node000007_Node000008" title=" " alt="" coords="675,351,776,375,775,381,674,356"/>
+<area shape="rect" id="Node000010" href="$structmlir_1_1detail_1_1ConversionPatternRewriterImpl.html" title=" " alt="" coords="765,313,940,353"/>
+<area shape="poly" id="edge709_Node000007_Node000010" title=" " alt="" coords="675,330,765,330,765,335,675,335"/>
+<area shape="rect" id="Node000009" href="$structmlir_1_1RewriterBase_1_1PatternLoggingListener.html" title="A listener that logs notification events to llvm::dbgs() before forwarding to the base listener." alt="" coords="1039,377,1217,417"/>
+<area shape="poly" id="edge708_Node000008_Node000009" title=" " alt="" coords="944,394,1038,394,1038,399,944,399"/>
+</map>

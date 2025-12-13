@@ -1,0 +1,2070 @@
+mlir.dialects._nvvm_enum_gen
+============================
+
+.. py:module:: mlir.dialects._nvvm_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._nvvm_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._nvvm_enum_gen.BarrierReduction
+   mlir.dialects._nvvm_enum_gen.BlockScaleFormat
+   mlir.dialects._nvvm_enum_gen.CTAGroupKind
+   mlir.dialects._nvvm_enum_gen.CacheEvictionPriority
+   mlir.dialects._nvvm_enum_gen.ClusterLaunchControlQueryType
+   mlir.dialects._nvvm_enum_gen.DotAccumulateType
+   mlir.dialects._nvvm_enum_gen.FPRoundingMode
+   mlir.dialects._nvvm_enum_gen.GridDepActionKind
+   mlir.dialects._nvvm_enum_gen.LdStMatrixEltType
+   mlir.dialects._nvvm_enum_gen.LoadCacheModifierKind
+   mlir.dialects._nvvm_enum_gen.MMAB1Op
+   mlir.dialects._nvvm_enum_gen.MMABlockScaleKind
+   mlir.dialects._nvvm_enum_gen.MMAFrag
+   mlir.dialects._nvvm_enum_gen.MMAIntOverflow
+   mlir.dialects._nvvm_enum_gen.MMAKind
+   mlir.dialects._nvvm_enum_gen.MMALayout
+   mlir.dialects._nvvm_enum_gen.MMATypes
+   mlir.dialects._nvvm_enum_gen.MatchSyncKind
+   mlir.dialects._nvvm_enum_gen.MemOrderKind
+   mlir.dialects._nvvm_enum_gen.MemScopeKind
+   mlir.dialects._nvvm_enum_gen.NVVMMemorySpace
+   mlir.dialects._nvvm_enum_gen.PermuteMode
+   mlir.dialects._nvvm_enum_gen.PrefetchCacheLevel
+   mlir.dialects._nvvm_enum_gen.ProxyKind
+   mlir.dialects._nvvm_enum_gen.ReduxKind
+   mlir.dialects._nvvm_enum_gen.SaturationMode
+   mlir.dialects._nvvm_enum_gen.ScaleVecSize
+   mlir.dialects._nvvm_enum_gen.SetMaxRegisterAction
+   mlir.dialects._nvvm_enum_gen.SharedSpace
+   mlir.dialects._nvvm_enum_gen.ShflKind
+   mlir.dialects._nvvm_enum_gen.TMALoadMode
+   mlir.dialects._nvvm_enum_gen.TMAReduxKind
+   mlir.dialects._nvvm_enum_gen.TMAStoreMode
+   mlir.dialects._nvvm_enum_gen.Tcgen05CpMulticast
+   mlir.dialects._nvvm_enum_gen.Tcgen05CpShape
+   mlir.dialects._nvvm_enum_gen.Tcgen05CpSrcFormat
+   mlir.dialects._nvvm_enum_gen.Tcgen05FenceKind
+   mlir.dialects._nvvm_enum_gen.Tcgen05LdStShape
+   mlir.dialects._nvvm_enum_gen.Tcgen05MMABlockScale
+   mlir.dialects._nvvm_enum_gen.Tcgen05MMACollectorBBuffer
+   mlir.dialects._nvvm_enum_gen.Tcgen05MMACollectorOp
+   mlir.dialects._nvvm_enum_gen.Tcgen05MMAKind
+   mlir.dialects._nvvm_enum_gen.Tcgen05WaitKind
+   mlir.dialects._nvvm_enum_gen.VoteSyncKind
+   mlir.dialects._nvvm_enum_gen.WGMMAScaleIn
+   mlir.dialects._nvvm_enum_gen.WGMMAScaleOut
+   mlir.dialects._nvvm_enum_gen.WGMMATypes
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._nvvm_enum_gen.register_attribute_builder
+   mlir.dialects._nvvm_enum_gen._barrierreduction
+   mlir.dialects._nvvm_enum_gen._blockscaleformat
+   mlir.dialects._nvvm_enum_gen._ctagroupkind
+   mlir.dialects._nvvm_enum_gen._dotaccumulatetype
+   mlir.dialects._nvvm_enum_gen._fproundingmode
+   mlir.dialects._nvvm_enum_gen._ldstmatrixelttype
+   mlir.dialects._nvvm_enum_gen._loadcachemodifierkind
+   mlir.dialects._nvvm_enum_gen._mmab1op
+   mlir.dialects._nvvm_enum_gen._mmablockscalekind
+   mlir.dialects._nvvm_enum_gen._mmafrag
+   mlir.dialects._nvvm_enum_gen._mmaintoverflow
+   mlir.dialects._nvvm_enum_gen._mmakind
+   mlir.dialects._nvvm_enum_gen._mmalayout
+   mlir.dialects._nvvm_enum_gen._mmatypes
+   mlir.dialects._nvvm_enum_gen._matchsynckind
+   mlir.dialects._nvvm_enum_gen._memorderkind
+   mlir.dialects._nvvm_enum_gen._memscopekind
+   mlir.dialects._nvvm_enum_gen._permutemode
+   mlir.dialects._nvvm_enum_gen._proxykind
+   mlir.dialects._nvvm_enum_gen._reduxkind
+   mlir.dialects._nvvm_enum_gen._saturationmode
+   mlir.dialects._nvvm_enum_gen._scalevecsize
+   mlir.dialects._nvvm_enum_gen._setmaxregisteraction
+   mlir.dialects._nvvm_enum_gen._sharedspace
+   mlir.dialects._nvvm_enum_gen._shflkind
+   mlir.dialects._nvvm_enum_gen._tmaloadmode
+   mlir.dialects._nvvm_enum_gen._tmareduxkind
+   mlir.dialects._nvvm_enum_gen._tmastoremode
+   mlir.dialects._nvvm_enum_gen._tcgen05cpmulticast
+   mlir.dialects._nvvm_enum_gen._tcgen05cpshape
+   mlir.dialects._nvvm_enum_gen._tcgen05cpsrcformat
+   mlir.dialects._nvvm_enum_gen._tcgen05fencekind
+   mlir.dialects._nvvm_enum_gen._tcgen05ldstshape
+   mlir.dialects._nvvm_enum_gen._tcgen05mmablockscale
+   mlir.dialects._nvvm_enum_gen._tcgen05mmacollectorbbuffer
+   mlir.dialects._nvvm_enum_gen._tcgen05mmacollectorop
+   mlir.dialects._nvvm_enum_gen._tcgen05mmakind
+   mlir.dialects._nvvm_enum_gen._tcgen05waitkind
+   mlir.dialects._nvvm_enum_gen._votesynckind
+   mlir.dialects._nvvm_enum_gen._wgmmascalein
+   mlir.dialects._nvvm_enum_gen._wgmmascaleout
+   mlir.dialects._nvvm_enum_gen._wgmmatypes
+   mlir.dialects._nvvm_enum_gen._barrierreductionattr
+   mlir.dialects._nvvm_enum_gen._blockscaleformatattr
+   mlir.dialects._nvvm_enum_gen._ctagroupkindattr
+   mlir.dialects._nvvm_enum_gen._cacheevictionpriorityattr
+   mlir.dialects._nvvm_enum_gen._clusterlaunchcontrolquerytypeattr
+   mlir.dialects._nvvm_enum_gen._dotaccumulatetypeattr
+   mlir.dialects._nvvm_enum_gen._fproundingmodeattr
+   mlir.dialects._nvvm_enum_gen._griddepactionattr
+   mlir.dialects._nvvm_enum_gen._ldstmatrixelttypeattr
+   mlir.dialects._nvvm_enum_gen._loadcachemodifierattr
+   mlir.dialects._nvvm_enum_gen._mmab1opattr
+   mlir.dialects._nvvm_enum_gen._mmablockscalekindattr
+   mlir.dialects._nvvm_enum_gen._mmafragattr
+   mlir.dialects._nvvm_enum_gen._mmaintoverflowattr
+   mlir.dialects._nvvm_enum_gen._mmakindattr
+   mlir.dialects._nvvm_enum_gen._mmalayoutattr
+   mlir.dialects._nvvm_enum_gen._mmatypesattr
+   mlir.dialects._nvvm_enum_gen._matchsynckindattr
+   mlir.dialects._nvvm_enum_gen._memorderkindattr
+   mlir.dialects._nvvm_enum_gen._memscopekindattr
+   mlir.dialects._nvvm_enum_gen._nvvmmemoryspaceattr
+   mlir.dialects._nvvm_enum_gen._permutemodeattr
+   mlir.dialects._nvvm_enum_gen._prefetchcachelevelattr
+   mlir.dialects._nvvm_enum_gen._proxykindattr
+   mlir.dialects._nvvm_enum_gen._reduxkindattr
+   mlir.dialects._nvvm_enum_gen._saturationmodeattr
+   mlir.dialects._nvvm_enum_gen._scalevecsizeattr
+   mlir.dialects._nvvm_enum_gen._setmaxregisteractionattr
+   mlir.dialects._nvvm_enum_gen._sharedspaceattr
+   mlir.dialects._nvvm_enum_gen._shflkindattr
+   mlir.dialects._nvvm_enum_gen._tmaloadmodeattr
+   mlir.dialects._nvvm_enum_gen._tmareduxkindattr
+   mlir.dialects._nvvm_enum_gen._tmastoremodeattr
+   mlir.dialects._nvvm_enum_gen._tcgen05cpmulticastattr
+   mlir.dialects._nvvm_enum_gen._tcgen05cpshapeattr
+   mlir.dialects._nvvm_enum_gen._tcgen05cpsrcformatattr
+   mlir.dialects._nvvm_enum_gen._tcgen05fencekindattr
+   mlir.dialects._nvvm_enum_gen._tcgen05ldstshapeattr
+   mlir.dialects._nvvm_enum_gen._tcgen05mmablockscaleattr
+   mlir.dialects._nvvm_enum_gen._tcgen05mmacollectorbbufferattr
+   mlir.dialects._nvvm_enum_gen._tcgen05mmacollectoropattr
+   mlir.dialects._nvvm_enum_gen._tcgen05mmakindattr
+   mlir.dialects._nvvm_enum_gen._tcgen05waitkindattr
+   mlir.dialects._nvvm_enum_gen._votesynckindattr
+   mlir.dialects._nvvm_enum_gen._wgmmascaleinattr
+   mlir.dialects._nvvm_enum_gen._wgmmascaleoutattr
+   mlir.dialects._nvvm_enum_gen._wgmmatypesattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: BarrierReduction
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM barrier reduction operation
+
+
+   .. py:attribute:: POPC
+      :value: 0
+
+
+
+   .. py:attribute:: AND
+      :value: 1
+
+
+
+   .. py:attribute:: OR
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _barrierreduction(x, context)
+
+.. py:class:: BlockScaleFormat
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   MMA Block Scale Format
+
+
+   .. py:attribute:: UE8M0
+      :value: 0
+
+
+
+   .. py:attribute:: UE4M3
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _blockscaleformat(x, context)
+
+.. py:class:: CTAGroupKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM CTA group kind
+
+
+   .. py:attribute:: CTA_1
+      :value: 0
+
+
+
+   .. py:attribute:: CTA_2
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _ctagroupkind(x, context)
+
+.. py:class:: CacheEvictionPriority
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Cache Eviction Priority
+
+
+   .. py:attribute:: EvictNormal
+      :value: 0
+
+
+
+   .. py:attribute:: EvictFirst
+      :value: 1
+
+
+
+   .. py:attribute:: EvictLast
+      :value: 2
+
+
+
+   .. py:attribute:: EvictUnchanged
+      :value: 3
+
+
+
+   .. py:attribute:: NoAllocate
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: ClusterLaunchControlQueryType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM ClusterLaunchControlQueryType
+
+
+   .. py:attribute:: IS_CANCELED
+      :value: 0
+
+
+
+   .. py:attribute:: GET_FIRST_CTA_ID_X
+      :value: 1
+
+
+
+   .. py:attribute:: GET_FIRST_CTA_ID_Y
+      :value: 2
+
+
+
+   .. py:attribute:: GET_FIRST_CTA_ID_Z
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: DotAccumulateType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM DotAccumulateType
+
+
+   .. py:attribute:: SIGNED
+      :value: 1
+
+
+
+   .. py:attribute:: UNSIGNED
+      :value: 0
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _dotaccumulatetype(x, context)
+
+.. py:class:: FPRoundingMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM FPRoundingMode kind
+
+
+   .. py:attribute:: NONE
+      :value: 0
+
+
+
+   .. py:attribute:: RN
+      :value: 1
+
+
+
+   .. py:attribute:: RM
+      :value: 2
+
+
+
+   .. py:attribute:: RP
+      :value: 3
+
+
+
+   .. py:attribute:: RZ
+      :value: 4
+
+
+
+   .. py:attribute:: RNA
+      :value: 5
+
+
+
+   .. py:attribute:: RS
+      :value: 6
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _fproundingmode(x, context)
+
+.. py:class:: GridDepActionKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Action kind for grid dependency control
+
+
+   .. py:attribute:: wait
+      :value: 0
+
+
+
+   .. py:attribute:: launch_dependents
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: LdStMatrixEltType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Element type for ldmatrix and stmatrix
+
+
+   .. py:attribute:: B16
+      :value: 0
+
+
+
+   .. py:attribute:: B8
+      :value: 1
+
+
+
+   .. py:attribute:: B8X16_B6X16_P32
+      :value: 2
+
+
+
+   .. py:attribute:: B8X16_B4X16_P64
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _ldstmatrixelttype(x, context)
+
+.. py:class:: LoadCacheModifierKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM load cache modifier kind
+
+
+   .. py:attribute:: CA
+      :value: 0
+
+
+
+   .. py:attribute:: CG
+      :value: 1
+
+
+
+   .. py:attribute:: CS
+      :value: 2
+
+
+
+   .. py:attribute:: LU
+      :value: 3
+
+
+
+   .. py:attribute:: CV
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _loadcachemodifierkind(x, context)
+
+.. py:class:: MMAB1Op
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   MMA binary operations
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: xor_popc
+      :value: 1
+
+
+
+   .. py:attribute:: and_popc
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmab1op(x, context)
+
+.. py:class:: MMABlockScaleKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Block Scale Kind
+
+
+   .. py:attribute:: MXF8F6F4
+      :value: 0
+
+
+
+   .. py:attribute:: MXF4
+      :value: 1
+
+
+
+   .. py:attribute:: MXF4NVF4
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmablockscalekind(x, context)
+
+.. py:class:: MMAFrag
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM MMA frag type
+
+
+   .. py:attribute:: a
+      :value: 0
+
+
+
+   .. py:attribute:: b
+      :value: 1
+
+
+
+   .. py:attribute:: c
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmafrag(x, context)
+
+.. py:class:: MMAIntOverflow
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   MMA overflow options
+
+
+   .. py:attribute:: satfinite
+      :value: 1
+
+
+
+   .. py:attribute:: wrapped
+      :value: 0
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmaintoverflow(x, context)
+
+.. py:class:: MMAKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   MMA operation kind
+
+
+   .. py:attribute:: f8f6f4
+      :value: 0
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmakind(x, context)
+
+.. py:class:: MMALayout
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM MMA layout
+
+
+   .. py:attribute:: row
+      :value: 0
+
+
+
+   .. py:attribute:: col
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmalayout(x, context)
+
+.. py:class:: MMATypes
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM MMA types
+
+
+   .. py:attribute:: f16
+      :value: 0
+
+
+
+   .. py:attribute:: f32
+      :value: 1
+
+
+
+   .. py:attribute:: tf32
+      :value: 2
+
+
+
+   .. py:attribute:: bf16
+      :value: 9
+
+
+
+   .. py:attribute:: s8
+      :value: 4
+
+
+
+   .. py:attribute:: u8
+      :value: 3
+
+
+
+   .. py:attribute:: s32
+      :value: 5
+
+
+
+   .. py:attribute:: s4
+      :value: 8
+
+
+
+   .. py:attribute:: u4
+      :value: 7
+
+
+
+   .. py:attribute:: b1
+      :value: 6
+
+
+
+   .. py:attribute:: f64
+      :value: 10
+
+
+
+   .. py:attribute:: e4m3
+      :value: 11
+
+
+
+   .. py:attribute:: e5m2
+      :value: 12
+
+
+
+   .. py:attribute:: e3m2
+      :value: 13
+
+
+
+   .. py:attribute:: e2m3
+      :value: 14
+
+
+
+   .. py:attribute:: e2m1
+      :value: 15
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmatypes(x, context)
+
+.. py:class:: MatchSyncKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM match sync kind
+
+
+   .. py:attribute:: any
+      :value: 0
+
+
+
+   .. py:attribute:: all
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _matchsynckind(x, context)
+
+.. py:class:: MemOrderKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Memory Ordering kind
+
+
+   .. py:attribute:: WEAK
+      :value: 0
+
+
+
+   .. py:attribute:: RELAXED
+      :value: 1
+
+
+
+   .. py:attribute:: ACQUIRE
+      :value: 2
+
+
+
+   .. py:attribute:: RELEASE
+      :value: 3
+
+
+
+   .. py:attribute:: ACQ_REL
+      :value: 4
+
+
+
+   .. py:attribute:: SC
+      :value: 5
+
+
+
+   .. py:attribute:: MMIO
+      :value: 6
+
+
+
+   .. py:attribute:: VOLATILE
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _memorderkind(x, context)
+
+.. py:class:: MemScopeKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Memory Scope kind
+
+
+   .. py:attribute:: CTA
+      :value: 0
+
+
+
+   .. py:attribute:: CLUSTER
+      :value: 1
+
+
+
+   .. py:attribute:: GPU
+      :value: 2
+
+
+
+   .. py:attribute:: SYS
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _memscopekind(x, context)
+
+.. py:class:: NVVMMemorySpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Memory Space
+
+
+   .. py:attribute:: Generic
+      :value: 0
+
+
+
+   .. py:attribute:: Global
+      :value: 1
+
+
+
+   .. py:attribute:: Shared
+      :value: 3
+
+
+
+   .. py:attribute:: Constant
+      :value: 4
+
+
+
+   .. py:attribute:: Local
+      :value: 5
+
+
+
+   .. py:attribute:: Tensor
+      :value: 6
+
+
+
+   .. py:attribute:: SharedCluster
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: PermuteMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM permute mode
+
+
+   .. py:attribute:: DEFAULT
+      :value: 0
+
+
+
+   .. py:attribute:: F4E
+      :value: 1
+
+
+
+   .. py:attribute:: B4E
+      :value: 2
+
+
+
+   .. py:attribute:: RC8
+      :value: 3
+
+
+
+   .. py:attribute:: ECL
+      :value: 4
+
+
+
+   .. py:attribute:: ECR
+      :value: 5
+
+
+
+   .. py:attribute:: RC16
+      :value: 6
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _permutemode(x, context)
+
+.. py:class:: PrefetchCacheLevel
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Prefetch Cache Level
+
+
+   .. py:attribute:: L1
+      :value: 0
+
+
+
+   .. py:attribute:: L2
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: ProxyKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Proxy kind
+
+
+   .. py:attribute:: alias
+      :value: 0
+
+
+
+   .. py:attribute:: async_
+      :value: 1
+
+
+
+   .. py:attribute:: async_global
+      :value: 2
+
+
+
+   .. py:attribute:: async_shared
+      :value: 3
+
+
+
+   .. py:attribute:: TENSORMAP
+      :value: 4
+
+
+
+   .. py:attribute:: GENERIC
+      :value: 5
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _proxykind(x, context)
+
+.. py:class:: ReduxKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM redux kind
+
+
+   .. py:attribute:: ADD
+      :value: 1
+
+
+
+   .. py:attribute:: AND
+      :value: 2
+
+
+
+   .. py:attribute:: MAX
+      :value: 3
+
+
+
+   .. py:attribute:: MIN
+      :value: 4
+
+
+
+   .. py:attribute:: OR
+      :value: 5
+
+
+
+   .. py:attribute:: UMAX
+      :value: 6
+
+
+
+   .. py:attribute:: UMIN
+      :value: 7
+
+
+
+   .. py:attribute:: XOR
+      :value: 8
+
+
+
+   .. py:attribute:: FMIN
+      :value: 9
+
+
+
+   .. py:attribute:: FMAX
+      :value: 10
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _reduxkind(x, context)
+
+.. py:class:: SaturationMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM SaturationMode kind
+
+
+   .. py:attribute:: NONE
+      :value: 0
+
+
+
+   .. py:attribute:: SATFINITE
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _saturationmode(x, context)
+
+.. py:class:: ScaleVecSize
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   MMA Scale Vector Sizes
+
+
+   .. py:attribute:: X1
+      :value: 0
+
+
+
+   .. py:attribute:: X2
+      :value: 1
+
+
+
+   .. py:attribute:: X4
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _scalevecsize(x, context)
+
+.. py:class:: SetMaxRegisterAction
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM set max register action
+
+
+   .. py:attribute:: decrease
+      :value: 1
+
+
+
+   .. py:attribute:: increase
+      :value: 0
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _setmaxregisteraction(x, context)
+
+.. py:class:: SharedSpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Shared memory space
+
+
+   .. py:attribute:: shared_cta
+      :value: 0
+
+
+
+   .. py:attribute:: shared_cluster
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _sharedspace(x, context)
+
+.. py:class:: ShflKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM shuffle kind
+
+
+   .. py:attribute:: bfly
+      :value: 0
+
+
+
+   .. py:attribute:: up
+      :value: 1
+
+
+
+   .. py:attribute:: down
+      :value: 2
+
+
+
+   .. py:attribute:: idx
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _shflkind(x, context)
+
+.. py:class:: TMALoadMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM TMA Load Mode
+
+
+   .. py:attribute:: TILE
+      :value: 0
+
+
+
+   .. py:attribute:: IM2COL
+      :value: 1
+
+
+
+   .. py:attribute:: IM2COL_W
+      :value: 2
+
+
+
+   .. py:attribute:: IM2COL_W_128
+      :value: 3
+
+
+
+   .. py:attribute:: TILE_GATHER4
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tmaloadmode(x, context)
+
+.. py:class:: TMAReduxKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM TMA redux kind
+
+
+   .. py:attribute:: ADD
+      :value: 0
+
+
+
+   .. py:attribute:: MAX
+      :value: 2
+
+
+
+   .. py:attribute:: MIN
+      :value: 1
+
+
+
+   .. py:attribute:: INC
+      :value: 3
+
+
+
+   .. py:attribute:: DEC
+      :value: 4
+
+
+
+   .. py:attribute:: AND
+      :value: 5
+
+
+
+   .. py:attribute:: OR
+      :value: 6
+
+
+
+   .. py:attribute:: XOR
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tmareduxkind(x, context)
+
+.. py:class:: TMAStoreMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM TMA Store Mode
+
+
+   .. py:attribute:: TILE
+      :value: 0
+
+
+
+   .. py:attribute:: IM2COL
+      :value: 1
+
+
+
+   .. py:attribute:: TILE_SCATTER4
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tmastoremode(x, context)
+
+.. py:class:: Tcgen05CpMulticast
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05 cp multicast
+
+
+   .. py:attribute:: NONE
+      :value: 0
+
+
+
+   .. py:attribute:: WARPX2_02_13
+      :value: 1
+
+
+
+   .. py:attribute:: WARPX2_01_23
+      :value: 2
+
+
+
+   .. py:attribute:: WARPX4
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05cpmulticast(x, context)
+
+.. py:class:: Tcgen05CpShape
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05 cp shapes
+
+
+   .. py:attribute:: SHAPE_128x256b
+      :value: 0
+
+
+
+   .. py:attribute:: SHAPE_4x256b
+      :value: 1
+
+
+
+   .. py:attribute:: SHAPE_128x128b
+      :value: 2
+
+
+
+   .. py:attribute:: SHAPE_64x128b
+      :value: 3
+
+
+
+   .. py:attribute:: SHAPE_32x128b
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05cpshape(x, context)
+
+.. py:class:: Tcgen05CpSrcFormat
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05 cp source format
+
+
+   .. py:attribute:: B6x16_P32
+      :value: 0
+
+
+
+   .. py:attribute:: B4x16_P64
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05cpsrcformat(x, context)
+
+.. py:class:: Tcgen05FenceKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Tcgen05 fence kind
+
+
+   .. py:attribute:: BEFORE_THREAD_SYNC
+      :value: 0
+
+
+
+   .. py:attribute:: AFTER_THREAD_SYNC
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05fencekind(x, context)
+
+.. py:class:: Tcgen05LdStShape
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4
+
+
+   .. py:attribute:: SHAPE_16X64B
+      :value: 0
+
+
+
+   .. py:attribute:: SHAPE_16X128B
+      :value: 1
+
+
+
+   .. py:attribute:: SHAPE_16X256B
+      :value: 2
+
+
+
+   .. py:attribute:: SHAPE_32X32B
+      :value: 3
+
+
+
+   .. py:attribute:: SHAPE_16X32BX2
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05ldstshape(x, context)
+
+.. py:class:: Tcgen05MMABlockScale
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05.mma block scale attribute
+
+
+   .. py:attribute:: DEFAULT
+      :value: 0
+
+
+
+   .. py:attribute:: BLOCK16
+      :value: 1
+
+
+
+   .. py:attribute:: BLOCK32
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05mmablockscale(x, context)
+
+.. py:class:: Tcgen05MMACollectorBBuffer
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05 MMA Collector Buffer B Attribute
+
+
+   .. py:attribute:: B0
+      :value: 0
+
+
+
+   .. py:attribute:: B1
+      :value: 1
+
+
+
+   .. py:attribute:: B2
+      :value: 2
+
+
+
+   .. py:attribute:: B3
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05mmacollectorbbuffer(x, context)
+
+.. py:class:: Tcgen05MMACollectorOp
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05.mma Collector Buffer Operation
+
+
+   .. py:attribute:: DISCARD
+      :value: 0
+
+
+
+   .. py:attribute:: LASTUSE
+      :value: 1
+
+
+
+   .. py:attribute:: FILL
+      :value: 2
+
+
+
+   .. py:attribute:: USE
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05mmacollectorop(x, context)
+
+.. py:class:: Tcgen05MMAKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   tcgen05 MMA Supported Types
+
+
+   .. py:attribute:: F8F6F4
+      :value: 2
+
+
+
+   .. py:attribute:: I8
+      :value: 3
+
+
+
+   .. py:attribute:: F16
+      :value: 0
+
+
+
+   .. py:attribute:: TF32
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05mmakind(x, context)
+
+.. py:class:: Tcgen05WaitKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM Tcgen05 wait kind
+
+
+   .. py:attribute:: LOAD
+      :value: 0
+
+
+
+   .. py:attribute:: STORE
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tcgen05waitkind(x, context)
+
+.. py:class:: VoteSyncKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM vote sync kind
+
+
+   .. py:attribute:: any
+      :value: 0
+
+
+
+   .. py:attribute:: all
+      :value: 1
+
+
+
+   .. py:attribute:: ballot
+      :value: 2
+
+
+
+   .. py:attribute:: uni
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _votesynckind(x, context)
+
+.. py:class:: WGMMAScaleIn
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   WGMMA overflow options
+
+
+   .. py:attribute:: one
+      :value: 1
+
+
+
+   .. py:attribute:: neg
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _wgmmascalein(x, context)
+
+.. py:class:: WGMMAScaleOut
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   WGMMA input predicate
+
+
+   .. py:attribute:: zero
+      :value: 0
+
+
+
+   .. py:attribute:: one
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _wgmmascaleout(x, context)
+
+.. py:class:: WGMMATypes
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   NVVM WGMMA types
+
+
+   .. py:attribute:: f16
+      :value: 0
+
+
+
+   .. py:attribute:: tf32
+      :value: 1
+
+
+
+   .. py:attribute:: u8
+      :value: 2
+
+
+
+   .. py:attribute:: s8
+      :value: 3
+
+
+
+   .. py:attribute:: b1
+      :value: 4
+
+
+
+   .. py:attribute:: bf16
+      :value: 5
+
+
+
+   .. py:attribute:: e4m3
+      :value: 6
+
+
+
+   .. py:attribute:: e5m2
+      :value: 7
+
+
+
+   .. py:attribute:: f32
+      :value: 8
+
+
+
+   .. py:attribute:: s32
+      :value: 9
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _wgmmatypes(x, context)
+
+.. py:function:: _barrierreductionattr(x, context)
+
+.. py:function:: _blockscaleformatattr(x, context)
+
+.. py:function:: _ctagroupkindattr(x, context)
+
+.. py:function:: _cacheevictionpriorityattr(x, context)
+
+.. py:function:: _clusterlaunchcontrolquerytypeattr(x, context)
+
+.. py:function:: _dotaccumulatetypeattr(x, context)
+
+.. py:function:: _fproundingmodeattr(x, context)
+
+.. py:function:: _griddepactionattr(x, context)
+
+.. py:function:: _ldstmatrixelttypeattr(x, context)
+
+.. py:function:: _loadcachemodifierattr(x, context)
+
+.. py:function:: _mmab1opattr(x, context)
+
+.. py:function:: _mmablockscalekindattr(x, context)
+
+.. py:function:: _mmafragattr(x, context)
+
+.. py:function:: _mmaintoverflowattr(x, context)
+
+.. py:function:: _mmakindattr(x, context)
+
+.. py:function:: _mmalayoutattr(x, context)
+
+.. py:function:: _mmatypesattr(x, context)
+
+.. py:function:: _matchsynckindattr(x, context)
+
+.. py:function:: _memorderkindattr(x, context)
+
+.. py:function:: _memscopekindattr(x, context)
+
+.. py:function:: _nvvmmemoryspaceattr(x, context)
+
+.. py:function:: _permutemodeattr(x, context)
+
+.. py:function:: _prefetchcachelevelattr(x, context)
+
+.. py:function:: _proxykindattr(x, context)
+
+.. py:function:: _reduxkindattr(x, context)
+
+.. py:function:: _saturationmodeattr(x, context)
+
+.. py:function:: _scalevecsizeattr(x, context)
+
+.. py:function:: _setmaxregisteractionattr(x, context)
+
+.. py:function:: _sharedspaceattr(x, context)
+
+.. py:function:: _shflkindattr(x, context)
+
+.. py:function:: _tmaloadmodeattr(x, context)
+
+.. py:function:: _tmareduxkindattr(x, context)
+
+.. py:function:: _tmastoremodeattr(x, context)
+
+.. py:function:: _tcgen05cpmulticastattr(x, context)
+
+.. py:function:: _tcgen05cpshapeattr(x, context)
+
+.. py:function:: _tcgen05cpsrcformatattr(x, context)
+
+.. py:function:: _tcgen05fencekindattr(x, context)
+
+.. py:function:: _tcgen05ldstshapeattr(x, context)
+
+.. py:function:: _tcgen05mmablockscaleattr(x, context)
+
+.. py:function:: _tcgen05mmacollectorbbufferattr(x, context)
+
+.. py:function:: _tcgen05mmacollectoropattr(x, context)
+
+.. py:function:: _tcgen05mmakindattr(x, context)
+
+.. py:function:: _tcgen05waitkindattr(x, context)
+
+.. py:function:: _votesynckindattr(x, context)
+
+.. py:function:: _wgmmascaleinattr(x, context)
+
+.. py:function:: _wgmmascaleoutattr(x, context)
+
+.. py:function:: _wgmmatypesattr(x, context)
+

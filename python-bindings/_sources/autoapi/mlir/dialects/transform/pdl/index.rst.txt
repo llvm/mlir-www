@@ -1,0 +1,202 @@
+mlir.dialects.transform.pdl
+===========================
+
+.. py:module:: mlir.dialects.transform.pdl
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.pdl.PDLMatchOp
+   mlir.dialects.transform.pdl.WithPDLPatternsOp
+   mlir.dialects.transform.pdl.PDLMatchOp
+   mlir.dialects.transform.pdl.WithPDLPatternsOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.pdl.pdl_match
+   mlir.dialects.transform.pdl.with_pdl_patterns
+
+
+Module Contents
+---------------
+
+.. py:class:: PDLMatchOp(matched, root, pattern_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Find Payload IR ops nested within the Payload IR op associated with the
+   operand that match the PDL pattern identified by its name. The pattern is
+   expected to be defined in the closest surrounding ``WithPDLPatternsOp``.
+
+   Produces a Transform IR value associated with the list of Payload IR ops
+   that matched the pattern. The order of results in the list is that of the
+   Operation::walk, clients are advised not to rely on a specific order though.
+   If the operand is associated with multiple Payload IR ops, finds matching
+   ops nested within each of those and produces a single list containing all
+   of the matched ops.
+
+   The transformation is considered successful regardless of whether some
+   Payload IR ops actually matched the pattern and only fails if the pattern
+   could not be looked up or compiled.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.pdl_match'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: root() -> _ods_ir
+
+
+   .. py:method:: pattern_name() -> _ods_ir
+
+
+   .. py:method:: matched() -> _ods_ir
+
+
+.. py:function:: pdl_match(matched, root, pattern_name, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WithPDLPatternsOp(*, root=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op contains a set of named PDL patterns that are available for the
+   Transform dialect operations to be used for pattern matching. For example,
+   PDLMatchOp can be used to produce a Transform IR value associated with all
+   Payload IR operations that match the pattern as follows:
+
+   .. code:: mlir
+
+       transform.with_pdl_patterns {
+       ^bb0(%arg0: !transform.any_op):
+         pdl.pattern @my_pattern : benefit(1) {
+           %0 = pdl.operation //...
+           // Regular PDL goes here.
+           pdl.rewrite %0 with "transform.dialect"
+         }
+       
+         sequence %arg0 failures(propagate) {
+         ^bb0(%arg1: !transform.any_op):
+           %1 = pdl_match @my_pattern in %arg1
+           // Use %1 as handle
+         }
+       }
+
+   Note that the pattern is expected to finish with a ``pdl.rewrite`` terminator
+   that points to the custom rewriter named "transform.dialect". The rewriter
+   actually does nothing, but the transform application will keep track of the
+   operations that matched the pattern.
+
+   This op is expected to contain ``pdl.pattern`` operations and exactly one
+   another Transform dialect operation that gets executed with all patterns
+   available. This op is a possible top-level Transform IR op, the argument of
+   its entry block corresponds to either the root op of the payload IR or the
+   ops associated with its operand when provided.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.with_pdl_patterns'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: root() -> Optional[_ods_ir]
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: with_pdl_patterns(*, root=None, loc=None, ip=None) -> WithPDLPatternsOp
+
+.. py:class:: PDLMatchOp(result_type: Type, target: Union[Operation, Value], pattern_name: Union[Attribute, str], *, loc=None, ip=None)
+
+   Bases: :py:obj:`PDLMatchOp`
+
+
+   
+   Find Payload IR ops nested within the Payload IR op associated with the
+   operand that match the PDL pattern identified by its name. The pattern is
+   expected to be defined in the closest surrounding ``WithPDLPatternsOp``.
+
+   Produces a Transform IR value associated with the list of Payload IR ops
+   that matched the pattern. The order of results in the list is that of the
+   Operation::walk, clients are advised not to rely on a specific order though.
+   If the operand is associated with multiple Payload IR ops, finds matching
+   ops nested within each of those and produces a single list containing all
+   of the matched ops.
+
+   The transformation is considered successful regardless of whether some
+   Payload IR ops actually matched the pattern and only fails if the pattern
+   could not be looked up or compiled.
+
+
+.. py:class:: WithPDLPatternsOp(target: Union[Operation, Value, Type], *, loc=None, ip=None)
+
+   Bases: :py:obj:`WithPDLPatternsOp`
+
+
+   
+   This op contains a set of named PDL patterns that are available for the
+   Transform dialect operations to be used for pattern matching. For example,
+   PDLMatchOp can be used to produce a Transform IR value associated with all
+   Payload IR operations that match the pattern as follows:
+
+   .. code:: mlir
+
+       transform.with_pdl_patterns {
+       ^bb0(%arg0: !transform.any_op):
+         pdl.pattern @my_pattern : benefit(1) {
+           %0 = pdl.operation //...
+           // Regular PDL goes here.
+           pdl.rewrite %0 with "transform.dialect"
+         }
+       
+         sequence %arg0 failures(propagate) {
+         ^bb0(%arg1: !transform.any_op):
+           %1 = pdl_match @my_pattern in %arg1
+           // Use %1 as handle
+         }
+       }
+
+   Note that the pattern is expected to finish with a ``pdl.rewrite`` terminator
+   that points to the custom rewriter named "transform.dialect". The rewriter
+   actually does nothing, but the transform application will keep track of the
+   operations that matched the pattern.
+
+   This op is expected to contain ``pdl.pattern`` operations and exactly one
+   another Transform dialect operation that gets executed with all patterns
+   available. This op is a possible top-level Transform IR op, the argument of
+   its entry block corresponds to either the root op of the payload IR or the
+   ops associated with its operand when provided.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+
+   .. py:property:: bodyTarget
+      :type: Value
+
+
+

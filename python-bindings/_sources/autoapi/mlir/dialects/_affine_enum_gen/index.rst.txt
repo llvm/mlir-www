@@ -1,0 +1,469 @@
+mlir.dialects._affine_enum_gen
+==============================
+
+.. py:module:: mlir.dialects._affine_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._affine_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._affine_enum_gen.CmpFPredicate
+   mlir.dialects._affine_enum_gen.CmpIPredicate
+   mlir.dialects._affine_enum_gen.IntegerOverflowFlags
+   mlir.dialects._affine_enum_gen.RoundingMode
+   mlir.dialects._affine_enum_gen.AtomicRMWKind
+   mlir.dialects._affine_enum_gen.FastMathFlags
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._affine_enum_gen.register_attribute_builder
+   mlir.dialects._affine_enum_gen._arith_cmpfpredicateattr
+   mlir.dialects._affine_enum_gen._arith_cmpipredicateattr
+   mlir.dialects._affine_enum_gen._arith_integeroverflowflags
+   mlir.dialects._affine_enum_gen._arith_roundingmodeattr
+   mlir.dialects._affine_enum_gen._atomicrmwkindattr
+   mlir.dialects._affine_enum_gen._fastmathflags
+   mlir.dialects._affine_enum_gen._arith_fastmathattr
+   mlir.dialects._affine_enum_gen._arith_integeroverflowattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: CmpFPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 64-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+
+
+   .. py:attribute:: AlwaysFalse
+      :value: 0
+
+
+
+   .. py:attribute:: OEQ
+      :value: 1
+
+
+
+   .. py:attribute:: OGT
+      :value: 2
+
+
+
+   .. py:attribute:: OGE
+      :value: 3
+
+
+
+   .. py:attribute:: OLT
+      :value: 4
+
+
+
+   .. py:attribute:: OLE
+      :value: 5
+
+
+
+   .. py:attribute:: ONE
+      :value: 6
+
+
+
+   .. py:attribute:: ORD
+      :value: 7
+
+
+
+   .. py:attribute:: UEQ
+      :value: 8
+
+
+
+   .. py:attribute:: UGT
+      :value: 9
+
+
+
+   .. py:attribute:: UGE
+      :value: 10
+
+
+
+   .. py:attribute:: ULT
+      :value: 11
+
+
+
+   .. py:attribute:: ULE
+      :value: 12
+
+
+
+   .. py:attribute:: UNE
+      :value: 13
+
+
+
+   .. py:attribute:: UNO
+      :value: 14
+
+
+
+   .. py:attribute:: AlwaysTrue
+      :value: 15
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _arith_cmpfpredicateattr(x, context)
+
+.. py:class:: CmpIPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 64-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+
+   .. py:attribute:: eq
+      :value: 0
+
+
+
+   .. py:attribute:: ne
+      :value: 1
+
+
+
+   .. py:attribute:: slt
+      :value: 2
+
+
+
+   .. py:attribute:: sle
+      :value: 3
+
+
+
+   .. py:attribute:: sgt
+      :value: 4
+
+
+
+   .. py:attribute:: sge
+      :value: 5
+
+
+
+   .. py:attribute:: ult
+      :value: 6
+
+
+
+   .. py:attribute:: ule
+      :value: 7
+
+
+
+   .. py:attribute:: ugt
+      :value: 8
+
+
+
+   .. py:attribute:: uge
+      :value: 9
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _arith_cmpipredicateattr(x, context)
+
+.. py:class:: IntegerOverflowFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   Integer overflow arith flags
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: nsw
+      :value: 1
+
+
+
+   .. py:attribute:: nuw
+      :value: 2
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _arith_integeroverflowflags(x, context)
+
+.. py:class:: RoundingMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Floating point rounding mode
+
+
+   .. py:attribute:: to_nearest_even
+      :value: 0
+
+
+
+   .. py:attribute:: downward
+      :value: 1
+
+
+
+   .. py:attribute:: upward
+      :value: 2
+
+
+
+   .. py:attribute:: toward_zero
+      :value: 3
+
+
+
+   .. py:attribute:: to_nearest_away
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _arith_roundingmodeattr(x, context)
+
+.. py:class:: AtomicRMWKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 64-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+
+
+   .. py:attribute:: addf
+      :value: 0
+
+
+
+   .. py:attribute:: addi
+      :value: 1
+
+
+
+   .. py:attribute:: andi
+      :value: 2
+
+
+
+   .. py:attribute:: assign
+      :value: 3
+
+
+
+   .. py:attribute:: maximumf
+      :value: 4
+
+
+
+   .. py:attribute:: maxnumf
+      :value: 5
+
+
+
+   .. py:attribute:: maxs
+      :value: 6
+
+
+
+   .. py:attribute:: maxu
+      :value: 7
+
+
+
+   .. py:attribute:: minimumf
+      :value: 8
+
+
+
+   .. py:attribute:: minnumf
+      :value: 9
+
+
+
+   .. py:attribute:: mins
+      :value: 10
+
+
+
+   .. py:attribute:: minu
+      :value: 11
+
+
+
+   .. py:attribute:: mulf
+      :value: 12
+
+
+
+   .. py:attribute:: muli
+      :value: 13
+
+
+
+   .. py:attribute:: ori
+      :value: 14
+
+
+
+   .. py:attribute:: xori
+      :value: 15
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _atomicrmwkindattr(x, context)
+
+.. py:class:: FastMathFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   Floating point fast math flags
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: reassoc
+      :value: 1
+
+
+
+   .. py:attribute:: nnan
+      :value: 2
+
+
+
+   .. py:attribute:: ninf
+      :value: 4
+
+
+
+   .. py:attribute:: nsz
+      :value: 8
+
+
+
+   .. py:attribute:: arcp
+      :value: 16
+
+
+
+   .. py:attribute:: contract
+      :value: 32
+
+
+
+   .. py:attribute:: afn
+      :value: 64
+
+
+
+   .. py:attribute:: fast
+      :value: 127
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _fastmathflags(x, context)
+
+.. py:function:: _arith_fastmathattr(x, context)
+
+.. py:function:: _arith_integeroverflowattr(x, context)
+

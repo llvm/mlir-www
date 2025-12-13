@@ -1,0 +1,136 @@
+mlir.dialects.transform.debug
+=============================
+
+.. py:module:: mlir.dialects.transform.debug
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.debug.EmitParamAsRemarkOp
+   mlir.dialects.transform.debug.EmitRemarkAtOp
+   mlir.dialects.transform.debug.EmitParamAsRemarkOp
+   mlir.dialects.transform.debug.EmitRemarkAtOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.debug.debug_emit_param_as_remark
+   mlir.dialects.transform.debug.debug_emit_remark_at
+   mlir.dialects.transform.debug.emit_param_as_remark
+   mlir.dialects.transform.debug.emit_remark_at
+
+
+Module Contents
+---------------
+
+.. py:class:: EmitParamAsRemarkOp(param, *, anchor=None, message=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark containing the string form of the
+   attributes associated with the parameter provided as attribute. It takes
+   as optional arguments:
+
+   * an additional message text to prepend;
+   * a handle pointing to operations the location of which will be used to
+   emit the diagnostic; if multiple operations are associated, the
+   diagnostic is emitted for all of their respective locations.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_param_as_remark'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+   .. py:method:: anchor() -> Optional[_ods_ir]
+
+
+   .. py:method:: message() -> Optional[_ods_ir]
+
+
+.. py:function:: debug_emit_param_as_remark(param, *, anchor=None, message=None, loc=None, ip=None) -> EmitParamAsRemarkOp
+
+.. py:class:: EmitRemarkAtOp(at, message, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark with the given message at the
+   location of each payload object associated with the argument. The argument
+   may be an operation or a value handle.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_remark_at'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: at() -> _ods_ir
+
+
+   .. py:method:: message() -> _ods_ir
+
+
+.. py:function:: debug_emit_remark_at(at, message, *, loc=None, ip=None) -> EmitRemarkAtOp
+
+.. py:class:: EmitParamAsRemarkOp(param: mlir.ir.Attribute, *, anchor: Optional[mlir.ir.Operation] = None, message: Optional[Union[mlir.ir.StringAttr, str]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`EmitParamAsRemarkOp`
+
+
+   
+   This operation emits a diagnostic remark containing the string form of the
+   attributes associated with the parameter provided as attribute. It takes
+   as optional arguments:
+
+   * an additional message text to prepend;
+   * a handle pointing to operations the location of which will be used to
+   emit the diagnostic; if multiple operations are associated, the
+   diagnostic is emitted for all of their respective locations.
+
+   This operation always succeeds.
+
+
+.. py:function:: emit_param_as_remark(param: mlir.ir.Attribute, *, anchor: Optional[mlir.ir.Operation] = None, message: Optional[Union[mlir.ir.StringAttr, str]] = None, loc=None, ip=None)
+
+.. py:class:: EmitRemarkAtOp(at: Union[mlir.ir.Operation, mlir.ir.Value], message: Optional[Union[mlir.ir.StringAttr, str]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`EmitRemarkAtOp`
+
+
+   
+   This operation emits a diagnostic remark with the given message at the
+   location of each payload object associated with the argument. The argument
+   may be an operation or a value handle.
+
+   This operation always succeeds.
+
+
+.. py:function:: emit_remark_at(at: Union[mlir.ir.Operation, mlir.ir.Value], message: Optional[Union[mlir.ir.StringAttr, str]] = None, *, loc=None, ip=None)
+

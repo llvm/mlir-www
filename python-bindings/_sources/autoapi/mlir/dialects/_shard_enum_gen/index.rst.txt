@@ -1,0 +1,104 @@
+mlir.dialects._shard_enum_gen
+=============================
+
+.. py:module:: mlir.dialects._shard_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._shard_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._shard_enum_gen.ReductionKind
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._shard_enum_gen.register_attribute_builder
+   mlir.dialects._shard_enum_gen._shard_reductionkind
+   mlir.dialects._shard_enum_gen._shard_reductionkindattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: ReductionKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Reduction of an iterator/grid dimension.
+
+
+   .. py:attribute:: Sum
+      :value: 1
+
+
+
+   .. py:attribute:: Max
+      :value: 2
+
+
+
+   .. py:attribute:: Min
+      :value: 3
+
+
+
+   .. py:attribute:: Product
+      :value: 4
+
+
+
+   .. py:attribute:: Average
+      :value: 5
+
+
+
+   .. py:attribute:: BitwiseAnd
+      :value: 6
+
+
+
+   .. py:attribute:: BitwiseOr
+      :value: 7
+
+
+
+   .. py:attribute:: BitwiseXor
+      :value: 8
+
+
+
+   .. py:attribute:: Generic
+      :value: 100
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _shard_reductionkind(x, context)
+
+.. py:function:: _shard_reductionkindattr(x, context)
+

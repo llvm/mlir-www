@@ -1,0 +1,488 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Testing Guide - MLIR</title><meta name=description content="Multi-Level IR Compiler Framework"><meta name=generator content="Hugo 0.119.0"><link href=https://mlir.llvm.org/index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://mlir.llvm.org/getting_started/TestingGuide/><link rel=stylesheet href=https://mlir.llvm.org/css/theme.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://mlir.llvm.org/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://mlir.llvm.org/js/bundle.js></script>
+<script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type=text/x-mathjax-config>
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    }
+  });
+</script><link rel=apple-touch-icon sizes=180x180 href="/apple-touch-icon.png?v=1"><link rel=icon type=image/png sizes=32x32 href="/favicon-32x32.png?v=1"><link rel=icon type=image/png sizes=16x16 href="/favicon-16x16.png?v=1"><link rel=manifest href="/site.webmanifest?v=1"><link rel=mask-icon href="/safari-pinned-tab.svg?v=1" color=#3775e0><link rel="shortcut icon" href="/favicon.ico?v=1"><meta name=msapplication-TileColor content="#2d89ef"><meta name=theme-color content="#ffffff"><link rel=icon href=/favicon.svg type=image/svg+xml sizes=any><style>:root{}</style></head><body><div class=container><header><h1><div><img src=https://mlir.llvm.org//mlir-logo.png width=40px align=absmiddle>
+MLIR</div></h1><p class=description>Multi-Level IR Compiler Framework</p></header><div class=global-menu><nav><ul><li class=parent><a href>Community<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=https://llvm.discourse.group/c/mlir/31>Forums</a></li><li class=child><a href=https://discord.gg/xS7Z362>Chat</a></li></ul></li><li><a href=/getting_started/Debugging/>Debugging Tips</a></li><li><a href=/getting_started/Faq/>FAQ</a></li><li class=parent><a href=https://github.com/llvm/llvm-project/tree/main/mlir>Source<i class="fas fa-angle-right"></i></a><ul class=sub-menu><li class=child><a href=/doxygen/>Doxygen</a></li><li class=child><a href=https://github.com/llvm/llvm-project/tree/main/mlir>GitHub</a></li><li class=child><a href=/python-bindings/>Python Bindings API docs</a></li></ul></li><li><a href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue%20state%3Aopen%20label%3Amlir">Bugs</a></li><li><a href=https://github.com/llvm/mlir-www/tree/main/website/static/LogoAssets>Logo Assets</a></li><li><a href=https://www.youtube.com/MLIRCompiler>Youtube Channel</a></li></ul></nav></div><div class=content-container><main><h1>Testing Guide</h1><nav id=TableOfContents><ul><li><a href=#quickstart-commands>Quickstart commands</a><ul><li><a href=#run-all-mlir-tests>Run all MLIR tests:</a></li><li><a href=#run-integration-tests-requires--dmlir_include_integration_testson>Run integration tests (requires <code>-DMLIR_INCLUDE_INTEGRATION_TESTS=ON</code>):</a></li><li><a href=#run-c-unit-tests>Run C++ unit tests:</a></li><li><a href=#run-lit-tests-in-a-specific-directory>Run <code>lit</code> tests in a specific directory</a></li><li><a href=#run-a-specific-lit-test-file>Run a specific <code>lit</code> test file</a></li></ul></li><li><a href=#test-categories>Test categories</a><ul><li><a href=#lit-and-filecheck-tests><code>lit</code> and <code>FileCheck</code> tests</a></li><li><a href=#diagnostic-tests>Diagnostic tests</a></li><li><a href=#integration-tests>Integration tests</a></li><li><a href=#c-unit-tests>C++ Unit tests</a></li></ul></li><li><a href=#contributor-guidelines>Contributor guidelines</a><ul><li><a href=#filecheck-best-practices>FileCheck best practices</a></li><li><a href=#test-formatting-best-practices>Test Formatting Best Practices</a></li><li><a href=#test-documentation-best-practices>Test Documentation Best Practices</a></li></ul></li></ul></nav><h2 id=quickstart-commands>Quickstart commands&nbsp;<a class=headline-hash href=#quickstart-commands>¶</a></h2><p>These commands are explained below in more detail. All commands are run from the
+cmake build directory <code>build/</code>, after
+<a href=/getting_started/>building the project</a>.</p><h3 id=run-all-mlir-tests>Run all MLIR tests:&nbsp;<a class=headline-hash href=#run-all-mlir-tests>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake --build . --target check-mlir
+</span></span></code></pre></div><h3 id=run-integration-tests-requires--dmlir_include_integration_testson>Run integration tests (requires <code>-DMLIR_INCLUDE_INTEGRATION_TESTS=ON</code>):&nbsp;<a class=headline-hash href=#run-integration-tests-requires--dmlir_include_integration_testson>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake --build . --target check-mlir-integration
+</span></span></code></pre></div><h3 id=run-c-unit-tests>Run C++ unit tests:&nbsp;<a class=headline-hash href=#run-c-unit-tests>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>bin/llvm-lit -v tools/mlir/test/Unit
+</span></span></code></pre></div><h3 id=run-lit-tests-in-a-specific-directory>Run <code>lit</code> tests in a specific directory&nbsp;<a class=headline-hash href=#run-lit-tests-in-a-specific-directory>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>bin/llvm-lit -v tools/mlir/test/Dialect/Arith
+</span></span></code></pre></div><h3 id=run-a-specific-lit-test-file>Run a specific <code>lit</code> test file&nbsp;<a class=headline-hash href=#run-a-specific-lit-test-file>¶</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>bin/llvm-lit -v tools/mlir/test/Dialect/Polynomial/ops.mlir
+</span></span></code></pre></div><h2 id=test-categories>Test categories&nbsp;<a class=headline-hash href=#test-categories>¶</a></h2><h3 id=lit-and-filecheck-tests><code>lit</code> and <code>FileCheck</code> tests&nbsp;<a class=headline-hash href=#lit-and-filecheck-tests>¶</a></h3><p><a href=https://llvm.org/docs/CommandGuide/FileCheck.html><code>FileCheck</code></a> is a tool that
+&ldquo;reads two files (one from standard input, and one specified on the command
+line) and uses one to verify the other.&rdquo; One file contains a set of <code>CHECK</code> tags
+that specify strings and patterns expected to appear in the other file. MLIR
+utilizes
+<a href=https://llvm.org/docs/CommandGuide/lit.html><code>lit</code></a> to orchestrate the
+execution of tools like <code>mlir-opt</code> to produce an output, and <code>FileCheck</code> to
+verify different aspects of the IR—such as the output of a transformation pass.</p><p>The source files of <code>lit</code>/<code>FileCheck</code> tests are organized within the <code>mlir</code>
+source tree under <code>mlir/test/</code>. Within this directory, tests are organized
+roughly mirroring <code>mlir/include/mlir/</code>, including subdirectories for <code>Dialect/</code>,
+<code>Transforms/</code>, <code>Conversion/</code>, etc.</p><h4 id=example>Example&nbsp;<a class=headline-hash href=#example>¶</a></h4><p>An example <code>FileCheck</code> test is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// RUN: mlir-opt %s -cse | FileCheck %s
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL: func.func @simple_constant
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@simple_constant</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i32</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// CHECK-NEXT: %[[RESULT:.*]] = arith.constant 1
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: return %[[RESULT]], %[[RESULT]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span> <span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>A comment with <code>RUN</code> represents a <code>lit</code> directive specifying a command line
+invocation to run, with special substitutions like <code>%s</code> for the current file. A
+comment with <code>CHECK</code> represents a <code>FileCheck</code> directive to assert a string or
+pattern appears in the output.</p><p>The above test asserts that, after running Common Subexpression Elimination
+(<code>-cse</code>), only one constant remains in the IR, and the sole SSA value is
+returned twice from the function.</p><h4 id=build-system-details>Build system details&nbsp;<a class=headline-hash href=#build-system-details>¶</a></h4><p>The main way to run all the tests mentioned above in a single invocation can be
+done using the <code>check-mlir</code> target:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake --build . --target check-mlir
+</span></span></code></pre></div><p>Invoking the <code>check-mlir</code> target is roughly equivalent to running (from the
+build directory, after building):</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>./bin/llvm-lit tools/mlir/test
+</span></span></code></pre></div><p>See the
+<a href=https://llvm.org/docs/CommandGuide/lit.html>Lit Documentation</a> for a
+description of all options.</p><p>Subsets of the testing tree can be invoked by passing a more specific path
+instead of <code>tools/mlir/test</code> above. Example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>./bin/llvm-lit tools/mlir/test/Dialect/Arith
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Note that it is possible to test at the file granularity, but since these</span>
+</span></span><span class=line><span class=cl><span class=c1># files do not actually exist in the build directory, you need to know the</span>
+</span></span><span class=line><span class=cl><span class=c1># name.</span>
+</span></span><span class=line><span class=cl>./bin/llvm-lit tools/mlir/test/Dialect/Arith/ops.mlir
+</span></span></code></pre></div><p>Or for running all the C++ unit-tests:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>./bin/llvm-lit tools/mlir/test/Unit
+</span></span></code></pre></div><p>The C++ unit-tests can also be executed as individual binaries, which is
+convenient when iterating on cycles of rebuild-test:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># Rebuild the minimum amount of libraries needed for the C++ MLIRIRTests</span>
+</span></span><span class=line><span class=cl>cmake --build . --target tools/mlir/unittests/IR/MLIRIRTests
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Invoke the MLIRIRTest C++ Unit Test directly</span>
+</span></span><span class=line><span class=cl>tools/mlir/unittests/IR/MLIRIRTests
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># It works for specific C++ unit-tests as well:</span>
+</span></span><span class=line><span class=cl><span class=nv>LIT_OPTS</span><span class=o>=</span><span class=s2>&#34;--filter=MLIRIRTests -a&#34;</span> cmake --build . --target check-mlir
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Run just one specific subset inside the MLIRIRTests:</span>
+</span></span><span class=line><span class=cl>tools/mlir/unittests/IR/MLIRIRTests --gtest_filter<span class=o>=</span>OpPropertiesTest.Properties
+</span></span></code></pre></div><p>Lit has a number of options that control test execution. Here are some of the
+most useful for development purposes:</p><ul><li><a href=https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter><code>--filter=REGEXP</code></a> :
+Only runs tests whose name matches the REGEXP. Can also be specified via the
+<code>LIT_FILTER</code> environment variable.</li><li><a href=https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-filter-out><code>--filter-out=REGEXP</code></a> :
+Filters out tests whose name matches the REGEXP. Can also be specified via
+the <code>LIT_FILTER_OUT</code> environment variable.</li><li><a href=https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-a><code>-a</code></a> : Shows
+all information (useful while iterating on a small set of tests).</li><li><a href=https://llvm.org/docs/CommandGuide/lit.html#cmdoption-lit-time-tests><code>--time-tests</code></a> :
+Prints timing statistics about slow tests and overall histograms.</li></ul><p>Any Lit options can be set in the <code>LIT_OPTS</code> environment variable. This is
+especially useful when using the build system target <code>check-mlir</code>.</p><p>Examples:</p><pre tabindex=0><code># Only run tests that have &#34;python&#34; in the name and print all invocations.
+LIT_OPTS=&#34;--filter=python -a&#34; cmake --build . --target check-mlir
+
+# Only run the array_attributes python test, using the LIT_FILTER mechanism.
+LIT_FILTER=&#34;python/ir/array_attributes&#34; cmake --build . --target check-mlir
+
+# Run everything except for example and integration tests (which are both
+# somewhat slow).
+LIT_FILTER_OUT=&#34;Examples|Integrations&#34; cmake --build . --target check-mlir
+</code></pre><p>Note that the above use the generic cmake command for invoking the <code>check-mlir</code>
+target, but you can typically use the generator directly to be more concise
+(i.e. if configured for <code>ninja</code>, then <code>ninja check-mlir</code> can replace the <code>cmake --build . --target check-mlir</code> command). We use generic <code>cmake</code> commands in
+documentation for consistency, but being concise is often better for interactive
+workflows.</p><h3 id=diagnostic-tests>Diagnostic tests&nbsp;<a class=headline-hash href=#diagnostic-tests>¶</a></h3><p>MLIR provides rich source location tracking that can be used to emit errors,
+warnings, etc. from anywhere throughout the codebase, which are jointly called
+<em>diagnostics</em>. Diagnostic tests assert that specific diagnostic messages are
+emitted for a given input program. These tests are useful in that they allow
+checking specific invariants of the IR without transforming or changing
+anything.</p><p>Some examples of tests in this category are:</p><ul><li>Verifying invariants of operations</li><li>Checking the expected results of an analysis</li><li>Detecting malformed IR</li></ul><p>Diagnostic verification tests are written utilizing the
+<a href=/docs/Diagnostics/#sourcemgr-diagnostic-verifier-handler>source manager verifier handler</a>,
+which is enabled via the <code>verify-diagnostics</code> flag in <code>mlir-opt</code>.</p><p>An example .mlir test running under <code>mlir-opt</code> is shown below:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// RUN: mlir-opt %s -split-input-file -verify-diagnostics
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// Expect an error on the same line.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@bad_branch</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  cf<span class=p>.</span>br <span class=nl>^missing  </span><span class=c>// expected-error {{reference to an undefined block}}
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// -----
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// Expect an error on an adjacent line.
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@foo</span><span class=p>(</span><span class=nv>%a</span> <span class=p>:</span> <span class=k>f32</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// expected-error@+1 {{invalid predicate attribute specification: &#34;foo&#34;}}
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%result</span> <span class=p>=</span> arith<span class=p>.</span>cmpf <span class=s>&#34;foo&#34;</span><span class=p>,</span> <span class=nv>%a</span><span class=p>,</span> <span class=nv>%a</span> <span class=p>:</span> <span class=k>f32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=integration-tests>Integration tests&nbsp;<a class=headline-hash href=#integration-tests>¶</a></h3><p>Integration tests are <code>FileCheck</code> tests that verify functional correctness of
+MLIR code by running it, usually by means of JIT compilation using
+<code>mlir-cpu-runner</code> and runtime support libraries.</p><p>Integration tests don&rsquo;t run by default. To enable them, set the
+<code>-DMLIR_INCLUDE_INTEGRATION_TESTS=ON</code> flag during <code>cmake</code> configuration as
+described in
+<a href=/getting_started/>Getting Started</a>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake -G Ninja ../llvm <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>   ... <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>   -DMLIR_INCLUDE_INTEGRATION_TESTS<span class=o>=</span>ON <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>   ...
+</span></span></code></pre></div><p>Now the integration tests run as part of regular testing.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake --build . --target check-mlir
+</span></span></code></pre></div><p>To run only the integration tests, run the <code>check-mlir-integration</code> target.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>cmake --build . --target check-mlir-integration
+</span></span></code></pre></div><p>Note that integration tests are relatively expensive to run (primarily due to
+JIT compilation), and tend to be trickier to debug (with multiple compilation
+steps <em>integrated</em>, it usually takes a bit of triaging to find the root cause
+of a failure). We reserve e2e tests for cases that are hard to verify
+otherwise, e.g. when composing and testing complex compilation pipelines. In
+those cases, verifying run-time output tends to be easier then the checking
+e.g. LLVM IR with FileCheck. Lowering optimized <code>linalg.matmul</code> (with tiling
+and vectorization) is a good example. For less involved lowering pipelines or
+when there&rsquo;s almost 1-1 mapping between an Op and it&rsquo;s LLVM IR counterpart
+(e.g. <code>arith.cmpi</code> and LLVM IR <code>icmp</code> instruction), regular unit tests are considered
+enough.</p><p>The source files of the integration tests are organized within the <code>mlir</code> source
+tree by dialect (for example, <code>test/Integration/Dialect/Vector</code>).</p><h4 id=hardware-emulators>Hardware emulators&nbsp;<a class=headline-hash href=#hardware-emulators>¶</a></h4><p>The integration tests include some tests for targets that are not widely
+available yet, such as specific AVX512 features (like <code>vp2intersect</code>) and the
+Intel AMX instructions. These tests require an emulator to run correctly
+(lacking real hardware, of course). To enable these specific tests, first
+download and install the
+<a href=https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html>Intel Emulator</a>.
+Then, include the following additional configuration flags in the initial set up
+(X86Vector and AMX can be individually enabled or disabled), where <code>&lt;path to emulator></code> denotes the path to the installed emulator binary. <code>sh cmake -G Ninja ../llvm \ ... \ -DMLIR_INCLUDE_INTEGRATION_TESTS=ON \ -DMLIR_RUN_X86VECTOR_TESTS=ON \ -DMLIR_RUN_AMX_TESTS=ON \ -DINTEL_SDE_EXECUTABLE=&lt;path to emulator> \ ...</code> After this one-time set up, the
+tests run as shown earlier, but will now include the indicated emulated tests as
+well.</p><h3 id=c-unit-tests>C++ Unit tests&nbsp;<a class=headline-hash href=#c-unit-tests>¶</a></h3><p>Unit tests are written using the
+<a href=https://google.github.io/googletest/>googletest</a> framework and are located in
+the <code>mlir/unittests/</code> directory.</p><h2 id=contributor-guidelines>Contributor guidelines&nbsp;<a class=headline-hash href=#contributor-guidelines>¶</a></h2><p>In general, all commits to the MLIR repository should include an accompanying
+test of some form. Commits that include no functional changes, such as API
+changes like symbol renaming, should be tagged with NFC (No Functional Changes).
+This signals to the reviewer why the change doesn&rsquo;t/shouldn&rsquo;t include a test.</p><p><code>lit</code> tests with <code>FileCheck</code> are the preferred method of testing in MLIR for
+non-erroneous output verification.</p><p>Diagnostic tests are the preferred method of asserting error messages are output
+correctly. Every user-facing error message (e.g., <code>op.emitError()</code>) should be
+accompanied by a corresponding diagnostic test.</p><p>When you cannot use the above, such as for testing a non-user-facing API like a
+data structure, then you may write C++ unit tests. This is preferred because the
+C++ APIs are not stable and subject to frequent refactoring. Using <code>lit</code> and
+<code>FileCheck</code> allows maintainers to improve the MLIR internals more easily.</p><h3 id=filecheck-best-practices>FileCheck best practices&nbsp;<a class=headline-hash href=#filecheck-best-practices>¶</a></h3><p>FileCheck is an extremely useful utility, it allows for easily matching various
+parts of the output. This ease of use means that it becomes easy to write
+brittle tests that are essentially <code>diff</code> tests. FileCheck tests should be as
+self-contained as possible and focus on testing the minimal set of
+functionalities needed. Let&rsquo;s see an example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// RUN: mlir-opt %s -cse | FileCheck %s
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL: func.func @simple_constant() -&gt; (i32, i32)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@simple_constant</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i32</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// CHECK-NEXT: %result = arith.constant 1 : i32
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: return %result, %result : i32, i32
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: }
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span> <span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The above example is another way to write the original example shown in the main
+<a href=#lit-and-filecheck-tests><code>lit</code> and <code>FileCheck</code> tests</a> section. There are a few
+problems with this test; below is a breakdown of the no-nos of this test to
+specifically highlight best practices.</p><ul><li>Tests should be self-contained.</li></ul><p>This means that tests should not test lines or sections outside of what is
+intended. In the above example, we see lines such as <code>CHECK-NEXT: }</code>. This line
+in particular is testing pieces of the Parser/Printer of FuncOp, which is
+outside of the realm of concern for the CSE pass. This line should be removed.</p><ul><li>Tests should be minimal, and only check what is absolutely necessary.</li></ul><p>This means that anything in the output that is not core to the functionality
+that you are testing should <em>not</em> be present in a CHECK line. This is a separate
+bullet just to highlight the importance of it, especially when checking against
+IR output.</p><p>If we naively remove the unrelated <code>CHECK</code> lines in our source file, we may end
+up with:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL: func.func @simple_constant
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@simple_constant</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i32</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// CHECK-NEXT: %result = arith.constant 1 : i32
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: return %result, %result : i32, i32
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span> <span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>It may seem like this is a minimal test case, but it still checks several
+aspects of the output that are unrelated to the CSE transformation. Namely the
+result types of the <code>arith.constant</code> and <code>return</code> operations, as well the actual
+SSA value names that are produced. FileCheck <code>CHECK</code> lines may contain
+<a href=https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-regex-matching-syntax>regex statements</a>
+as well as named
+<a href=https://llvm.org/docs/CommandGuide/FileCheck.html#filecheck-string-substitution-blocks>string substitution blocks</a>.
+Utilizing the above, we end up with the example shown in the main
+<a href=#filecheck-tests>FileCheck tests</a> section.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL: func.func @simple_constant
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@simple_constant</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=p>(</span><span class=k>i32</span><span class=p>,</span> <span class=k>i32</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>/// Here we use a substitution variable as the output of the constant is
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>/// useful for the test, but we omit as much as possible of everything else.
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: %[[RESULT:.*]] = arith.constant 1
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=c>// CHECK-NEXT: return %[[RESULT]], %[[RESULT]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl>  <span class=nv>%0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%1</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>1</span> <span class=p>:</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%0</span><span class=p>,</span> <span class=nv>%1</span> <span class=p>:</span> <span class=k>i32</span><span class=p>,</span> <span class=k>i32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=test-formatting-best-practices>Test Formatting Best Practices&nbsp;<a class=headline-hash href=#test-formatting-best-practices>¶</a></h3><p>When adding new tests, strive to follow these two key rules:</p><ol><li><strong>Follow the existing naming and whitespace style.</strong><ul><li>This applies when modifying existing test files that follow a particular
+convention, as it likely fits the context.</li></ul></li><li><strong>Consistently document the edge case being tested.</strong><ul><li>Clearly state what makes this test unique and how it complements other
+similar tests.</li></ul></li></ol><p>While the first rule extends LLVM’s general coding style to tests, the second
+may feel new. The goal is to improve:</p><ul><li><strong>Test discoverability</strong> – Well-documented tests make it easier to pair tests
+with patterns and understand their purpose.</li><li><strong>Test consistency</strong> – Consistent documentation and naming lowers cognitive
+load and helps avoid duplication.</li></ul><p>A well-thought-out naming convention helps achieve all of the above.</p><hr><h4 id=example-improving-test-readability--naming>Example: Improving Test Readability & Naming&nbsp;<a class=headline-hash href=#example-improving-test-readability--naming>¶</a></h4><p>Consider these <strong>three tests</strong> that exercise <code>vector.maskedload -> vector.load</code>
+lowering under the <code>-test-vector-to-vector-lowering</code> flag:</p><h5 id=before-inconsistent--hard-to-differentiate>Before: Inconsistent & Hard to Differentiate&nbsp;<a class=headline-hash href=#before-inconsistent--hard-to-differentiate>¶</a></h5><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_1(
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[A0:.*]]: memref&lt;16xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[A1:.*]]: vector&lt;16xf32&gt;) -&gt; vector&lt;16xf32&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:     : memref&lt;16xf32&gt;, vector&lt;16xf32&gt;
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   return %[[LOAD]] : vector&lt;16xf32&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_1</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg1</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0</span> <span class=p>:</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%vec_i1</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>16</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%arg0</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%vec_i1</span><span class=p>,</span> <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> into <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%ld</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_2(
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[A0:.*]]: memref&lt;16xi8&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[A1:.*]]: vector&lt;16xi8&gt;) -&gt; vector&lt;16xi8&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   %[[C0:.*]] = arith.constant 0 : index
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   %[[LOAD:.*]] = vector.load %[[A0]][%[[C]]]
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:     : memref&lt;16xi8&gt;, vector&lt;16xi8&gt;
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:   return %[[LOAD]] : vector&lt;16xi8&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_2</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg1</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0</span> <span class=p>:</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%vec_i1</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>16</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%arg0</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%vec_i1</span><span class=p>,</span> <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span> into <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%ld</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_3(
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        %[[A0:.*]]: memref&lt;16xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        %[[A1:.*]]: vector&lt;16xf32&gt;) -&gt; vector&lt;16xf32&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:    return %[[A1]] : vector&lt;16xf32&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_3</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg0</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%arg1</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0</span> <span class=p>:</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%vec_i1</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%arg0</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%vec_i1</span><span class=p>,</span> <span class=nv>%arg1</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> into <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%ld</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>While all examples test <code>vector.maskedload</code> -> <code>vector.load lowering</code>, it is
+difficult to tell their actual differences.</p><h5 id=after-step-1-introduce-consistent-variable-names>After Step 1 (Introduce Consistent Variable Names)&nbsp;<a class=headline-hash href=#after-step-1-introduce-consistent-variable-names>¶</a></h5><p>To reduce cognitive load, use consistent names across MLIR and FileCheck (e.g.,
+<code>%arg0</code> and <code>A0</code> above are not consistent). Also, instead of using generic
+names like <code>%arg0</code> or <code>%vec_i1</code>, encode some additional context by using names
+from existing documentation. For example from the Op documentation,
+<a href=https://mlir.llvm.org/docs/Dialects/Vector/#vectormaskedload-vectormaskedloadop><code>vector.maskedload</code></a>,
+in this case, you can use <code>%base</code>, <code>%mask</code> and <code>%pass_thru</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_1(
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[BASE:.*]]: memref&lt;16xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector&lt;16xf32&gt;) -&gt; vector&lt;16xf32&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_1</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%base</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%pass_thru</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%mask</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>16</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%base</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%mask</span><span class=p>,</span> <span class=nv>%pass_thru</span> <span class=p>(...)</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_2(
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[BASE:.*]]: memref&lt;16xi8&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector&lt;16xi8&gt;) -&gt; vector&lt;16xi8&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_2</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%base</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%pass_thru</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%mask</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>16</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%base</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%mask</span><span class=p>,</span> <span class=nv>%pass_thru</span> <span class=p>(...)</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_regression_3(
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[BASE:.*]]: memref&lt;16xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:       %[[PASS_THRU:.*]]: vector&lt;16xf32&gt;) -&gt; vector&lt;16xf32&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_regression_3</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%base</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%pass_thru</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span>  <span class=nv>%mask</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%base</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%mask</span><span class=p>,</span> <span class=nv>%base</span> <span class=p>(...)</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span></code></pre></div><h5 id=after-step-2-improve-test-naming>After Step 2 (Improve Test Naming)&nbsp;<a class=headline-hash href=#after-step-2-improve-test-naming>¶</a></h5><p>Instead of using &ldquo;regression&rdquo; (which does not add unique information), rename
+tests based on key attributes:</p><ul><li>All examples test the <code>vector.maskedload</code> to <code>vector.load</code> lowering.</li><li>The first test uses a <em>dynamically</em> shaped <code>memref</code>, while the others use
+<em>static</em> shapes.</li><li>The mask in the first two examples is &ldquo;all true&rdquo; (<code>vector.constant_mask [16]</code>), while it is &ldquo;all false&rdquo; (<code>vector.constant_mask [0]</code>) in the third
+example.</li><li>The first and the third tests use <code>i32</code> elements, whereas the second uses
+<code>i8</code>.</li></ul><p>This suggests the following naming scheme:</p><ul><li><code>@maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false}</code>.</li></ul><p>Below are the updated names:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_to_load_dynamic_i32_all_true(
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_to_load_dynamic_i32_all_true</span><span class=p>(...)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_to_load_static_i8_all_true(
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_to_load_static_i8_all_true</span><span class=p>(...)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i8</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @maskedload_to_load_static_i32_all_false(
+</span></span></span><span class=line><span class=cl><span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@maskedload_to_load_static_i32_all_false</span><span class=p>(...)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c>// (...)
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=p>}</span>
+</span></span></code></pre></div><h5 id=after-step-3-add-the-newly-identified-missing-case>After Step 3 (Add The Newly Identified Missing Case)&nbsp;<a class=headline-hash href=#after-step-3-add-the-newly-identified-missing-case>¶</a></h5><p>Step 2 made it possible to see that there is a case which is not tested:</p><ul><li>A mask that is neither &ldquo;all true&rdquo; nor &ldquo;all false&rdquo;.</li></ul><p>Unlike the existing cases, this mask must be preserved. In this scenario,
+<code>vector.load</code> is not the right abstraction. Thus, no lowering should occur:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func @negative_maskedload_to_load_static_i32_mixed(
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        %[[BASE:.*]]: memref&lt;16xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        %[[PASS_THRU:.*]]: vector&lt;16xf32&gt;) -&gt; vector&lt;16xf32&gt; {
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:    vector.maskedload
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@negative_maskedload_to_load_static_i32_mixed</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%base</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%pass_thru</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>-&gt;</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%c0</span> <span class=p>=</span> arith<span class=p>.</span><span class=kt>constant</span> <span class=m>0</span> <span class=p>:</span> <span class=k>index</span>
+</span></span><span class=line><span class=cl>  <span class=nv>%mask</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span><span class=kt>constant</span>_mask <span class=p>[</span><span class=m>4</span><span class=p>]</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nv>%ld</span> <span class=p>=</span> <span class=kt>vector</span><span class=p>.</span>maskedload <span class=nv>%base</span><span class=p>[</span><span class=nv>%c0</span><span class=p>],</span> <span class=nv>%mask</span><span class=p>,</span> <span class=nv>%pass_thru</span>
+</span></span><span class=line><span class=cl>    <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>i1</span><span class=p>&gt;,</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span> into <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span> <span class=nv>%ld</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>16x</span><span class=k>f32</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The <code>negative_</code> prefix indicates that this test should fail to lower, as the
+pattern should not match.</p><h5 id=test-naming-convention>Test Naming Convention&nbsp;<a class=headline-hash href=#test-naming-convention>¶</a></h5><p>To summarize, here is the naming convention used in the examples above:</p><ul><li><code>@{negative_}?maskedload_to_load_{static|dynamic}_{i32|i8}_{all_true|all_false|mixed}</code>.</li></ul><p>The exact format may vary depending on context. However:</p><ul><li><strong>Avoid using suffixes</strong> (e.g., <code>_fail</code>) to indicate negative tests — prefixes like
+<code>negative_</code> are easier to spot and grep for.</li><li>Whatever naming convention you choose, <strong>apply it consistently</strong> throughout
+the test suite.</li></ul><p><strong>Note:</strong> In some cases, a prefix other than <code>negative_</code> might be more
+appropriate. For instance, in &ldquo;folding&rdquo; tests where a pattern is expected not
+to apply, using <code>no_</code> can be a more concise and equally clear alternative —
+e.g., <code>@no_fold_&lt;case>_&lt;subcase>.</code></p><h4 id=what-if-there-is-no-pre-existing-style-to-follow>What if there is no pre-existing style to follow?&nbsp;<a class=headline-hash href=#what-if-there-is-no-pre-existing-style-to-follow>¶</a></h4><p>If you are adding a new test file, you can use other test files in the same
+directory as inspiration.</p><p>If the test file you are modifying lacks a clear style and instead has mixed,
+inconsistent styles, try to identify the dominant one and follow it. Even
+better, consider refactoring the file to adopt a single, consistent style —
+this helps improve our overall testing quality. Refactoring is also encouraged
+when the existing style could be improved.</p><p>In many cases, it is best to create a separate PR for test refactoring to
+reduce per-PR noise. However, this depends on the scale of changes — reducing
+PR traffic is also important. Work with reviewers to use your judgment and
+decide the best approach.</p><p>Alternatively, if you defer refactoring, consider creating a GitHub issue and
+adding a TODO in the test file linking to it.</p><p>When creating a new naming convention, keep these points in mind:</p><ul><li><p><strong>Write Orthogonal Tests</strong>
+If naming is difficult then the tests may be lacking a clear purpose. A good
+rule of thumb is to avoid testing the same thing repeatedly. Before writing
+tests, define clear categories to cover (e.g., number of loops, data types).
+This often leads to a natural naming scheme—for example: <code>@loop_depth_2_i32</code>.</p></li><li><p><strong>What vs Why</strong>
+Test names should reflect <em>what</em> is being tested, not <em>why</em>.</p></li></ul><p>Encoding <em>why</em> in test names can lead to overly long and complex names.
+Instead, add inline comments where needed.</p><h4 id=do-not-forget-the-common-sense>Do not forget the common sense&nbsp;<a class=headline-hash href=#do-not-forget-the-common-sense>¶</a></h4><p>Always apply common sense when naming functions and variables. Encoding too
+much information in names makes the tests less readable and less maintainable.</p><p>Trust your judgment. When in doubt, consult your &ldquo;future self&rdquo;: <em>&ldquo;Will this still
+make sense to me six months from now?</em>&rdquo;</p><h4 id=final-points---key-principles>Final Points - Key Principles&nbsp;<a class=headline-hash href=#final-points---key-principles>¶</a></h4><p>The above approach is just an example. It may not fit your use case perfectly,
+so feel free to adapt it as needed. Key principles to follow:</p><ul><li>Make tests self-documenting.</li><li>Follow existing conventions.</li></ul><p>These principles make tests easier to discover and maintain. For you, &ldquo;future
+you&rdquo;, and the rest of the MLIR community.</p><h3 id=test-documentation-best-practices>Test Documentation Best Practices&nbsp;<a class=headline-hash href=#test-documentation-best-practices>¶</a></h3><p>In addition to following good naming and formatting conventions, please
+document your tests with comments. Focus on explaining <strong>why</strong> since the
+<strong>what</strong> is usually clear from the code itself.</p><p>As an example, consider this test that uses the
+<code>TransferWritePermutationLowering</code> pattern:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>/// Even with out-of-bounds accesses, it is safe to apply this pattern as it
+</span></span></span><span class=line><span class=cl><span class=c>/// does not modify which memory location is being accessed.
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed_out_of_bounds
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:      %[[VEC:.*]]: vector&lt;4x8xi16&gt;
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:      %[[MEM:.*]]: memref&lt;2x2x?x?xi16&gt;
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-SAME:      %[[IDX:.*]]: index)
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:      %[[TR:.*]] = vector.transpose %[[VEC]], [1, 0]
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK_SAME:        : vector&lt;4x8xi16&gt; to vector&lt;8x4xi16&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// Expect the in_bounds attribute to be preserved. However, since we don&#39;t
+</span></span></span><span class=line><span class=cl><span class=c>/// print it when all flags are &#34;false&#34;, it should not appear in the output.
+</span></span></span><span class=line><span class=cl><span class=c>/// CHECK-NOT:       in_bounds
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// CHECK:           vector.transfer_write
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// The permutation map was replaced with vector.transpose
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-NOT:       permutation_map
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        %[[TR]], %[[MEM]][%[[IDX]], %[[IDX]], %[[IDX]], %[[IDX]]]
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:        : vector&lt;8x4xi16&gt;, memref&lt;2x2x?x?xi16&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@xfer_write_minor_identity_transposed_out_of_bounds</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%vec</span><span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>4x8x</span><span class=k>i16</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%mem</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x2x?x?x</span><span class=k>i16</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%idx</span><span class=p>:</span> <span class=k>index</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>vector</span><span class=p>.</span>transfer_write <span class=nv>%vec</span><span class=p>,</span> <span class=nv>%mem</span><span class=p>[</span><span class=nv>%idx</span><span class=p>,</span> <span class=nv>%idx</span><span class=p>,</span> <span class=nv>%idx</span><span class=p>,</span> <span class=nv>%idx</span><span class=p>]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nl>in_bounds =</span> <span class=p>[</span>false<span class=p>,</span> false<span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=nl>permutation_map =</span> affine_map<span class=p>&lt;(</span>d0<span class=p>,</span> d1<span class=p>,</span> d2<span class=p>,</span> d3<span class=p>)</span> <span class=p>-&gt;</span> <span class=p>(</span>d3<span class=p>,</span> d2<span class=p>)&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=p>:</span> <span class=kt>vector</span><span class=p>&lt;</span><span class=m>4x8x</span><span class=k>i16</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>2x2x?x?x</span><span class=k>i16</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>The comments in the example above document two non-obvious behaviors:</p><ul><li><em>Why</em> is the <code>permutation_map</code> attribute missing from the output?</li><li><em>Why</em> is the <code>in_bounds</code> attribute missing from the output?</li></ul><h4 id=how-to-identify-what-needs-documentation>How to Identify What Needs Documentation?&nbsp;<a class=headline-hash href=#how-to-identify-what-needs-documentation>¶</a></h4><p>Think of yourself six months from now and ask: <em>&ldquo;What might be difficult to
+understand without comments?&rdquo;</em></p><p>If you expect something to be tricky for &ldquo;future-you&rdquo;, it’s likely to be tricky
+for others encountering the test for the first time.</p><h4 id=making-tests-self-documenting>Making Tests Self-Documenting&nbsp;<a class=headline-hash href=#making-tests-self-documenting>¶</a></h4><p>We can improve documentation further by:</p><ul><li>clarifying what pattern is being tested,</li><li>providing high-level reasoning, and</li><li>consolidating shared comments.</li></ul><p>For example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=c>///--------------------------------------------------------------------------------
+</span></span></span><span class=line><span class=cl><span class=c>/// [Pattern: TransferWritePermutationLowering]
+</span></span></span><span class=line><span class=cl><span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c>/// IN: vector.transfer_write (_transposed_ minor identity permutation map)
+</span></span></span><span class=line><span class=cl><span class=c>/// OUT: vector.transpose + vector.transfer_write (minor identity permutation map)
+</span></span></span><span class=line><span class=cl><span class=c>///
+</span></span></span><span class=line><span class=cl><span class=c>/// Note: `permutation_map` from the input Op is replaced with the newly
+</span></span></span><span class=line><span class=cl><span class=c>/// inserted vector.traspose Op.
+</span></span></span><span class=line><span class=cl><span class=c>///--------------------------------------------------------------------------------
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-LABEL:   func.func @xfer_write_minor_identity_transposed
+</span></span></span><span class=line><span class=cl><span class=c>//       (...)
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:      %[[TR:.*]] = vector.transpose (...)
+</span></span></span><span class=line><span class=cl><span class=c>//       CHECK:      vector.transfer_write %[[TR]] (...)
+</span></span></span><span class=line><span class=cl><span class=c>//       (...)
+</span></span></span></code></pre></div><p>The example above documents:</p><ul><li>The transformation pattern being tested.</li><li>The key logic behind the transformation.</li><li>The expected change in output.</li></ul><h4 id=documenting-the-what>Documenting the &ldquo;What&rdquo;&nbsp;<a class=headline-hash href=#documenting-the-what>¶</a></h4><p>You should always document why, but documenting what is also valid and
+encouraged in cases where:</p><ul><li>The test output is long and complex.</li><li>The tested logic is non-trivial and/or involves multiple transformations.</li></ul><p>For example, in this test for Linalg convolution vectorization, comments are
+used to document high-level steps (original FileCheck &ldquo;check&rdquo; lines have been
+trimmed for brevity):</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-mlir data-lang=mlir><span class=line><span class=cl><span class=kt>func</span><span class=p>.</span><span class=kt>func</span> <span class=nf>@conv1d_nwc_4x2x8_memref</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%input</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>4x6x3x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%filter</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1x3x8x</span><span class=k>f32</span><span class=p>&gt;,</span>
+</span></span><span class=line><span class=cl>    <span class=nv>%output</span><span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>4x2x8x</span><span class=k>f32</span><span class=p>&gt;)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  linalg<span class=p>.</span>conv_1d_nwc_wcf
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=nl>dilations =</span> dense<span class=p>&lt;</span><span class=m>1</span><span class=p>&gt;</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;,</span> <span class=nl>strides =</span> dense<span class=p>&lt;</span><span class=m>3</span><span class=p>&gt;</span> <span class=p>:</span> <span class=kt>tensor</span><span class=p>&lt;</span><span class=m>1x</span><span class=k>i64</span><span class=p>&gt;}</span>
+</span></span><span class=line><span class=cl>    ins<span class=p>(</span><span class=nv>%input</span><span class=p>,</span> <span class=nv>%filter</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>4x6x3x</span><span class=k>f32</span><span class=p>&gt;,</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>1x3x8x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>    outs<span class=p>(</span><span class=nv>%output</span> <span class=p>:</span> <span class=kt>memref</span><span class=p>&lt;</span><span class=m>4x2x8x</span><span class=k>f32</span><span class=p>&gt;)</span>
+</span></span><span class=line><span class=cl>  <span class=kt>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>//      CHECK: func @conv1d_nwc_4x2x8_memref
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME: %[[INPUT:.+]]: memref&lt;4x6x3xf32&gt;
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME: %[[FILTER:.+]]: memref&lt;1x3x8xf32&gt;,
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME: %[[OUTPUT:.+]]: memref&lt;4x2x8xf32&gt;
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// Read the whole data in one shot.
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-DAG:   %[[V_INPUT_R:.+]] = vector.transfer_read %[[INPUT]]
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-DAG:  %[[V_FILTER_R:.+]] = vector.transfer_read %[[FILTER]]
+</span></span></span><span class=line><span class=cl><span class=c>//  CHECK-DAG:  %[[V_OUTPUT_R:.+]] = vector.transfer_read %[[OUTPUT]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[V_INPUT_0:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[V_INPUT_1:.+]] = vector.extract_strided_slice %[[V_INPUT_R]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>//      CHECK:    %[[V_FILTER:.+]] = vector.extract %[[V_FILTER_R]][0]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>//      CHECK:  %[[V_OUTPUT_0:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:  %[[V_OUTPUT_1:.+]] = vector.extract_strided_slice %[[V_OUTPUT_R]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// w == 0, kw == 0
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[CONTRACT_0:.+]] = vector.contract
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:     %[[V_INPUT_0]], %[[V_FILTER]], %[[V_OUTPUT_0]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// w == 1, kw == 0
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[CONTRACT_1:.+]] = vector.contract
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:     %[[V_INPUT_1]], %[[V_FILTER]], %[[V_OUTPUT_1]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// w == 0, kw == 0
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[RES_0:.+]] = vector.insert_strided_slice
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:    %[[CONTRACT_0]], %[[V_OUTPUT_R]]
+</span></span></span><span class=line><span class=cl><span class=c>/// w == 1, kw == 0
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   %[[RES_1:.+]] = vector.insert_strided_slice
+</span></span></span><span class=line><span class=cl><span class=c>// CHECK-SAME:    %[[CONTRACT_1]], %[[RES_0]]
+</span></span></span><span class=line><span class=cl><span class=c></span>
+</span></span><span class=line><span class=cl><span class=c>/// Write the result back in one shot.
+</span></span></span><span class=line><span class=cl><span class=c>//      CHECK:   vector.transfer_write %[[RES_1]], %[[OUTPUT]]
+</span></span></span></code></pre></div><p>Though the comments document <em>what</em> is happening (e.g., &ldquo;Write the result back
+in one shot&rdquo;), some variables — like <code>w</code> and <code>kw</code> — are not explained. This is
+intentional - their purpose becomes clear when studying the corresponding
+Linalg vectorizer implementation (or, when analysing how
+<code>linalg.conv_1d_nwc_wcf</code> works).</p><p>Comments help you understand code, they do not replace the need to read it.
+Comments guide the reader, they do not repeat what the code already says.</p><h4 id=final-points---key-principles-1>Final Points - Key Principles&nbsp;<a class=headline-hash href=#final-points---key-principles-1>¶</a></h4><p>Below are key principles to follow when documenting tests:</p><ul><li>Always document <em>why</em>, document <em>what</em> if you need to (e.g. the underlying
+logic is non-trivial).</li><li>Use block comments for higher-level comments (e.g. to describe the patterns
+being tested).</li><li>Think about maintainability - comments should help future developers (which
+includes you) understand tests at a glance.</li><li>Avoid over-explaining. Comments should assist, not replace reading the code.</li></ul><div class=edit-meta><br><a href=https://github.com/llvm/mlir-www//edit/main/website/content/getting_started/TestingGuide.md class=edit-page><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://mlir.llvm.org/getting_started/Glossary/ title=Glossary><i class="fas fa-arrow-left" aria-hidden=true></i> Prev - Glossary</a>
+<a class="nav nav-next" href=https://mlir.llvm.org/docs/ title="Code Documentation">Next - Code Documentation <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://mlir.llvm.org/>Home</a></li><li><a href=https://mlir.llvm.org/governance/>Governance</a></li><li><a href=https://mlir.llvm.org/users/>Users of MLIR</a></li><li><a href=https://mlir.llvm.org/pubs/>MLIR Related Publications</a></li><li><a href=https://mlir.llvm.org/talks/>Talks</a></li><li><a href=https://mlir.llvm.org/deprecation/>Deprecations & Current Refactoring</a></li><li class="parent has-sub-menu"><a href=https://mlir.llvm.org/getting_started/>Getting Started<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/getting_started/ReportingIssues/>Reporting Issues</a></li><li><a href=https://mlir.llvm.org/getting_started/Debugging/>Debugging Tips</a></li><li><a href=https://mlir.llvm.org/getting_started/Faq/>FAQ</a></li><li><a href=https://mlir.llvm.org/getting_started/Contributing/>How to Contribute</a></li><li><a href=https://mlir.llvm.org/getting_started/DeveloperGuide/>Developer Guide</a></li><li><a href=https://mlir.llvm.org/getting_started/openprojects/>Open Projects</a></li><li><a href=https://mlir.llvm.org/getting_started/Glossary/>Glossary</a></li><li class=active><a href=https://mlir.llvm.org/getting_started/TestingGuide/>Testing Guide</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/>Code Documentation<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Bindings/>Bindings<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Bindings/Python/>MLIR Python Bindings</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tools/>Tools<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tools/MLIRLSP/>MLIR : Language Server Protocol</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-reduce/>MLIR Reduce</a></li><li><a href=https://mlir.llvm.org/docs/Tools/mlir-rewrite/>mlir-rewrite</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/OpenMPPasses/></a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIRTransforms/></a></li><li><a href=https://mlir.llvm.org/docs/ActionTracing/>Action: Tracing and Debugging MLIR-based Compilers</a></li><li><a href=https://mlir.llvm.org/docs/Bufferization/>Bufferization</a></li><li><a href=https://mlir.llvm.org/docs/DataLayout/>Data Layout Modeling</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/DefiningDialects/>Defining Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Constraints/>Constraints</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Assembly/>Customizing Assembly Behavior</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/AttributesAndTypes/>Defining Dialect Attributes and Types</a></li><li><a href=https://mlir.llvm.org/docs/DefiningDialects/Operations/>Operation Definition Specification (ODS)</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Diagnostics/>Diagnostic Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/DialectConversion/>Dialect Conversion</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/>Dialects<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPUTransformOps/></a></li><li><a href=https://mlir.llvm.org/docs/Dialects/OpenACCDialect/>'acc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Affine/>'affine' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMDGPU/>'amdgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AMX/>'amx' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArithOps/>'arith' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmNeon/>'arm_neon' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSVE/>'arm_sve' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ArmSME/>'ArmSME' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/AsyncDialect/>'async' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/BufferizationOps/>'bufferization' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ControlFlowDialect/>'cf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ComplexOps/>'complex' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/DLTIDialect/>'dlti' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/EmitC/>'emitc' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Func/>'func' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/GPU/>'gpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IndexOps/>'index' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/IRDL/>'irdl' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/Linalg/>'linalg' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/Linalg/OpDSL/>Linalg OpDSL</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/LLVM/>'llvm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MathOps/>'math' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MemRef/>'memref' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MLProgramOps/>'ml_program' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MPI/>'mpi' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVGPU/>'nvgpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/NVVMDialect/>'nvvm' Dialect</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/>'omp' Dialect<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Dialects/OpenMPDialect/ODS/>ODS Documentation</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLInterpOps/>'pdl_interp' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PDLOps/>'pdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/PtrOps/>'ptr' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/QuantDialect/>'quant' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ROCDLDialect/>'rocdl' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SCFDialect/>'scf' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/ShapeDialect/>'shape' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Shard/>'shard' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SMT/>'smt' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SparseTensorOps/>'sparse_tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TensorOps/>'tensor' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/UBOps/>'ub' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/VCIXDialect/>'vcix' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Vector/>'vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/WasmSSAOps/>'wasmssa' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/X86Vector/>'x86vector' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeGPU/>'xegpu' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/XeVMDialect/>'xevm' Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Builtin/>Builtin Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/MatchOpInterfaces/>OpInterface definitions</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/SPIR-V/>SPIR-V Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/TOSA/>Tensor Operator Set Architecture (TOSA) Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Dialects/Transform/>Transform Dialect</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Interfaces/>Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/TargetLLVMIR/>LLVM IR Target</a></li><li><a href=https://mlir.llvm.org/docs/BytecodeFormat/>MLIR Bytecode Format</a></li><li><a href=https://mlir.llvm.org/docs/CAPI/>MLIR C API</a></li><li><a href=https://mlir.llvm.org/docs/LangRef/>MLIR Language Reference</a></li><li><a href=https://mlir.llvm.org/docs/ReleaseNotes/>MLIR Release Notes</a></li><li><a href=https://mlir.llvm.org/docs/Canonicalization/>Operation Canonicalization</a></li><li><a href=https://mlir.llvm.org/docs/OwnershipBasedBufferDeallocation/>Ownership-based Buffer Deallocation</a></li><li><a href=https://mlir.llvm.org/docs/PassManagement/>Pass Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/Passes/>Passes</a></li><li><a href=https://mlir.llvm.org/docs/PatternRewriter/>Pattern Rewriting : Generic DAG-to-DAG Rewriting</a></li><li><a href=https://mlir.llvm.org/docs/PatternSearch/>Pattern Search</a></li><li><a href=https://mlir.llvm.org/docs/PDLL/>PDLL - PDL Language</a></li><li><a href=https://mlir.llvm.org/docs/Quantization/>Quantization</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Rationale/>Rationale<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleGenericDAGRewriter/>Generic DAG Rewriter Infrastructure Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleLinalgDialect/>Linalg Dialect Rationale: The Case For Compiler-Friendly Custom Operations</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/Rationale/>MLIR Rationale</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/MLIRForGraphAlgorithms/>MLIR: Incremental Application to Graph Algorithms in ML Frameworks</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/RationaleSimplifiedPolyhedralForm/>MLIR: The case for a simplified polyhedral form</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/SideEffectsAndSpeculation/>Side Effects & Speculation</a></li><li><a href=https://mlir.llvm.org/docs/Rationale/UsageOfConst/>Usage of 'const' in MLIR, for core IR types</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Remarks/>Remark Infrastructure</a></li><li><a href=https://mlir.llvm.org/docs/ShapeInference/>Shape Inference</a></li><li><a href=https://mlir.llvm.org/docs/SPIRVToLLVMDialectConversion/>SPIR-V Dialect to LLVM Dialect conversion manual</a></li><li><a href=https://mlir.llvm.org/docs/SymbolsAndSymbolTables/>Symbols and Symbol Tables</a></li><li><a href=https://mlir.llvm.org/docs/DeclarativeRewrites/>Table-driven Declarative Rewrite Rule (DRR)</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Traits/>Traits<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Traits/Broadcastable/>The `Broadcastable` Trait</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/>Tutorials<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/CreatingADialect/>Creating a Dialect</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/QuickstartRewrites/>Quickstart tutorial to adding MLIR graph rewrite</a></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/Toy/>Toy Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-1/>Chapter 1: Toy Language and AST</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-2/>Chapter 2: Emitting Basic MLIR</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-3/>Chapter 3: High-level Language-Specific Analysis and Transformation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-4/>Chapter 4: Enabling Generic Transformation with Interfaces</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-5/>Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-6/>Chapter 6: Lowering to LLVM and CodeGeneration</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/Toy/Ch-7/>Chapter 7: Adding a Composite Type to Toy</a></li></ul></li><li class=has-sub-menu><a href=https://mlir.llvm.org/docs/Tutorials/transform/>Transform Dialect Tutorial<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch0/>Chapter 0: A Primer on “Structured” Linalg Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch1/>Chapter 1: Combining Existing Transformations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch2/>Chapter 2: Adding a Simple New Transformation Operation</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch3/>Chapter 3: More than Simple Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/Ch4/>Chapter 4: Matching Payload with Transform Operations</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/transform/ChH/>Chapter H: Reproducing Halide Schedule</a></li></ul></li><li><a href=https://mlir.llvm.org/docs/Tutorials/UnderstandingTheIRStructure/>Understanding the IR Structure</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/MlirOpt/>Using `mlir-opt`</a></li><li><a href=https://mlir.llvm.org/docs/Tutorials/DataFlowAnalysis/>Writing DataFlow Analyses in MLIR</a></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>

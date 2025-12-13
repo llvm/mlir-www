@@ -1,0 +1,107 @@
+mlir.dialects._transform_debug_extension_ops_gen
+================================================
+
+.. py:module:: mlir.dialects._transform_debug_extension_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_debug_extension_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_debug_extension_ops_gen.EmitParamAsRemarkOp
+   mlir.dialects._transform_debug_extension_ops_gen.EmitRemarkAtOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_debug_extension_ops_gen.debug_emit_param_as_remark
+   mlir.dialects._transform_debug_extension_ops_gen.debug_emit_remark_at
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: EmitParamAsRemarkOp(param, *, anchor=None, message=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark containing the string form of the
+   attributes associated with the parameter provided as attribute. It takes
+   as optional arguments:
+
+   * an additional message text to prepend;
+   * a handle pointing to operations the location of which will be used to
+   emit the diagnostic; if multiple operations are associated, the
+   diagnostic is emitted for all of their respective locations.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_param_as_remark'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+   .. py:method:: anchor() -> Optional[_ods_ir]
+
+
+   .. py:method:: message() -> Optional[_ods_ir]
+
+
+.. py:function:: debug_emit_param_as_remark(param, *, anchor=None, message=None, loc=None, ip=None) -> EmitParamAsRemarkOp
+
+.. py:class:: EmitRemarkAtOp(at, message, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark with the given message at the
+   location of each payload object associated with the argument. The argument
+   may be an operation or a value handle.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_remark_at'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: at() -> _ods_ir
+
+
+   .. py:method:: message() -> _ods_ir
+
+
+.. py:function:: debug_emit_remark_at(at, message, *, loc=None, ip=None) -> EmitRemarkAtOp
+

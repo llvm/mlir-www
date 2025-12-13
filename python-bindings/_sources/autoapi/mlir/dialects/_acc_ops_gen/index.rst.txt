@@ -1,0 +1,4223 @@
+mlir.dialects._acc_ops_gen
+==========================
+
+.. py:module:: mlir.dialects._acc_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._acc_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._acc_ops_gen._Dialect
+   mlir.dialects._acc_ops_gen.AtomicCaptureOp
+   mlir.dialects._acc_ops_gen.AtomicReadOp
+   mlir.dialects._acc_ops_gen.AtomicUpdateOp
+   mlir.dialects._acc_ops_gen.AtomicWriteOp
+   mlir.dialects._acc_ops_gen.AttachOp
+   mlir.dialects._acc_ops_gen.CacheOp
+   mlir.dialects._acc_ops_gen.CopyinOp
+   mlir.dialects._acc_ops_gen.CopyoutOp
+   mlir.dialects._acc_ops_gen.CreateOp
+   mlir.dialects._acc_ops_gen.DataBoundsOp
+   mlir.dialects._acc_ops_gen.DataOp
+   mlir.dialects._acc_ops_gen.DeclareDeviceResidentOp
+   mlir.dialects._acc_ops_gen.DeclareEnterOp
+   mlir.dialects._acc_ops_gen.DeclareExitOp
+   mlir.dialects._acc_ops_gen.DeclareLinkOp
+   mlir.dialects._acc_ops_gen.DeclareOp
+   mlir.dialects._acc_ops_gen.DeleteOp
+   mlir.dialects._acc_ops_gen.DetachOp
+   mlir.dialects._acc_ops_gen.DevicePtrOp
+   mlir.dialects._acc_ops_gen.EnterDataOp
+   mlir.dialects._acc_ops_gen.ExitDataOp
+   mlir.dialects._acc_ops_gen.FirstprivateMapInitialOp
+   mlir.dialects._acc_ops_gen.FirstprivateOp
+   mlir.dialects._acc_ops_gen.FirstprivateRecipeOp
+   mlir.dialects._acc_ops_gen.GetDevicePtrOp
+   mlir.dialects._acc_ops_gen.GetExtentOp
+   mlir.dialects._acc_ops_gen.GetLowerboundOp
+   mlir.dialects._acc_ops_gen.GetStrideOp
+   mlir.dialects._acc_ops_gen.GetUpperboundOp
+   mlir.dialects._acc_ops_gen.GlobalConstructorOp
+   mlir.dialects._acc_ops_gen.GlobalDestructorOp
+   mlir.dialects._acc_ops_gen.HostDataOp
+   mlir.dialects._acc_ops_gen.InitOp
+   mlir.dialects._acc_ops_gen.KernelEnvironmentOp
+   mlir.dialects._acc_ops_gen.KernelsOp
+   mlir.dialects._acc_ops_gen.LoopOp
+   mlir.dialects._acc_ops_gen.NoCreateOp
+   mlir.dialects._acc_ops_gen.ParallelOp
+   mlir.dialects._acc_ops_gen.PresentOp
+   mlir.dialects._acc_ops_gen.PrivateOp
+   mlir.dialects._acc_ops_gen.PrivateRecipeOp
+   mlir.dialects._acc_ops_gen.ReductionOp
+   mlir.dialects._acc_ops_gen.ReductionRecipeOp
+   mlir.dialects._acc_ops_gen.RoutineOp
+   mlir.dialects._acc_ops_gen.SerialOp
+   mlir.dialects._acc_ops_gen.SetOp
+   mlir.dialects._acc_ops_gen.ShutdownOp
+   mlir.dialects._acc_ops_gen.TerminatorOp
+   mlir.dialects._acc_ops_gen.UpdateDeviceOp
+   mlir.dialects._acc_ops_gen.UpdateHostOp
+   mlir.dialects._acc_ops_gen.UpdateOp
+   mlir.dialects._acc_ops_gen.UseDeviceOp
+   mlir.dialects._acc_ops_gen.WaitOp
+   mlir.dialects._acc_ops_gen.YieldOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._acc_ops_gen.atomic_capture
+   mlir.dialects._acc_ops_gen.atomic_read
+   mlir.dialects._acc_ops_gen.atomic_update
+   mlir.dialects._acc_ops_gen.atomic_write
+   mlir.dialects._acc_ops_gen.attach
+   mlir.dialects._acc_ops_gen.cache
+   mlir.dialects._acc_ops_gen.copyin
+   mlir.dialects._acc_ops_gen.copyout
+   mlir.dialects._acc_ops_gen.create_
+   mlir.dialects._acc_ops_gen.bounds
+   mlir.dialects._acc_ops_gen.data
+   mlir.dialects._acc_ops_gen.declare_device_resident
+   mlir.dialects._acc_ops_gen.declare_enter
+   mlir.dialects._acc_ops_gen.declare_exit
+   mlir.dialects._acc_ops_gen.declare_link
+   mlir.dialects._acc_ops_gen.declare
+   mlir.dialects._acc_ops_gen.delete
+   mlir.dialects._acc_ops_gen.detach
+   mlir.dialects._acc_ops_gen.deviceptr
+   mlir.dialects._acc_ops_gen.enter_data
+   mlir.dialects._acc_ops_gen.exit_data
+   mlir.dialects._acc_ops_gen.firstprivate_map
+   mlir.dialects._acc_ops_gen.firstprivate
+   mlir.dialects._acc_ops_gen.firstprivate_recipe
+   mlir.dialects._acc_ops_gen.getdeviceptr
+   mlir.dialects._acc_ops_gen.get_extent
+   mlir.dialects._acc_ops_gen.get_lowerbound
+   mlir.dialects._acc_ops_gen.get_stride
+   mlir.dialects._acc_ops_gen.get_upperbound
+   mlir.dialects._acc_ops_gen.global_ctor
+   mlir.dialects._acc_ops_gen.global_dtor
+   mlir.dialects._acc_ops_gen.host_data
+   mlir.dialects._acc_ops_gen.init
+   mlir.dialects._acc_ops_gen.kernel_environment
+   mlir.dialects._acc_ops_gen.kernels
+   mlir.dialects._acc_ops_gen.loop
+   mlir.dialects._acc_ops_gen.nocreate
+   mlir.dialects._acc_ops_gen.parallel
+   mlir.dialects._acc_ops_gen.present
+   mlir.dialects._acc_ops_gen.private
+   mlir.dialects._acc_ops_gen.private_recipe
+   mlir.dialects._acc_ops_gen.reduction
+   mlir.dialects._acc_ops_gen.reduction_recipe
+   mlir.dialects._acc_ops_gen.routine
+   mlir.dialects._acc_ops_gen.serial
+   mlir.dialects._acc_ops_gen.set
+   mlir.dialects._acc_ops_gen.shutdown
+   mlir.dialects._acc_ops_gen.terminator
+   mlir.dialects._acc_ops_gen.update_device
+   mlir.dialects._acc_ops_gen.update_host
+   mlir.dialects._acc_ops_gen.update
+   mlir.dialects._acc_ops_gen.use_device
+   mlir.dialects._acc_ops_gen.wait
+   mlir.dialects._acc_ops_gen.yield_
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'acc'
+
+
+
+.. py:class:: AtomicCaptureOp(*, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs an atomic capture.
+
+   The region has the following allowed forms:
+
+   .. code::
+
+         acc.atomic.capture {
+           acc.atomic.update ...
+           acc.atomic.read ...
+           acc.terminator
+         }
+       
+         acc.atomic.capture {
+           acc.atomic.read ...
+           acc.atomic.update ...
+           acc.terminator
+         }
+       
+         acc.atomic.capture {
+           acc.atomic.read ...
+           acc.atomic.write ...
+           acc.terminator
+         }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.atomic.capture'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: atomic_capture(*, if_cond=None, loc=None, ip=None) -> AtomicCaptureOp
+
+.. py:class:: AtomicReadOp(x, v, element_type, *, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs an atomic read.
+
+   The operand ``x`` is the address from where the value is atomically read.
+   The operand ``v`` is the address where the value is stored after reading.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.atomic.read'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: x() -> _ods_ir
+
+
+   .. py:method:: v() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: element_type() -> _ods_ir
+
+
+.. py:function:: atomic_read(x, v, element_type, *, if_cond=None, loc=None, ip=None) -> AtomicReadOp
+
+.. py:class:: AtomicUpdateOp(x, *, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs an atomic update.
+
+   The operand ``x`` is exactly the same as the operand ``x`` in the OpenACC
+   Standard (OpenACC 3.3, section 2.12). It is the address of the variable
+   that is being updated. ``x`` is atomically read/written.
+
+   The region describes how to update the value of ``x``. It takes the value at
+   ``x`` as an input and must yield the updated value. Only the update to ``x`` is
+   atomic. Generally the region must have only one instruction, but can
+   potentially have more than one instructions too. The update is sematically
+   similar to a compare-exchange loop based atomic update.
+
+   The syntax of atomic update operation is different from atomic read and
+   atomic write operations. This is because only the host dialect knows how to
+   appropriately update a value. For example, while generating LLVM IR, if
+   there are no special ``atomicrmw`` instructions for the operation-type
+   combination in atomic update, a compare-exchange loop is generated, where
+   the core update operation is directly translated like regular operations by
+   the host dialect. The front-end must handle semantic checks for allowed
+   operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.atomic.update'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: x() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: atomic_update(x, *, if_cond=None, loc=None, ip=None) -> AtomicUpdateOp
+
+.. py:class:: AtomicWriteOp(x, expr, *, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs an atomic write.
+
+   The operand ``x`` is the address to where the ``expr`` is atomically
+   written w.r.t. multiple threads. The evaluation of ``expr`` need not be
+   atomic w.r.t. the write to address. In general, the type(x) must
+   dereference to type(expr).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.atomic.write'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: x() -> _ods_ir
+
+
+   .. py:method:: expr() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+.. py:function:: atomic_write(x, expr, *, if_cond=None, loc=None, ip=None) -> AtomicWriteOp
+
+.. py:class:: AttachOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.attach'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: attach(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CacheOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.cache'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: cache(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CopyinOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.copyin'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: copyin(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CopyoutOp(accVar, var, varType, bounds, asyncOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   * ``varPtr``: The address of variable to copy back to.
+   * ``accVar``: The acc variable. This is the link from the data-entry
+   operation used.
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, always, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+   The async values attached to the data exit operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.copyout'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+.. py:function:: copyout(acc_var, var, var_type, bounds, async_operands, *, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None) -> CopyoutOp
+
+.. py:class:: CreateOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.create'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: create_(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DataBoundsOp(result, *, lowerbound=None, upperbound=None, extent=None, stride=None, strideInBytes=None, startIdx=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation is used to record bounds used in acc data clause in a
+   normalized fashion (zero-based). This works well with the ``PointerLikeType``
+   requirement in data clauses - since a ``lowerbound`` of 0 means looking
+   at data at the zero offset from pointer.
+
+   The operation must have an ``upperbound`` or ``extent`` (or both are allowed -
+   but not checked for consistency). When the source language's arrays are
+   not zero-based, the ``startIdx`` must specify the zero-position index.
+
+   The ``stride`` represents the distance between consecutive elements. For
+   multi-dimensional arrays, the ``stride`` for each outer dimension must account
+   for the complete size of all inner dimensions.
+
+   The ``strideInBytes`` flag indicates that the ``stride`` is specified in bytes
+   rather than the number of elements.
+
+   Examples below show copying a slice of 10-element array except first element.
+   Note that the examples use extent in data clause for C++ and upperbound
+   for Fortran (as per 2.7.1). To simplify examples, the constants are used
+   directly in the acc.bounds operands - this is not the syntax of operation.
+
+   C++:
+
+   .. code::
+
+       int array[10];
+       #pragma acc copy(array[1:9])
+
+   =>
+
+   .. code:: mlir
+
+       acc.bounds lb(1) ub(9) extent(9) startIdx(0) stride(1)
+
+   Fortran:
+
+   .. code::
+
+       integer :: array(1:10)
+       !$acc copy(array(2:10))
+
+   =>
+
+   .. code:: mlir
+
+       acc.bounds lb(1) ub(9) extent(9) startIdx(1) stride(1)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.bounds'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [0, 0, 0, 0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowerbound() -> Optional[_ods_ir]
+
+
+   .. py:method:: upperbound() -> Optional[_ods_ir]
+
+
+   .. py:method:: extent() -> Optional[_ods_ir]
+
+
+   .. py:method:: stride() -> Optional[_ods_ir]
+
+
+   .. py:method:: startIdx() -> Optional[_ods_ir]
+
+
+   .. py:method:: strideInBytes() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bounds(result, *, lowerbound=None, upperbound=None, extent=None, stride=None, stride_in_bytes=None, start_idx=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DataOp(asyncOperands, waitOperands, dataClauseOperands, *, ifCond=None, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, defaultAttr=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.data" operation represents a data construct. It defines vars to
+   be allocated in the current device memory for the duration of the region,
+   whether data should be copied from local memory to the current device
+   memory upon region entry , and copied from device memory to local memory
+   upon region exit.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.data present(%a: memref<10x10xf32>, %b: memref<10x10xf32>,
+           %c: memref<10xf32>, %d: memref<10xf32>) {
+         // data region
+       }
+
+   ``async`` and ``wait`` operands are supported with ``device_type`` information.
+   They should only be accessed by the extra provided getters. If modified,
+   the corresponding ``device_type`` attributes must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.data'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: defaultAttr() -> Optional[_ods_ir]
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: data(async_operands, wait_operands, data_clause_operands, *, if_cond=None, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, default_attr=None, loc=None, ip=None) -> DataOp
+
+.. py:class:: DeclareDeviceResidentOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.declare_device_resident'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: declare_device_resident(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DeclareEnterOp(token, dataClauseOperands, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.declare_enter" operation represents the OpenACC declare directive
+   and captures the entry semantics to the implicit data region.
+   This operation is modeled similarly to "acc.enter_data".
+
+   Example showing ``acc declare create(a)``:
+
+   .. code:: mlir
+
+       %0 = acc.create varPtr(%a : !llvm.ptr) -> !llvm.ptr
+       acc.declare_enter dataOperands(%0 : !llvm.ptr)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.declare_enter'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: token() -> _ods_ir
+
+
+.. py:function:: declare_enter(token, data_clause_operands, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DeclareExitOp(dataClauseOperands, *, token=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.declare_exit" operation represents the OpenACC declare directive
+   and captures the exit semantics from the implicit data region.
+   This operation is modeled similarly to "acc.exit_data".
+
+   Example showing ``acc declare device_resident(a)``:
+
+   .. code:: mlir
+
+       %0 = acc.getdeviceptr varPtr(%a : !llvm.ptr) -> !llvm.ptr {dataClause = #acc<data_clause declare_device_resident>}
+       acc.declare_exit dataOperands(%0 : !llvm.ptr)
+       acc.delete accPtr(%0 : !llvm.ptr) {dataClause = #acc<data_clause declare_device_resident>}
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.declare_exit'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: token() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+.. py:function:: declare_exit(data_clause_operands, *, token=None, loc=None, ip=None) -> DeclareExitOp
+
+.. py:class:: DeclareLinkOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.declare_link'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: declare_link(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DeclareOp(dataClauseOperands, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.declare" operation represents an implicit declare region in
+   function (and subroutine in Fortran).
+
+   Example:
+
+   .. code:: mlir
+
+       %pa = acc.present varPtr(%a : memref<10x10xf32>) -> memref<10x10xf32>
+       acc.declare dataOperands(%pa: memref<10x10xf32>) {
+         // implicit region
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.declare'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: declare(data_clause_operands, *, loc=None, ip=None) -> DeclareOp
+
+.. py:class:: DeleteOp(accVar, bounds, asyncOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   * ``accVar``: The acc variable. This is the link from the data-entry
+   operation used.
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, always, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data exit operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.delete'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+.. py:function:: delete(acc_var, bounds, async_operands, *, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None) -> DeleteOp
+
+.. py:class:: DetachOp(accVar, bounds, asyncOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   * ``accVar``: The acc variable. This is the link from the data-entry
+   operation used.
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, always, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data exit operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.detach'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+.. py:function:: detach(acc_var, bounds, async_operands, *, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None) -> DetachOp
+
+.. py:class:: DevicePtrOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.deviceptr'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: deviceptr(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: EnterDataOp(waitOperands, dataClauseOperands, *, ifCond=None, asyncOperand=None, async_=None, waitDevnum=None, wait=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.enter_data" operation represents the OpenACC enter data directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.enter_data create(%d1 : memref<10xf32>) attributes {async}
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.enter_data'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: asyncOperand() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: async_() -> bool
+
+
+   .. py:method:: wait() -> bool
+
+
+.. py:function:: enter_data(wait_operands, data_clause_operands, *, if_cond=None, async_operand=None, async_=None, wait_devnum=None, wait=None, loc=None, ip=None) -> EnterDataOp
+
+.. py:class:: ExitDataOp(waitOperands, dataClauseOperands, *, ifCond=None, asyncOperand=None, async_=None, waitDevnum=None, wait=None, finalize=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.exit_data" operation represents the OpenACC exit data directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.exit_data delete(%d1 : memref<10xf32>) attributes {async}
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.exit_data'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: asyncOperand() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: async_() -> bool
+
+
+   .. py:method:: wait() -> bool
+
+
+   .. py:method:: finalize() -> bool
+
+
+.. py:function:: exit_data(wait_operands, data_clause_operands, *, if_cond=None, async_operand=None, async_=None, wait_devnum=None, wait=None, finalize=None, loc=None, ip=None) -> ExitDataOp
+
+.. py:class:: FirstprivateMapInitialOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.firstprivate_map'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: firstprivate_map(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FirstprivateOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.firstprivate'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: firstprivate(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FirstprivateRecipeOp(sym_name, type_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Declares an OpenACC privatization recipe with copy of the initial value.
+   The operation requires two mandatory regions and one optional.
+
+   #. The initializer region specifies how to allocate and initialize a new
+   private value. For example in Fortran, a derived-type might have a
+   default initialization. The region has an argument that contains the
+   original value that needs to be privatized, followed by bounds arguments
+   (if any) in order from innermost to outermost dimension. The region must
+   yield the privatized copy.
+   #. The copy region specifies how to copy the initial value to the newly
+   created private value. It takes the original value, the privatized
+   value, followed by bounds arguments (if any) in the same order.
+   #. The destroy region specifies how to destruct the value when it reaches
+   its end of life. It takes the original value, the privatized value, and
+   bounds arguments (if any) in the same order. It is optional.
+
+   A single privatization recipe can be used for multiple operand if they have
+   the same type and do not require a specific default initialization.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.firstprivate.recipe @firstprivate_memref : memref<10x20xf32> init {
+       ^bb0(%original: memref<10x20xf32>):
+         // init region contains a sequence of operations to create and
+         // initialize the copy. It yields the privatized copy.
+         %alloca = memref.alloca() : memref<10x20xf32>
+         acc.yield %alloca : memref<10x20xf32>
+       } copy {
+       ^bb0(%original: memref<10x20xf32>, %privatized: memref<10x20xf32>):
+         // copy region contains a sequence of operations to copy the initial value
+         // of the firstprivate value to the newly created value.
+         memref.copy %original, %privatized : memref<10x20xf32> to memref<10x20xf32>
+         acc.terminator
+       } destroy {
+       ^bb0(%original: memref<10x20xf32>, %privatized: memref<10x20xf32>):
+         // destroy region is empty since alloca is automatically cleaned up
+         acc.terminator
+       }
+       
+       // Example with bounds for array slicing:
+       acc.firstprivate.recipe @firstprivate_slice : memref<10x20xf32> init {
+       ^bb0(%original: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Extract bounds and create appropriately sized allocation
+         %extent_inner = acc.get_extent %bounds_inner : (!acc.data_bounds_ty) -> index
+         %extent_outer = acc.get_extent %bounds_outer : (!acc.data_bounds_ty) -> index
+         %slice_alloc = memref.alloca(%extent_outer, %extent_inner) : memref<?x?xf32>
+         // ... base pointer adjustment logic ...
+         acc.yield %result : memref<10x20xf32>
+       } copy {
+       ^bb0(%original: memref<10x20xf32>, %privatized: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Copy the slice portion from original to privatized
+         %lb_inner = acc.get_lowerbound %bounds_inner : (!acc.data_bounds_ty) -> index
+         %lb_outer = acc.get_lowerbound %bounds_outer : (!acc.data_bounds_ty) -> index
+         %extent_inner = acc.get_extent %bounds_inner : (!acc.data_bounds_ty) -> index
+         %extent_outer = acc.get_extent %bounds_outer : (!acc.data_bounds_ty) -> index
+         %subview = memref.subview %original[%lb_outer, %lb_inner][%extent_outer, %extent_inner][1, 1]
+           : memref<10x20xf32> to memref<?x?xf32, strided<[20, 1], offset: ?>>
+         // Copy subview to privatized...
+         acc.terminator
+       }
+       
+       // The privatization symbol is then used in the corresponding operation.
+       acc.parallel firstprivate(@firstprivate_memref -> %a : memref<10x20xf32>) {
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.firstprivate.recipe'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (3, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: initRegion() -> _ods_ir
+
+
+   .. py:method:: copyRegion() -> _ods_ir
+
+
+   .. py:method:: destroyRegion() -> _ods_ir
+
+
+.. py:function:: firstprivate_recipe(sym_name, type_, *, loc=None, ip=None) -> FirstprivateRecipeOp
+
+.. py:class:: GetDevicePtrOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation is used to get the ``accPtr`` for a variable. This is often
+   used in conjunction with data exit operations when the data entry
+   operation is not visible. This operation can have a ``dataClause`` argument
+   that is any of the valid ``mlir::acc::DataClause`` entries.
+   \
+
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.getdeviceptr'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: getdeviceptr(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetExtentOp(result, bounds, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation extracts the extent value from an ``acc.bounds`` value.
+   If the data bounds does not have an extent specified, it is computed
+   from the upperbound.
+
+   Example:
+
+   .. code:: mlir
+
+       %extent = acc.get_extent %bounds : (!acc.data_bounds_ty) -> index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.get_extent'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_extent(result, bounds, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetLowerboundOp(result, bounds, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation extracts the lowerbound value from an ``acc.bounds`` value.
+   If the data bounds does not have a lowerbound specified, it means it is zero.
+
+   Example:
+
+   .. code:: mlir
+
+       %lb = acc.get_lowerbound %bounds : (!acc.data_bounds_ty) -> index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.get_lowerbound'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_lowerbound(result, bounds, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetStrideOp(result, bounds, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation extracts the stride value from an ``acc.bounds`` value.
+   If the data bounds does not have a stride specified, it defaults to 1.
+
+   Example:
+
+   .. code:: mlir
+
+       %stride = acc.get_stride %bounds : (!acc.data_bounds_ty) -> index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.get_stride'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_stride(result, bounds, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GetUpperboundOp(result, bounds, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation extracts the upperbound value from an ``acc.bounds`` value.
+   If the data bounds does not have an upperbound specified, this operation
+   uses the extent to compute it.
+
+   Example:
+
+   .. code:: mlir
+
+       %ub = acc.get_upperbound %bounds : (!acc.data_bounds_ty) -> index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.get_upperbound'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: get_upperbound(result, bounds, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GlobalConstructorOp(sym_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.global_ctor" operation is used to capture OpenACC actions to apply
+   on globals (such as ``acc declare``) at the entry to the implicit data region.
+   This operation is isolated and intended to be used in a module.
+
+   Example showing ``declare create`` of global:
+
+   .. code:: mlir
+
+       llvm.mlir.global external @globalvar() : i32 {
+         %0 = llvm.mlir.constant(0 : i32) : i32
+         llvm.return %0 : i32
+       }
+       acc.global_ctor @acc_constructor {
+         %0 = llvm.mlir.addressof @globalvar : !llvm.ptr
+         %1 = acc.create varPtr(%0 : !llvm.ptr) -> !llvm.ptr
+         acc.declare_enter dataOperands(%1 : !llvm.ptr)
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.global_ctor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: global_ctor(sym_name, *, loc=None, ip=None) -> GlobalConstructorOp
+
+.. py:class:: GlobalDestructorOp(sym_name, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.global_dtor" operation is used to capture OpenACC actions to apply
+   on globals (such as ``acc declare``) at the exit from the implicit data
+   region. This operation is isolated and intended to be used in a module.
+
+   Example showing delete associated with ``declare create`` of global:
+
+   .. code:: mlir
+
+       llvm.mlir.global external @globalvar() : i32 {
+         %0 = llvm.mlir.constant(0 : i32) : i32
+         llvm.return %0 : i32
+       }
+       acc.global_dtor @acc_destructor {
+         %0 = llvm.mlir.addressof @globalvar : !llvm.ptr
+         %1 = acc.getdeviceptr varPtr(%0 : !llvm.ptr) -> !llvm.ptr {dataClause = #acc<data_clause create>}
+         acc.declare_exit dataOperands(%1 : !llvm.ptr)
+         acc.delete accPtr(%1 : !llvm.ptr) {dataClause = #acc<data_clause create>}
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.global_dtor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: global_dtor(sym_name, *, loc=None, ip=None) -> GlobalDestructorOp
+
+.. py:class:: HostDataOp(dataClauseOperands, *, ifCond=None, ifPresent=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.host_data" operation represents the OpenACC host_data construct.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = acc.use_device varPtr(%a : !llvm.ptr) -> !llvm.ptr
+       acc.host_data dataOperands(%0 : !llvm.ptr) {
+       
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.host_data'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: ifPresent() -> bool
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: host_data(data_clause_operands, *, if_cond=None, if_present=None, loc=None, ip=None) -> HostDataOp
+
+.. py:class:: InitOp(*, device_types=None, deviceNum=None, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.init" operation represents the OpenACC init executable
+   directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.init
+       acc.init device_num(%dev1 : i32)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.init'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: deviceNum() -> Optional[_ods_ir]
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: device_types() -> Optional[_ods_ir]
+
+
+.. py:function:: init(*, device_types=None, device_num=None, if_cond=None, loc=None, ip=None) -> InitOp
+
+.. py:class:: KernelEnvironmentOp(dataClauseOperands, asyncOperands, waitOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``acc.kernel_environment`` operation represents a decomposition of
+   any OpenACC compute construct (acc.kernels, acc.parallel, or
+   acc.serial) that captures data mapping and asynchronous behavior:
+
+   * data clause operands
+   * async clause operands
+   * wait clause operands
+
+   This allows kernel execution parallelism and privatization to be
+   handled separately, facilitating eventual lowering to GPU dialect where
+   kernel launching and compute offloading are handled separately.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.kernel_environment'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: kernel_environment(data_clause_operands, async_operands, wait_operands, *, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, loc=None, ip=None) -> KernelEnvironmentOp
+
+.. py:class:: KernelsOp(asyncOperands, waitOperands, numGangs, numWorkers, vectorLength, reductionOperands, privateOperands, firstprivateOperands, dataClauseOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, numGangsSegments=None, numGangsDeviceType=None, numWorkersDeviceType=None, vectorLengthDeviceType=None, ifCond=None, selfCond=None, selfAttr=None, defaultAttr=None, combined=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.kernels" operation represents a kernels construct block. It has
+   one region to be compiled into a sequence of kernels for execution on the
+   current device.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.kernels num_gangs(%c10) num_workers(%c10)
+           private(%c : memref<10xf32>) {
+         // kernels region
+       }
+
+   ``collapse``, ``gang``, ``worker``, ``vector``, ``seq``, ``independent``, ``auto`` and
+   ``tile`` operands are supported with ``device_type`` information. They should
+   only be accessed by the extra provided getters. If modified, the
+   corresponding ``device_type`` attributes must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.kernels'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: numGangs() -> _ods_ir
+
+
+   .. py:method:: numWorkers() -> _ods_ir
+
+
+   .. py:method:: vectorLength() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: selfCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: reductionOperands() -> _ods_ir
+
+
+   .. py:method:: privateOperands() -> _ods_ir
+
+
+   .. py:method:: firstprivateOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: numGangsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: numGangsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: numWorkersDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: vectorLengthDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: selfAttr() -> bool
+
+
+   .. py:method:: defaultAttr() -> Optional[_ods_ir]
+
+
+   .. py:method:: combined() -> bool
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: kernels(async_operands, wait_operands, num_gangs, num_workers, vector_length, reduction_operands, private_operands, firstprivate_operands, data_clause_operands, *, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, num_gangs_segments=None, num_gangs_device_type=None, num_workers_device_type=None, vector_length_device_type=None, if_cond=None, self_cond=None, self_attr=None, default_attr=None, combined=None, loc=None, ip=None) -> KernelsOp
+
+.. py:class:: LoopOp(results_, lowerbound, upperbound, step, gangOperands, workerNumOperands, vectorOperands, tileOperands, cacheOperands, privateOperands, firstprivateOperands, reductionOperands, *, inclusiveUpperbound=None, collapse=None, collapseDeviceType=None, gangOperandsArgType=None, gangOperandsSegments=None, gangOperandsDeviceType=None, workerNumOperandsDeviceType=None, vectorOperandsDeviceType=None, seq=None, independent=None, auto_=None, gang=None, worker=None, vector=None, tileOperandsSegments=None, tileOperandsDeviceType=None, combined=None, unstructured=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``acc.loop`` operation represents the OpenACC loop construct and when
+   bounds are included, the associated source language loop iterators. The
+   lower and upper bounds specify a half-open range: the range includes the
+   lower bound but does not include the upper bound. If the ``inclusive``
+   attribute is set then the upper bound is included.
+
+   In cases where the OpenACC loop directive needs to capture multiple
+   source language loops, such as in the case of ``collapse`` or ``tile``,
+   the multiple induction arguments are used to capture each case. Having
+   such a representation makes sure no intermediate transformation such
+   as Loop Invariant Code Motion breaks the property requested by the
+   clause on the loop constructs.
+
+   Each ``acc.loop`` holds private and reduction operands which are the
+   ssa values from the corresponding ``acc.private`` or ``acc.reduction``
+   operations. Additionally, firstprivate operands are supported to
+   represent cases where privatization is needed with initialization
+   from an original value. While the OpenACC specification does not
+   explicitly support firstprivate on loop constructs, this extension
+   enables representing privatization scenarios that arise from an
+   optimization and codegen pipeline operating on acc dialect.
+
+   The operation supports capturing information that it comes combined
+   constructs (e.g., ``parallel loop``, ``kernels loop``, ``serial loop``)
+   through the ``combined`` attribute despite requiring the ``acc.loop``
+   to be decomposed from the compute operation representing compute
+   construct.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.loop gang() vector() (%arg3 : index, %arg4 : index, %arg5 : index) =
+           (%c0, %c0, %c0 : index, index, index) to 
+           (%c10, %c10, %c10 : index, index, index) step 
+           (%c1, %c1, %c1 : index, index, index) {
+         // Loop body
+         acc.yield
+       } attributes { collapse = [3] }
+
+   ``collapse``, ``gang``, ``worker``, ``vector``, ``seq``, ``independent``, ``auto``,
+   ``cache``, and ``tile`` operands are supported with ``device_type``
+   information. These clauses should only be accessed through the provided
+   device-type-aware getter methods. When modifying these operands, the
+   corresponding ``device_type`` attributes must be updated to maintain
+   consistency between operands and their target device types.
+
+   The ``unstructured`` attribute indicates that the loops inside the OpenACC
+   construct contain early exits and cannot be lowered to structured MLIR
+   operations. When this flag is set, the acc.loop should have no induction
+   variables and the loop must be implemented via explicit control flow
+   inside its body.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.loop'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: lowerbound() -> _ods_ir
+
+
+   .. py:method:: upperbound() -> _ods_ir
+
+
+   .. py:method:: step() -> _ods_ir
+
+
+   .. py:method:: gangOperands() -> _ods_ir
+
+
+   .. py:method:: workerNumOperands() -> _ods_ir
+
+
+   .. py:method:: vectorOperands() -> _ods_ir
+
+
+   .. py:method:: tileOperands() -> _ods_ir
+
+
+   .. py:method:: cacheOperands() -> _ods_ir
+
+
+   .. py:method:: privateOperands() -> _ods_ir
+
+
+   .. py:method:: firstprivateOperands() -> _ods_ir
+
+
+   .. py:method:: reductionOperands() -> _ods_ir
+
+
+   .. py:method:: inclusiveUpperbound() -> Optional[_ods_ir]
+
+
+   .. py:method:: collapse() -> Optional[_ods_ir]
+
+
+   .. py:method:: collapseDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: gangOperandsArgType() -> Optional[_ods_ir]
+
+
+   .. py:method:: gangOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: gangOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: workerNumOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: vectorOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: seq() -> Optional[_ods_ir]
+
+
+   .. py:method:: independent() -> Optional[_ods_ir]
+
+
+   .. py:method:: auto_() -> Optional[_ods_ir]
+
+
+   .. py:method:: gang() -> Optional[_ods_ir]
+
+
+   .. py:method:: worker() -> Optional[_ods_ir]
+
+
+   .. py:method:: vector() -> Optional[_ods_ir]
+
+
+   .. py:method:: tileOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: tileOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: combined() -> Optional[_ods_ir]
+
+
+   .. py:method:: unstructured() -> bool
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: loop(results_, lowerbound, upperbound, step, gang_operands, worker_num_operands, vector_operands, tile_operands, cache_operands, private_operands, firstprivate_operands, reduction_operands, *, inclusive_upperbound=None, collapse=None, collapse_device_type=None, gang_operands_arg_type=None, gang_operands_segments=None, gang_operands_device_type=None, worker_num_operands_device_type=None, vector_operands_device_type=None, seq=None, independent=None, auto_=None, gang=None, worker=None, vector=None, tile_operands_segments=None, tile_operands_device_type=None, combined=None, unstructured=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, LoopOp]
+
+.. py:class:: NoCreateOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.nocreate'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: nocreate(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ParallelOp(asyncOperands, waitOperands, numGangs, numWorkers, vectorLength, reductionOperands, privateOperands, firstprivateOperands, dataClauseOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, numGangsSegments=None, numGangsDeviceType=None, numWorkersDeviceType=None, vectorLengthDeviceType=None, ifCond=None, selfCond=None, selfAttr=None, defaultAttr=None, combined=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.parallel" operation represents a parallel construct block. It has
+   one region to be executed in parallel on the current device.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.parallel num_gangs(%c10) num_workers(%c10)
+           private(%c : memref<10xf32>) {
+         // parallel region
+       }
+
+   ``async``, ``wait``, ``num_gangs``, ``num_workers`` and ``vector_length`` operands are
+   supported with ``device_type`` information. They should only be accessed by
+   the extra provided getters. If modified, the corresponding ``device_type``
+   attributes must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.parallel'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: numGangs() -> _ods_ir
+
+
+   .. py:method:: numWorkers() -> _ods_ir
+
+
+   .. py:method:: vectorLength() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: selfCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: reductionOperands() -> _ods_ir
+
+
+   .. py:method:: privateOperands() -> _ods_ir
+
+
+   .. py:method:: firstprivateOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: numGangsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: numGangsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: numWorkersDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: vectorLengthDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: selfAttr() -> bool
+
+
+   .. py:method:: defaultAttr() -> Optional[_ods_ir]
+
+
+   .. py:method:: combined() -> bool
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: parallel(async_operands, wait_operands, num_gangs, num_workers, vector_length, reduction_operands, private_operands, firstprivate_operands, data_clause_operands, *, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, num_gangs_segments=None, num_gangs_device_type=None, num_workers_device_type=None, vector_length_device_type=None, if_cond=None, self_cond=None, self_attr=None, default_attr=None, combined=None, loc=None, ip=None) -> ParallelOp
+
+.. py:class:: PresentOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.present'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: present(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PrivateOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.private'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: private(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PrivateRecipeOp(sym_name, type_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Declares an OpenACC privatization recipe. The operation requires one
+   mandatory and one optional region.
+
+   #. The initializer region specifies how to allocate and initialize a new
+   private value. For example in Fortran, a derived-type might have a
+   default initialization. The region has an argument that contains the
+   original value that needs to be privatized, followed by bounds arguments
+   (if any) in order from innermost to outermost dimension. The region
+   must yield the privatized copy.
+   #. The destroy region specifies how to destruct the value when it reaches
+   its end of life. It takes the original value, the privatized value, and
+   bounds arguments (if any) in the same order as the init region.
+
+   A single privatization recipe can be used for multiple operand if they have
+   the same type and do not require a specific default initialization.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.private.recipe @privatization_memref : memref<10x20xf32> init {
+       ^bb0(%original: memref<10x20xf32>):
+         // init region contains a sequence of operations to create and
+         // initialize the copy. It yields the privatized copy.
+         %alloca = memref.alloca() : memref<10x20xf32>
+         acc.yield %alloca : memref<10x20xf32>
+       } destroy {
+       ^bb0(%original: memref<10x20xf32>, %privatized: memref<10x20xf32>):
+         // destroy region is empty since alloca is automatically cleaned up
+         acc.terminator
+       }
+       
+       // Example with bounds for array slicing:
+       acc.private.recipe @privatization_slice : memref<10x20xf32> init {
+       ^bb0(%original: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Extract bounds and create appropriately sized allocation
+         %extent_inner = acc.get_extent %bounds_inner : (!acc.data_bounds_ty) -> index
+         %extent_outer = acc.get_extent %bounds_outer : (!acc.data_bounds_ty) -> index
+         %slice_alloc = memref.alloca(%extent_outer, %extent_inner) : memref<?x?xf32>
+         // ... base pointer adjustment logic ...
+         acc.yield %result : memref<10x20xf32>
+       } destroy {
+       ^bb0(%original: memref<10x20xf32>, %privatized: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Cleanup is automatic for alloca-based allocations
+         acc.terminator
+       }
+       
+       // The privatization symbol is then used in the corresponding operation.
+       acc.parallel private(@privatization_memref -> %a : memref<10x20xf32>) {
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.private.recipe'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (2, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: initRegion() -> _ods_ir
+
+
+   .. py:method:: destroyRegion() -> _ods_ir
+
+
+.. py:function:: private_recipe(sym_name, type_, *, loc=None, ip=None) -> PrivateRecipeOp
+
+.. py:class:: ReductionOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.reduction'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: reduction(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ReductionRecipeOp(sym_name, type_, reductionOperator, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Declares an OpenACC reduction recipe. The operation requires two
+   mandatory regions and one optional region.
+
+   #. The initializer region specifies how to initialize the local reduction
+   value. The region has a first argument that contains the original value
+   that needs to be reduced, followed by bounds arguments (if any) in order
+   from innermost to outermost dimension. It is expected to ``acc.yield`` the
+   initialized reduction value.
+   #. The combiner region contains a sequence of operations to combine two
+   values of the reduction type into one. It has the first reduction value,
+   the second reduction value, followed by bounds arguments (if any) in the
+   same order. It is expected to ``acc.yield`` the combined value.
+   #. The optional destroy region specifies how to destruct the value when it
+   reaches its end of life. It takes the original value, the reduction value,
+   and bounds arguments (if any) in the same order.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.reduction.recipe @reduction_add_memref : memref<10x20xf32> reduction_operator<add> init {
+       ^bb0(%original: memref<10x20xf32>):
+         // init region contains a sequence of operations to initialize the local
+         // reduction value as specified in 2.5.15
+         %alloca = memref.alloca() : memref<10x20xf32>
+         %cst = arith.constant 0.0 : f32
+         linalg.fill ins(%cst : f32) outs(%alloca : memref<10x20xf32>)
+         acc.yield %alloca : memref<10x20xf32>
+       } combiner {
+       ^bb0(%lhs: memref<10x20xf32>, %rhs: memref<10x20xf32>):
+         // combiner region contains a sequence of operations to combine
+         // two values into one.
+         linalg.add ins(%lhs, %rhs : memref<10x20xf32>, memref<10x20xf32>)
+                    outs(%lhs : memref<10x20xf32>)
+         acc.yield %lhs : memref<10x20xf32>
+       } destroy {
+       ^bb0(%original: memref<10x20xf32>, %reduction: memref<10x20xf32>):
+         // destroy region is empty since alloca is automatically cleaned up
+         acc.terminator
+       }
+       
+       // Example with bounds for array slicing:
+       acc.reduction.recipe @reduction_add_slice : memref<10x20xf32> reduction_operator<add> init {
+       ^bb0(%original: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Extract bounds and create appropriately sized allocation
+         %extent_inner = acc.get_extent %bounds_inner : (!acc.data_bounds_ty) -> index
+         %extent_outer = acc.get_extent %bounds_outer : (!acc.data_bounds_ty) -> index
+         %slice_alloc = memref.alloca(%extent_outer, %extent_inner) : memref<?x?xf32>
+         %cst = arith.constant 0.0 : f32
+         linalg.fill ins(%cst : f32) outs(%slice_alloc : memref<?x?xf32>)
+         // ... base pointer adjustment logic ...
+         acc.yield %result : memref<10x20xf32>
+       } combiner {
+       ^bb0(%lhs: memref<10x20xf32>, %rhs: memref<10x20xf32>, %bounds_inner: !acc.data_bounds_ty, %bounds_outer: !acc.data_bounds_ty):
+         // Extract bounds to operate only on the slice portion
+         %lb_inner = acc.get_lowerbound %bounds_inner : (!acc.data_bounds_ty) -> index
+         %lb_outer = acc.get_lowerbound %bounds_outer : (!acc.data_bounds_ty) -> index
+         %extent_inner = acc.get_extent %bounds_inner : (!acc.data_bounds_ty) -> index
+         %extent_outer = acc.get_extent %bounds_outer : (!acc.data_bounds_ty) -> index
+       
+         // Create subviews to access only the slice portions
+         %lhs_slice = memref.subview %lhs[%lb_outer, %lb_inner][%extent_outer, %extent_inner][1, 1]
+           : memref<10x20xf32> to memref<?x?xf32, strided<[20, 1], offset: ?>>
+         %rhs_slice = memref.subview %rhs[%lb_outer, %lb_inner][%extent_outer, %extent_inner][1, 1]
+           : memref<10x20xf32> to memref<?x?xf32, strided<[20, 1], offset: ?>>
+       
+         // Combine only the slice portions
+         linalg.add ins(%lhs_slice, %rhs_slice : memref<?x?xf32, strided<[20, 1], offset: ?>>, memref<?x?xf32, strided<[20, 1], offset: ?>>)
+                    outs(%lhs_slice : memref<?x?xf32, strided<[20, 1], offset: ?>>)
+         acc.yield %lhs : memref<10x20xf32>
+       }
+       
+       // The reduction symbol is then used in the corresponding operation.
+       acc.parallel reduction(@reduction_add_memref -> %a : memref<10x20xf32>) {
+       }
+
+   The following table lists the valid operators and the initialization values
+   according to OpenACC 3.3:
+
+   |------------------------------------------------|
+   |        C/C++          |        Fortran         |
+   |-----------------------|------------------------|
+   | operator | init value | operator | init value  |
+   |     +    |      0     |     +    |      0      |
+   |     *    |      1     |     *    |      1      |
+   |    max   |    least   |    max   |    least    |
+   |    min   |   largest  |    min   |   largest   |
+   |     &    |     ~0     |   iand   | all bits on |
+   |     |    |      0     |    ior   |      0      |
+   |     ^    |      0     |   ieor   |      0      |
+   |    &&    |      1     |   .and.  |    .true.   |
+   |    ||    |      0     |    .or.  |   .false.   |
+   |          |            |   .eqv.  |    .true.   |
+   |          |            |  .neqv.  |   .false.   |
+   -------------------------------------------------|
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.reduction.recipe'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (3, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: reductionOperator() -> _ods_ir
+
+
+   .. py:method:: initRegion() -> _ods_ir
+
+
+   .. py:method:: combinerRegion() -> _ods_ir
+
+
+   .. py:method:: destroyRegion() -> _ods_ir
+
+
+.. py:function:: reduction_recipe(sym_name, type_, reduction_operator, *, loc=None, ip=None) -> ReductionRecipeOp
+
+.. py:class:: RoutineOp(sym_name, func_name, *, bindIdName=None, bindStrName=None, bindIdNameDeviceType=None, bindStrNameDeviceType=None, worker=None, vector=None, seq=None, nohost=None, implicit=None, gang=None, gangDim=None, gangDimDeviceType=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``acc.routine`` operation is used to capture the clauses of acc
+   routine directive, including the associated function name. The associated
+   function keeps track of its corresponding routine declaration through
+   the ``RoutineInfoAttr``.
+
+   Example:
+
+   .. code:: mlir
+
+       func.func @acc_func(%a : i64) -> () attributes 
+           {acc.routine_info = #acc.routine_info<[@acc_func_rout1]>} {
+         return
+       }
+       acc.routine @acc_func_rout1 func(@acc_func) gang
+
+   ``bind``, ``gang``, ``worker``, ``vector`` and ``seq`` operands are supported with
+   ``device_type`` information. They should only be accessed by the extra
+   provided getters. If modified, the corresponding ``device_type`` attributes
+   must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.routine'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: func_name() -> _ods_ir
+
+
+   .. py:method:: bindIdName() -> Optional[_ods_ir]
+
+
+   .. py:method:: bindStrName() -> Optional[_ods_ir]
+
+
+   .. py:method:: bindIdNameDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: bindStrNameDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: worker() -> Optional[_ods_ir]
+
+
+   .. py:method:: vector() -> Optional[_ods_ir]
+
+
+   .. py:method:: seq() -> Optional[_ods_ir]
+
+
+   .. py:method:: nohost() -> bool
+
+
+   .. py:method:: implicit() -> bool
+
+
+   .. py:method:: gang() -> Optional[_ods_ir]
+
+
+   .. py:method:: gangDim() -> Optional[_ods_ir]
+
+
+   .. py:method:: gangDimDeviceType() -> Optional[_ods_ir]
+
+
+.. py:function:: routine(sym_name, func_name, *, bind_id_name=None, bind_str_name=None, bind_id_name_device_type=None, bind_str_name_device_type=None, worker=None, vector=None, seq=None, nohost=None, implicit=None, gang=None, gang_dim=None, gang_dim_device_type=None, loc=None, ip=None) -> RoutineOp
+
+.. py:class:: SerialOp(asyncOperands, waitOperands, reductionOperands, privateOperands, firstprivateOperands, dataClauseOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, ifCond=None, selfCond=None, selfAttr=None, defaultAttr=None, combined=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.serial" operation represents a serial construct block. It has
+   one region to be executed in serial on the current device.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.serial private(%c : memref<10xf32>) {
+         // serial region
+       }
+
+   ``async`` and ``wait`` operands are supported with ``device_type`` information.
+   They should only be accessed by the extra provided getters. If modified,
+   the corresponding ``device_type`` attributes must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.serial'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: selfCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: reductionOperands() -> _ods_ir
+
+
+   .. py:method:: privateOperands() -> _ods_ir
+
+
+   .. py:method:: firstprivateOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: selfAttr() -> bool
+
+
+   .. py:method:: defaultAttr() -> Optional[_ods_ir]
+
+
+   .. py:method:: combined() -> bool
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+.. py:function:: serial(async_operands, wait_operands, reduction_operands, private_operands, firstprivate_operands, data_clause_operands, *, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, if_cond=None, self_cond=None, self_attr=None, default_attr=None, combined=None, loc=None, ip=None) -> SerialOp
+
+.. py:class:: SetOp(*, device_type=None, defaultAsync=None, deviceNum=None, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.set" operation represents the OpenACC set directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.set device_num(%dev1 : i32)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.set'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [0, 0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: defaultAsync() -> Optional[_ods_ir]
+
+
+   .. py:method:: deviceNum() -> Optional[_ods_ir]
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: device_type() -> Optional[_ods_ir]
+
+
+.. py:function:: set(*, device_type=None, default_async=None, device_num=None, if_cond=None, loc=None, ip=None) -> SetOp
+
+.. py:class:: ShutdownOp(*, device_types=None, deviceNum=None, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.shutdown" operation represents the OpenACC shutdown executable
+   directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.shutdown
+       acc.shutdown device_num(%dev1 : i32)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.shutdown'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: deviceNum() -> Optional[_ods_ir]
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: device_types() -> Optional[_ods_ir]
+
+
+.. py:function:: shutdown(*, device_types=None, device_num=None, if_cond=None, loc=None, ip=None) -> ShutdownOp
+
+.. py:class:: TerminatorOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A terminator operation for regions that appear in the body of OpenACC
+   operation. Generic OpenACC construct regions are not expected to return any
+   value so the terminator takes no operands. The terminator op returns control
+   to the enclosing op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.terminator'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: terminator(*, loc=None, ip=None) -> TerminatorOp
+
+.. py:class:: UpdateDeviceOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.update_device'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: update_device(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: UpdateHostOp(accVar, var, varType, bounds, asyncOperands, *, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   * ``varPtr``: The address of variable to copy back to.
+   * ``accVar``: The acc variable. This is the link from the data-entry
+   operation used.
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, always, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+   The async values attached to the data exit operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.update_host'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+.. py:function:: update_host(acc_var, var, var_type, bounds, async_operands, *, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, loc=None, ip=None) -> UpdateHostOp
+
+.. py:class:: UpdateOp(asyncOperands, waitOperands, dataClauseOperands, *, ifCond=None, asyncOperandsDeviceType=None, asyncOnly=None, waitOperandsSegments=None, waitOperandsDeviceType=None, hasWaitDevnum=None, waitOnly=None, ifPresent=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``acc.update`` operation represents the OpenACC update executable
+   directive.
+   As host and self clauses are synonyms, any operands for host and self are
+   add to $hostOperands.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.update device(%d1 : memref<10xf32>) attributes {async}
+
+   ``async`` and ``wait`` operands are supported with ``device_type`` information.
+   They should only be accessed by the extra provided getters. If modified,
+   the corresponding ``device_type`` attributes must be modified as well.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.update'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: dataClauseOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsSegments() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: hasWaitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: ifPresent() -> bool
+
+
+.. py:function:: update(async_operands, wait_operands, data_clause_operands, *, if_cond=None, async_operands_device_type=None, async_only=None, wait_operands_segments=None, wait_operands_device_type=None, has_wait_devnum=None, wait_only=None, if_present=None, loc=None, ip=None) -> UpdateOp
+
+.. py:class:: UseDeviceOp(accVar, var, varType, bounds, asyncOperands, *, varPtrPtr=None, asyncOperandsDeviceType=None, asyncOnly=None, dataClause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Description of arguments:
+
+   * ``var``: The variable to copy. Must be either ``MappableType`` or
+   ``PointerLikeType``.
+   * ``varType``: The type of the variable that is being copied. When ``var`` is
+   a ``MappableType``, this matches the type of ``var``. When ``var`` is a
+   ``PointerLikeType``, this type holds information about the target of the
+   pointer.
+   * ``varPtrPtr``: Specifies the address of the address of ``var`` - only used
+   when the variable copied is a field in a struct. This is important for
+   OpenACC due to implicit attach semantics on data clauses (2.6.4).
+   * ``bounds``: Used when copying just slice of array or array's bounds are not
+   encoded in type. They are in rank order where rank 0 is inner-most dimension.
+   * ``asyncOperands`` and ``asyncOperandsDeviceType``:
+   pair-wise lists of the async clause values associated with device_type's.
+   * ``asyncOnly``: a list of device_type's for which async clause
+   does not specify a value (default is acc_async_noval - OpenACC 3.3 2.16.1).
+   * ``dataClause``: Keeps track of the data clause the user used. This is because
+   the acc operations are decomposed. So a 'copy' clause is decomposed to both
+   ``acc.copyin`` and ``acc.copyout`` operations, but both have dataClause that
+   specifies ``acc_copy`` in this field.
+   * ``structured``: Flag to note whether this is associated with structured region
+   (parallel, kernels, data) or unstructured (enter data, exit data). This is
+   important due to spec specifically calling out structured and dynamic reference
+   counters (2.6.7).
+   * ``implicit``: Whether this is an implicitly generated operation, such as copies
+   done to satisfy "Variables with Implicitly Determined Data Attributes" in 2.6.2.
+   * ``modifiers``: Keeps track of the data clause modifiers (eg zero, readonly, etc)
+   * ``name``: Holds the name of variable as specified in user clause (including bounds).
+
+   The async values attached to the data entry operation imply that the data
+   action applies to all device types specified by the device_type clauses
+   using the activity queues on these devices as defined by the async values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.use_device'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: var() -> _ods_ir
+
+
+   .. py:method:: varPtrPtr() -> Optional[_ods_ir]
+
+
+   .. py:method:: bounds() -> _ods_ir
+
+
+   .. py:method:: asyncOperands() -> _ods_ir
+
+
+   .. py:method:: varType() -> _ods_ir
+
+
+   .. py:method:: asyncOperandsDeviceType() -> Optional[_ods_ir]
+
+
+   .. py:method:: asyncOnly() -> Optional[_ods_ir]
+
+
+   .. py:method:: dataClause() -> _ods_ir
+
+
+   .. py:method:: structured() -> _ods_ir
+
+
+   .. py:method:: implicit() -> _ods_ir
+
+
+   .. py:method:: modifiers() -> _ods_ir
+
+
+   .. py:method:: name() -> Optional[_ods_ir]
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: recipe() -> Optional[_ods_ir]
+
+
+   .. py:method:: accVar() -> _ods_ir
+
+
+.. py:function:: use_device(acc_var, var, var_type, bounds, async_operands, *, var_ptr_ptr=None, async_operands_device_type=None, async_only=None, data_clause=None, structured=None, implicit=None, modifiers=None, name=None, recipe=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WaitOp(waitOperands, *, asyncOperand=None, waitDevnum=None, async_=None, ifCond=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "acc.wait" operation represents the OpenACC wait executable
+   directive.
+
+   Example:
+
+   .. code:: mlir
+
+       acc.wait(%value1: index)
+       acc.wait() async(%async1: i32)
+
+   acc.wait does not implement MemoryEffects interface,
+   so it affects all the resources. This is conservatively
+   correct. More precise modelling of the memory effects
+   seems to be impossible without the whole program analysis.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.wait'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: waitOperands() -> _ods_ir
+
+
+   .. py:method:: asyncOperand() -> Optional[_ods_ir]
+
+
+   .. py:method:: waitDevnum() -> Optional[_ods_ir]
+
+
+   .. py:method:: ifCond() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: async_() -> bool
+
+
+.. py:function:: wait(wait_operands, *, async_operand=None, wait_devnum=None, async_=None, if_cond=None, loc=None, ip=None) -> WaitOp
+
+.. py:class:: YieldOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``acc.yield`` is a special terminator operation for block inside regions in
+   various acc ops (including parallel, loop, atomic.update). It returns values
+   to the immediately enclosing acc op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'acc.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: yield_(operands_, *, loc=None, ip=None) -> YieldOp
+

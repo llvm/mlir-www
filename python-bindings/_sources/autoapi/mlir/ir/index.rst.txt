@@ -1,0 +1,184 @@
+mlir.ir
+=======
+
+.. py:module:: mlir.ir
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.ir.loc_tracebacks
+   mlir.ir.register_attribute_builder
+   mlir.ir._affineMapAttr
+   mlir.ir._integerSetAttr
+   mlir.ir._boolAttr
+   mlir.ir._dictAttr
+   mlir.ir._indexAttr
+   mlir.ir._i1Attr
+   mlir.ir._i8Attr
+   mlir.ir._i16Attr
+   mlir.ir._i32Attr
+   mlir.ir._i64Attr
+   mlir.ir._si1Attr
+   mlir.ir._si8Attr
+   mlir.ir._si16Attr
+   mlir.ir._si32Attr
+   mlir.ir._si64Attr
+   mlir.ir._ui1Attr
+   mlir.ir._ui8Attr
+   mlir.ir._ui16Attr
+   mlir.ir._ui32Attr
+   mlir.ir._ui64Attr
+   mlir.ir._f32Attr
+   mlir.ir._f64Attr
+   mlir.ir._stringAttr
+   mlir.ir._symbolNameAttr
+   mlir.ir._symbolRefAttr
+   mlir.ir._flatSymbolRefAttr
+   mlir.ir._unitAttr
+   mlir.ir._arrayAttr
+   mlir.ir._affineMapArrayAttr
+   mlir.ir._boolArrayAttr
+   mlir.ir._dictArrayAttr
+   mlir.ir._flatSymbolRefArrayAttr
+   mlir.ir._i32ArrayAttr
+   mlir.ir._i64ArrayAttr
+   mlir.ir._i64SmallVectorArrayAttr
+   mlir.ir._indexListArrayAttr
+   mlir.ir._f32ArrayAttr
+   mlir.ir._f64ArrayAttr
+   mlir.ir._strArrayAttr
+   mlir.ir._symbolRefArrayAttr
+   mlir.ir._denseF32ArrayAttr
+   mlir.ir._denseF64ArrayAttr
+   mlir.ir._denseI8ArrayAttr
+   mlir.ir._denseI16ArrayAttr
+   mlir.ir._denseI32ArrayAttr
+   mlir.ir._denseI64ArrayAttr
+   mlir.ir._denseBoolArrayAttr
+   mlir.ir._typeAttr
+   mlir.ir._typeArrayAttr
+   mlir.ir._memref_type_attr
+   mlir.ir._f64ElementsAttr
+
+
+Module Contents
+---------------
+
+.. py:function:: loc_tracebacks(*, max_depth: int | None = None) -> collections.abc.Iterable[None]
+
+   Enables automatic traceback-based locations for MLIR operations.
+
+   Operations created within this context will have their location
+   automatically set based on the Python call stack.
+
+   :param max_depth: Maximum number of frames to include in the location.
+                     If None, the default limit is used.
+
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:function:: _affineMapAttr(x, context)
+
+.. py:function:: _integerSetAttr(x, context)
+
+.. py:function:: _boolAttr(x, context)
+
+.. py:function:: _dictAttr(x, context)
+
+.. py:function:: _indexAttr(x, context)
+
+.. py:function:: _i1Attr(x, context)
+
+.. py:function:: _i8Attr(x, context)
+
+.. py:function:: _i16Attr(x, context)
+
+.. py:function:: _i32Attr(x, context)
+
+.. py:function:: _i64Attr(x, context)
+
+.. py:function:: _si1Attr(x, context)
+
+.. py:function:: _si8Attr(x, context)
+
+.. py:function:: _si16Attr(x, context)
+
+.. py:function:: _si32Attr(x, context)
+
+.. py:function:: _si64Attr(x, context)
+
+.. py:function:: _ui1Attr(x, context)
+
+.. py:function:: _ui8Attr(x, context)
+
+.. py:function:: _ui16Attr(x, context)
+
+.. py:function:: _ui32Attr(x, context)
+
+.. py:function:: _ui64Attr(x, context)
+
+.. py:function:: _f32Attr(x, context)
+
+.. py:function:: _f64Attr(x, context)
+
+.. py:function:: _stringAttr(x, context)
+
+.. py:function:: _symbolNameAttr(x, context)
+
+.. py:function:: _symbolRefAttr(x, context)
+
+.. py:function:: _flatSymbolRefAttr(x, context)
+
+.. py:function:: _unitAttr(x, context)
+
+.. py:function:: _arrayAttr(x, context)
+
+.. py:function:: _affineMapArrayAttr(x, context)
+
+.. py:function:: _boolArrayAttr(x, context)
+
+.. py:function:: _dictArrayAttr(x, context)
+
+.. py:function:: _flatSymbolRefArrayAttr(x, context)
+
+.. py:function:: _i32ArrayAttr(x, context)
+
+.. py:function:: _i64ArrayAttr(x, context)
+
+.. py:function:: _i64SmallVectorArrayAttr(x, context)
+
+.. py:function:: _indexListArrayAttr(x, context)
+
+.. py:function:: _f32ArrayAttr(x, context)
+
+.. py:function:: _f64ArrayAttr(x, context)
+
+.. py:function:: _strArrayAttr(x, context)
+
+.. py:function:: _symbolRefArrayAttr(x, context)
+
+.. py:function:: _denseF32ArrayAttr(x, context)
+
+.. py:function:: _denseF64ArrayAttr(x, context)
+
+.. py:function:: _denseI8ArrayAttr(x, context)
+
+.. py:function:: _denseI16ArrayAttr(x, context)
+
+.. py:function:: _denseI32ArrayAttr(x, context)
+
+.. py:function:: _denseI64ArrayAttr(x, context)
+
+.. py:function:: _denseBoolArrayAttr(x, context)
+
+.. py:function:: _typeAttr(x, context)
+
+.. py:function:: _typeArrayAttr(x, context)
+
+.. py:function:: _memref_type_attr(x, context)
+
+.. py:function:: _f64ElementsAttr(x, context)
+

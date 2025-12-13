@@ -1,0 +1,2288 @@
+mlir.dialects._smt_ops_gen
+==========================
+
+.. py:module:: mlir.dialects._smt_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_ops_gen._Dialect
+   mlir.dialects._smt_ops_gen.AndOp
+   mlir.dialects._smt_ops_gen.ApplyFuncOp
+   mlir.dialects._smt_ops_gen.ArrayBroadcastOp
+   mlir.dialects._smt_ops_gen.ArraySelectOp
+   mlir.dialects._smt_ops_gen.ArrayStoreOp
+   mlir.dialects._smt_ops_gen.AssertOp
+   mlir.dialects._smt_ops_gen.BV2IntOp
+   mlir.dialects._smt_ops_gen.BVAShrOp
+   mlir.dialects._smt_ops_gen.BVAddOp
+   mlir.dialects._smt_ops_gen.BVAndOp
+   mlir.dialects._smt_ops_gen.BVCmpOp
+   mlir.dialects._smt_ops_gen.BVConstantOp
+   mlir.dialects._smt_ops_gen.BVLShrOp
+   mlir.dialects._smt_ops_gen.BVMulOp
+   mlir.dialects._smt_ops_gen.BVNegOp
+   mlir.dialects._smt_ops_gen.BVNotOp
+   mlir.dialects._smt_ops_gen.BVOrOp
+   mlir.dialects._smt_ops_gen.BVSDivOp
+   mlir.dialects._smt_ops_gen.BVSModOp
+   mlir.dialects._smt_ops_gen.BVSRemOp
+   mlir.dialects._smt_ops_gen.BVShlOp
+   mlir.dialects._smt_ops_gen.BVUDivOp
+   mlir.dialects._smt_ops_gen.BVURemOp
+   mlir.dialects._smt_ops_gen.BVXOrOp
+   mlir.dialects._smt_ops_gen.BoolConstantOp
+   mlir.dialects._smt_ops_gen.CheckOp
+   mlir.dialects._smt_ops_gen.ConcatOp
+   mlir.dialects._smt_ops_gen.DeclareFunOp
+   mlir.dialects._smt_ops_gen.DistinctOp
+   mlir.dialects._smt_ops_gen.EqOp
+   mlir.dialects._smt_ops_gen.ExistsOp
+   mlir.dialects._smt_ops_gen.ExtractOp
+   mlir.dialects._smt_ops_gen.ForallOp
+   mlir.dialects._smt_ops_gen.ImpliesOp
+   mlir.dialects._smt_ops_gen.Int2BVOp
+   mlir.dialects._smt_ops_gen.IntAbsOp
+   mlir.dialects._smt_ops_gen.IntAddOp
+   mlir.dialects._smt_ops_gen.IntCmpOp
+   mlir.dialects._smt_ops_gen.IntConstantOp
+   mlir.dialects._smt_ops_gen.IntDivOp
+   mlir.dialects._smt_ops_gen.IntModOp
+   mlir.dialects._smt_ops_gen.IntMulOp
+   mlir.dialects._smt_ops_gen.IntSubOp
+   mlir.dialects._smt_ops_gen.IteOp
+   mlir.dialects._smt_ops_gen.NotOp
+   mlir.dialects._smt_ops_gen.OrOp
+   mlir.dialects._smt_ops_gen.PopOp
+   mlir.dialects._smt_ops_gen.PushOp
+   mlir.dialects._smt_ops_gen.RepeatOp
+   mlir.dialects._smt_ops_gen.ResetOp
+   mlir.dialects._smt_ops_gen.SetLogicOp
+   mlir.dialects._smt_ops_gen.SolverOp
+   mlir.dialects._smt_ops_gen.XOrOp
+   mlir.dialects._smt_ops_gen.YieldOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_ops_gen.and_
+   mlir.dialects._smt_ops_gen.apply_func
+   mlir.dialects._smt_ops_gen.array_broadcast
+   mlir.dialects._smt_ops_gen.array_select
+   mlir.dialects._smt_ops_gen.array_store
+   mlir.dialects._smt_ops_gen.assert_
+   mlir.dialects._smt_ops_gen.bv2int
+   mlir.dialects._smt_ops_gen.bv_ashr
+   mlir.dialects._smt_ops_gen.bv_add
+   mlir.dialects._smt_ops_gen.bv_and
+   mlir.dialects._smt_ops_gen.bv_cmp
+   mlir.dialects._smt_ops_gen.bv_constant
+   mlir.dialects._smt_ops_gen.bv_lshr
+   mlir.dialects._smt_ops_gen.bv_mul
+   mlir.dialects._smt_ops_gen.bv_neg
+   mlir.dialects._smt_ops_gen.bv_not
+   mlir.dialects._smt_ops_gen.bv_or
+   mlir.dialects._smt_ops_gen.bv_sdiv
+   mlir.dialects._smt_ops_gen.bv_smod
+   mlir.dialects._smt_ops_gen.bv_srem
+   mlir.dialects._smt_ops_gen.bv_shl
+   mlir.dialects._smt_ops_gen.bv_udiv
+   mlir.dialects._smt_ops_gen.bv_urem
+   mlir.dialects._smt_ops_gen.bv_xor
+   mlir.dialects._smt_ops_gen.constant
+   mlir.dialects._smt_ops_gen.check
+   mlir.dialects._smt_ops_gen.bv_concat
+   mlir.dialects._smt_ops_gen.declare_fun
+   mlir.dialects._smt_ops_gen.distinct
+   mlir.dialects._smt_ops_gen.eq
+   mlir.dialects._smt_ops_gen.exists
+   mlir.dialects._smt_ops_gen.bv_extract
+   mlir.dialects._smt_ops_gen.forall
+   mlir.dialects._smt_ops_gen.implies
+   mlir.dialects._smt_ops_gen.int2bv
+   mlir.dialects._smt_ops_gen.int_abs
+   mlir.dialects._smt_ops_gen.int_add
+   mlir.dialects._smt_ops_gen.int_cmp
+   mlir.dialects._smt_ops_gen.int_constant
+   mlir.dialects._smt_ops_gen.int_div
+   mlir.dialects._smt_ops_gen.int_mod
+   mlir.dialects._smt_ops_gen.int_mul
+   mlir.dialects._smt_ops_gen.int_sub
+   mlir.dialects._smt_ops_gen.ite
+   mlir.dialects._smt_ops_gen.not_
+   mlir.dialects._smt_ops_gen.or_
+   mlir.dialects._smt_ops_gen.pop
+   mlir.dialects._smt_ops_gen.push
+   mlir.dialects._smt_ops_gen.bv_repeat
+   mlir.dialects._smt_ops_gen.reset
+   mlir.dialects._smt_ops_gen.set_logic
+   mlir.dialects._smt_ops_gen.solver
+   mlir.dialects._smt_ops_gen.xor
+   mlir.dialects._smt_ops_gen.yield_
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'smt'
+
+
+
+.. py:class:: AndOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a boolean conjunction.
+   The semantics are equivalent to the 'and' operator in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_.
+   of the SMT-LIB Standard 2.7.
+
+   .. code::
+
+       It supports a variadic number of operands, but requires at least two.
+       This is because the operator is annotated with the `:left-assoc` attribute
+       which means that `op a b c` is equivalent to `(op (op a b) c)`.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.and'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: and_(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ApplyFuncOp(func, args, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a function application as described in the
+   `SMT-LIB 2.7 standard <https://smt-lib.org/papers/smt-lib-reference-v2.7-r2025-02-05.pdf>`_.
+   It is part of the language itself rather than a theory or logic.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.apply_func'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: func() -> _ods_ir
+
+
+   .. py:method:: args() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: apply_func(func, args, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ArrayBroadcastOp(result, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents a broadcast of the 'value' operand to all indices
+   of the array. It is equivalent to
+
+   .. code::
+
+       %0 = smt.declare_fun "array" : !smt.array<[!smt.int -> !smt.bool]>
+       %1 = smt.forall ["idx"] {
+       ^bb0(%idx: !smt.int):
+         %2 = smt.array.select %0[%idx] : !smt.array<[!smt.int -> !smt.bool]>
+         %3 = smt.eq %value, %2 : !smt.bool
+         smt.yield %3 : !smt.bool
+       }
+       smt.assert %1
+       // return %0
+
+   In SMT-LIB, this is frequently written as
+   ``((as const (Array Int Bool)) value)``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.array.broadcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: array_broadcast(result, value, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ArraySelectOp(array, index, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation is retuns the value stored in the given array at the given
+   index. The semantics are equivalent to the ``select`` operator defined in the
+   `SMT ArrayEx theory <https://smtlib.cs.uiowa.edu/Theories/ArraysEx.smt2>`_ of
+   the SMT-LIB standard 2.7.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.array.select'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: array() -> _ods_ir
+
+
+   .. py:method:: index() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: array_select(array, index, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ArrayStoreOp(array, index, value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation returns a new array which is the same as the 'array' operand
+   except that the value at the given 'index' is changed to the given 'value'.
+   The semantics are equivalent to the 'store' operator described in the
+   `SMT ArrayEx theory <https://smtlib.cs.uiowa.edu/Theories/ArraysEx.smt2>`_ of
+   the SMT-LIB standard 2.7.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.array.store'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: array() -> _ods_ir
+
+
+   .. py:method:: index() -> _ods_ir
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: array_store(array, index, value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AssertOp(input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.assert'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: assert_(input, *, loc=None, ip=None) -> AssertOp
+
+.. py:class:: BV2IntOp(input, *, is_signed=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Create an integer from the bit-vector argument ``input``. If ``is_signed`` is
+   present, the bit-vector is treated as two's complement signed.  Otherwise,
+   it is treated as an unsigned integer in the range [0..2^N-1], where N is
+   the number of bits in ``input``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv2int'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: is_signed() -> bool
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv2int(input, *, is_signed=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVAShrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs arithmetic shift right. The semantics are
+   equivalent to the ``bvashr`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.ashr'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_ashr(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVAddOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs addition. The semantics are
+   equivalent to the ``bvadd`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_add(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVAndOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs bitwise AND. The semantics are
+   equivalent to the ``bvand`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.and'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_and(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVCmpOp(pred, lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation compares bit-vector values, interpreting them as signed or
+   unsigned values depending on the predicate. The semantics are equivalent to
+   the ``bvslt``, ``bvsle``, ``bvsgt``, ``bvsge``, ``bvult``, ``bvule``, ``bvugt``, or
+   ``bvuge`` operator defined in the SMT-LIB 2.7 standard depending on the
+   specified predicate. More precisely in the
+   `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.cmp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: pred() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_cmp(pred, lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVConstantOp(value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation produces an SSA value equal to the bit-vector constant
+   specified by the 'value' attribute.
+   Refer to the ``BitVectorAttr`` documentation for more information about
+   the semantics of bit-vector constants, their format, and associated sort.
+   The result type always matches the attribute's type.
+
+   Examples:
+
+   .. code:: mlir
+
+       %c92_bv8 = smt.bv.constant #smt.bv<92> : !smt.bv<8>
+       %c5_bv4 = smt.bv.constant #smt.bv<5> : !smt.bv<4>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_constant(value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVLShrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs logical shift right. The semantics are
+   equivalent to the ``bvlshr`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.lshr'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_lshr(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVMulOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs multiplication. The semantics are
+   equivalent to the ``bvmul`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_mul(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVNegOp(input, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs two's complement unary minus. The semantics are
+   equivalent to the ``bvneg`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.neg'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_neg(input, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVNotOp(input, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs bitwise negation. The semantics are
+   equivalent to the ``bvnot`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.not'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_not(input, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVOrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs bitwise OR. The semantics are
+   equivalent to the ``bvor`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.or'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_or(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVSDivOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs two's complement signed division. The semantics are
+   equivalent to the ``bvsdiv`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.sdiv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_sdiv(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVSModOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs two's complement signed remainder (sign follows divisor). The semantics are
+   equivalent to the ``bvsmod`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.smod'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_smod(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVSRemOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs two's complement signed remainder (sign follows dividend). The semantics are
+   equivalent to the ``bvsrem`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.srem'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_srem(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVShlOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs shift left. The semantics are
+   equivalent to the ``bvshl`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.shl'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_shl(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVUDivOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs unsigned division (rounded towards zero). The semantics are
+   equivalent to the ``bvudiv`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.udiv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_udiv(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVURemOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs unsigned remainder. The semantics are
+   equivalent to the ``bvurem`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.urem'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_urem(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BVXOrOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs bitwise exclusive OR. The semantics are
+   equivalent to the ``bvxor`` operator defined in the SMT-LIB 2.7
+   standard. More precisely in the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.xor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_xor(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BoolConstantOp(value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Produces the constant expressions 'true' and 'false' as described in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_ of the SMT-LIB
+   Standard 2.7.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: constant(value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CheckOp(results_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation checks if all the assertions in the solver defined by the
+   nearest ancestor operation of type ``smt.solver`` are consistent. The outcome
+   an be 'satisfiable', 'unknown', or 'unsatisfiable' and the corresponding
+   region will be executed. It is the corresponding construct to the
+   ``check-sat`` in SMT-LIB.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = smt.check sat {
+         %c1_i32 = arith.constant 1 : i32
+         smt.yield %c1_i32 : i32
+       } unknown {
+         %c0_i32 = arith.constant 0 : i32
+         smt.yield %c0_i32 : i32
+       } unsat {
+         %c-1_i32 = arith.constant -1 : i32
+         smt.yield %c-1_i32 : i32
+       } -> i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.check'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (3, True)
+
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: satRegion() -> _ods_ir
+
+
+   .. py:method:: unknownRegion() -> _ods_ir
+
+
+   .. py:method:: unsatRegion() -> _ods_ir
+
+
+.. py:function:: check(results_, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CheckOp]
+
+.. py:class:: ConcatOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation concatenates bit-vector values with semantics equivalent to
+   the ``concat`` operator defined in the SMT-LIB 2.7 standard. More precisely in
+   the `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+   Note that the following equivalences hold:
+
+   * ``smt.bv.concat %a, %b : !smt.bv<4>, !smt.bv<4>`` is equivalent to
+   ``(concat a b)`` in SMT-LIB
+   * ``(= (concat #xf #x0) #xf0)``
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.concat'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_concat(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DeclareFunOp(result, *, namePrefix=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation declares a symbolic value just as the ``declare-const`` and
+   ``declare-fun`` statements in SMT-LIB 2.7. The result type determines the SMT
+   sort of the symbolic value. The returned value can then be used to refer to
+   the symbolic value instead of using the identifier like in SMT-LIB.
+
+   The optionally provided string will be used as a prefix for the newly
+   generated identifier (useful for easier readability when exporting to
+   SMT-LIB). Each ``declare`` will always provide a unique new symbolic value
+   even if the identifier strings are the same.
+
+   Note that there does not exist a separate operation equivalent to
+   SMT-LIBs ``define-fun`` since
+
+   .. code::
+
+       (define-fun f (a Int) Int (-a))
+
+   is only syntactic sugar for
+
+   .. code::
+
+       %f = smt.declare_fun : !smt.func<(!smt.int) !smt.int>
+       %0 = smt.forall {
+       ^bb0(%arg0: !smt.int):
+         %1 = smt.apply_func %f(%arg0) : !smt.func<(!smt.int) !smt.int>
+         %2 = smt.int.neg %arg0
+         %3 = smt.eq %1, %2 : !smt.int
+         smt.yield %3 : !smt.bool
+       }
+       smt.assert %0
+
+   Note that this operation cannot be marked as Pure since two operations (even
+   with the same identifier string) could then be CSEd, leading to incorrect
+   behavior.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.declare_fun'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: namePrefix() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: declare_fun(result, *, name_prefix=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DistinctOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation compares the operands and returns true iff all operands are
+   not identical to any of the other operands. The semantics are equivalent to
+   the ``distinct`` operator defined in the SMT-LIB Standard 2.7 in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_.
+
+   Any SMT sort/type is allowed for the operands and it supports a variadic
+   number of operands, but requires at least two. This is because the
+   ``distinct`` operator is annotated with ``:pairwise`` which means that
+   ``distinct a b c d`` is equivalent to
+
+   .. code::
+
+       and (distinct a b) (distinct a c) (distinct a d)
+           (distinct b c) (distinct b d)
+           (distinct c d)
+
+   where ``and`` is annotated ``:left-assoc``, i.e., it can be further rewritten to
+
+   .. code::
+
+       (and (and (and (and (and (distinct a b)
+                                (distinct a c))
+                           (distinct a d))
+                      (distinct b c))
+                 (distinct b d))
+            (distinct c d)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.distinct'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: distinct(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: EqOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation compares the operands and returns true iff all operands are
+   identical. The semantics are equivalent to the ``=`` operator defined in the
+   SMT-LIB Standard 2.7 in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_.
+
+   Any SMT sort/type is allowed for the operands and it supports a variadic
+   number of operands, but requires at least two. This is because the ``=``
+   operator is annotated with ``:chainable`` which means that ``= a b c d`` is
+   equivalent to ``and (= a b) (= b c) (= c d)`` where ``and`` is annotated
+   ``:left-assoc``, i.e., it can be further rewritten to
+   ``and (and (= a b) (= b c)) (= c d)``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.eq'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: eq(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExistsOp(result, num_patterns, *, weight=None, noPattern=None, boundVarNames=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents the exists quantifier as described in the
+   `SMT-LIB 2.7 standard <https://smt-lib.org/papers/smt-lib-reference-v2.7-r2025-02-05.pdf>`_.
+   It is part of the language itself rather than a theory or logic.
+
+   The operation specifies the name prefixes (as an optional attribute) and
+   types (as the types of the block arguments of the regions) of bound
+   variables that may be used in the 'body' of the operation. If a 'patterns'
+   region is specified, the block arguments must match the ones of the 'body'
+   region and (other than there) must be used at least once in the 'patterns'
+   region. It may also not contain any operations that bind variables, such as
+   quantifiers. While the 'body' region must always yield exactly one
+   ``!smt.bool``-typed value, the 'patterns' region can yield an arbitrary number
+   (but at least one) of SMT values.
+
+   The bound variables can be any SMT type except of functions, since SMT only
+   supports first-order logic.
+
+   The 'no_patterns' attribute is only allowed when no 'patterns' region is
+   specified and forbids the solver to generate and use patterns for this
+   quantifier.
+
+   The 'weight' attribute indicates the importance of this quantifier being
+   instantiated compared to other quantifiers that may be present. The default
+   value is zero.
+
+   Both the 'no_patterns' and 'weight' attributes are annotations to the
+   quantifiers body term. Annotations and attributes are described in the
+   standard in sections 3.4, and 3.6 (specifically 3.6.5). SMT-LIB allows
+   adding custom attributes to provide solvers with additional metadata, e.g.,
+   hints such as above mentioned attributes. They are not part of the standard
+   themselves, but supported by common SMT solvers (e.g., Z3).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.exists'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, False)
+
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: noPattern() -> bool
+
+
+   .. py:method:: boundVarNames() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+   .. py:method:: patterns() -> _ods_ir
+
+
+.. py:function:: exists(result, num_patterns, *, weight=None, no_pattern=None, bound_var_names=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExtractOp(result, lowBit, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation extracts the range of bits starting at the 'lowBit' index
+   (inclusive) up to the 'lowBit' + result-width index (exclusive). The
+   semantics are equivalent to the ``extract`` operator defined in the SMT-LIB
+   2.7 standard. More precisely in the
+   `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+   Note that ``smt.bv.extract %bv from 2 : (!smt.bv<32>) -> !smt.bv<16>`` is
+   equivalent to ``((_ extract 17 2) bv)``, i.e., the SMT-LIB operator takes the
+   low and high indices where both are inclusive. The following equivalence
+   holds: ``(= ((_ extract 3 0) #x0f) #xf)``
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.extract'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: lowBit() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_extract(result, low_bit, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ForallOp(result, num_patterns, *, weight=None, noPattern=None, boundVarNames=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents the forall quantifier as described in the
+   `SMT-LIB 2.7 standard <https://smt-lib.org/papers/smt-lib-reference-v2.7-r2025-02-05.pdf>`_.
+   It is part of the language itself rather than a theory or logic.
+
+   The operation specifies the name prefixes (as an optional attribute) and
+   types (as the types of the block arguments of the regions) of bound
+   variables that may be used in the 'body' of the operation. If a 'patterns'
+   region is specified, the block arguments must match the ones of the 'body'
+   region and (other than there) must be used at least once in the 'patterns'
+   region. It may also not contain any operations that bind variables, such as
+   quantifiers. While the 'body' region must always yield exactly one
+   ``!smt.bool``-typed value, the 'patterns' region can yield an arbitrary number
+   (but at least one) of SMT values.
+
+   The bound variables can be any SMT type except of functions, since SMT only
+   supports first-order logic.
+
+   The 'no_patterns' attribute is only allowed when no 'patterns' region is
+   specified and forbids the solver to generate and use patterns for this
+   quantifier.
+
+   The 'weight' attribute indicates the importance of this quantifier being
+   instantiated compared to other quantifiers that may be present. The default
+   value is zero.
+
+   Both the 'no_patterns' and 'weight' attributes are annotations to the
+   quantifiers body term. Annotations and attributes are described in the
+   standard in sections 3.4, and 3.6 (specifically 3.6.5). SMT-LIB allows
+   adding custom attributes to provide solvers with additional metadata, e.g.,
+   hints such as above mentioned attributes. They are not part of the standard
+   themselves, but supported by common SMT solvers (e.g., Z3).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.forall'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, False)
+
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: noPattern() -> bool
+
+
+   .. py:method:: boundVarNames() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+   .. py:method:: patterns() -> _ods_ir
+
+
+.. py:function:: forall(result, num_patterns, *, weight=None, no_pattern=None, bound_var_names=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ImpliesOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a boolean implication. The semantics are equivalent
+   to the '=>' operator in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_ of the SMT-LIB
+   Standard 2.7.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.implies'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: implies(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Int2BVOp(result, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Designed to lower directly to an operation of the same name in Z3. The Z3
+   C API describes the semantics as follows:
+   Create an n bit bit-vector from the integer argument t1.
+   The resulting bit-vector has n bits, where the i'th bit (counting from 0
+   to n-1) is 1 if (t1 div 2^i) mod 2 is 1.
+   The node t1 must have integer sort.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int2bv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int2bv(result, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntAbsOp(input, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents the absolute value function for the ``Int`` sort.
+   The semantics are equivalent to the ``abs`` operator as described in the
+   `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.abs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_abs(input, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntAddOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer addition.
+   The semantics are equivalent to the corresponding operator described in
+   the `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_add(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntCmpOp(pred, lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents the comparison of (infinite-precision) integers.
+   The semantics are equivalent to the ``<= (le)``, ``< (lt)``, ``>= (ge)``, or
+   ``> (gt)`` operator depending on the predicate (indicated in parentheses) as
+   described in the
+   `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.cmp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: pred() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_cmp(pred, lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntConstantOp(value, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer literals of the ``Int``
+   sort. The set of values for the sort ``Int`` consists of all numerals and
+   all terms of the form ``-n``where n is a numeral other than 0. For more
+   information refer to the
+   `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_constant(value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntDivOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer division.
+   The semantics are equivalent to the corresponding operator described in
+   the `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.div'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_div(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntModOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer remainder.
+   The semantics are equivalent to the corresponding operator described in
+   the `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.mod'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_mod(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntMulOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer multiplication.
+   The semantics are equivalent to the corresponding operator described in
+   the `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_mul(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IntSubOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents (infinite-precision) integer subtraction.
+   The semantics are equivalent to the corresponding operator described in
+   the `SMT Ints theory <https://smtlib.cs.uiowa.edu/Theories/Ints.smt2>`_ of the
+   SMT-LIB 2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.int.sub'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: int_sub(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IteOp(cond, thenValue, elseValue, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation returns its second operand or its third operand depending on
+   whether its first operand is true or not. The semantics are equivalent to
+   the ``ite`` operator defined in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_ of the SMT-LIB
+   2.7 standard.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.ite'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: cond() -> _ods_ir
+
+
+   .. py:method:: thenValue() -> _ods_ir
+
+
+   .. py:method:: elseValue() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ite(cond, then_value, else_value, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: NotOp(input, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a boolean negation. The semantics are equivalent to
+   the 'not' operator in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_ of the SMT-LIB
+   Standard 2.7.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.not'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: not_(input, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: OrOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a boolean disjunction.
+   The semantics are equivalent to the 'or' operator in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_.
+   of the SMT-LIB Standard 2.7.
+
+   .. code::
+
+       It supports a variadic number of operands, but requires at least two.
+       This is because the operator is annotated with the `:left-assoc` attribute
+       which means that `op a b c` is equivalent to `(op (op a b) c)`.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.or'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: or_(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PopOp(count, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.pop'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:function:: pop(count, *, loc=None, ip=None) -> PopOp
+
+.. py:class:: PushOp(count, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.push'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:function:: push(count, *, loc=None, ip=None) -> PushOp
+
+.. py:class:: RepeatOp(result, input, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation is a shorthand for repeated concatenation of the same
+   bit-vector value, i.e.,
+
+   .. code:: mlir
+
+       smt.bv.repeat 5 times %a : !smt.bv<4>
+       // is the same as
+       %0 = smt.bv.repeat 4 times %a : !smt.bv<4>
+       smt.bv.concat %a, %0 : !smt.bv<4>, !smt.bv<16>
+       // or also 
+       %0 = smt.bv.repeat 4 times %a : !smt.bv<4>
+       smt.bv.concat %0, %a : !smt.bv<16>, !smt.bv<4>
+
+   The semantics are equivalent to the ``repeat`` operator defined in the SMT-LIB
+   2.7 standard. More precisely in the
+   `theory of FixedSizeBitVectors <https://smtlib.cs.uiowa.edu/Theories/FixedSizeBitVectors.smt2>`_
+   and the `QF_BV logic <https://smtlib.cs.uiowa.edu/Logics/QF_BV.smt2>`_
+   describing closed quantifier-free formulas over the theory of fixed-size
+   bit-vectors.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.bv.repeat'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bv_repeat(result, input, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ResetOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.reset'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: reset(*, loc=None, ip=None) -> ResetOp
+
+.. py:class:: SetLogicOp(logic, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.set_logic'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: logic() -> _ods_ir
+
+
+.. py:function:: set_logic(logic, *, loc=None, ip=None) -> SetLogicOp
+
+.. py:class:: SolverOp(results_, inputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation defines an SMT context with a solver instance. SMT operations
+   are only valid when being executed between the start and end of the region
+   of this operation. Any invocation outside is undefined. However, they do not
+   have to be direct children of this operation. For example, it is allowed to
+   have SMT operations in a ``func.func`` which is only called from within this
+   region. No SMT value may enter or exit the lifespan of this region (such
+   that no value created from another SMT context can be used in this scope and
+   the solver can deallocate all state required to keep track of SMT values at
+   the end).
+
+   As a result, the region is comparable to an entire SMT-LIB script, but
+   allows for concrete operations and control-flow. Concrete values may be
+   passed in and returned to influence the computations after the ``smt.solver``
+   operation.
+
+   Example:
+
+   .. code:: mlir
+
+       %0:2 = smt.solver (%in) {smt.some_attr} : (i8) -> (i8, i32) {
+       ^bb0(%arg0: i8):
+         %c = smt.declare_fun "c" : !smt.bool
+         smt.assert %c
+         %1 = smt.check sat {
+           %c1_i32 = arith.constant 1 : i32
+           smt.yield %c1_i32 : i32
+         } unknown {
+           %c0_i32 = arith.constant 0 : i32
+           smt.yield %c0_i32 : i32
+         } unsat {
+           %c-1_i32 = arith.constant -1 : i32
+           smt.yield %c-1_i32 : i32
+         } -> i32
+         smt.yield %arg0, %1 : i8, i32
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.solver'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: bodyRegion() -> _ods_ir
+
+
+.. py:function:: solver(results_, inputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, SolverOp]
+
+.. py:class:: XOrOp(inputs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation performs a boolean exclusive OR.
+   The semantics are equivalent to the 'xor' operator in the
+   `Core theory <https://smtlib.cs.uiowa.edu/Theories/Core.smt2>`_.
+   of the SMT-LIB Standard 2.7.
+
+   .. code::
+
+       It supports a variadic number of operands, but requires at least two.
+       This is because the operator is annotated with the `:left-assoc` attribute
+       which means that `op a b c` is equivalent to `(op (op a b) c)`.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.xor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: xor(inputs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: YieldOp(values, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'smt.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+.. py:function:: yield_(values, *, loc=None, ip=None) -> YieldOp
+

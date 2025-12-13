@@ -1,0 +1,37 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classmlir_1_1DataFlowAnalysis.html" title="Base class for all data&#45;flow analyses." alt="" coords="5,197,179,222"/>
+<area shape="rect" id="Node000001" href="$classmlir_1_1dataflow_1_1AbstractDenseBackwardDataFlowAnalysis.html" title="Base class for dense backward dataflow analyses." alt="" coords="228,13,472,53"/>
+<area shape="poly" id="edge715_Node000000_Node000001" title=" " alt="" coords="111,184,160,132,191,104,225,79,283,51,285,56,228,84,194,108,163,136,115,188"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1dataflow_1_1AbstractDenseForwardDataFlowAnalysis.html" title="Base class for dense forward data&#45;flow analyses." alt="" coords="234,93,466,133"/>
+<area shape="poly" id="edge717_Node000000_Node000003" title=" " alt="" coords="139,189,294,131,296,136,141,194"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1dataflow_1_1AbstractSparseBackwardDataFlowAnalysis.html" title="Base class for sparse backward data&#45;flow analyses." alt="" coords="227,189,473,229"/>
+<area shape="poly" id="edge719_Node000000_Node000005" title=" " alt="" coords="192,207,227,207,227,212,192,212"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1dataflow_1_1AbstractSparseForwardDataFlowAnalysis.html" title="Base class for sparse forward data&#45;flow analyses." alt="" coords="233,308,467,348"/>
+<area shape="poly" id="edge723_Node000000_Node000009" title=" " alt="" coords="134,225,307,305,304,310,132,230"/>
+<area shape="rect" id="Node000017" href="$classmlir_1_1dataflow_1_1DeadCodeAnalysis.html" title="Dead code analysis analyzes control&#45;flow, as understood by RegionBranchOpInterface and BranchOpInterf..." alt="" coords="257,372,443,412"/>
+<area shape="poly" id="edge731_Node000000_Node000017" title=" " alt="" coords="110,232,158,295,191,329,228,358,257,372,255,377,225,362,187,333,154,299,106,235"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1dataflow_1_1DenseBackwardDataFlowAnalysis.html" title="A dense backward dataflow analysis propagating lattices after and before the execution of every opera..." alt="" coords="548,5,772,45"/>
+<area shape="poly" id="edge716_Node000001_Node000002" title=" " alt="" coords="486,27,548,26,548,31,486,32"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1dataflow_1_1DenseForwardDataFlowAnalysis.html" title="A dense forward data&#45;flow analysis for propagating lattices before and after the execution of every o..." alt="" coords="549,69,771,109"/>
+<area shape="poly" id="edge718_Node000003_Node000004" title=" " alt="" coords="479,101,549,95,549,101,480,106"/>
+<area shape="rect" id="Node000006" href="$classmlir_1_1dataflow_1_1SparseBackwardDataFlowAnalysis.html" title=" " alt="" coords="547,133,773,173"/>
+<area shape="poly" id="edge720_Node000005_Node000006" title=" " alt="" coords="474,184,548,171,549,176,475,190"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1dataflow_1_1SparseBackwardDataFlowAnalysis.html" title="A sparse (backward) data&#45;flow analysis for propagating SSA value lattices backwards across the IR by ..." alt="" coords="547,197,773,237"/>
+<area shape="poly" id="edge722_Node000005_Node000008" title=" " alt="" coords="487,210,546,212,546,217,487,216"/>
+<area shape="rect" id="Node000007" href="$classmlir_1_1dataflow_1_1LivenessAnalysis.html" title="An analysis that, by going backwards along the dataflow graph, annotates each value with a boolean st..." alt="" coords="872,133,1048,173"/>
+<area shape="poly" id="edge721_Node000006_Node000007" title=" " alt="" coords="787,151,872,151,872,156,787,156"/>
+<area shape="rect" id="Node000010" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="521,262,799,317"/>
+<area shape="poly" id="edge724_Node000009_Node000010" title=" " alt="" coords="480,309,521,304,521,309,481,314"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="553,341,767,395"/>
+<area shape="poly" id="edge726_Node000009_Node000012" title=" " alt="" coords="482,342,553,352,552,357,481,348"/>
+<area shape="rect" id="Node000014" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="529,419,791,474"/>
+<area shape="poly" id="edge728_Node000009_Node000014" title=" " alt="" coords="462,351,475,358,490,369,500,382,509,393,523,404,548,417,546,422,520,409,505,397,495,385,486,373,472,362,459,356"/>
+<area shape="rect" id="Node000016" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title="A sparse forward data&#45;flow analysis for propagating SSA value lattices across the IR by implementing ..." alt="" coords="553,499,767,539"/>
+<area shape="poly" id="edge730_Node000009_Node000016" title=" " alt="" coords="470,353,475,358,489,374,496,390,500,422,504,454,510,469,523,483,554,502,551,507,520,487,506,472,499,455,495,423,491,392,484,377,471,362,466,358"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1dataflow_1_1IntegerRangeAnalysis.html" title="Integer range analysis determines the integer value range of SSA values using operations that define ..." alt="" coords="857,269,1063,309"/>
+<area shape="poly" id="edge725_Node000010_Node000011" title=" " alt="" coords="812,287,857,287,857,292,812,292"/>
+<area shape="rect" id="Node000013" href="$classmlir_1_1dataflow_1_1SparseConstantPropagation.html" title="This analysis implements sparse constant propagation, which attempts to determine constant&#45;valued res..." alt="" coords="849,348,1071,388"/>
+<area shape="poly" id="edge727_Node000012_Node000013" title=" " alt="" coords="781,365,849,365,849,371,781,371"/>
+<area shape="rect" id="Node000015" href="$classmlir_1_1dataflow_1_1StridedMetadataRangeAnalysis.html" title="Strided metadata range analysis determines the strided metadata ranges of SSA values using operations..." alt="" coords="847,427,1073,467"/>
+<area shape="poly" id="edge729_Node000014_Node000015" title=" " alt="" coords="805,444,847,444,847,449,805,449"/>
+</map>

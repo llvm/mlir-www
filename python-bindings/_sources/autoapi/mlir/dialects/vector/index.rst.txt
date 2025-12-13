@@ -1,0 +1,3011 @@
+mlir.dialects.vector
+====================
+
+.. py:module:: mlir.dialects.vector
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.vector.VectorScaleOp
+   mlir.dialects.vector.BitCastOp
+   mlir.dialects.vector.BroadcastOp
+   mlir.dialects.vector.CompressStoreOp
+   mlir.dialects.vector.ConstantMaskOp
+   mlir.dialects.vector.ContractionOp
+   mlir.dialects.vector.CreateMaskOp
+   mlir.dialects.vector.DeinterleaveOp
+   mlir.dialects.vector.ExpandLoadOp
+   mlir.dialects.vector.ExtractOp
+   mlir.dialects.vector.ExtractStridedSliceOp
+   mlir.dialects.vector.FMAOp
+   mlir.dialects.vector.FromElementsOp
+   mlir.dialects.vector.GatherOp
+   mlir.dialects.vector.InsertOp
+   mlir.dialects.vector.InsertStridedSliceOp
+   mlir.dialects.vector.InterleaveOp
+   mlir.dialects.vector.LoadOp
+   mlir.dialects.vector.MaskOp
+   mlir.dialects.vector.MaskedLoadOp
+   mlir.dialects.vector.MaskedStoreOp
+   mlir.dialects.vector.MultiDimReductionOp
+   mlir.dialects.vector.OuterProductOp
+   mlir.dialects.vector.PrintOp
+   mlir.dialects.vector.ReductionOp
+   mlir.dialects.vector.ScalableExtractOp
+   mlir.dialects.vector.ScalableInsertOp
+   mlir.dialects.vector.ScanOp
+   mlir.dialects.vector.ScatterOp
+   mlir.dialects.vector.ShapeCastOp
+   mlir.dialects.vector.ShuffleOp
+   mlir.dialects.vector.StepOp
+   mlir.dialects.vector.StoreOp
+   mlir.dialects.vector.ToElementsOp
+   mlir.dialects.vector.TransferReadOp
+   mlir.dialects.vector.TransferWriteOp
+   mlir.dialects.vector.TransposeOp
+   mlir.dialects.vector.TypeCastOp
+   mlir.dialects.vector.YieldOp
+   mlir.dialects.vector.CombiningKind
+   mlir.dialects.vector.PrintPunctuation
+   mlir.dialects.vector.IteratorType
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.vector.vscale
+   mlir.dialects.vector.bitcast
+   mlir.dialects.vector.broadcast
+   mlir.dialects.vector.compressstore
+   mlir.dialects.vector.constant_mask
+   mlir.dialects.vector.contract
+   mlir.dialects.vector.create_mask
+   mlir.dialects.vector.deinterleave
+   mlir.dialects.vector.expandload
+   mlir.dialects.vector.extract
+   mlir.dialects.vector.extract_strided_slice
+   mlir.dialects.vector.fma
+   mlir.dialects.vector.from_elements
+   mlir.dialects.vector.gather
+   mlir.dialects.vector.insert
+   mlir.dialects.vector.insert_strided_slice
+   mlir.dialects.vector.interleave
+   mlir.dialects.vector.load
+   mlir.dialects.vector.mask
+   mlir.dialects.vector.maskedload
+   mlir.dialects.vector.maskedstore
+   mlir.dialects.vector.multi_reduction
+   mlir.dialects.vector.outerproduct
+   mlir.dialects.vector.print_
+   mlir.dialects.vector.reduction
+   mlir.dialects.vector.scalable_extract
+   mlir.dialects.vector.scalable_insert
+   mlir.dialects.vector.scan
+   mlir.dialects.vector.scatter
+   mlir.dialects.vector.shape_cast
+   mlir.dialects.vector.shuffle
+   mlir.dialects.vector.step
+   mlir.dialects.vector.store
+   mlir.dialects.vector.to_elements
+   mlir.dialects.vector.transfer_read
+   mlir.dialects.vector.transfer_write
+   mlir.dialects.vector.transpose
+   mlir.dialects.vector.type_cast
+   mlir.dialects.vector.yield_
+   mlir.dialects.vector.register_attribute_builder
+
+
+Module Contents
+---------------
+
+.. py:class:: VectorScaleOp(*, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``vscale`` op returns the scale of the scalable vectors, a positive
+   integer value that is constant at runtime but unknown at compile-time.
+   The scale of the vector indicates the multiplicity of the vectors and
+   vector operations. For example, a ``vector<[4]xi32>`` is equivalent to
+   ``vscale`` consecutive ``vector<4xi32>``; and an operation on a
+   ``vector<[4]xi32>`` is equivalent to performing that operation ``vscale``
+   times, once on each ``<4xi32>`` segment of the scalable vector. The ``vscale``
+   op can be used to calculate the step in vector-length agnostic (VLA) loops.
+   Right now we only support one contiguous set of scalable dimensions, all of
+   them grouped and scaled with the value returned by 'vscale'.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.vscale'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: res() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: vscale(*, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BitCastOp(result, source, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The bitcast operation casts between vectors of the same rank, the minor 1-D
+   vector size is casted to a vector with a different element type but same
+   bitwidth. In case of 0-D vectors, the bitwidth of element types must be
+   equal.
+
+   Example:
+
+   .. code:: mlir
+
+       // Example casting to a smaller element type.
+       %1 = vector.bitcast %0 : vector<5x1x4x3xf32> to vector<5x1x4x6xi16>
+       
+       // Example casting to a bigger element type.
+       %3 = vector.bitcast %2 : vector<10x12x8xi8> to vector<10x12x2xi32>
+       
+       // Example casting to an element type of the same size.
+       %5 = vector.bitcast %4 : vector<5x1x4x3xf32> to vector<5x1x4x3xi32>
+       
+       // Example casting of 0-D vectors.
+       %7 = vector.bitcast %6 : vector<f32> to vector<i32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.bitcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bitcast(result, source, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BroadcastOp(vector, source, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Broadcasts the scalar or k-D vector value in the source operand
+   to a n-D result vector such that the broadcast makes sense, i.e.,
+   the source operand is duplicated to match the given rank and sizes
+   in the result vector. The legality rules are:
+
+   * the source operand must have the same element type as the result type
+   * a k-D vector <s_1 x .. x s_k x type> can be broadcast to
+   a n-D vector <t_1 x .. x t_n x type> if
+   * k <= n, and
+   * the sizes in the trailing dimensions n-k < i <= n with j=i+k-n
+   match exactly as s_j = t_i or s_j = 1:
+
+   .. code::
+
+           t_1 x   ..  t_n-k x t_n-k+1 x .. x t_i x .. x t_n
+                               s_1     x .. x s_j x .. x s_k
+               <duplication>         <potential stretch>
+
+   * in addition, any scalable unit dimension, ``[1]``, must match exactly.
+
+
+   The source operand is duplicated over all the missing leading dimensions
+   and stretched over the trailing dimensions where the source has a non-equal
+   dimension of 1 (stretching a trailing dimension is also referred to as
+   "dim-1" broadcasting). These rules imply that any scalar broadcast (k=0) to
+   any shaped vector with the same element type is always legal.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = arith.constant 0.0 : f32
+       %1 = vector.broadcast %0 : f32 to vector<16xf32>
+       %2 = vector.broadcast %1 : vector<16xf32> to vector<4x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.broadcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: vector() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: broadcast(vector, source, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CompressStoreOp(base, indices, mask, valueToStore, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The compress store operation writes elements from a vector into memory as
+   defined by a base with indices and a mask vector. Compression only applies
+   to the innermost dimension. When the mask is set, the corresponding element
+   from the vector is written next to memory.  Otherwise, no action is taken
+   for the element. Informally the semantics are:
+
+   .. code::
+
+       index = i
+       if (mask[0]) base[index++] = value[0]
+       if (mask[1]) base[index++] = value[1]
+       etc.
+
+   Note that the index increment is done conditionally.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, no value
+   is stored regardless of the index, and the index is allowed to be
+   out-of-bounds.
+
+   The compress store can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for a compress. The semantics of the operation closely
+   correspond to those of the ``llvm.masked.compressstore``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-masked-compressstore-intrinsics>`_.
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   store operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+   Note, at the moment this Op is only available for fixed-width vectors.
+
+   Examples:
+
+   .. code:: mlir
+
+       vector.compressstore %base[%i], %mask, %value
+         : memref<?xf32>, vector<8xi1>, vector<8xf32>
+       
+       vector.compressstore %base[%i, %j], %mask, %value
+         : memref<?x?xf32>, vector<16xi1>, vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.compressstore'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+.. py:function:: compressstore(base, indices, mask, value_to_store, *, alignment=None, loc=None, ip=None) -> CompressStoreOp
+
+.. py:class:: ConstantMaskOp(result, mask_dim_sizes, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Creates and returns a vector mask where elements of the result vector
+   are set to '0' or '1', based on whether the element indices are contained
+   within a hyper-rectangular region specified by the 'mask_dim_sizes'
+   array attribute argument. Each element of the 'mask_dim_sizes' array,
+   specifies an exclusive upper bound [0, mask-dim-size-element-value)
+   for a unique dimension in the vector result. The conjunction of the ranges
+   define a hyper-rectangular region within which elements values are set to 1
+   (otherwise element values are set to 0). Each value of 'mask_dim_sizes' must
+   be non-negative and not greater than the size of the corresponding vector
+   dimension (as opposed to vector.create_mask which allows this). Sizes that
+   correspond to scalable dimensions are implicitly multiplied by vscale,
+   though currently only zero (none set) or the size of the dim/vscale
+   (all set) are supported.
+
+   Example:
+
+   .. code:: mlir
+
+       // create a constant vector mask of size 4x3xi1 with elements in range
+       // 0 <= row <= 2 and 0 <= col <= 1 are set to 1 (others to 0).
+       %1 = vector.constant_mask [3, 2] : vector<4x3xi1>
+       
+       print %1
+                     columns
+                   0    1    2
+                 |------------
+               0 | 1    1    0
+         rows  1 | 1    1    0
+               2 | 1    1    0
+               3 | 0    0    0
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.constant_mask'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: mask_dim_sizes() -> _ods_ir
+
+
+.. py:function:: constant_mask(result, mask_dim_sizes, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ContractionOp(result, lhs, rhs, acc, indexing_maps, iterator_types, *, kind=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the sum of products of vector elements along contracting
+   dimension pairs from 2 vectors of rank M and N respectively, adds this
+   intermediate result to the accumulator argument of rank K, and returns a
+   vector result of rank K (where K = num_lhs_free_dims + num_rhs_free_dims +
+   num_batch_dims (see dimension type descriptions below)). For K = 0 (no
+   free or batch dimensions), the accumulator and output are a scalar.
+
+   If operands and the result have types of different bitwidths, operands are
+   promoted to have the same bitwidth as the result before performing the
+   contraction. For integer types, only signless integer types are supported,
+   and the promotion happens via sign extension.
+
+   An iterator type attribute list must be specified, where each element of
+   the list represents an iterator with one of the following types:
+
+   * "reduction": reduction dimensions are present in the lhs and rhs
+   arguments but not in the output (and accumulator
+   argument). These are the dimensions along which the vector
+   contraction op computes the sum of products, and
+   contracting dimension pair dimension sizes must match
+   between lhs/rhs.
+   * "parallel": Batch dimensions are iterator type "parallel", and
+   are non-contracting dimensions present in the lhs, rhs and
+   output. The lhs/rhs co-iterate along the batch dimensions,
+   which should be expressed in their indexing maps.Free dimensions are iterator type "parallel", and are
+   non-contraction, non-batch dimensions accessed by either the
+   lhs or rhs (but not both). The lhs and rhs free dimensions
+   are unrelated to each other and do not co-iterate, which
+   should be expressed in their indexing maps.
+
+   An indexing map attribute list must be specified with an entry for lhs, rhs
+   and acc arguments. An indexing map attribute specifies a mapping from each
+   iterator in the iterator type list, to each dimension of an N-D vector.
+
+   An optional kind attribute may be used to specify the combining function
+   between the intermediate result and accumulator argument of rank K. This
+   attribute can take the values ``add``/``mul``/``minsi``/``minui``/``maxsi``/``maxui``
+   /``and``/``or``/``xor`` for integers, and ``add``/``mul``/``minnumf``/``maxnumf``
+   /``minimumf``/``maximumf`` for floats. The default is ``add``.
+
+   Example:
+
+   .. code:: mlir
+
+       // Simple DOT product (K = 0).
+       #contraction_accesses = [
+        affine_map<(i) -> (i)>,
+        affine_map<(i) -> (i)>,
+        affine_map<(i) -> ()>
+       ]
+       #contraction_trait = {
+         indexing_maps = #contraction_accesses,
+         iterator_types = ["reduction"]
+       }
+       %3 = vector.contract #contraction_trait %0, %1, %2
+         : vector<10xf32>, vector<10xf32> into f32
+       
+       // 2D vector contraction with one contracting dimension (matmul, K = 2).
+       #contraction_accesses = [
+         affine_map<(i, j, k) -> (i, k)>,
+         affine_map<(i, j, k) -> (k, j)>,
+         affine_map<(i, j, k) -> (i, j)>
+       ]
+       #contraction_trait = {
+         indexing_maps = #contraction_accesses,
+         iterator_types = ["parallel", "parallel", "reduction"]
+       }
+       
+       %3 = vector.contract #contraction_trait %0, %1, %2
+         : vector<4x3xf32>, vector<3x7xf32> into vector<4x7xf32>
+       
+       // 4D to 3D vector contraction with two contracting dimensions and
+       // one batch dimension (K = 3).
+       #contraction_accesses = [
+         affine_map<(b0, f0, f1, c0, c1) -> (c0, b0, c1, f0)>,
+         affine_map<(b0, f0, f1, c0, c1) -> (b0, c1, c0, f1)>,
+         affine_map<(b0, f0, f1, c0, c1) -> (b0, f0, f1)>
+       ]
+       #contraction_trait = {
+         indexing_maps = #contraction_accesses,
+         iterator_types = ["parallel", "parallel", "parallel",
+                           "reduction", "reduction"]
+       }
+       
+       %4 = vector.contract #contraction_trait %0, %1, %2
+           : vector<7x8x16x15xf32>, vector<8x16x7x5xf32> into vector<8x15x5xf32>
+       
+       // Vector contraction with mixed typed. lhs/rhs have different element
+       // types than accumulator/result.
+       %5 = vector.contract #contraction_trait %0, %1, %2
+         : vector<10xf16>, vector<10xf16> into f32
+       
+       // Contract with max (K = 0).
+       #contraction_accesses = [
+        affine_map<(i) -> (i)>,
+        affine_map<(i) -> (i)>,
+        affine_map<(i) -> ()>
+       ]
+       #contraction_trait = {
+         indexing_maps = #contraction_accesses,
+         iterator_types = ["reduction"],
+         kind = #vector.kind<maxnumf>
+       }
+       %6 = vector.contract #contraction_trait %0, %1, %2
+         : vector<10xf32>, vector<10xf32> into f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.contract'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+   .. py:method:: indexing_maps() -> _ods_ir
+
+
+   .. py:method:: iterator_types() -> _ods_ir
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+.. py:function:: contract(result, lhs, rhs, acc, indexing_maps, iterator_types, *, kind=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CreateMaskOp(result, operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Creates and returns a vector mask where elements of the result vector
+   are set to '0' or '1', based on whether the element indices are contained
+   within a hyper-rectangular region specified by the operands. Specifically,
+   each operand specifies a range [0, operand-value) for a unique dimension in
+   the vector result. The conjunction of the operand ranges define a
+   hyper-rectangular region within which elements values are set to 1
+   (otherwise element values are set to 0). If operand-value is negative, it is
+   treated as if it were zero, and if it is greater than the corresponding
+   dimension size, it is treated as if it were equal to the dimension size.
+
+   Example:
+
+   .. code:: mlir
+
+       // create a vector mask of size 4x3xi1 where elements in range
+       // 0 <= row <= 2 and 0 <= col <= 1 are set to 1 (others to 0).
+       %1 = vector.create_mask %c3, %c2 : vector<4x3xi1>
+       
+       print %1
+                     columns
+                   0    1    2
+                 |------------
+               0 | 1    1    0
+         rows  1 | 1    1    0
+               2 | 1    1    0
+               3 | 0    0    0
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.create_mask'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: create_mask(result, operands_, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DeinterleaveOp(source, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The deinterleave operation constructs two vectors from a single input
+   vector. The first result vector contains the elements from even indexes
+   of the input, and the second contains elements from odd indexes. This is
+   the inverse of a ``vector.interleave`` operation.
+
+   Each output's trailing dimension is half of the size of the input
+   vector's trailing dimension. This operation requires the input vector
+   to have a rank > 0 and an even number of elements in its trailing
+   dimension.
+
+   The operation supports scalable vectors.
+
+   Example:
+
+   .. code:: mlir
+
+       %0, %1 = vector.deinterleave %a
+                  : vector<8xi8> -> vector<4xi8>
+       %2, %3 = vector.deinterleave %b
+                  : vector<2x8xi8> -> vector<2x4xi8>
+       %4, %5 = vector.deinterleave %c
+                  : vector<2x8x4xi8> -> vector<2x8x2xi8>
+       %6, %7 = vector.deinterleave %d
+                  : vector<[8]xf32> -> vector<[4]xf32>
+       %8, %9 = vector.deinterleave %e
+                  : vector<2x[6]xf64> -> vector<2x[3]xf64>
+       %10, %11 = vector.deinterleave %f
+                  : vector<2x4x[6]xf64> -> vector<2x4x[3]xf64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.deinterleave'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: res1() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: res2() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: deinterleave(source, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExpandLoadOp(result, base, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The expand load reads elements from memory into a vector as defined by a
+   base with indices and a mask vector. Expansion only applies to the innermost
+   dimension. When the mask is set, the next element is read from memory.
+   Otherwise, the corresponding element is taken from a pass-through vector.
+   Informally the semantics are:
+
+   .. code::
+
+       index = i
+       result[0] := if mask[0] then base[index++] else pass_thru[0]
+       result[1] := if mask[1] then base[index++] else pass_thru[1]
+       etc.
+
+   Note that the index increment is done conditionally.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, the value
+   comes from the pass-through vector regardless of the index, and the index is
+   allowed to be out-of-bounds.
+
+   The expand load can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for an expand. The semantics of the operation closely
+   correspond to those of the ``llvm.masked.expandload``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-masked-expandload-intrinsics>`_.
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   load operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+   Note, at the moment this Op is only available for fixed-width vectors.
+
+   Examples:
+
+   .. code:: mlir
+
+       %0 = vector.expandload %base[%i], %mask, %pass_thru
+          : memref<?xf32>, vector<8xi1>, vector<8xf32> into vector<8xf32>
+       
+       %1 = vector.expandload %base[%i, %j], %mask, %pass_thru
+          : memref<?x?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.expandload'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pass_thru() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: expandload(result, base, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExtractOp(source, dynamic_position, static_position, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extracts an (n − k)-D result sub-vector from an n-D source vector at a
+   specified k-D position. When n = k, the result degenerates to a scalar
+   element.
+
+   Static and dynamic indices must be greater or equal to zero and less than
+   the size of the corresponding dimension. The result is undefined if any
+   index is out-of-bounds. The value ``-1`` represents a poison index, which
+   specifies that the extracted element is poison.
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.extract %0[3]: vector<8x16xf32> from vector<4x8x16xf32>
+       %2 = vector.extract %0[2, 1, 3]: f32 from vector<4x8x16xf32>
+       %4 = vector.extract %0[%a, %b, %c]: f32 from vector<4x8x16xf32>
+       %5 = vector.extract %0[2, %b]: vector<16xf32> from vector<4x8x16xf32>
+       %6 = vector.extract %10[-1, %c]: f32 from vector<4x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.extract'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dynamic_position() -> _ods_ir
+
+
+   .. py:method:: static_position() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: extract(source, dynamic_position, static_position, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExtractStridedSliceOp(result, source, offsets, sizes, strides, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Takes an n-D vector, k-D ``offsets`` integer array attribute, a k-sized
+   ``sizes`` integer array attribute, a k-sized ``strides`` integer array
+   attribute and extracts the n-D subvector at the proper offset.
+
+   At the moment strides must contain only 1s.
+
+   Returns an n-D vector where the first k-D dimensions match the ``sizes``
+   attribute. The returned subvector contains the elements starting at offset
+   ``offsets`` and ending at ``offsets + sizes``.
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.extract_strided_slice %0
+           {offsets = [0, 2], sizes = [2, 4], strides = [1, 1]}:
+         vector<4x8x16xf32> to vector<2x4x16xf32>
+       
+       // TODO: Evolve to a range form syntax similar to:
+       %1 = vector.extract_strided_slice %0[0:2:1][2:4:1]
+         vector<4x8x16xf32> to vector<2x4x16xf32>
+
+   TODO: Implement support for poison indices.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.extract_strided_slice'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: sizes() -> _ods_ir
+
+
+   .. py:method:: strides() -> _ods_ir
+
+
+.. py:function:: extract_strided_slice(result, source, offsets, sizes, strides, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FMAOp(lhs, rhs, acc, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Multiply-add expressions operate on n-D vectors and compute a fused
+   pointwise multiply-and-accumulate: ``$result = $lhs * $rhs + $acc``.
+   All operands and result have the same vector type. The semantics
+   of the operation correspond to those of the ``llvm.fma``
+   `intrinsic <https://llvm.org/docs/LangRef.html#int-fma>`_. In the
+   particular case of lowering to LLVM, this is guaranteed to lower
+   to the ``llvm.fma.*`` intrinsic.
+
+   Example:
+
+   .. code:: mlir
+
+       %3 = vector.fma %0, %1, %2: vector<8x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.fma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: fma(lhs, rhs, acc, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FromElementsOp(dest, elements, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation defines a vector from one or multiple scalar elements. The
+   scalar elements are arranged in row-major within the vector. The number of
+   elements must match the number of elements in the result type. All elements
+   must have the same type, which must match the element type of the result
+   vector type. Scalable vectors are not supported.
+
+   Examples:
+
+   .. code:: mlir
+
+       // Define a 0-D vector.
+       %0 = vector.from_elements %f1 : vector<f32>
+       // [%f1]
+       
+       // Define a 1-D vector.
+       %1 = vector.from_elements %f1, %f2 : vector<2xf32>
+       // [%f1, %f2]
+       
+       // Define a 2-D vector.
+       %2 = vector.from_elements %f1, %f2, %f3, %f4, %f5, %f6 : vector<2x3xf32>
+       // [[%f1, %f2, %f3], [%f4, %f5, %f6]]
+       
+       // Define a 3-D vector.
+       %3 = vector.from_elements %f1, %f2, %f3, %f4, %f5, %f6 : vector<3x1x2xf32>
+       // [[[%f1, %f2]], [[%f3, %f4]], [[%f5, %f6]]]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.from_elements'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: elements() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: from_elements(dest, elements, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GatherOp(result, base, offsets, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The gather operation returns an n-D vector whose elements are either loaded
+   from a k-D memref or tensor, or taken from an n-D pass-through vector, depending
+   on the values of an n-D mask vector.
+
+   If a mask bit is set, the corresponding result element is taken from ``base``
+   at an index defined by k indices and n-D ``index_vec``. Otherwise, the element
+   is taken from the pass-through vector. As an example, suppose that ``base`` is
+   3-D and the result is 2-D:
+
+   .. code:: mlir
+
+       func.func @gather_3D_to_2D(
+           %base: memref<?x10x?xf32>, %ofs_0: index, %ofs_1: index, %ofs_2: index,
+           %indices: vector<2x3xi32>, %mask: vector<2x3xi1>,
+           %fall_thru: vector<2x3xf32>) -> vector<2x3xf32> {
+               %result = vector.gather %base[%ofs_0, %ofs_1, %ofs_2]
+                                      [%indices], %mask, %fall_thru : [...]
+               return %result : vector<2x3xf32>
+       }
+
+   The indexing semantics are then,
+
+   .. code::
+
+       result[i,j] := if mask[i,j] then base[i0, i1, i2 + indices[i,j]]
+                      else pass_thru[i,j]
+
+   The index into ``base`` only varies in the innermost ((k-1)-th) dimension.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, the value
+   comes from the pass-through vector regardless of the index, and the index is
+   allowed to be out-of-bounds.
+
+   The gather operation can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for a gather.
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   gather operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+   Examples:
+
+   .. code:: mlir
+
+       // 1-D memref gathered to 2-D vector.
+       %0 = vector.gather %base[%c0][%v], %mask, %pass_thru
+          : memref<?xf32>, vector<2x16xi32>, vector<2x16xi1>, vector<2x16xf32> into vector<2x16xf32>
+       
+       // 2-D memref gathered to 1-D vector.
+       %1 = vector.gather %base[%i, %j][%v], %mask, %pass_thru
+          : memref<16x16xf32>, vector<16xi32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.gather'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pass_thru() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: gather(result, base, offsets, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: InsertOp(valueToStore, dest, dynamic_position, static_position, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Inserts an (n - k)-D sub-vector (value-to-store) into an n-D destination
+   vector at a specified k-D position. When n = 0, value-to-store degenerates
+   to a scalar element inserted into the n-D destination vector.
+
+   Static and dynamic indices must be greater or equal to zero and less than
+   the size of the corresponding dimension. The result is undefined if any
+   index is out-of-bounds. The value ``-1`` represents a poison index, which
+   specifies that the resulting vector is poison.
+
+   Example:
+
+   .. code:: mlir
+
+       %2 = vector.insert %0, %1[3] : vector<8x16xf32> into vector<4x8x16xf32>
+       %5 = vector.insert %3, %4[2, 1, 3] : f32 into vector<4x8x16xf32>
+       %11 = vector.insert %9, %10[%a, %b, %c] : f32 into vector<4x8x16xf32>
+       %12 = vector.insert %4, %10[2, %b] : vector<16xf32> into vector<4x8x16xf32>
+       %13 = vector.insert %20, %1[-1, %c] : f32 into vector<4x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.insert'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: valueToStore() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dynamic_position() -> _ods_ir
+
+
+   .. py:method:: static_position() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: insert(value_to_store, dest, dynamic_position, static_position, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: InsertStridedSliceOp(valueToStore, dest, offsets, strides, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Takes a k-D valueToStore vector, an n-D destination vector (n >= k), n-sized
+   ``offsets`` integer array attribute, a k-sized ``strides`` integer array attribute
+   and inserts the k-D valueToStore vector as a strided subvector at the proper offset
+   into the n-D destination vector.
+
+   At the moment strides must contain only 1s.
+
+   Returns an n-D vector that is a copy of the n-D destination vector in which
+   the last k-D dimensions contain the k-D valueToStore vector elements strided at
+   the proper location as specified by the offsets.
+
+   Example:
+
+   .. code:: mlir
+
+       %2 = vector.insert_strided_slice %0, %1
+           {offsets = [0, 0, 2], strides = [1, 1]}:
+         vector<2x4xf32> into vector<16x4x8xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.insert_strided_slice'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: strides() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: insert_strided_slice(value_to_store, dest, offsets, strides, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: InterleaveOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The interleave operation constructs a new vector by interleaving the
+   elements from the trailing (or final) dimension of two input vectors,
+   returning a new vector where the trailing dimension is twice the size.
+
+   Note that for the n-D case this differs from the interleaving possible with
+   ``vector.shuffle``, which would only operate on the leading dimension.
+
+   Another key difference is this operation supports scalable vectors, though
+   currently a general LLVM lowering is limited to the case where only the
+   trailing dimension is scalable.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = arith.constant dense<[0, 1]> : vector<2xi32>
+       %b = arith.constant dense<[2, 3]> : vector<2xi32>
+       // The value of `%0` is `[0, 2, 1, 3]`.
+       %0 = vector.interleave %a, %b : vector<2xi32> -> vector<4xi32>
+       
+       // Examples showing allowed input and result types.
+       %1 = vector.interleave %c, %d : vector<f16> -> vector<2xf16>
+       %2 = vector.interleave %e, %f : vector<6x3xf32> -> vector<6x6xf32>
+       %3 = vector.interleave %g, %h : vector<[4]xi32> -> vector<[8]xi32>
+       %4 = vector.interleave %i, %j : vector<2x4x[2]xf64> -> vector<2x4x[4]xf64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.interleave'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: interleave(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LoadOp(result, base, indices, *, nontemporal=None, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The 'vector.load' operation reads an n-D slice of memory into an n-D
+   vector. It takes a 'base' memref, an index for each memref dimension and a
+   result vector type as arguments. It returns a value of the result vector
+   type. The 'base' memref and indices determine the start memory address from
+   which to read. Each index provides an offset for each memref dimension
+   based on the element type of the memref. The shape of the result vector
+   type determines the shape of the slice read from the start memory address.
+   The elements along each dimension of the slice are strided by the memref
+   strides. When loading more than 1 element, only unit strides are allowed
+   along the most minor memref dimension. These constraints guarantee that
+   elements read along the first dimension of the slice are contiguous in
+   memory.
+
+   The memref element type can be a scalar or a vector type. If the memref
+   element type is a scalar, it should match the element type of the result
+   vector. If the memref element type is vector, it should match the result
+   vector type.
+
+   Example: 0-D vector load on a scalar memref.
+
+   .. code:: mlir
+
+       %result = vector.load %base[%i, %j] : memref<100x100xf32>, vector<f32>
+
+   Example: 1-D vector load on a scalar memref.
+
+   .. code:: mlir
+
+       %result = vector.load %base[%i, %j] : memref<100x100xf32>, vector<8xf32>
+
+   Example: 1-D vector load on a vector memref.
+
+   .. code:: mlir
+
+       %result = vector.load %memref[%i, %j] : memref<200x100xvector<8xf32>>, vector<8xf32>
+
+   Example:  2-D vector load on a scalar memref.
+
+   .. code:: mlir
+
+       %result = vector.load %memref[%i, %j] : memref<200x100xf32>, vector<4x8xf32>
+
+   Example:  2-D vector load on a vector memref.
+
+   .. code:: mlir
+
+       %result = vector.load %memref[%i, %j] : memref<200x100xvector<4x8xf32>>, vector<4x8xf32>
+
+   Representation-wise, the 'vector.load' operation permits out-of-bounds
+   reads. Support and implementation of out-of-bounds vector loads is
+   target-specific. No assumptions should be made on the value of elements
+   loaded out of bounds. Not all targets may support out-of-bounds vector
+   loads.
+
+   Example:  Potential out-of-bound vector load.
+
+   .. code:: mlir
+
+       %result = vector.load %memref[%index] : memref<?xf32>, vector<8xf32>
+
+   Example:  Explicit out-of-bound vector load.
+
+   .. code:: mlir
+
+       %result = vector.load %memref[%c0] : memref<7xf32>, vector<8xf32>
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   load operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.load'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: nontemporal() -> Optional[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: load(result, base, indices, *, nontemporal=None, alignment=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MaskOp(results_, mask, *, passthru=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``vector.mask`` is a ``MaskingOpInterface`` operation that predicates the
+   execution of another operation. It takes an ``i1`` vector mask and an
+   optional passthru vector as arguments.
+
+   A implicitly ``vector.yield``-terminated region encloses the operation to be
+   masked. Values used within the region are captured from above. Only one
+   *maskable* operation can be masked with a ``vector.mask`` operation at a time.
+   An operation is *maskable* if it implements the ``MaskableOpInterface``. The
+   terminator yields all results from the maskable operation to the result of
+   this operation. No other values are allowed to be yielded.
+
+   An empty ``vector.mask`` operation is currently legal to enable optimizations
+   across the ``vector.mask`` region. However, this might change in the future
+   once vector transformations gain better support for ``vector.mask``.
+   TODO: Consider making empty ``vector.mask`` illegal.
+
+   The vector mask argument holds a bit for each vector lane and determines
+   which vector lanes should execute the maskable operation and which ones
+   should not. The ``vector.mask`` operation returns the value produced by the
+   masked execution of the nested operation, if any. The masked-off lanes in
+   the result vector are taken from the corresponding lanes of the pass-thru
+   argument, if provided, or left unmodified, otherwise. At this point, 0-D
+   vectors are not supported by ``vector.mask``. They may be supported in the
+   future.
+
+   The ``vector.mask`` operation does not prescribe how a maskable operation
+   should be masked or how a masked operation should be lowered. Masking
+   constraints and some semantic details are provided by each maskable
+   operation through the ``MaskableOpInterface``. Lowering of masked operations
+   is implementation defined. For instance, scalarizing the masked operation
+   or executing the operation for the masked-off lanes are valid lowerings as
+   long as the execution of masked-off lanes does not change the observable
+   behavior of the program.
+
+   Examples:
+
+   .. code::
+
+         %0 = vector.mask %mask { vector.reduction <add>, %a : vector<8xi32> into i32 } : vector<8xi1> -> i32
+
+   .. code::
+
+         %0 = vector.mask %mask, %passthru { arith.divsi %a, %b : vector<8xi32> } : vector<8xi1> -> vector<8xi32>
+
+   .. code::
+
+         vector.mask %mask { vector.transfer_write %val, %t0[%idx] : vector<16xf32>, memref<?xf32> } : vector<16xi1>
+
+   .. code::
+
+         vector.mask %mask { vector.transfer_write %val, %t0[%idx] : vector<16xf32>, tensor<?xf32> } : vector<16xi1> -> tensor<?xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.mask'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: passthru() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: maskRegion() -> _ods_ir
+
+
+.. py:function:: mask(results_, mask, *, passthru=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, MaskOp]
+
+.. py:class:: MaskedLoadOp(result, base, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The masked load reads elements from memory into a vector as defined
+   by a base with indices and a mask vector. When the mask is set, the
+   element is read from memory. Otherwise, the corresponding element is taken
+   from a pass-through vector. Informally the semantics are:
+
+   .. code::
+
+       result[0] := if mask[0] then base[i + 0] else pass_thru[0]
+       result[1] := if mask[1] then base[i + 1] else pass_thru[1]
+       etc.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, the value
+   comes from the pass-through vector regardless of the index, and the index is
+   allowed to be out-of-bounds.
+
+   The masked load can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for a masked load. The semantics of the operation
+   closely correspond to those of the ``llvm.masked.load``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-masked-load-intrinsics>`_.
+
+   Examples:
+
+   .. code:: mlir
+
+       %0 = vector.maskedload %base[%i], %mask, %pass_thru
+          : memref<?xf32>, vector<8xi1>, vector<8xf32> into vector<8xf32>
+       
+       %1 = vector.maskedload %base[%i, %j], %mask, %pass_thru
+          : memref<?x?xf32>, vector<16xi1>, vector<16xf32> into vector<16xf32>
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   load operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.maskedload'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pass_thru() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: maskedload(result, base, indices, mask, pass_thru, *, alignment=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MaskedStoreOp(base, indices, mask, valueToStore, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The masked store operation writes elements from a vector into memory
+   as defined by a base with indices and a mask vector. When the mask is
+   set, the corresponding element from the vector is written to memory. Otherwise,
+   no action is taken for the element. Informally the semantics are:
+
+   .. code::
+
+       if (mask[0]) base[i+0] = value[0]
+       if (mask[1]) base[i+1] = value[1]
+       etc.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, no value
+   is stored regardless of the index, and the index is allowed to be
+   out-of-bounds.
+
+   The masked store can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for a masked store. The semantics of the operation
+   closely correspond to those of the ``llvm.masked.store``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-masked-store-intrinsics>`_.
+
+   Examples:
+
+   .. code:: mlir
+
+       vector.maskedstore %base[%i], %mask, %value
+         : memref<?xf32>, vector<8xi1>, vector<8xf32>
+       
+       vector.maskedstore %base[%i, %j], %mask, %value
+         : memref<?x?xf32>, vector<16xi1>, vector<16xf32>
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   store operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.maskedstore'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+.. py:function:: maskedstore(base, indices, mask, value_to_store, *, alignment=None, loc=None, ip=None) -> MaskedStoreOp
+
+.. py:class:: MultiDimReductionOp(kind, source, acc, reduction_dims, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduces an n-D vector into an (n-k)-D vector (or a scalar when k == n)
+   using the given operation: ``add``/``mul``/``minsi``/``minui``/``maxsi``/``maxui``
+   /``and``/``or``/``xor`` for integers, and ``add``/``mul``/``minnumf``/``maxnumf``/``minimumf``
+   /``maximumf`` for floats.
+   Takes an initial accumulator operand.
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.multi_reduction <add>, %0, %acc0 [1, 3] :
+         vector<4x8x16x32xf32> to vector<4x16xf32>
+       %2 = vector.multi_reduction <add>, %1, %acc1 [0, 1] :
+         vector<4x16xf32> to f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.multi_reduction'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: reduction_dims() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir
+
+
+.. py:function:: multi_reduction(kind, source, acc, reduction_dims, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: OuterProductOp(result, lhs, rhs, *, acc=None, kind=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Takes 2 1-D vectors and returns the 2-D vector containing the outer-product,
+   as illustrated below:
+
+   .. code::
+
+        outer |   [c, d]
+        ------+------------
+          [a, | [ [a*c, a*d],
+           b] |   [b*c, b*d] ]
+
+   This operation also accepts a 1-D vector lhs and a scalar rhs. In this
+   case a simple AXPY operation is performed, which returns a 1-D vector.
+
+   .. code::
+
+           [a, b] * c = [a*c, b*c]
+
+   An optional extra vector argument with the same shape as the output
+   vector may be specified in which case the operation returns the sum of
+   the outer-product and the extra vector. In this multiply-accumulate
+   scenario for floating-point arguments, the rounding mode is enforced
+   by guaranteeing that a fused-multiply add operation is emitted. When
+   lowered to the LLVMIR dialect, this form emits ``llvm.intr.fma``, which
+   is guaranteed to lower to actual ``fma`` instructions on x86.
+
+   An optional kind attribute may be specified to be: ``add``/``mul``/``minsi``
+   /``minui``/``maxsi``/``maxui``/``and``/``or``/``xor`` for integers, and ``add``/``mul``
+   /``minnumf``/``maxnumf``/``minimumf``/``maximumf`` for floats. The default is
+   ``add``.
+
+   Example:
+
+   .. code::
+
+       %2 = vector.outerproduct %0, %1: vector<4xf32>, vector<8xf32>
+       return %2: vector<4x8xf32>
+       
+       %3 = vector.outerproduct %0, %1, %2:
+         vector<4xf32>, vector<8xf32>, vector<4x8xf32>
+       return %3: vector<4x8xf32>
+       
+       %4 = vector.outerproduct %0, %1, %2 {kind = #vector.kind<maxnumf>}:
+         vector<4xf32>, vector<8xf32>, vector<4x8xf32>
+       return %3: vector<4x8xf32>
+       
+       %6 = vector.outerproduct %4, %5: vector<10xf32>, f32
+       return %6: vector<10xf32>
+       
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.outerproduct'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: acc() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+.. py:function:: outerproduct(result, lhs, rhs, *, acc=None, kind=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PrintOp(*, source=None, punctuation=None, stringLiteral=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Prints the source vector (or scalar) to stdout in a human-readable format
+   (for testing and debugging). No return value.
+
+   Example:
+
+   .. code:: mlir
+
+       %v = arith.constant dense<0.0> : vector<4xf32>
+       vector.print %v : vector<4xf32>
+
+   When lowered to LLVM, the vector print is decomposed into elementary
+   printing method calls that at runtime will yield:
+
+   .. code::
+
+       ( 0.0, 0.0, 0.0, 0.0 )
+
+   This is printed to stdout via a small runtime support library, which only
+   needs to provide a few printing methods (single value for all data
+   types, opening/closing bracket, comma, newline).
+
+   By default ``vector.print`` adds a newline after the vector, but this can be
+   controlled by the ``punctuation`` attribute. For example, to print a comma
+   after instead do:
+
+   .. code:: mlir
+
+       vector.print %v : vector<4xf32> punctuation <comma>
+
+   Note that it is possible to use the punctuation attribute alone. The
+   following will print a single newline:
+
+   .. code:: mlir
+
+       vector.print punctuation <newline>
+
+   Additionally, to aid with debugging and testing ``vector.print`` can also
+   print constant strings:
+
+   .. code:: mlir
+
+       vector.print str "Hello, World!"
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.print'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> Optional[_ods_ir]
+
+
+   .. py:method:: punctuation() -> _ods_ir
+
+
+   .. py:method:: stringLiteral() -> Optional[_ods_ir]
+
+
+.. py:function:: print_(*, source=None, punctuation=None, string_literal=None, loc=None, ip=None) -> PrintOp
+
+.. py:class:: ReductionOp(dest, kind, vector, *, acc=None, fastmath=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduces an 1-D vector "horizontally" into a scalar using the given
+   operation: ``add``/``mul``/``minsi``/``minui``/``maxsi``/``maxui``/``and``/``or``/``xor`` for
+   integers, and ``add``/``mul``/``minnumf``/``maxnumf``/``minimumf``/``maximumf`` for
+   floats. Reductions also allow an optional fused accumulator.
+
+   Note that these operations are restricted to 1-D vectors to remain
+   close to the corresponding LLVM intrinsics:
+
+   http://llvm.org/docs/LangRef.html#vector-reduction-intrinsics
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.reduction <add>, %0 : vector<16xf32> into f32
+       
+       %3 = vector.reduction <xor>, %2 : vector<4xi32> into i32
+       
+       %4 = vector.reduction <mul>, %0, %1 : vector<16xf32> into f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.reduction'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: vector() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> Optional[_ods_ir]
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir
+
+
+.. py:function:: reduction(dest, kind, vector, *, acc=None, fastmath=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScalableExtractOp(result, source, pos, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Takes rank-1 source vector and a position ``pos`` within the source
+   vector, and extracts a subvector starting from that position.
+
+   The extraction position must be a multiple of the minimum size of the result
+   vector. For the operation to be well defined, the destination vector must
+   fit within the source vector from the specified position. Since the source
+   vector is scalable and its runtime length is unknown, the validity of the
+   operation can't be verified nor guaranteed at compile time.
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.scalable.extract %0[8] : vector<4xf32> from vector<[8]xf32>
+       %3 = vector.scalable.extract %2[0] : vector<[4]xf32> from vector<[8]xf32>
+
+   Invalid example:
+
+   .. code:: mlir
+
+       %1 = vector.scalable.extract %0[5] : vector<4xf32> from vector<[16]xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.scalable.extract'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pos() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: scalable_extract(result, source, pos, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScalableInsertOp(valueToStore, dest, pos, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operations takes a rank-1 fixed-length or scalable subvector and
+   inserts it within the destination scalable vector starting from the
+   position specificed by ``pos``. If the source vector is scalable, the
+   insertion position will be scaled by the runtime scaling factor of the
+   source subvector.
+
+   The insertion position must be a multiple of the minimum size of the source
+   vector. For the operation to be well defined, the source vector must fit in
+   the destination vector from the specified position. Since the destination
+   vector is scalable and its runtime length is unknown, the validity of the
+   operation can't be verified nor guaranteed at compile time.
+
+   Example:
+
+   .. code:: mlir
+
+       %2 = vector.scalable.insert %0, %1[8] : vector<4xf32> into vector<[16]xf32>
+       %5 = vector.scalable.insert %3, %4[0] : vector<8xf32> into vector<[4]xf32>
+       %8 = vector.scalable.insert %6, %7[0] : vector<[4]xf32> into vector<[8]xf32>
+
+   Invalid example:
+
+   .. code:: mlir
+
+       %2 = vector.scalable.insert %0, %1[5] : vector<4xf32> into vector<[16]xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.scalable.insert'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: pos() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: scalable_insert(value_to_store, dest, pos, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScanOp(kind, source, initial_value, reduction_dim, inclusive, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs an inclusive/exclusive scan on an n-D vector along a single
+   dimension returning an n-D result vector using the given
+   operation (``add``/``mul``/``minsi``/``minui``/``maxsi``/``maxui``/``and``/``or``/``xor`` for
+   integers, and ``add``/``mul``/``minnumf``/``maxnumf``/``minimumf``/``maximumf`` for
+   floats), and a specified value for the initial value. The operator returns
+   the result of scan as well as the result of the last reduction in the scan.
+
+   Example:
+
+   .. code:: mlir
+
+       %1:2 = vector.scan <add>, %0, %acc {inclusive = false, reduction_dim = 1 : i64} :
+         vector<4x8x16x32xf32>, vector<4x16x32xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.scan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: initial_value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: reduction_dim() -> _ods_ir
+
+
+   .. py:method:: inclusive() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: accumulated_value() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: scan(kind, source, initial_value, reduction_dim, inclusive, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScatterOp(result, base, offsets, indices, mask, valueToStore, *, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The scatter operation stores elements from a n-D vector into memory or ranked tensor as
+   defined by a base with indices and an additional n-D index vector, but
+   only if the corresponding bit in a n-D mask vector is set. Otherwise, no
+   action is taken for that element. Informally the semantics are:
+
+   .. code::
+
+       if (mask[0]) base[index[0]] = value[0]
+       if (mask[1]) base[index[1]] = value[1]
+       etc.
+
+   If a mask bit is set and the corresponding index is out-of-bounds for the
+   given base, the behavior is undefined. If a mask bit is not set, no value
+   is stored regardless of the index, and the index is allowed to be
+   out-of-bounds.
+
+   If the index vector contains two or more duplicate indices, the behavior is
+   undefined. Underlying implementation may enforce strict sequential
+   semantics.
+   TODO: always enforce strict sequential semantics?
+
+   The scatter operation can be used directly where applicable, or can be used
+   during progressively lowering to bring other memory operations closer to
+   hardware ISA support for a scatter. The semantics of the operation closely
+   correspond to those of the ``llvm.masked.scatter``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-masked-scatter-intrinsics>`_.
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   scatter operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+   Examples:
+
+   .. code:: mlir
+
+       vector.scatter %base[%c0][%v], %mask, %value
+           : memref<?xf32>, vector<16xi32>, vector<16xi1>, vector<16xf32>
+       
+       vector.scatter %base[%i, %j][%v], %mask, %value
+           : memref<16x16xf32>, vector<16xi32>, vector<16xi1>, vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.scatter'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> Optional[_ods_ir[_ods_ir]]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: scatter(result, base, offsets, indices, mask, value_to_store, *, alignment=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ScatterOp]
+
+.. py:class:: ShapeCastOp(result, source, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Casts to a vector with the same number of elements, element type, and
+   number of scalable dimensions.
+
+   It is currently assumed that this operation does not require moving data,
+   and that it will be folded away before lowering vector operations.
+
+   There is an exception to the folding expectation when targeting
+   llvm.intr.matrix operations. We need a type conversion back and forth from a
+   2-D MLIR vector to a 1-D flattened LLVM vector.shape_cast lowering to LLVM
+   is supported in that particular case, for now.
+
+   Examples:
+
+   .. code:: mlir
+
+       %1 = vector.shape_cast %0 : vector<4x3xf32> to vector<3x2x2xf32>
+       
+       // with 2 scalable dimensions (number of which must be preserved).
+       %3 = vector.shape_cast %2 : vector<[2]x3x[4]xi8> to vector<3x[1]x[8]xi8>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.shape_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: shape_cast(result, source, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ShuffleOp(v1, v2, mask, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The shuffle operation constructs a permutation (or duplication) of elements
+   from two input vectors, returning a vector with the same element type as
+   the input and a length that is the same as the shuffle mask. The two input
+   vectors must have the same element type, same rank, and trailing dimension
+   sizes and shuffles their values in the leading dimension (which may differ
+   in size) according to the given mask. The legality rules are:
+
+   * the two operands must have the same element type as the result
+   * Either, the two operands and the result must have the same
+   rank and trailing dimension sizes, viz. given two k-D operands
+   v1 : <s_1 x s_2 x .. x s_k x type> and
+   v2 : <t_1 x t_2 x .. x t_k x type>
+   we have s_i = t_i for all 1 < i <= k
+   * Or, the two operands must be 0-D vectors and the result is a 1-D vector.
+
+   * the mask length equals the leading dimension size of the result
+   * numbering the input vector indices left to right across the operands, all
+   mask values must be within range, viz. given two k-D operands v1 and v2
+   above, all mask values are in the range [0,s_1+t_1). The value ``-1``
+   represents a poison mask value, which specifies that the selected element
+   is poison.
+
+   Note, scalable vectors are not supported.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = vector.shuffle %a, %b[0, 3]
+                  : vector<2xf32>, vector<2xf32>       ; yields vector<2xf32>
+       %1 = vector.shuffle %c, %b[0, 1, 2]
+                  : vector<2x16xf32>, vector<1x16xf32> ; yields vector<3x16xf32>
+       %2 = vector.shuffle %a, %b[3, 2, 1, 0]
+                  : vector<2xf32>, vector<2xf32>       ; yields vector<4xf32>
+       %3 = vector.shuffle %a, %b[0, 1]
+                  : vector<f32>, vector<f32>           ; yields vector<2xf32>
+       %4 = vector.shuffle %a, %b[0, 4, -1, -1, -1, -1]
+                  : vector<4xf32>, vector<4xf32>       ; yields vector<6xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.shuffle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: v1() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: v2() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: mask() -> _ods_ir
+
+
+   .. py:method:: vector() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: shuffle(v1, v2, mask, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: StepOp(result, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A ``step`` operation produces an index vector, i.e. a 1-D vector of values of
+   index type that represents a linear sequence from 0 to N-1, where N is the
+   number of elements in the ``result`` vector.
+
+   Supports fixed-width and scalable vectors.
+
+   Examples:
+
+   .. code:: mlir
+
+       %0 = vector.step : vector<4xindex> ; [0, 1, 2, 3]
+       %1 = vector.step : vector<[4]xindex> ; [0, 1, .., <vscale * 4 - 1>]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.step'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: step(result, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: StoreOp(valueToStore, base, indices, *, nontemporal=None, alignment=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The 'vector.store' operation writes an n-D vector to an n-D slice of memory.
+   It takes the vector value to be stored, a 'base' memref and an index for
+   each memref dimension. The 'base' memref and indices determine the start
+   memory address from which to write. Each index provides an offset for each
+   memref dimension based on the element type of the memref. The shape of the
+   vector value to store determines the shape of the slice written from the
+   start memory address. The elements along each dimension of the slice are
+   strided by the memref strides. When storing more than 1 element, only unit
+   strides are allowed along the most minor memref dimension. These constraints
+   guarantee that elements written along the first dimension of the slice are
+   contiguous in memory.
+
+   The memref element type can be a scalar or a vector type. If the memref
+   element type is a scalar, it should match the element type of the value
+   to store. If the memref element type is vector, it should match the type
+   of the value to store.
+
+   Example: 0-D vector store on a scalar memref.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%i, %j] : memref<200x100xf32>, vector<f32>
+
+   Example: 1-D vector store on a scalar memref.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%i, %j] : memref<200x100xf32>, vector<8xf32>
+
+   Example: 1-D vector store on a vector memref.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%i, %j] : memref<200x100xvector<8xf32>>, vector<8xf32>
+
+   Example:  2-D vector store on a scalar memref.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%i, %j] : memref<200x100xf32>, vector<4x8xf32>
+
+   Example:  2-D vector store on a vector memref.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%i, %j] : memref<200x100xvector<4x8xf32>>, vector<4x8xf32>
+
+   Representation-wise, the 'vector.store' operation permits out-of-bounds
+   writes. Support and implementation of out-of-bounds vector stores are
+   target-specific. No assumptions should be made on the memory written out of
+   bounds. Not all targets may support out-of-bounds vector stores.
+
+   Example:  Potential out-of-bounds vector store.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%index] : memref<?xf32>, vector<8xf32>
+
+   Example:  Explicit out-of-bounds vector store.
+
+   .. code:: mlir
+
+       vector.store %valueToStore, %memref[%c0] : memref<7xf32>, vector<8xf32>
+
+   An optional ``alignment`` attribute allows to specify the byte alignment of the
+   store operation. It must be a positive power of 2. The operation must access
+   memory at an address aligned to this boundary. Violating this requirement
+   triggers immediate undefined behavior.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.store'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: nontemporal() -> Optional[_ods_ir]
+
+
+   .. py:method:: alignment() -> Optional[_ods_ir]
+
+
+.. py:function:: store(value_to_store, base, indices, *, nontemporal=None, alignment=None, loc=None, ip=None) -> StoreOp
+
+.. py:class:: ToElementsOp(source, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation decomposes all the scalar elements from a vector. The
+   decomposed scalar elements are returned in row-major order. The number of
+   scalar results must match the number of elements in the input vector type.
+   All the result elements have the same result type, which must match the
+   element type of the input vector. Scalable vectors are not supported.
+
+   Examples:
+
+   .. code:: mlir
+
+       // Decompose a 0-D vector.
+       %0 = vector.to_elements %v0 : vector<f32>
+       // %0 = %v0[0]
+       
+       // Decompose a 1-D vector.
+       %0:2 = vector.to_elements %v1 : vector<2xf32>
+       // %0#0 = %v1[0]
+       // %0#1 = %v1[1]
+       
+       // Decompose a 2-D.
+       %0:6 = vector.to_elements %v2 : vector<2x3xf32>
+       // %0#0 = %v2[0, 0]
+       // %0#1 = %v2[0, 1]
+       // %0#2 = %v2[0, 2]
+       // %0#3 = %v2[1, 0]
+       // %0#4 = %v2[1, 1]
+       // %0#5 = %v2[1, 2]
+       
+       // Decompose a 3-D vector.
+       %0:6 = vector.to_elements %v3 : vector<3x1x2xf32>
+       // %0#0 = %v3[0, 0, 0]
+       // %0#1 = %v3[0, 0, 1]
+       // %0#2 = %v3[1, 0, 0]
+       // %0#3 = %v3[1, 0, 1]
+       // %0#4 = %v3[2, 0, 0]
+       // %0#5 = %v3[2, 0, 1]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.to_elements'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: elements() -> _ods_ir
+
+
+.. py:function:: to_elements(source, *, results=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ToElementsOp]
+
+.. py:class:: TransferReadOp(vector, base, indices, permutation_map, padding, in_bounds, *, mask=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``vector.transfer_read`` op performs a read from a slice within a
+   `MemRef <../LangRef.md#memref-type>`_ or a Ranked
+   `Tensor <../LangRef.md#tensor-type>`_ supplied as its first operand
+   into a `vector <../LangRef.md#vector-type>`_ of the same base elemental type.
+
+   A memref/tensor operand with vector element type, must have its vector
+   element type match a suffix (shape and element type) of the vector (e.g.
+   memref<3x2x6x4x3xf32>, vector<1x1x4x3xf32>).
+
+   The slice is further defined by a full-rank index within the MemRef/Tensor,
+   supplied as the operands ``[1 .. 1 + rank(memref/tensor))`` that defines the
+   starting point of the transfer (e.g. ``%A[%i0, %i1, %i2]``).
+
+   The permutation_map `attribute <../LangRef.md#attributes>`_ is an
+   `affine-map <Affine.md#affine-maps>`_ which specifies the transposition on the
+   slice to match the vector shape. The permutation map may be implicit and
+   omitted from parsing and printing if it is the canonical minor identity map
+   (i.e. if it does not permute or broadcast any dimension).
+
+   The size of the slice is specified by the size of the vector, given as the
+   return type.
+
+   An SSA value ``padding`` of the same elemental type as the MemRef/Tensor is
+   provided to specify a fallback value in the case of out-of-bounds accesses
+   and/or masking.
+
+   An optional SSA value ``mask`` may be specified to mask out elements read from
+   the MemRef/Tensor. The ``mask`` type is an ``i1`` vector with a shape that
+   matches how elements are read from the MemRef/Tensor, *before* any
+   permutation or broadcasting. Elements whose corresponding mask element is
+   ``0`` are masked out and replaced with ``padding``.
+
+   For every vector dimension, the boolean array attribute ``in_bounds``
+   specifies if the transfer is guaranteed to be within the source bounds. If
+   set to "false", accesses (including the starting point) may run
+   out-of-bounds along the respective vector dimension as the index increases.
+   Non-vector dimensions *must* always be in-bounds. The ``in_bounds`` array
+   length has to be equal to the vector rank. This attribute has a default
+   value: ``false`` (i.e. "out-of-bounds"). When skipped in the textual IR, the
+   default value is assumed. Similarly, the OP printer will omit this
+   attribute when all dimensions are out-of-bounds (i.e. the default value is
+   used).
+
+   A ``vector.transfer_read`` can be lowered to a simple load if all dimensions
+   are specified to be within bounds and no ``mask`` was specified.
+
+   This operation is called 'read' by opposition to 'load' because the
+   super-vector granularity is generally not representable with a single
+   hardware register. A ``vector.transfer_read`` is thus a mid-level abstraction
+   that supports super-vectorization with non-effecting padding for full-tile
+   only operations.
+
+   More precisely, let's dive deeper into the permutation_map for the following
+   MLIR:
+
+   .. code:: mlir
+
+       vector.transfer_read %A[%expr1, %expr2, %expr3, %expr4]
+         { permutation_map : (d0,d1,d2,d3) -> (d2,0,d0) } :
+         memref<?x?x?x?xf32>, vector<3x4x5xf32>
+
+   This operation always reads a slice starting at ``%A[%expr1, %expr2, %expr3, %expr4]``. The size of the slice can be inferred from the resulting vector
+   shape and walking back through the permutation map: 3 along d2 and 5 along
+   d0, so the slice is: ``%A[%expr1 : %expr1 + 5, %expr2, %expr3:%expr3 + 3, %expr4]``
+
+   That slice needs to be read into a ``vector<3x4x5xf32>``. Since the
+   permutation map is not full rank, there must be a broadcast along vector
+   dimension ``1``.
+
+   A notional lowering of vector.transfer_read could generate code resembling:
+
+   .. code:: mlir
+
+       // %expr1, %expr2, %expr3, %expr4 defined before this point
+       // alloc a temporary buffer for performing the "gather" of the slice.
+       %tmp = memref.alloc() : memref<vector<3x4x5xf32>>
+       for %i = 0 to 3 {
+         affine.for %j = 0 to 4 {
+           affine.for %k = 0 to 5 {
+             // Note that this load does not involve %j.
+             %a = load %A[%expr1 + %k, %expr2, %expr3 + %i, %expr4] : memref<?x?x?x?xf32>
+             // Update the temporary gathered slice with the individual element
+             %slice = memref.load %tmp : memref<vector<3x4x5xf32>> -> vector<3x4x5xf32>
+             %updated = vector.insert %a, %slice[%i, %j, %k] : f32 into vector<3x4x5xf32>
+             memref.store %updated, %tmp : memref<vector<3x4x5xf32>>
+       }}}
+       // At this point we gathered the elements from the original
+       // memref into the desired vector layout, stored in the `%tmp` allocation.
+       %vec = memref.load %tmp : memref<vector<3x4x5xf32>> -> vector<3x4x5xf32>
+
+   On a GPU one could then map ``i``, ``j``, ``k`` to blocks and threads. Notice that
+   the temporary storage footprint could conceptually be only ``3 * 5`` values but
+   ``3 * 4 * 5`` values are actually transferred between ``%A`` and ``%tmp``.
+
+   Alternatively, if a notional vector broadcast operation were available, we
+   could avoid the loop on ``%j`` and the lowered code would resemble:
+
+   .. code:: mlir
+
+       // %expr1, %expr2, %expr3, %expr4 defined before this point
+       %tmp = memref.alloc() : memref<vector<3x4x5xf32>>
+       for %i = 0 to 3 {
+         affine.for %k = 0 to 5 {
+           %a = load %A[%expr1 + %k, %expr2, %expr3 + %i, %expr4] : memref<?x?x?x?xf32>
+           %slice = memref.load %tmp : memref<vector<3x4x5xf32>> -> vector<3x4x5xf32>
+           // Here we only store to the first element in dimension one
+           %updated = vector.insert %a, %slice[%i, 0, %k] : f32 into vector<3x4x5xf32>
+           memref.store %updated, %tmp : memref<vector<3x4x5xf32>>
+       }}
+       // At this point we gathered the elements from the original
+       // memref into the desired vector layout, stored in the `%tmp` allocation.
+       // However we haven't replicated them alongside the first dimension, we need
+       // to broadcast now.
+       %partialVec = load %tmp : memref<vector<3x4x5xf32>> -> vector<3x4x5xf32>
+       %vec = broadcast %tmpvec, 1 : vector<3x4x5xf32>
+
+   where ``broadcast`` broadcasts from element 0 to all others along the
+   specified dimension. This time, the number of loaded element is ``3 * 5``
+   values.
+   An additional ``1`` broadcast is required. On a GPU this broadcast could be
+   implemented using a warp-shuffle if loop ``j`` were mapped to ``threadIdx.x``.
+
+   Syntax
+
+   .. code::
+
+       operation ::= ssa-id `=` `vector.transfer_read` ssa-use-list
+         `{` attribute-entry `} :` memref-type `,` vector-type
+
+   Example:
+
+   .. code:: mlir
+
+       // Read the slice `%A[%i0, %i1:%i1+256, %i2:%i2+32]` into vector<32x256xf32>
+       // and pad with %f0 to handle the boundary case:
+       %f0 = arith.constant 0.0f : f32
+       affine.for %i0 = 0 to %0 {
+         affine.for %i1 = 0 to %1 step 256 {
+           affine.for %i2 = 0 to %2 step 32 {
+             %v = vector.transfer_read %A[%i0, %i1, %i2], (%f0)
+                  {permutation_map: (d0, d1, d2) -> (d2, d1)} :
+                  memref<?x?x?xf32>, vector<32x256xf32>
+       }}}
+       
+       // or equivalently (rewrite with vector.transpose)
+       %f0 = arith.constant 0.0f : f32
+       affine.for %i0 = 0 to %0 {
+         affine.for %i1 = 0 to %1 step 256 {
+           affine.for %i2 = 0 to %2 step 32 {
+             %v0 = vector.transfer_read %A[%i0, %i1, %i2], (%f0)
+                  {permutation_map: (d0, d1, d2) -> (d1, d2)} :
+                  memref<?x?x?xf32>, vector<256x32xf32>
+             %v = vector.transpose %v0, [1, 0] :
+                 vector<256x32xf32> to vector<32x256f32>
+       }}}
+       
+       // Read the slice `%A[%i0, %i1]` (i.e. the element `%A[%i0, %i1]`) into
+       // vector<128xf32>. The underlying implementation will require a 1-D vector
+       // broadcast:
+       affine.for %i0 = 0 to %0 {
+         affine.for %i1 = 0 to %1 {
+           %3 = vector.transfer_read %A[%i0, %i1]
+                {permutation_map: (d0, d1) -> (0)} :
+                memref<?x?xf32>, vector<128xf32>
+         }
+       }
+       
+       // Read from a memref with vector element type.
+       %4 = vector.transfer_read %arg1[%c3, %c3], %vf0
+         {permutation_map = (d0, d1)->(d0, d1)}
+           : memref<?x?xvector<4x3xf32>>, vector<1x1x4x3xf32>
+       
+       // Read from a tensor with vector element type.
+       %4 = vector.transfer_read %arg1[%c3, %c3], %vf0
+         {permutation_map = (d0, d1)->(d0, d1)}
+           : tensor<?x?xvector<4x3xf32>>, vector<1x1x4x3xf32>
+       
+       // Special encoding for 0-d transfer with 0-d tensor/memref, vector shape
+       // {1} and permutation_map () -> (0).
+       %0 = vector.transfer_read %arg0[], %f0 {permutation_map = affine_map<()->(0)>} :
+         tensor<f32>, vector<1xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.transfer_read'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: padding() -> _ods_ir
+
+
+   .. py:method:: mask() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: permutation_map() -> _ods_ir
+
+
+   .. py:method:: in_bounds() -> _ods_ir
+
+
+   .. py:method:: vector() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: transfer_read(vector, base, indices, permutation_map, padding, in_bounds, *, mask=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TransferWriteOp(result, valueToStore, base, indices, permutation_map, in_bounds, *, mask=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``vector.transfer_write`` op performs a write from a
+   `vector <../LangRef.md#vector-type>`_, supplied as its first operand, into a
+   slice within a `MemRef <../LangRef.md#memref-type>`_ or a Ranked
+   `Tensor <../LangRef.md#tensor-type>`_ of the same base elemental type,
+   supplied as its second operand.
+
+   A vector memref/tensor operand must have its vector element type match a
+   suffix (shape and element type) of the vector (e.g. memref<3x2x6x4x3xf32>,
+   vector<1x1x4x3xf32>). If the operand is a tensor, the operation returns a
+   new tensor of the same type.
+
+   The slice is further defined by a full-rank index within the MemRef/Tensor,
+   supplied as the operands ``[2 .. 2 + rank(memref/tensor))`` that defines the
+   starting point of the transfer (e.g. ``%A[%i0, %i1, %i2, %i3]``).
+
+   The permutation_map `attribute <../LangRef.md#attributes>`_ is an
+   `affine-map <Affine.md#affine-maps>`_ which specifies the transposition on the
+   slice to match the vector shape. The permutation map may be implicit and
+   omitted from parsing and printing if it is the canonical minor identity map
+   (i.e. if it does not permute any dimension). In contrast to ``transfer_read``,
+   write ops cannot have broadcast dimensions.
+
+   The size of the slice is specified by the size of the vector.
+
+   An optional SSA value ``mask`` may be specified to mask out elements written
+   to the MemRef/Tensor. The ``mask`` type is an ``i1`` vector with a shape that
+   matches how elements are written into the MemRef/Tensor, *after* applying
+   any permutation. Elements whose corresponding mask element is ``0`` are
+   masked out.
+
+   For every vector dimension, the boolean array attribute ``in_bounds``
+   specifies if the transfer is guaranteed to be within the source bounds. If
+   set to "false", accesses (including the starting point) may run
+   out-of-bounds along the respective vector dimension as the index increases.
+   Non-vector dimensions *must* always be in-bounds. The ``in_bounds`` array
+   length has to be equal to the vector rank. This attribute has a default
+   value: ``false`` (i.e. "out-of-bounds"). When skipped in the textual IR, the
+   default value is assumed. Similarly, the OP printer will omit this
+   attribute when all dimensions are out-of-bounds (i.e. the default value is
+   used).
+
+   A ``vector.transfer_write`` can be lowered to a simple store if all
+   dimensions are specified to be within bounds and no ``mask`` was specified.
+
+   This operation is called 'write' by opposition to 'store' because the
+   super-vector granularity is generally not representable with a single
+   hardware register. A ``vector.transfer_write`` is thus a
+   mid-level abstraction that supports super-vectorization with non-effecting
+   padding for full-tile-only code. It is the responsibility of
+   ``vector.transfer_write``'s implementation to ensure the memory writes are
+   valid. Different lowerings may be pertinent depending on the hardware
+   support.
+
+   Example:
+
+   .. code:: mlir
+
+       // write vector<16x32x64xf32> into the slice
+       //   `%A[%i0, %i1:%i1+32, %i2:%i2+64, %i3:%i3+16]`:
+       for %i0 = 0 to %0 {
+         affine.for %i1 = 0 to %1 step 32 {
+           affine.for %i2 = 0 to %2 step 64 {
+             affine.for %i3 = 0 to %3 step 16 {
+               %val = `ssa-value` : vector<16x32x64xf32>
+               vector.transfer_write %val, %A[%i0, %i1, %i2, %i3]
+                 {permutation_map: (d0, d1, d2, d3) -> (d3, d1, d2)} :
+                 vector<16x32x64xf32>, memref<?x?x?x?xf32>
+       }}}}
+       
+       // or equivalently (rewrite with vector.transpose)
+       for %i0 = 0 to %0 {
+         affine.for %i1 = 0 to %1 step 32 {
+           affine.for %i2 = 0 to %2 step 64 {
+             affine.for %i3 = 0 to %3 step 16 {
+               %val = `ssa-value` : vector<16x32x64xf32>
+               %valt = vector.transpose %val, [1, 2, 0] :
+                     vector<16x32x64xf32> -> vector<32x64x16xf32>
+               vector.transfer_write %valt, %A[%i0, %i1, %i2, %i3]
+                 {permutation_map: (d0, d1, d2, d3) -> (d1, d2, d3)} :
+                 vector<32x64x16xf32>, memref<?x?x?x?xf32>
+       }}}}
+       
+       // write to a memref with vector element type.
+       vector.transfer_write %4, %arg1[%c3, %c3]
+         {permutation_map = (d0, d1)->(d0, d1)}
+           : vector<1x1x4x3xf32>, memref<?x?xvector<4x3xf32>>
+       
+       // return a tensor where the vector is inserted into the source tensor.
+       %5 = vector.transfer_write %4, %arg1[%c3, %c3]
+         {permutation_map = (d0, d1)->(d0, d1)}
+           : vector<1x1x4x3xf32>, tensor<?x?xvector<4x3xf32>>
+       
+       // Special encoding for 0-d transfer with 0-d tensor/memref, vector shape
+       // {1} and permutation_map () -> (0).
+       %1 = vector.transfer_write %0, %arg0[] {permutation_map = affine_map<()->(0)>} :
+         vector<1xf32>, tensor<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.transfer_write'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: valueToStore() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: mask() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: permutation_map() -> _ods_ir
+
+
+   .. py:method:: in_bounds() -> _ods_ir
+
+
+   .. py:method:: result() -> Optional[_ods_ir[_ods_ir]]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: transfer_write(result, value_to_store, base, indices, permutation_map, in_bounds, *, mask=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, TransferWriteOp]
+
+.. py:class:: TransposeOp(result, vector, permutation, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Takes a n-D vector and returns the transposed n-D vector defined by
+   the permutation of ranks in the n-sized integer array attribute (in case
+   of 0-D vectors the array attribute must be empty).
+
+   In the operation
+
+   .. code:: mlir
+
+       %1 = vector.transpose %0, [i_1, .., i_n]
+         : vector<d_1 x .. x d_n x f32>
+         to vector<d_trans[0] x .. x d_trans[n-1] x f32>
+
+   the ``permutation`` array [i_1, .., i_n] must be a permutation of [0, .., n-1].
+
+   Example:
+
+   .. code:: mlir
+
+       %1 = vector.transpose %0, [1, 0] : vector<2x3xf32> to vector<3x2xf32>
+       
+        [ [a, b, c],       [ [a, d],
+          [d, e, f] ]  ->    [b, e],
+                             [c, f] ]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.transpose'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: vector() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: permutation() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: transpose(result, vector, permutation, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TypeCastOp(result, memref, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a conversion from a memref with scalar element to a memref with a
+   *single* vector element, copying the shape of the memref to the vector. This
+   is the minimal viable operation that is required to makeke
+   super-vectorization operational. It can be seen as a special case of the
+   ``view`` operation but scoped in the super-vectorization context.
+
+   Example:
+
+   .. code:: mlir
+
+       %A  = memref.alloc() : memref<5x4x3xf32>
+       %VA = vector.type_cast %A : memref<5x4x3xf32> to memref<vector<5x4x3xf32>>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.type_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: type_cast(result, memref, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: YieldOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   "vector.yield" yields an SSA value from the Vector dialect op region and
+   terminates the regions. The semantics of how the values are yielded is
+   defined by the parent operation.
+   If "vector.yield" has any operands, the operands must correspond to the
+   parent operation's results.
+   If the parent operation defines no value the vector.yield may be omitted
+   when printing the region.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'vector.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: yield_(operands_, *, loc=None, ip=None) -> YieldOp
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:class:: CombiningKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Kind of combining function for contractions and reductions
+
+
+   .. py:attribute:: ADD
+      :value: 0
+
+
+
+   .. py:attribute:: MUL
+      :value: 1
+
+
+
+   .. py:attribute:: MINUI
+      :value: 2
+
+
+
+   .. py:attribute:: MINSI
+      :value: 3
+
+
+
+   .. py:attribute:: MINNUMF
+      :value: 4
+
+
+
+   .. py:attribute:: MAXUI
+      :value: 5
+
+
+
+   .. py:attribute:: MAXSI
+      :value: 6
+
+
+
+   .. py:attribute:: MAXNUMF
+      :value: 7
+
+
+
+   .. py:attribute:: AND
+      :value: 8
+
+
+
+   .. py:attribute:: OR
+      :value: 9
+
+
+
+   .. py:attribute:: XOR
+      :value: 10
+
+
+
+   .. py:attribute:: MAXIMUMF
+      :value: 12
+
+
+
+   .. py:attribute:: MINIMUMF
+      :value: 11
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: PrintPunctuation
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Punctuation for separating vectors or vector elements
+
+
+   .. py:attribute:: NoPunctuation
+      :value: 0
+
+
+
+   .. py:attribute:: NewLine
+      :value: 1
+
+
+
+   .. py:attribute:: Comma
+      :value: 2
+
+
+
+   .. py:attribute:: Open
+      :value: 3
+
+
+
+   .. py:attribute:: Close
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: IteratorType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Iterator type
+
+
+   .. py:attribute:: parallel
+      :value: 0
+
+
+
+   .. py:attribute:: reduction
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+

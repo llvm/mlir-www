@@ -1,0 +1,136 @@
+mlir.dialects._smt_enum_gen
+===========================
+
+.. py:module:: mlir.dialects._smt_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_enum_gen.BVCmpPredicate
+   mlir.dialects._smt_enum_gen.IntPredicate
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._smt_enum_gen.register_attribute_builder
+   mlir.dialects._smt_enum_gen._bvcmppredicate
+   mlir.dialects._smt_enum_gen._intpredicate
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: BVCmpPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   smt bit-vector comparison predicate
+
+
+   .. py:attribute:: slt
+      :value: 0
+
+
+
+   .. py:attribute:: sle
+      :value: 1
+
+
+
+   .. py:attribute:: sgt
+      :value: 2
+
+
+
+   .. py:attribute:: sge
+      :value: 3
+
+
+
+   .. py:attribute:: ult
+      :value: 4
+
+
+
+   .. py:attribute:: ule
+      :value: 5
+
+
+
+   .. py:attribute:: ugt
+      :value: 6
+
+
+
+   .. py:attribute:: uge
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _bvcmppredicate(x, context)
+
+.. py:class:: IntPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   smt comparison predicate for integers
+
+
+   .. py:attribute:: lt
+      :value: 0
+
+
+
+   .. py:attribute:: le
+      :value: 1
+
+
+
+   .. py:attribute:: gt
+      :value: 2
+
+
+
+   .. py:attribute:: ge
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _intpredicate(x, context)
+

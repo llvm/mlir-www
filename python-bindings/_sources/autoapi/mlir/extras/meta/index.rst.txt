@@ -1,0 +1,51 @@
+mlir.extras.meta
+================
+
+.. py:module:: mlir.extras.meta
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.extras.meta.get_op_result_or_op_results
+   mlir.extras.meta.op_region_builder
+   mlir.extras.meta.region_op
+
+
+Module Contents
+---------------
+
+.. py:function:: get_op_result_or_op_results(op: Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation]) -> Union[mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.OpResult, Sequence[mlir._mlir_libs._mlir.ir.OpResult]]
+
+.. py:function:: op_region_builder(op, op_region, terminator=None)
+
+.. py:function:: region_op(op_constructor, terminator=None)
+
+   
+   Decorator to define an MLIR Op specified as a python function.
+
+   Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+   active for the current thread (i.e. established in a ``with`` block).
+
+   Supports "naked" usage i.e., no parens if no args need to be passed to the Op constructor.
+
+   When applied as a decorator to a Python function, an entry block will
+   be constructed for the Op with types as specified **as type hints on the args of the function**.
+   The block arguments will be passed positionally to the Python function.
+
+   If a terminator is specified then the return from the decorated function will be passed
+   to the terminator as the last statement in the entry block. Note, the API for the terminator
+   is a (possibly empty) list; terminator accepting single values should be wrapped in a
+   ``lambda args: term(args[0])``
+
+   The identifier (name) of the function will become:
+
+   #. A single value result if the Op returns a single value;
+   #. An OpResultList (as a list) if the Op returns multiple values;
+   #. The Operation if the Op returns no results.
+
+   See examples in tensor.py and transform.extras.
+
+

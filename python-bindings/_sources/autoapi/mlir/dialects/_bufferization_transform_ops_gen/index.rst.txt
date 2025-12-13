@@ -1,0 +1,243 @@
+mlir.dialects._bufferization_transform_ops_gen
+==============================================
+
+.. py:module:: mlir.dialects._bufferization_transform_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_transform_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_transform_ops_gen.BufferLoopHoistingOp
+   mlir.dialects._bufferization_transform_ops_gen.EliminateEmptyTensorsOp
+   mlir.dialects._bufferization_transform_ops_gen.EmptyTensorToAllocTensorOp
+   mlir.dialects._bufferization_transform_ops_gen.OneShotBufferizeOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_transform_ops_gen.bufferization_buffer_loop_hoisting
+   mlir.dialects._bufferization_transform_ops_gen.bufferization_eliminate_empty_tensors
+   mlir.dialects._bufferization_transform_ops_gen.bufferization_empty_tensor_to_alloc_tensor
+   mlir.dialects._bufferization_transform_ops_gen.bufferization_one_shot_bufferize
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: BufferLoopHoistingOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Hoist buffer allocations ("memref.alloc" and "memref.alloca") from loops
+   within the targeted op. This transform assumes that there are no buffer
+   deallocation ops in the IR.
+
+   This transform reads the ``target`` handle and modifies the payload.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.bufferization.buffer_loop_hoisting'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: bufferization_buffer_loop_hoisting(target, *, loc=None, ip=None) -> BufferLoopHoistingOp
+
+.. py:class:: EliminateEmptyTensorsOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Try to eliminate all ``tensor.empty`` ops within the targeted op by replacing
+   them with another destination tensor.
+
+   "tensor.empty" ops cannot be bufferized. They can either be converted to
+   "bufferization.alloc_tensor" or replaced with another tensor (via this
+   transform). "tensor.empty" does not specify the contents of the returned
+   tensor so their results can be replaced with arbitrary tensor values as long
+   as the dimensions match.
+
+   This transformation looks for subset ops that insert a tensor that
+   originates from a "tensor.empty" (as per the reverse use-def chain). Such
+   "tensor.empty" ops are replaced with the destination subset.
+
+   Example:
+
+   .. code::
+
+       %0 = tensor.empty() : tensor<5xf32>
+       %1 = linalg.fill ... outs(%0)
+       %2 = tensor.insert_slice %1 into %t[1][5][1]
+
+   Is rewritten with:
+
+   .. code::
+
+       %0 = tensor.extract_slice %t[1][5][1]
+       %1 = linalg.fill ... outs(%0)
+       %2 = tensor.insert_slice %1 into %t[1][5][1]
+
+   In the above example, the subset op is "tensor.insert_slice". When tracing
+   back the reverse use-def chain of a the source, we end up at a
+   "tensor.empty" op.
+
+   The above example can bufferize without an allocation (in the absence of
+   other conflicts) because there is no longer a ``tensor.empty`` op.
+
+   See ``-eliminate-empty-tensors`` for more details.
+
+   Return modes
+   ------------
+
+   This transform reads the target handle and modifies the payload. It does
+   not produce any handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.bufferization.eliminate_empty_tensors'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: bufferization_eliminate_empty_tensors(target, *, loc=None, ip=None) -> EliminateEmptyTensorsOp
+
+.. py:class:: EmptyTensorToAllocTensorOp(transformed, target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Replace a tensor.empty with a bufferization.tensor_alloc.
+
+   Return modes
+   ------------
+
+   This operation consumes the ``target`` handle and produces the ``transformed``
+   handle. ``target`` is expected to be a ``tensor.empty`` operation. The transform
+   always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.bufferization.empty_tensor_to_alloc_tensor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: bufferization_empty_tensor_to_alloc_tensor(transformed, target, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: OneShotBufferizeOp(transformed, target, *, function_boundary_type_conversion=None, allow_return_allocs_from_loops=None, allow_unknown_ops=None, bufferize_function_boundaries=None, dump_alias_sets=None, test_analysis_only=None, print_conflicts=None, check_parallel_regions=None, memcpy_op=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that the given ``target`` op should be bufferized with One-Shot
+   Bufferize. The bufferization can be configured with various attributes that
+   corresponding to options in ``BufferizationOptions`` and the
+   ``one-shot-bufferize`` pass. More information can be found in the pass
+   documentation.
+
+   The targeted ops must be modules or functions. This is because there is
+   always a single, bufferized replacement op for such targets.
+
+   Note: Only ops that implement ``BufferizableOpInterface`` are bufferized. All
+   other ops are ignored if ``allow_unknown_ops``. If ``allow_unknown_ops`` is
+   unset, this transform fails when an unknown/non-bufferizable op is found.
+   Many ops implement ``BufferizableOpInterface`` via an external model. These
+   external models must be registered when applying this transform op;
+   otherwise, said ops would be considered non-bufferizable.
+
+   Return modes
+   ------------
+
+   This operation consumes the ``target`` handle and produces the ``transformed``
+   handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.bufferization.one_shot_bufferize'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: function_boundary_type_conversion() -> Optional[_ods_ir]
+
+
+   .. py:method:: allow_return_allocs_from_loops() -> _ods_ir
+
+
+   .. py:method:: allow_unknown_ops() -> _ods_ir
+
+
+   .. py:method:: bufferize_function_boundaries() -> _ods_ir
+
+
+   .. py:method:: dump_alias_sets() -> _ods_ir
+
+
+   .. py:method:: test_analysis_only() -> _ods_ir
+
+
+   .. py:method:: print_conflicts() -> _ods_ir
+
+
+   .. py:method:: check_parallel_regions() -> _ods_ir
+
+
+   .. py:method:: memcpy_op() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: bufferization_one_shot_bufferize(transformed, target, *, function_boundary_type_conversion=None, allow_return_allocs_from_loops=None, allow_unknown_ops=None, bufferize_function_boundaries=None, dump_alias_sets=None, test_analysis_only=None, print_conflicts=None, check_parallel_regions=None, memcpy_op=None, loc=None, ip=None) -> _ods_ir
+

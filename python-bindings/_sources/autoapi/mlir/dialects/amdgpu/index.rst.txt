@@ -1,0 +1,2060 @@
+mlir.dialects.amdgpu
+====================
+
+.. py:module:: mlir.dialects.amdgpu
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.amdgpu.DPPOp
+   mlir.dialects.amdgpu.ExtPackedFp8Op
+   mlir.dialects.amdgpu.FatRawBufferCastOp
+   mlir.dialects.amdgpu.GatherToLDSOp
+   mlir.dialects.amdgpu.LDSBarrierOp
+   mlir.dialects.amdgpu.MFMAOp
+   mlir.dialects.amdgpu.MakeDmaBaseOp
+   mlir.dialects.amdgpu.MakeDmaDescriptorOp
+   mlir.dialects.amdgpu.MakeGatherDmaBaseOp
+   mlir.dialects.amdgpu.MemoryCounterWaitOp
+   mlir.dialects.amdgpu.PackedScaledTruncOp
+   mlir.dialects.amdgpu.PackedStochRoundFp8Op
+   mlir.dialects.amdgpu.PackedTrunc2xFp8Op
+   mlir.dialects.amdgpu.PermlaneSwapOp
+   mlir.dialects.amdgpu.RawBufferAtomicCmpswapOp
+   mlir.dialects.amdgpu.RawBufferAtomicFaddOp
+   mlir.dialects.amdgpu.RawBufferAtomicFmaxOp
+   mlir.dialects.amdgpu.RawBufferAtomicSmaxOp
+   mlir.dialects.amdgpu.RawBufferAtomicUminOp
+   mlir.dialects.amdgpu.RawBufferLoadOp
+   mlir.dialects.amdgpu.RawBufferStoreOp
+   mlir.dialects.amdgpu.ScaledExtPackedMatrixOp
+   mlir.dialects.amdgpu.ScaledExtPackedOp
+   mlir.dialects.amdgpu.ScaledMFMAOp
+   mlir.dialects.amdgpu.SchedBarrierOp
+   mlir.dialects.amdgpu.SwizzleBitModeOp
+   mlir.dialects.amdgpu.TransposeLoadOp
+   mlir.dialects.amdgpu.WMMAOp
+   mlir.dialects.amdgpu.AddressSpace
+   mlir.dialects.amdgpu.DPPPerm
+   mlir.dialects.amdgpu.MFMAPermB
+   mlir.dialects.amdgpu.sched_barrier_opt_enum
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.amdgpu.dpp
+   mlir.dialects.amdgpu.ext_packed_fp8
+   mlir.dialects.amdgpu.fat_raw_buffer_cast
+   mlir.dialects.amdgpu.gather_to_lds
+   mlir.dialects.amdgpu.lds_barrier
+   mlir.dialects.amdgpu.mfma
+   mlir.dialects.amdgpu.make_dma_base
+   mlir.dialects.amdgpu.make_dma_descriptor
+   mlir.dialects.amdgpu.make_gather_dma_base
+   mlir.dialects.amdgpu.memory_counter_wait
+   mlir.dialects.amdgpu.packed_scaled_trunc
+   mlir.dialects.amdgpu.packed_stoch_round_fp8
+   mlir.dialects.amdgpu.packed_trunc_2xfp8
+   mlir.dialects.amdgpu.permlane_swap
+   mlir.dialects.amdgpu.raw_buffer_atomic_cmpswap
+   mlir.dialects.amdgpu.raw_buffer_atomic_fadd
+   mlir.dialects.amdgpu.raw_buffer_atomic_fmax
+   mlir.dialects.amdgpu.raw_buffer_atomic_smax
+   mlir.dialects.amdgpu.raw_buffer_atomic_umin
+   mlir.dialects.amdgpu.raw_buffer_load
+   mlir.dialects.amdgpu.raw_buffer_store
+   mlir.dialects.amdgpu.scaled_ext_packed_matrix
+   mlir.dialects.amdgpu.scaled_ext_packed
+   mlir.dialects.amdgpu.scaled_mfma
+   mlir.dialects.amdgpu.sched_barrier
+   mlir.dialects.amdgpu.swizzle_bitmode
+   mlir.dialects.amdgpu.transpose_load
+   mlir.dialects.amdgpu.wmma
+   mlir.dialects.amdgpu.register_attribute_builder
+
+
+Module Contents
+---------------
+
+.. py:class:: DPPOp(old, src, kind, *, permArgument=None, row_mask=None, bank_mask=None, bound_ctrl=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation represents DPP functionality in a GPU program.
+   DPP provides the following operations:
+
+   * Full crossbar in a group of four (``quad_perm``)
+   * Wavefront shift left by one lane (``wave_shl``)
+   * Wavefront shift right by one lane (``wave_shr``)
+   * Wavefront rotate right by one lane (``wave_ror``)
+   * Wavefront rotate left by one lane (``wave_rol``)
+   * Row shift left by 1–15 lanes (``row_shl``)
+   * Row shift right by 1–15 lanes (``row_shr``)
+   * Row rotate right by 1–15 lanes (``row_ror``)
+   * Reverse within a row (``row_mirror``)
+   * Reverse within a half-row (``row_half_mirror``)
+   * Broadcast the 15th lane of each row to the next row (``row_bcast``)
+   * Broadcast lane 31 to rows 2 and 3 (``row_bcast``)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.dpp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: old() -> _ods_ir
+
+
+   .. py:method:: src() -> _ods_ir
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: permArgument() -> Optional[_ods_ir]
+
+
+   .. py:method:: row_mask() -> _ods_ir
+
+
+   .. py:method:: bank_mask() -> _ods_ir
+
+
+   .. py:method:: bound_ctrl() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: dpp(old, src, kind, *, perm_argument=None, row_mask=None, bank_mask=None, bound_ctrl=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExtPackedFp8Op(res, source, index, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extend one or two 8-bit floats in ``source[index]`` to a 32-bit float or
+   two floats and return them.
+
+   This rather unusual signature arises from the fact that AMD GPUs cannot
+   easily work with sub 32-bit quantities, so the compiler intrinsics for
+   extending 8-bit floats (which are, currently, the only way to work with
+   this operation) take packed vectors of 4 such floats.
+
+   If the passed-in vector has fewer than four elements, or the input is scalar,
+   the remaining values in the <4 x i8> will be filled with
+   undefined values as needed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.ext_packed_fp8'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: index() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:function:: ext_packed_fp8(res, source, index, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FatRawBufferCastOp(source, *, validBytes=None, cacheSwizzleStride=None, boundsCheck=None, resetOffset=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Wraps the memory pointed to by ``source`` as a raw buffer fat pointer, or,
+   in LLVM terms, a ``ptr addrspace(7)``, returning a memref that has the same
+   sizes and layout but the ``#amdgpu.address_space<fat_raw_buffer>``
+   address space.
+
+   This memref can be used with standard memref operations like ``memref.load``,
+   ``memref.store``, and ``memref.atomicrmw``, which will be lowered to the relevant
+   buffer intrinsics. (``vector.masked_load/store`` will work once there's backend
+   support for lowering them, and then this document will be updated)
+
+   If ``validBytes`` is given, it is the number of bytes that will be valid as
+   an offset to ``out``. If it is not provided, this will be inferred from
+   the size of the memref during lowering. This size is
+   max_{d = 0 upto rank(source)} (sizes[d] * strides[d]) * sizeof(element type).
+
+   The flags of the buffer descriptor will be set up to enable raw usage -
+   for example, stride = 0, add_tid = 0, and so on. The ``boundsCheck``
+   property determines if bounds checking is enabled or not (on architectures
+   where this can be controlled - that is, on RDNA chips).
+
+   If ``cacheSwizzleStride`` is provided, L1 cache swizzling will be enabled
+   on architectures that support it. This swizzling, unlike the main swizzling
+   mode (whose usage makes a buffer non-raw) does not affect index calculation,
+   but does affect cache behavior. Mixing access between cache-swizzled raw
+   buffers and other forms of memory access, like ordinary pointer loads or
+   unswizzled buffer pointers can cause incorrect behavior and must be avoided.
+
+   This operation preserves the sizes, strides, and offset of the input
+   memref - they'll be added in by ``memref.load`` later. However, if
+   ``resetOffset`` is set, that offset will be added to the base pointer.
+   If the value of the memref's offset is not uniform (independent of the lane/thread ID),
+   this will lead to substantially decreased performance due to the need for
+   a waterfall loop on the base address of the buffer resource.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.fat_raw_buffer_cast'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [1, 0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: validBytes() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: cacheSwizzleStride() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: resetOffset() -> bool
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: fat_raw_buffer_cast(source, *, valid_bytes=None, cache_swizzle_stride=None, bounds_check=None, reset_offset=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GatherToLDSOp(src, srcIndices, dst, dstIndices, transferType, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.gather_to_lds`` op is a wrapper around the ``global_load_lds`` instructions.
+
+   Operands:
+
+   * ``$src``: global memory (including fat buffer) memref to read from.
+   * ``$srcIndices``: indices into ``$src`` to read from for this thread.
+   * ``$dst``: LDS memory memref to write to.
+   * ``$dstIndices``: base indices into ``$dst`` to write to for the subgroup of this thread.
+   The elements gathered by the subgroup will be written contiguously in order of lane ID
+   starting at ``$dst[$dstIndices]``. Byte-sized (ex. i8) or short-sized (ex. i16)
+   types will be zero-padded/extended to 32 bits before being written. 96-bit types
+   (ex. vector<3xf32>) will be zero-padded to 128 bits before being written. Only the
+   offsets held by lane 0 are used.
+   * ``$transferType``: type of the data to be transferred by each thread. This is used to determine
+   the size of the data to be transferred and the number of threads in the subgroup.
+   The transfer type must be a scalar type or a vector type with a single element type.
+
+   The ``$dst``, along with its indices, points to the memory location the subgroup of this thread
+   will write to.
+
+   Note: only supported on gfx9 and gfx10.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.gather_to_lds'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: srcIndices() -> _ods_ir
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dstIndices() -> _ods_ir
+
+
+   .. py:method:: transferType() -> _ods_ir
+
+
+.. py:function:: gather_to_lds(src, src_indices, dst, dst_indices, transfer_type, *, loc=None, ip=None) -> GatherToLDSOp
+
+.. py:class:: LDSBarrierOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``amdgpu.lds_barrier`` is both a barrier (all workitems in a workgroup must reach
+   the barrier before any of them may proceed past it) and a wait for all
+   operations that affect the Local Data Store (LDS) issued from that wrokgroup
+   to complete before the workgroup may continue. Since the LDS is per-workgroup
+   memory, this barrier may be used, for example, to ensure all workitems have
+   written data to LDS before any workitem attempts to read from it.
+
+   Note that ``lds_barrier`` does **not** force reads to or from global memory
+   to complete before execution continues. Therefore, it should be used when
+   operations on global memory can be issued far in advance of when their results
+   are used (for example, by writing them to LDS).
+
+   WARNING: On architectures that do not support the BackOffBarrier feature,
+   (those which will implement this barrier by emitting inline assembly),
+   use of this operation will impede the usabiliity of memory watches (including
+   breakpoints set on variables) when debugging.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.lds_barrier'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: lds_barrier(*, loc=None, ip=None) -> LDSBarrierOp
+
+.. py:class:: MFMAOp(m, n, k, sourceA, sourceB, destC, *, blocks=None, cbsz=None, abid=None, blgp=None, reducePrecision=None, negateA=None, negateB=None, negateC=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.mfma`` op is an MLIR wrapper around intrinsics
+   for various ``mfma`` instructions in the CDNA architecture, which perform
+   multiple outer products in order to allow fast matrix multiplication.
+
+   The wrapper will select an appropriate ``mfma`` instruction, if one is available,
+   based on the provided ``m``, ``k``, ``n``, and ``nBlks`` attributes, along with the
+   types of the source and destination arguments.
+
+   For information on the layouts of the input and output matrices (which are stored
+   in ``sourceA``, ``sourceB``, ``destC``, and ``destD``), see the CDNA ISA documentation.
+
+   The ``cbsz``, ``abid``, and ``blgp`` parameters control how the lanes of the wave
+   are permuted when matrix data is being loaded: ``blgp`` can be any number of
+   fixed permutations, ``cbsz`` specifies the log_2 of the number of chunks the lanes
+   holding sourceA are split into, and ``abid`` selects one of those chunks.
+
+   Note, this wrapper allows specifying ``vector<4Kxi8>`` arguments to MFMA
+   intrinsics that take an integer type of width ``4K``. For example,
+   one can provide a vector<4xi8> as an argument to an MFMA instruction that
+   logically takes 4 i8s but whose intrinsics are specified to take an i32.
+   In these cases, the bytes in the vector will be concatenated in little-endian
+   order (that is, v[0] will go to arg[7:0], v[1] to arg[15:8] and so on).
+
+   The negateA, negateB, and negateC flags are only supported for double-precision
+   operations on gfx94x.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = amdgpu.mfma 16x16x16 %matA * %matB + %matC
+           : vector<4xf16>, vector<4xf16>, vector<4xf32>
+       
+         %1 = amdgpu.mfma 32x32x1 %matD * %matE + %matF
+           { abid = 1 : i32, cbsz = 1 : i32, blocks = 2 : i32 }
+           blgp = bcast_second_32 : f32, f32, vector<32xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.mfma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sourceA() -> _ods_ir
+
+
+   .. py:method:: sourceB() -> _ods_ir
+
+
+   .. py:method:: destC() -> _ods_ir
+
+
+   .. py:method:: m() -> _ods_ir
+
+
+   .. py:method:: n() -> _ods_ir
+
+
+   .. py:method:: k() -> _ods_ir
+
+
+   .. py:method:: blocks() -> _ods_ir
+
+
+   .. py:method:: cbsz() -> _ods_ir
+
+
+   .. py:method:: abid() -> _ods_ir
+
+
+   .. py:method:: blgp() -> _ods_ir
+
+
+   .. py:method:: reducePrecision() -> bool
+
+
+   .. py:method:: negateA() -> bool
+
+
+   .. py:method:: negateB() -> bool
+
+
+   .. py:method:: negateC() -> bool
+
+
+   .. py:method:: destD() -> _ods_ir
+
+
+.. py:function:: mfma(m, n, k, source_a, source_b, dest_c, *, blocks=None, cbsz=None, abid=None, blgp=None, reduce_precision=None, negate_a=None, negate_b=None, negate_c=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MakeDmaBaseOp(base, global_, global_indices, lds, lds_indices, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation creates a pair of addresses that will be used by tensor_load_to_lds
+   and tensor_store_from_lds.
+
+   This operation creates a value corresponding to the tensor descriptor (D#) group 0
+   found in TensorLoadToLDSOp and TensorStoreFromLDSOp in the rocdl dialect.
+
+   For example:
+
+   .. code:: mlir
+
+         %base = amdgpu.make_dma_base %global[%idx0, %idx1], %lds[%idx2, %idx3] : memref<64x64xi32>, memref<64x64xi32, #gpu.address_space<workgroup>> -> !amdgpu.tdm_base<i32>
+         %descriptor = amdgpu.make_dma_descriptor %base globalSize [2, 2] globalStride [2, 1] sharedSize [2, 2] : !amdgpu.tdm_base<i32> -> !amdgpu.tdm_descriptor
+         amdgpu.tensor_load_to_lds %descriptor : !amdgpu.tdm_descriptor
+
+   to
+
+   .. code:: mlir
+
+         // pseudo-code
+         %global_base = llvm.extractvalue %global_memref[1]
+         %global_address = llvm.get_element_ptr ...
+       
+         %lds_base = llvm.extractvalue %lds_memref[1]
+         %lds_address = llvm.get_element_ptr ...
+       
+         // Definition of %base
+         %undef = llvm.mlir.undef : vector<4xi32>
+         %v0 = llvm.insertelement %15, %undef[0] : vector<4xi32>
+         %v1 = llvm.insertelement %lds_address, %v0[1] : vector<4xi32>
+         %v2 = llvm.insertelement %global_address_low, %v1[2] : vector<4xi32>
+         %base = llvm.insertelement %global_address_high, %v2[3] : vector<4xi32>
+       
+         rocdl.tensor.load.to.lds %base, %dgroup1, %dgroup2, %dgroup3 cachepolicy 0 : vector<4xi32>, vector<8xi32>
+
+   These tensor DMA operations were introduced in gfx1250.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.make_dma_base'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: global_() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: global_indices() -> _ods_ir
+
+
+   .. py:method:: lds() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: lds_indices() -> _ods_ir
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+.. py:function:: make_dma_base(base, global_, global_indices, lds, lds_indices, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MakeDmaDescriptorOp(base, global_dynamic_sizes, global_static_sizes, global_dynamic_strides, global_static_strides, shared_dynamic_sizes, shared_static_sizes, atomic_barrier_indices, *, workgroup_mask=None, early_timeout=None, pad_amount=None, pad_interval=None, atomic_barrier_address=None, global_increment=None, lds_increment=None, iteration_count=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Make all descriptor groups needed by tensor memory operations.
+
+   The $base operand corresponds to the base pair addresses, one must be an address in LDS
+   while the other must be a global memory location.
+
+   $global_{static/dynamic}*sizes determine the size of the tensor.
+   $global*{static/dynamic}*strides determine the strides of the tensor.
+   $shared*{static/dynamic}_sizes determines the size of the tile.
+
+   $workgroup_mask broadcast load to workgroups inside of a workgroup cluster
+   (0 = do not broadcast result to workgroup, 1 = broadcast result to workgroup). Ignored for stores.
+   An all zeros mask is interpreted as a non-broadcasted load.
+
+   $early_timeout return data to requesters as soon as cache supplies it.
+
+   Padding can be applied to the LDS address when copying from memory to LDS,
+   but not when copying from LDS to memory.
+   The values in the padded target addresses remain the same as before the operation was applied.
+   $pad_interval must be a power of two contained in [2, 256].
+   $pad_amount must be a value contained in [1, 128].
+
+   $atomic_barrier_address must be aligned to 8 bytes.
+
+   2D and 3D tensors may be iterated over by setting $global_increment, $lds_increment, and $iteration_count.
+   $global_increment determines how much to increment the starting global memory address per iteration in units of the $base's element type.
+   $lds_increment determines how much to increment the starting LDS address per iteration in units of the $base's element type.
+   $iterate_count determines how many times to iterate, it must be a value in the inclusive interval [1, 256].
+
+   .. code:: mlir
+
+        // Example of moving a two-dimensional tensor to LDS.
+        %base = amdgpu.make_dma_base %global[0, 0], %lds[0, 0] : memref<64x64xi32>, memref<64x64xi32, #gpu.address_space<workgroup>> -> !amdgpu.tdm_base<i32>
+        %descriptor = amdgpu.make_dma_descriptor %base globalSize [64, 64] globalStride [64, 1] sharedSize [64, 64] : !amdgpu.tdm_base<i32> -> !amdgpu.tdm_descriptor
+        amdgpu.tensor_load_to_lds %descriptor : !amdgpu.tdm_descriptor
+       
+        // Example of moving a two dimension tensor to LDS where padding is applied after every integer.
+        %base = amdgpu.make_dma_base %global[0, 0], %lds[0, 0] : memref<32x32xi32>, memref<64x64xi32, #gpu.address_space<workgroup>> -> !amdgpu.tdm_base<i32>
+        %descriptor = amdgpu.make_dma_descriptor %base globalSize [32, 32] globalStride [32, 1] sharedSize [64, 64] padShared(%pad_amount every %pad_interval) : !amdgpu.tdm_base<i32> -> !amdgpu.tdm_descriptor
+        amdgpu.tensor_load_to_lds %descriptor : !amdgpu.tdm_descriptor
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.make_dma_descriptor'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+   .. py:method:: global_dynamic_sizes() -> _ods_ir
+
+
+   .. py:method:: global_dynamic_strides() -> _ods_ir
+
+
+   .. py:method:: shared_dynamic_sizes() -> _ods_ir
+
+
+   .. py:method:: workgroup_mask() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: early_timeout() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: pad_amount() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: pad_interval() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: atomic_barrier_address() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: atomic_barrier_indices() -> _ods_ir
+
+
+   .. py:method:: global_increment() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: lds_increment() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: iteration_count() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: global_static_sizes() -> _ods_ir
+
+
+   .. py:method:: global_static_strides() -> _ods_ir
+
+
+   .. py:method:: shared_static_sizes() -> _ods_ir
+
+
+   .. py:method:: desc() -> _ods_ir
+
+
+.. py:function:: make_dma_descriptor(base, global_dynamic_sizes, global_static_sizes, global_dynamic_strides, global_static_strides, shared_dynamic_sizes, shared_static_sizes, atomic_barrier_indices, *, workgroup_mask=None, early_timeout=None, pad_amount=None, pad_interval=None, atomic_barrier_address=None, global_increment=None, lds_increment=None, iteration_count=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MakeGatherDmaBaseOp(base, global_, global_indices, lds, lds_indices, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation creates a pair of addresses that will be used by ``tensor_load_to_lds``
+   and ``tensor_store_from_lds``.
+
+   This operation creates a value corresponding to the tensor descriptor (D#) group 0
+   found in TensorLoadToLDSOp and TensorStoreFromLDSOp in the rocdl dialect.
+
+   Unlike ``make_dma_base``, this operation returns ``!amdgpu.tdm_gather_base<$element_type, $index_type>``
+   which is only compatible with ``make_gather_dma_descriptor``. Using the descriptor returned
+   by ``make_gather_dma_descriptor`` will set the ``tensor_load_to_lds`` and ``tensor_store_from_lds`` to gather mode.
+
+   .. code:: mlir
+
+         %base = amdgpu.make_gather_dma_base %global[%idx0, %idx1], %lds[%idx2, %idx3] : memref<64x64xi32>, memref<64x64xi32, #gpu.address_space<workgroup>> -> !amdgpu.tdm_gather_base<i32, i16>
+         // %indices : i16
+         %descriptor = amdgpu.make_gather_dma_descriptor %base[%indices] globalSize [2, 2] globalStride [2, 1] sharedSize [2, 2] : !amdgpu.tdm_gather_base<i32, i16>, i16 -> !amdgpu.tdm_descriptor
+         amdgpu.tensor_load_to_lds %descriptor : !amdgpu.tdm_descriptor
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.make_gather_dma_base'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: global_() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: global_indices() -> _ods_ir
+
+
+   .. py:method:: lds() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: lds_indices() -> _ods_ir
+
+
+   .. py:method:: base() -> _ods_ir
+
+
+.. py:function:: make_gather_dma_base(base, global_, global_indices, lds, lds_indices, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MemoryCounterWaitOp(*, load=None, store=None, ds=None, exp=None, tensor=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Wait for the specified counters to be less-than or equal-to the provided
+   values before continuing.
+
+   Counters can lower to different instructions on different architectires,
+   including clamping to the some HW supported max value or combining multiple
+   counters into one.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.memory_counter_wait'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: load() -> Optional[_ods_ir]
+
+
+   .. py:method:: store() -> Optional[_ods_ir]
+
+
+   .. py:method:: ds() -> Optional[_ods_ir]
+
+
+   .. py:method:: exp() -> Optional[_ods_ir]
+
+
+   .. py:method:: tensor() -> Optional[_ods_ir]
+
+
+.. py:function:: memory_counter_wait(*, load=None, store=None, ds=None, exp=None, tensor=None, loc=None, ip=None) -> MemoryCounterWaitOp
+
+.. py:class:: PackedScaledTruncOp(res, source, scale, index, *, existing=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Scale and round the inputs ``source`` (which is undefined if not
+   specified) into the low or high word (bottom two or top two) elements
+   of the returned vector, keeping the other two elements of ``existing``
+   unchanged if present (or undefined if it was not passed in).
+
+   The reason for this odd signature is that AMD GPUs cannot easily work with
+   sub-registers, and so the conversion intrinsics take 32-bit wide
+   packed vectors of float values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.packed_scaled_trunc'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: scale() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: existing() -> Optional[_ods_ir]
+
+
+   .. py:method:: index() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:function:: packed_scaled_trunc(res, source, scale, index, *, existing=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PackedStochRoundFp8Op(res, source, stochiasticParam, storeIndex, *, existing=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Round the input ``source``, adding in ``stochiasticParam``, and place it into
+   the ``storeIndex``th element of ``res``.
+
+   If ``existing`` is passed in, elements of ``res`` other than the one at ``storeIndex``
+   are copied from ``existing``.
+
+   The reason for this odd signature is that AMD GPUs cannot easily work with
+   sub-registers, and so the conversion intrinsics (which are currently the
+   only way to work with 8-bit float types) take packed vectors of 4 8-bit
+   values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.packed_stoch_round_fp8'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: stochiasticParam() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: existing() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: storeIndex() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: packed_stoch_round_fp8(res, source, stochiastic_param, store_index, *, existing=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PackedTrunc2xFp8Op(res, sourceA, wordIndex, *, sourceB=None, existing=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Round the inputs ``sourceA`` and ``sourceB`` (which is undefined if not
+   specified) into the low or high word (bottom two or top two) elements
+   of the returned vector, keeping the other two elements of ``existing``
+   unchanged if present (or undefined if it was not passed in).
+
+   The reason for this odd signature is that AMD GPUs cannot easily work with
+   sub-registers, and so the conversion intrinsics (which are currently the
+   only way to work with 8-bit float types) take packed vectors of 4 8-bit
+   values.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.packed_trunc_2xfp8'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [1, 0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sourceA() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: sourceB() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: existing() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: wordIndex() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: packed_trunc_2xfp8(res, source_a, word_index, *, source_b=None, existing=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PermlaneSwapOp(src, row_length, *, fetch_inactive=None, bound_ctrl=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   High-level wrapper on ``rocdl.permlane{16,32}.swap`` variants for permutations
+   on rows of lanes in a subgroup.
+
+   Supports arbitrary int/float/vector types, which will be repacked to i32 and
+   one or more ``rocdl.permlane_swap`` ops during lowering.
+   Supported lane permutations:
+
+   * Swap the data between odd and even rows of 16 lanes
+   * Swap the data between the first 32 lanes and the last 32 lanes
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = amdgpu.permlane_swap %src 16 : f16
+       %1 = amdgpu.permlane_swap %src 32 { fetch_inactive = true, bound_ctrl = true } : f16
+
+   Operands:
+
+   * ``$src``: Vector register to permute across lanes of the subgroup.
+   * ``$row_length``: The length of a row to permute in number of lanes (valid values are 16 and 32).
+   * ``$fetch_inactive``: Optional. Used to dertermine behavior of a fetch from a disabled lane.
+   ``fetch_inactive = false``: If the source lane is disabled, use ``bound_ctrl`` to determine the source value.
+   ``fetch_inactive = true``: If the source lane is disabled, fetch the source value anyway (ignoring ``bound_ctrl``).
+   * ``$bound_ctrl``: Optional. Used to determine what a thread should do if its source operand is from
+   a disabled lane: use the value zero, or disable the write.
+   ``bound_ctrl = false``: Do not write when source is from a disabled lane
+   ``bound_ctrl = true``: Use zero as input if source is from a disabled lane
+
+   Note: Lowering is only supported on gfx950 and up.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.permlane_swap'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir
+
+
+   .. py:method:: row_length() -> _ods_ir
+
+
+   .. py:method:: fetch_inactive() -> _ods_ir
+
+
+   .. py:method:: bound_ctrl() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: permlane_swap(src, row_length, *, fetch_inactive=None, bound_ctrl=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RawBufferAtomicCmpswapOp(src, cmp, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_atomic_cmpswap`` op is a wrapper around the
+   buffer-based atomic compare-and-swap min available on AMD GPUs.
+
+   The index into the buffer is computed as for ``memref.store`` with the addition
+   of ``indexOffset`` (which is used to aid in emitting vectorized code) and,
+   if present ``sgprOffset`` (which is added after bounds checks and includes
+   any non-zero offset on the memref type).
+
+   All indexing components are given in terms of the memref's element size, not
+   the byte lengths required by the intrinsic.
+
+   Out of bounds atomic operations are ignored in hardware.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_atomic_cmpswap'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir
+
+
+   .. py:method:: cmp() -> _ods_ir
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:function:: raw_buffer_atomic_cmpswap(src, cmp, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RawBufferAtomicFaddOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_atomic_fadd`` op is a wrapper around the
+   buffer-based atomic floating point addition available on the MI-* series
+   of AMD GPUs.
+
+   The index into the buffer is computed as for ``memref.store`` with the addition
+   of ``indexOffset`` (which is used to aid in emitting vectorized code) and,
+   if present ``sgprOffset`` (which is added after bounds checks and includes
+   any non-zero offset on the memref type).
+
+   All indexing components are given in terms of the memref's element size, not
+   the byte lengths required by the intrinsic.
+
+   Out of bounds atomic operations are ignored in hardware.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_atomic_fadd'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+.. py:function:: raw_buffer_atomic_fadd(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> RawBufferAtomicFaddOp
+
+.. py:class:: RawBufferAtomicFmaxOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_atomic_fmax`` op is a wrapper around the
+   buffer-based atomic floating point max available on AMD GPUs (except GFX9).
+
+   The index into the buffer is computed as for ``memref.store`` with the addition
+   of ``indexOffset`` (which is used to aid in emitting vectorized code) and,
+   if present ``sgprOffset`` (which is added after bounds checks and includes
+   any non-zero offset on the memref type).
+
+   All indexing components are given in terms of the memref's element size, not
+   the byte lengths required by the intrinsic.
+
+   Out of bounds atomic operations are ignored in hardware.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_atomic_fmax'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+.. py:function:: raw_buffer_atomic_fmax(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> RawBufferAtomicFmaxOp
+
+.. py:class:: RawBufferAtomicSmaxOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_atomic_smax`` op is a wrapper around the
+   buffer-based atomic signed integer max available on AMD GPUs.
+
+   The index into the buffer is computed as for ``memref.store`` with the addition
+   of ``indexOffset`` (which is used to aid in emitting vectorized code) and,
+   if present ``sgprOffset`` (which is added after bounds checks and includes
+   any non-zero offset on the memref type).
+
+   All indexing components are given in terms of the memref's element size, not
+   the byte lengths required by the intrinsic.
+
+   Out of bounds atomic operations are ignored in hardware.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_atomic_smax'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+.. py:function:: raw_buffer_atomic_smax(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> RawBufferAtomicSmaxOp
+
+.. py:class:: RawBufferAtomicUminOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_atomic_umin`` op is a wrapper around the
+   buffer-based atomic signed integer min available on AMD GPUs.
+
+   The index into the buffer is computed as for ``memref.store`` with the addition
+   of ``indexOffset`` (which is used to aid in emitting vectorized code) and,
+   if present ``sgprOffset`` (which is added after bounds checks and includes
+   any non-zero offset on the memref type).
+
+   All indexing components are given in terms of the memref's element size, not
+   the byte lengths required by the intrinsic.
+
+   Out of bounds atomic operations are ignored in hardware.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_atomic_umin'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+.. py:function:: raw_buffer_atomic_umin(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> RawBufferAtomicUminOp
+
+.. py:class:: RawBufferLoadOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_load`` op is a wrapper around the buffer load intrinsics
+   available on AMD GPUs, including extensions in newer GPUs.
+
+   The index into the buffer is computed as for ``memref.load`` with the additon
+   of ``indexOffset`` and ``sgprOffset`` (which **may or may not** be considered
+   in bounds checks and includes any offset present on the memref type if it's
+   non-zero).
+
+   All indices and offsets are in units of the memref's data type and are
+   converted to bytes during lowering.
+
+   When a load is out of bounds, the instruction returns zero.
+   Partially-out of bounds have chipset-dependent behavior: whether reading
+   2 elements starting at index 7 of a ``memref<8xf32>`` returns the last element
+   in the first vector component depends on the architecture.
+
+   The memref struct is converted into a buffer resource (a V#) and the arguments
+   are translated to intrinsic arguments as follows:
+
+   * The base address of the buffer is the base address of the memref
+   * The stride is 0 to enable raw mode
+   * The number of records is the size of the memref, in bytes
+   In the case of dynamically-shaped memrefs, this is computed at runtime
+   as max_d (size(d) * stride(d)) * sizeof(elementType(memref))
+   * The offset enable bit is 1, the index enable bit is 0.
+   * The thread ID addition bit is off
+   * If ``boundsCheck`` is false and the target chipset is RDNA, OOB_SELECT is set
+   to 2 to disable bounds checks, otherwise it is 3
+   * The cache coherency bits are off
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_load'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:function:: raw_buffer_load(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RawBufferStoreOp(value, memref, indices, *, boundsCheck=None, indexOffset=None, sgprOffset=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.raw_buffer_store`` op is a wrapper around the buffer store
+   intrinsics available on AMD GPUs, including extensions in newer GPUs.
+
+   The store index is computed as in ``memref.store`` with the addition of
+   ``indexOffset`` (which is included for uniformity with atomics and may be useful
+   when writing vectorized code) and ``sgprOffset`` (which is added after bounds
+   checks and implicitly includes the offset of the memref type if non-zero).
+   All index components are in terms of the elements of the memref, not bytes,
+   and are scaled up appropriately.
+
+   Out of bounds stores are ignored in hardware.
+   Wthether a vector write that includes some in-bounds and soeme out-of-bounds
+   components is partically completed is chipset-dependent.
+
+   See ``amdgpu.raw_buffer_load`` for a description of how the underlying
+   instruction is constructed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.raw_buffer_store'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: memref() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: sgprOffset() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: boundsCheck() -> _ods_ir
+
+
+   .. py:method:: indexOffset() -> Optional[_ods_ir]
+
+
+.. py:function:: raw_buffer_store(value, memref, indices, *, bounds_check=None, index_offset=None, sgpr_offset=None, loc=None, ip=None) -> RawBufferStoreOp
+
+.. py:class:: ScaledExtPackedMatrixOp(res, source, scale, blockSize, firstScaleLane, firstScaleByte, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extend matrix of microfloats (8 or 16 elements per lane) using a set of scales
+   that may be stored on other lanes.
+
+   The scales applied to the input microfloats are stored in bytes which
+   come from the ``scales`` input provided in a *half* of the wave identified
+   by ``firstScaleLane``. The bytes used is selected by ``firstScaleByte`` and depends
+   on the type of ``source``. The 16 vectors in consecutive lanes starting from
+   ``firstScaleLane`` (which we'll call the scale vectors) will be used by both
+   halves of the wave (with lane L reading from L % 16'th scale vector).
+
+   When ``source`` is either F4E2M1FN, F6E2M3FN, or F6E3M2FN each half of the
+   wave will use a different byte. The first one being ``firstScaleByte`` and
+   the second one being ``firstScaleByte`` + 1. When the block size is 32,
+   ``firstScaleByte`` can be either 0 or 2, selecting halves of the scale vectors.
+   Lanes 0-15 will read from ``firstScaleByte`` and lanes 16-31 will read
+   from ``firstScaleByte`` + 1.
+
+   For example:
+
+   .. code:: mlir
+
+       // Input: 8-element vector of F8E4M3FN, converting to F32
+       // Lanes 0-15 read from byte 0, lanes 16-31 read from byte 1
+       %result = amdgpu.scaled_ext_packed_matrix %source scale(%scales)
+         blockSize(32) firstScaleLane(0) firstScaleByte(0)
+         : vector<8xf8E4M3FN>, vector<4xf8E8M0FNU> -> vector<8xf32>
+       
+       // Input: 16-element vector of F6E2M3FN, converting to F16
+       // Lanes 0-15 read from byte 2, lanes 16-31 read from byte 3
+       %result = amdgpu.scaled_ext_packed_matrix %source scale(%scales)
+         blockSize(32) firstScaleLane(16) firstScaleByte(2)
+         : vector<16xf6E2M3FN>, vector<4xf8E8M0FNU> -> vector<16xf16>
+
+   When ``source`` is either F4E2M1FN, F6E2M3FN, or F6E3M2FN and
+   the block size is 16, ``firstScaleByte`` can be 0 or 1.
+   Lanes 0-15 read from the ``firstScaleByte``th element of the scale vectors,
+   while lanes 16-31 read from ``firstScaleByte`` + 2.
+   For example:
+
+   .. code:: mlir
+
+       // Input: 8-element vector of F8E5M2, converting to BF16
+       // Lanes 0-15 read from byte 0, lanes 16-31 read from byte 2 (0+2)
+       %result = amdgpu.scaled_ext_packed_matrix %source scale(%scales)
+         blockSize(16) firstScaleLane(0) firstScaleByte(0)
+         : vector<8xf8E5M2>, vector<4xf8E8M0FNU> -> vector<8xbf16>
+       
+       // Input: 16-element vector of F6E3M2FN, converting to F32
+       // Lanes 0-15 read from byte 1, lanes 16-31 read from byte 3 (1+2)
+       %result = amdgpu.scaled_ext_packed_matrix %source scale(%scales)
+         blockSize(16) firstScaleLane(16) firstScaleByte(1)
+         : vector<16xf6E3M2FN>, vector<4xf8E8M0FNU> -> vector<16xf32>
+
+   Note: the layout for the scales generally mirrors how the WMMA
+   instructions use for matrix scales. These selection operands allows
+   one to choose portions of the matrix to convert.
+
+   When ``source`` is either F8E4M3FN or F8E5M2 and ``blockSize`` is 32,
+   then the same byte will be used by both halves of the wave.
+   In this case, ``firstScaleByte`` can be any value from 0 to 3.
+
+   When ``source`` is either F8E4M3FN or F8E5M2 and ``blockSize`` is 16,
+   following combinations are allowed:
+
+   * ``firstScaleLane(0), firstScaleByte(0)``
+   * ``firstScaleLane(16), firstScaleByte(2)``
+   all other combinations are reserved.
+
+   Available on gfx1250+.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.scaled_ext_packed_matrix'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: scale() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: blockSize() -> _ods_ir
+
+
+   .. py:method:: firstScaleLane() -> _ods_ir
+
+
+   .. py:method:: firstScaleByte() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:function:: scaled_ext_packed_matrix(res, source, scale, block_size, first_scale_lane, first_scale_byte, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScaledExtPackedOp(res, source, scale, index, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extend and scale two packed floats in ``source[index]`` to two floats and
+   return them.
+
+   This rather unusual signature arises from the fact that AMD GPUs cannot
+   easily work with sub 32-bit quantities, so the compiler intrinsics for
+   extending 8-bit floats (which are, currently, the only way to work with
+   this operation) take packed vectors of 2 such floats.
+
+   If the passed-in vector has fewer than two elements, or the input is scalar,
+   the remaining values in the <2 x i8> will be filled with
+   undefined values as needed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.scaled_ext_packed'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: scale() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: index() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:function:: scaled_ext_packed(res, source, scale, index, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ScaledMFMAOp(m, n, k, sourceA, sourceB, destC, scalesA, scalesB, scalesIdxA, scalesIdxB, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.scaled_mfma`` op is an MLIR wrapper around intrinsics
+   for various scaled versions of ``mfma`` instructions in the CDNA architecture, which
+   perform multiple outer products in order to allow fast matrix multiplication.
+
+   The wrapper will select an appropriate ``mfma`` instruction, if one is available,
+   based on the provided ``m``, ``k``, ``n``, and ``nBlks`` attributes, along with the
+   types of the source and destination arguments.
+
+   Note, this wrapper allows specifying ``vector<4Kxi8>`` arguments to MFMA
+   intrinsics that take an integer type of width ``4K``. For example,
+   one can provide a ``vector<4xi8>`` as an argument to an MFMA instruction that
+   logically takes 4 i8s but whose intrinsics are specified to take an i32.
+   In these cases, the bytes in the vector will be concatenated in little-endian
+   order (that is, v[0] will go to arg[7:0], v[1] to arg[15:8] and so on).
+
+   This wrapper takes inspiration from ``amdgpu.mfma``, but has some key differences:
+
+   * ``amdgpu.scaled_mfma`` operates on fp4 (f4E2M1FN), fp6 (f6E2M3FN and f6E3M2FN) and
+   fp8 (f8E4M3FN and f8E5M2) types using either M=N=16, K=128 or M=N=32, K=64 as
+   their tile size.
+   * ``amdgpu.scaled_mfma`` does not support broadcasting. So, ``cbsz``, ``abid``, and ``blgp``
+   are omitted from this wrapper.
+   * The ``negateA``, ``negateB``, and ``negateC`` flags in ``amdgpu.mfma`` are only supported
+   for double-precision operations on gfx94x and so are not included here.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = amdgpu.scaled_mfma 32x32x64 (%arg0[0] * %arg1) * (%arg0[1] * %arg1) + %arg2
+           : vector<4xf8E8M0FNU>, vector<32xf6E2M3FN>, f8E8M0FNU, vector<32xf6E2M3FN>, vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.scaled_mfma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sourceA() -> _ods_ir
+
+
+   .. py:method:: sourceB() -> _ods_ir
+
+
+   .. py:method:: destC() -> _ods_ir
+
+
+   .. py:method:: scalesA() -> _ods_ir
+
+
+   .. py:method:: scalesB() -> _ods_ir
+
+
+   .. py:method:: m() -> _ods_ir
+
+
+   .. py:method:: n() -> _ods_ir
+
+
+   .. py:method:: k() -> _ods_ir
+
+
+   .. py:method:: scalesIdxA() -> _ods_ir
+
+
+   .. py:method:: scalesIdxB() -> _ods_ir
+
+
+   .. py:method:: destD() -> _ods_ir
+
+
+.. py:function:: scaled_mfma(m, n, k, source_a, source_b, dest_c, scales_a, scales_b, scales_idx_a, scales_idx_b, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SchedBarrierOp(opts, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``amdgpu.sched_barrier`` serves as a barrier that could be
+   configured to restrict movements of instructions through it as
+   defined by sched_barrier_opts.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.sched_barrier'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: opts() -> _ods_ir
+
+
+.. py:function:: sched_barrier(opts, *, loc=None, ip=None) -> SchedBarrierOp
+
+.. py:class:: SwizzleBitModeOp(src, and_mask, or_mask, xor_mask, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   High-level wrapper on bitmode ``rocdl.ds_swizzle`` op, masks are represented
+   as separate fields so user won't need to do manual bitpacking.
+
+   Supports arbitrary int/float/vector types, which will be repacked to i32 and
+   one or more ``rocdl.ds_swizzle`` ops during lowering.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.swizzle_bitmode'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir
+
+
+   .. py:method:: and_mask() -> _ods_ir
+
+
+   .. py:method:: or_mask() -> _ods_ir
+
+
+   .. py:method:: xor_mask() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: swizzle_bitmode(src, and_mask, or_mask, xor_mask, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TransposeLoadOp(result, src, srcIndices, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.transpose_load`` op is a wrapper around the ``ds_read_tr`` instructions.
+   The transpose load op represents a subgroup load from LDS memory,
+   where the subgroup of threads collectively reads a matrix from the source
+   memref, with each thread reading a vector of the matrix, and gets a transposed matrix
+   in as the result. That is, each thread reads a vector of the col-major matrix at different
+   indices, and the thread's read result is a vector of the corresponding row of the transposed
+   matrix.
+
+   This op is a direct wrapper around the ROCDL ``ds_read_tr`` family intrinsics. Please refer
+   to the CDNA4 ISA documentation for more details about its exact semantics.
+
+   Format example:
+
+   .. code::
+
+       %0 = amdgpu.transpose_load %src[%srcIndices] : memref<128x256xf16> -> vector<4xf16>
+
+   Operands:
+
+   * ``$src``: LDS memref to read from.
+   * ``$srcIndices``: indices into ``$src`` to read from for this thread.
+   * ``$result``: target register this transpose load instruction will write to.
+
+   Note: Lowering is only supported on gfx950 and up.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.transpose_load'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: srcIndices() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: transpose_load(result, src, src_indices, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: WMMAOp(m, n, k, sourceA, sourceB, destC, *, subwordOffset=None, unsignedA=None, unsignedB=None, clamp=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``amdgpu.wmma`` op is an MLIR wrapper around intrinsics for various ``wmma``
+   instructions in the AMDGPU architecture, which perform matrix multiplication.
+
+   On gfx11/RDNA3, wmma intrinsics have M=N=K=16 dimensions.
+
+   On gfx12/RDNA4, wmma intrinsics have M=N=16 dimensions and support K=16 for
+   all element types, and K=32 for i4 sources.
+
+   On gfx1250, wmma intrinsics have M=N=16 and K dimensions of 4, 32, 64, or 128,
+   depending on the element types.
+
+   On gfx11/RDNA3, emitting f16->f16 (or bf16->bf16) wmma the output is a 16xf16
+   (or 16xbf16) vector containing only 8 valid values:
+
+   * If ``subwordOffset`` is 0, then the output is stored at indices 0, 2, 4, ..., 14.
+   * If ``subwordOffset`` is 1, then the output is stored at indices 1, 3, 5, ..., 15.
+   On gfx12/RDNA4 and gfx1250, the result is instead returned as vector where all
+   the values are valid and the ``subwordOffset`` must be ``0``, as it cannot be used.
+
+   ``unsignedA`` and ``unsignedB`` flag that the ``int8`` LLVM inputs are unsigned.
+
+   The ``clamp`` flag is used to saturate the output of type T to ``numeric_limits<T>::max()``
+   in case of overflow.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = amdgpu.wmma 16x16x16 %matA * %matB + %matC : vector<8xf16>, vector<8xf16>, vector<8xf16>
+       
+         %1 = amdgpu.wmma 16x16x64 %matD * %matE + %matF : vector<32xi8>, vector<8xf32>, vector<8xf32>
+       
+         %2 = amdgpu.wmma 16x16x128 %matG * %matH + %matI : vector<64xf4E2M1FN>, vector<64xf4E2M1FN>, vector<8xf32>
+       
+         %3 = amdgpu.wmma 16x16x4 %matJ * %matK + %matL : vector<2xf32>, vector<2xf32>, vector<8xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'amdgpu.wmma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sourceA() -> _ods_ir
+
+
+   .. py:method:: sourceB() -> _ods_ir
+
+
+   .. py:method:: destC() -> _ods_ir
+
+
+   .. py:method:: m() -> _ods_ir
+
+
+   .. py:method:: n() -> _ods_ir
+
+
+   .. py:method:: k() -> _ods_ir
+
+
+   .. py:method:: subwordOffset() -> _ods_ir
+
+
+   .. py:method:: unsignedA() -> bool
+
+
+   .. py:method:: unsignedB() -> bool
+
+
+   .. py:method:: clamp() -> bool
+
+
+   .. py:method:: destD() -> _ods_ir
+
+
+.. py:function:: wmma(m, n, k, source_a, source_b, dest_c, *, subword_offset=None, unsigned_a=None, unsigned_b=None, clamp=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:class:: AddressSpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   AMDGPU-specific address spaces
+
+
+   .. py:attribute:: FatRawBuffer
+      :value: 0
+
+
+
+   .. py:attribute:: BufferRsrc
+      :value: 1
+
+
+
+   .. py:attribute:: FatStructuredBuffer
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: DPPPerm
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   The possible permutations for a DPP operation
+
+
+   .. py:attribute:: quad_perm
+      :value: 0
+
+
+
+   .. py:attribute:: row_shl
+      :value: 1
+
+
+
+   .. py:attribute:: row_shr
+      :value: 2
+
+
+
+   .. py:attribute:: row_ror
+      :value: 3
+
+
+
+   .. py:attribute:: wave_shl
+      :value: 4
+
+
+
+   .. py:attribute:: wave_shr
+      :value: 5
+
+
+
+   .. py:attribute:: wave_ror
+      :value: 6
+
+
+
+   .. py:attribute:: wave_rol
+      :value: 7
+
+
+
+   .. py:attribute:: row_mirror
+      :value: 8
+
+
+
+   .. py:attribute:: row_half_mirror
+      :value: 9
+
+
+
+   .. py:attribute:: row_bcast_15
+      :value: 10
+
+
+
+   .. py:attribute:: row_bcast_31
+      :value: 11
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: MFMAPermB
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   The possible permutations of the lanes storing B available in an MFMA
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: bcast_first_32
+      :value: 1
+
+
+
+   .. py:attribute:: bcast_second_32
+      :value: 2
+
+
+
+   .. py:attribute:: rotate_16_right
+      :value: 3
+
+
+
+   .. py:attribute:: bcast_first_16
+      :value: 4
+
+
+
+   .. py:attribute:: bcast_second_16
+      :value: 5
+
+
+
+   .. py:attribute:: bcast_third_16
+      :value: 6
+
+
+
+   .. py:attribute:: bcast_fourth_16
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: sched_barrier_opt_enum
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   The possible options for scheduling barriers
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: non_mem_non_sideffect
+      :value: 1
+
+
+
+   .. py:attribute:: valu
+      :value: 2
+
+
+
+   .. py:attribute:: salu
+      :value: 4
+
+
+
+   .. py:attribute:: mfma_wmma
+      :value: 8
+
+
+
+   .. py:attribute:: all_vmem
+      :value: 16
+
+
+
+   .. py:attribute:: vmem_read
+      :value: 32
+
+
+
+   .. py:attribute:: vmem_write
+      :value: 64
+
+
+
+   .. py:attribute:: all_ds
+      :value: 128
+
+
+
+   .. py:attribute:: ds_read
+      :value: 256
+
+
+
+   .. py:attribute:: ds_write
+      :value: 512
+
+
+
+   .. py:attribute:: transcendental
+      :value: 1024
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+

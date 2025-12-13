@@ -1,0 +1,113 @@
+mlir.dialects.transform.smt
+===========================
+
+.. py:module:: mlir.dialects.transform.smt
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.smt.ConstrainParamsOp
+   mlir.dialects.transform.smt.ConstrainParamsOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.smt.smt_constrain_params
+   mlir.dialects.transform.smt.constrain_params
+
+
+Module Contents
+---------------
+
+.. py:class:: ConstrainParamsOp(results_, params, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Allows expressing constraints on params using the SMT dialect.
+
+   Each Transform-dialect param provided as an operand has a corresponding
+   argument of SMT-type in the region. The SMT-Dialect ops in the region use
+   these params-as-SMT-vars as operands, thereby expressing relevant
+   constraints on their allowed values.
+
+   Computations w.r.t. passed-in params can also be expressed through the
+   region's SMT-ops. Namely, the constraints express relationships to other
+   SMT-variables which can then be yielded from the region (with ``smt.yield``).
+
+   The semantics of this op is that all the ops in the region together express
+   a constraint on the params-interpreted-as-smt-vars. The op fails in case the
+   expressed constraint is not satisfiable per SMTLIB semantics. Otherwise the
+   op succeeds and any one satisfying assignment is used to map the
+   SMT-variables yielded in the region to ``transform.param``s.
+
+   TODO: currently the operational semantics per the Transform interpreter is
+   to always fail. The intention is build out support for hooking in your own
+   operational semantics so you can invoke your favourite solver to determine
+   satisfiability of the corresponding constraint problem.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.smt.constrain_params'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: params() -> _ods_ir
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: smt_constrain_params(results_, params, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, ConstrainParamsOp]
+
+.. py:class:: ConstrainParamsOp(results: Sequence[mlir.ir.Type], params: Sequence[mlir.dialects.transform.AnyParamType], arg_types: Sequence[mlir.ir.Type], loc=None, ip=None)
+
+   Bases: :py:obj:`ConstrainParamsOp`
+
+
+   
+   Allows expressing constraints on params using the SMT dialect.
+
+   Each Transform-dialect param provided as an operand has a corresponding
+   argument of SMT-type in the region. The SMT-Dialect ops in the region use
+   these params-as-SMT-vars as operands, thereby expressing relevant
+   constraints on their allowed values.
+
+   Computations w.r.t. passed-in params can also be expressed through the
+   region's SMT-ops. Namely, the constraints express relationships to other
+   SMT-variables which can then be yielded from the region (with ``smt.yield``).
+
+   The semantics of this op is that all the ops in the region together express
+   a constraint on the params-interpreted-as-smt-vars. The op fails in case the
+   expressed constraint is not satisfiable per SMTLIB semantics. Otherwise the
+   op succeeds and any one satisfying assignment is used to map the
+   SMT-variables yielded in the region to ``transform.param``s.
+
+   TODO: currently the operational semantics per the Transform interpreter is
+   to always fail. The intention is build out support for hooking in your own
+   operational semantics so you can invoke your favourite solver to determine
+   satisfiability of the corresponding constraint problem.
+
+
+   .. py:property:: body
+      :type: mlir.ir.Block
+
+
+
+.. py:function:: constrain_params(results: Sequence[mlir.ir.Type], params: Sequence[mlir.dialects.transform.AnyParamType], arg_types: Sequence[mlir.ir.Type], loc=None, ip=None)
+

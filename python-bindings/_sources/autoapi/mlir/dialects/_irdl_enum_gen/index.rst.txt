@@ -1,0 +1,74 @@
+mlir.dialects._irdl_enum_gen
+============================
+
+.. py:module:: mlir.dialects._irdl_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._irdl_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._irdl_enum_gen.Variadicity
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._irdl_enum_gen.register_attribute_builder
+   mlir.dialects._irdl_enum_gen._variadicity
+   mlir.dialects._irdl_enum_gen._variadicityattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: Variadicity
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   variadicity kind
+
+
+   .. py:attribute:: single
+      :value: 0
+
+
+
+   .. py:attribute:: optional
+      :value: 1
+
+
+
+   .. py:attribute:: variadic
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _variadicity(x, context)
+
+.. py:function:: _variadicityattr(x, context)
+

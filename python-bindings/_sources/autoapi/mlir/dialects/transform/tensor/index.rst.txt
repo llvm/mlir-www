@@ -1,0 +1,352 @@
+mlir.dialects.transform.tensor
+==============================
+
+.. py:module:: mlir.dialects.transform.tensor
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tensor.ApplyBubbleUpExtractSlicePatternsOp
+   mlir.dialects.transform.tensor.ApplyDecomposeTensorConcatPatternsOp
+   mlir.dialects.transform.tensor.ApplyDropRedundantInsertSliceRankExpansionPatternsOp
+   mlir.dialects.transform.tensor.ApplyFoldTensorEmptyPatternsOp
+   mlir.dialects.transform.tensor.ApplyFoldTensorSubsetOpsIntoVectorTransfersPatternsOp
+   mlir.dialects.transform.tensor.ApplyFoldTensorSubsetOpsPatternsOp
+   mlir.dialects.transform.tensor.ApplyMergeConsecutiveInsertExtractSlicePatternsOp
+   mlir.dialects.transform.tensor.ApplyReassociativeReshapeFoldingPatternsOp
+   mlir.dialects.transform.tensor.ApplyRewriteTensorOpsAsConstantPatternsOp
+   mlir.dialects.transform.tensor.MakeLoopIndependentOp
+   mlir.dialects.transform.tensor.TypeConversionCastShapeDynamicDimsOp
+   mlir.dialects.transform.tensor.MakeLoopIndependentOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tensor.apply_patterns_tensor_bubble_up_extract_slice
+   mlir.dialects.transform.tensor.apply_patterns_tensor_decompose_concat
+   mlir.dialects.transform.tensor.apply_patterns_tensor_drop_redundant_insert_slice_rank_expansion
+   mlir.dialects.transform.tensor.apply_patterns_tensor_fold_tensor_empty
+   mlir.dialects.transform.tensor.apply_patterns_tensor_fold_tensor_subset_ops_into_vector_transfers
+   mlir.dialects.transform.tensor.apply_patterns_tensor_fold_tensor_subset_ops
+   mlir.dialects.transform.tensor.apply_patterns_tensor_merge_consecutive_insert_extract_slice
+   mlir.dialects.transform.tensor.apply_patterns_tensor_reassociative_reshape_folding
+   mlir.dialects.transform.tensor.apply_patterns_tensor_rewrite_as_constant
+   mlir.dialects.transform.tensor.tensor_make_loop_independent
+   mlir.dialects.transform.tensor.type_conversion_tensor_cast_shape_dynamic_dims
+
+
+Module Contents
+---------------
+
+.. py:class:: ApplyBubbleUpExtractSlicePatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that producers of tensor.extract_slice should swap and operate on
+   the result of the slice.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.bubble_up_extract_slice'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_bubble_up_extract_slice(*, loc=None, ip=None) -> ApplyBubbleUpExtractSlicePatternsOp
+
+.. py:class:: ApplyDecomposeTensorConcatPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that tensor.concat ops should be decomposed into a chain of
+   tensor.insert_slice operations inserting into a materialized destination.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.decompose_concat'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_decompose_concat(*, loc=None, ip=None) -> ApplyDecomposeTensorConcatPatternsOp
+
+.. py:class:: ApplyDropRedundantInsertSliceRankExpansionPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that redundant tensor.insert_slice rank reductions should be
+   dropped. E.g., cases where a tensor.extract_slice rank reduction immediately
+   follows an inverse tensor.insert_slice rank expansion.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.drop_redundant_insert_slice_rank_expansion'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_drop_redundant_insert_slice_rank_expansion(*, loc=None, ip=None) -> ApplyDropRedundantInsertSliceRankExpansionPatternsOp
+
+.. py:class:: ApplyFoldTensorEmptyPatternsOp(*, fold_single_use_only=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that tensor.extract_slice and reassociative reshapes should be
+   folded into tensor.empty.
+
+   If ``fold_single_use_only`` is set to "true", only tensor.empty that have a
+   single use are folded.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.fold_tensor_empty'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: fold_single_use_only() -> _ods_ir
+
+
+.. py:function:: apply_patterns_tensor_fold_tensor_empty(*, fold_single_use_only=None, loc=None, ip=None) -> ApplyFoldTensorEmptyPatternsOp
+
+.. py:class:: ApplyFoldTensorSubsetOpsIntoVectorTransfersPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that tensor.extract_slice -> vector.transfer_read and
+   vector.transfer_write -> tensor.insert_slice op chains should be folded into
+   vector tranfer read and write ops
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.fold_tensor_subset_ops_into_vector_transfers'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_fold_tensor_subset_ops_into_vector_transfers(*, loc=None, ip=None) -> ApplyFoldTensorSubsetOpsIntoVectorTransfersPatternsOp
+
+.. py:class:: ApplyFoldTensorSubsetOpsPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that tensor.empty should be folded with tensor.extract_slice,
+   tensor.expand_shape and tensor.collapse_shape.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.fold_tensor_subset_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_fold_tensor_subset_ops(*, loc=None, ip=None) -> ApplyFoldTensorSubsetOpsPatternsOp
+
+.. py:class:: ApplyMergeConsecutiveInsertExtractSlicePatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that consecutive tensor.extract_slice/tensor.insert_slice ops
+   should be merged into a single op. These patterns are not canonicalizations
+   because the bufferization is sensitive to IR structure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.merge_consecutive_insert_extract_slice'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_merge_consecutive_insert_extract_slice(*, loc=None, ip=None) -> ApplyMergeConsecutiveInsertExtractSlicePatternsOp
+
+.. py:class:: ApplyReassociativeReshapeFoldingPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that reassociative reshapes (tensor.collapse_shape /
+   tensor.expand_shape) should be folded with inverse rank expansions / rank
+   reductions (via tensor.insert_slice / tensor.extract_slice).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.reassociative_reshape_folding'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_tensor_reassociative_reshape_folding(*, loc=None, ip=None) -> ApplyReassociativeReshapeFoldingPatternsOp
+
+.. py:class:: ApplyRewriteTensorOpsAsConstantPatternsOp(*, aggressive=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that tensor ops (such as tensor.generate) should be replaced with
+   constants (arith.constant) when possible.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.tensor.rewrite_as_constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: aggressive() -> bool
+
+
+.. py:function:: apply_patterns_tensor_rewrite_as_constant(*, aggressive=None, loc=None, ip=None) -> ApplyRewriteTensorOpsAsConstantPatternsOp
+
+.. py:class:: MakeLoopIndependentOp(transformed, target, num_loops, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Rewrite the targeted ops such that their index-typed operands no longer
+   depend on any loop induction variable of the ``num_loop`` enclosing ``scf.for``
+   loops. I.e., compute an upper bound that is independent of any such loop IV
+   for every tensor dimension. The transformed op could then be hoisted from
+   the ``num_loop`` enclosing loops. To preserve the original semantics, place a
+   ``tensor.extract_slice`` inside the loop.
+
+   Currently supported operations are:
+
+   * tensor.empty: Replaced with a new tensor.empty with upper bound sizes,
+   followed by a tensor.extract_slice.
+   * tensor.pad: Replaced by an upper bound padding, followed by a
+   tensor.extract_slice.
+
+   Return modes
+   ------------
+
+   This operation fails if at least one induction variable could not be
+   eliminated. In case the targeted op is already independent of induction
+   variables, this transform succeeds and returns the unmodified target op.
+
+   Otherwise, the returned handle points to a subset of the produced ops:
+
+   * tensor.empty: The returned handle points to the tensor.extract_slice op.
+   * tensor.pad: The returned handle points to the tensor.extract_slice op.
+
+   This transform op consumes the target handle and produces a result handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tensor.make_loop_independent'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: num_loops() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: tensor_make_loop_independent(transformed, target, num_loops, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TypeConversionCastShapeDynamicDimsOp(*, ignore_dynamic_info=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Populates a type converter with conversion materialization functions that
+   cast a tensor value between two cast-compatible tensors. See ``tensor.cast``
+   for more information on cast compatibility between tensors.
+
+   If ``ignore_dynamic_info`` is not set, this will set an additional constraint
+   that source materializations do not cast dynamic dimensions to static ones.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.type_conversion.tensor.cast_shape_dynamic_dims'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: ignore_dynamic_info() -> bool
+
+
+.. py:function:: type_conversion_tensor_cast_shape_dynamic_dims(*, ignore_dynamic_info=None, loc=None, ip=None) -> TypeConversionCastShapeDynamicDimsOp
+
+.. py:class:: MakeLoopIndependentOp(transformed_type: Type, target: Union[Operation, OpView, Value], num_loops: Union[int, IntegerAttr], *, loc=None, ip=None)
+              MakeLoopIndependentOp(target: Union[Operation, OpView, Value], num_loops: Union[int, IntegerAttr], *, loc=None, ip=None)
+
+   Bases: :py:obj:`MakeLoopIndependentOp`
+
+
+   
+   Specialization for MakeLoopIndependentOp class.
+
+

@@ -1,0 +1,116 @@
+mlir.dialects._transform_enum_gen
+=================================
+
+.. py:module:: mlir.dialects._transform_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_enum_gen.FailurePropagationMode
+   mlir.dialects._transform_enum_gen.MatchCmpIPredicate
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_enum_gen.register_attribute_builder
+   mlir.dialects._transform_enum_gen._failurepropagationmode
+   mlir.dialects._transform_enum_gen._matchcmpipredicateattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: FailurePropagationMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Silenceable error propagation policy
+
+
+   .. py:attribute:: Propagate
+      :value: 1
+
+
+
+   .. py:attribute:: Suppress
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _failurepropagationmode(x, context)
+
+.. py:class:: MatchCmpIPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4, 5
+
+
+   .. py:attribute:: eq
+      :value: 0
+
+
+
+   .. py:attribute:: ne
+      :value: 1
+
+
+
+   .. py:attribute:: lt
+      :value: 2
+
+
+
+   .. py:attribute:: le
+      :value: 3
+
+
+
+   .. py:attribute:: gt
+      :value: 4
+
+
+
+   .. py:attribute:: ge
+      :value: 5
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _matchcmpipredicateattr(x, context)
+

@@ -1,0 +1,2166 @@
+mlir.dialects.math
+==================
+
+.. py:module:: mlir.dialects.math
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.math.AbsFOp
+   mlir.dialects.math.AbsIOp
+   mlir.dialects.math.AcosOp
+   mlir.dialects.math.AcoshOp
+   mlir.dialects.math.AsinOp
+   mlir.dialects.math.AsinhOp
+   mlir.dialects.math.Atan2Op
+   mlir.dialects.math.AtanOp
+   mlir.dialects.math.AtanhOp
+   mlir.dialects.math.CbrtOp
+   mlir.dialects.math.CeilOp
+   mlir.dialects.math.ClampFOp
+   mlir.dialects.math.CopySignOp
+   mlir.dialects.math.CosOp
+   mlir.dialects.math.CoshOp
+   mlir.dialects.math.CountLeadingZerosOp
+   mlir.dialects.math.CountTrailingZerosOp
+   mlir.dialects.math.CtPopOp
+   mlir.dialects.math.ErfOp
+   mlir.dialects.math.ErfcOp
+   mlir.dialects.math.Exp2Op
+   mlir.dialects.math.ExpM1Op
+   mlir.dialects.math.ExpOp
+   mlir.dialects.math.FPowIOp
+   mlir.dialects.math.FloorOp
+   mlir.dialects.math.FmaOp
+   mlir.dialects.math.IPowIOp
+   mlir.dialects.math.IsFiniteOp
+   mlir.dialects.math.IsInfOp
+   mlir.dialects.math.IsNaNOp
+   mlir.dialects.math.IsNormalOp
+   mlir.dialects.math.Log1pOp
+   mlir.dialects.math.Log2Op
+   mlir.dialects.math.Log10Op
+   mlir.dialects.math.LogOp
+   mlir.dialects.math.PowFOp
+   mlir.dialects.math.RoundEvenOp
+   mlir.dialects.math.RoundOp
+   mlir.dialects.math.RsqrtOp
+   mlir.dialects.math.SinOp
+   mlir.dialects.math.SincosOp
+   mlir.dialects.math.SinhOp
+   mlir.dialects.math.SqrtOp
+   mlir.dialects.math.TanOp
+   mlir.dialects.math.TanhOp
+   mlir.dialects.math.TruncOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.math.absf
+   mlir.dialects.math.absi
+   mlir.dialects.math.acos
+   mlir.dialects.math.acosh
+   mlir.dialects.math.asin
+   mlir.dialects.math.asinh
+   mlir.dialects.math.atan2
+   mlir.dialects.math.atan
+   mlir.dialects.math.atanh
+   mlir.dialects.math.cbrt
+   mlir.dialects.math.ceil
+   mlir.dialects.math.clampf
+   mlir.dialects.math.copysign
+   mlir.dialects.math.cos
+   mlir.dialects.math.cosh
+   mlir.dialects.math.ctlz
+   mlir.dialects.math.cttz
+   mlir.dialects.math.ctpop
+   mlir.dialects.math.erf
+   mlir.dialects.math.erfc
+   mlir.dialects.math.exp2
+   mlir.dialects.math.expm1
+   mlir.dialects.math.exp
+   mlir.dialects.math.fpowi
+   mlir.dialects.math.floor
+   mlir.dialects.math.fma
+   mlir.dialects.math.ipowi
+   mlir.dialects.math.isfinite
+   mlir.dialects.math.isinf
+   mlir.dialects.math.isnan
+   mlir.dialects.math.isnormal
+   mlir.dialects.math.log1p
+   mlir.dialects.math.log2
+   mlir.dialects.math.log10
+   mlir.dialects.math.log
+   mlir.dialects.math.powf
+   mlir.dialects.math.roundeven
+   mlir.dialects.math.round
+   mlir.dialects.math.rsqrt
+   mlir.dialects.math.sin
+   mlir.dialects.math.sincos
+   mlir.dialects.math.sinh
+   mlir.dialects.math.sqrt
+   mlir.dialects.math.tan
+   mlir.dialects.math.tanh
+   mlir.dialects.math.trunc
+
+
+Module Contents
+---------------
+
+.. py:class:: AbsFOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``absf`` operation computes the absolute value. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result
+   of the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar absolute value.
+       %a = math.absf %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.absf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: absf(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AbsIOp(operand, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``absi`` operation computes the absolute value. It takes one operand of
+   integer type (i.e., scalar, tensor or vector) and returns one result of the
+   same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar absolute value.
+       %a = math.absi %b : i64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.absi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: absi(operand, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AcosOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``acos`` operation computes the arcus cosine of a given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.  It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar arcus cosine value.
+       %a = math.acos %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.acos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: acos(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AcoshOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Syntax:
+
+   .. code::
+
+       operation ::= ssa-id `=` `math.acosh` ssa-use `:` type
+
+   The ``acosh`` operation computes the arcus cosine of a given value.  It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Hyperbolic arcus cosine of scalar value.
+       %a = math.acosh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.acosh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: acosh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AsinOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Syntax:
+
+   .. code::
+
+       operation ::= ssa-id `=` `math.asin` ssa-use `:` type
+
+   The ``asin`` operation computes the arcus sine of a given value.  It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Arcus sine of scalar value.
+       %a = math.asin %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.asin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: asin(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AsinhOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Syntax:
+
+   .. code::
+
+       operation ::= ssa-id `=` `math.asinh` ssa-use `:` type
+
+   The ``asinh`` operation computes the hyperbolic arcus sine of a given value.  It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Hyperbolic arcus sine of scalar value.
+       %a = math.asinh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.asinh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: asinh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Atan2Op(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``atan2`` operation takes two operands and returns one result, all of
+   which must be of the same type.  The operands must be of floating point type
+   (i.e., scalar, tensor or vector).
+
+   The 2-argument arcus tangent ``atan2(y, x)`` returns the angle in the
+   Euclidian plane between the positive x-axis and the ray through the point
+   (x, y).  It is a generalization of the 1-argument arcus tangent which
+   returns the angle on the basis of the ratio y/x.
+
+   See also https://en.wikipedia.org/wiki/Atan2
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar variant.
+       %a = math.atan2 %b, %c : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.atan2'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: atan2(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AtanOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``atan`` operation computes the arcus tangent of a given value.  It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Arcus tangent of scalar value.
+       %a = math.atan %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.atan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: atan(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AtanhOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Syntax:
+
+   .. code::
+
+       operation ::= ssa-id `=` `math.atanh` ssa-use `:` type
+
+   The ``atanh`` operation computes the hyperbolic arcus tangent of a given value.  It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Hyperbolic arcus tangent of scalar value.
+       %a = math.atanh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.atanh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: atanh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CbrtOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cbrt`` operation computes the cube root. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result
+   of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar cube root value.
+       %a = math.cbrt %b : f64
+
+   Note: This op is not equivalent to powf(..., 1/3.0).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.cbrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cbrt(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CeilOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``ceil`` operation computes the ceiling of a given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.  It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar ceiling value.
+       %a = math.ceil %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.ceil'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ceil(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ClampFOp(value, min, max, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``clampf`` operation takes three operands and returns one result, each of
+   these is required to be the same type. Operands must be of floating point type
+   (i.e., scalar, tensor or vector).
+
+   The semantics of the operation are described by:
+
+   .. code::
+
+         clampf(value, min, max) = maxf(minf(value, min), max)
+
+   Example:
+
+   .. code:: mlir
+
+       %d = math.clampf %value to [%min, %max] : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.clampf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: min() -> _ods_ir
+
+
+   .. py:method:: max() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: clampf(value, min, max, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CopySignOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``copysign`` returns a value with the magnitude of the first operand and
+   the sign of the second operand. It takes two operands and returns one result of
+   the same type. The operands must be of floating point type (i.e., scalar,
+   tensor or vector). It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar copysign value.
+       %a = math.copysign %b, %c : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.copysign'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: copysign(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CosOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cos`` operation computes the cosine of a given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.  It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar cosine value.
+       %a = math.cos %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.cos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cos(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CoshOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cosh`` operation computes the hyperbolic cosine. It takes one operand
+   of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar hyperbolic cosine value.
+       %a = math.cosh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.cosh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cosh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CountLeadingZerosOp(operand, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``ctlz`` operation computes the number of leading zeros of an integer value.
+   It operates on scalar, tensor or vector.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar ctlz function value.
+       %a = math.ctlz %b : i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.ctlz'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ctlz(operand, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CountTrailingZerosOp(operand, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cttz`` operation computes the number of trailing zeros of an integer value.
+   It operates on scalar, tensor or vector.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar cttz function value.
+       %a = math.cttz %b : i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.cttz'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cttz(operand, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CtPopOp(operand, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``ctpop`` operation computes the number of set bits of an integer value.
+   It operates on scalar, tensor or vector.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar ctpop function value.
+       %a = math.ctpop %b : i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.ctpop'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ctpop(operand, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ErfOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``erf`` operation computes the error function. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result of
+   the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar error function value.
+       %a = math.erf %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.erf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: erf(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ErfcOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``erfc`` operation computes the complementary error function, defined as
+   1-erf(x). This function is part of libm and is needed for accuracy, since
+   simply calculating 1-erf(x) when x is close to 1 will give inaccurate results.
+   It takes one operand of floating point type (i.e., scalar,
+   tensor or vector) and returns one result of the same type. It has no
+   standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar error function value.
+       %a = math.erfc %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.erfc'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: erfc(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Exp2Op(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``exp`` operation takes one operand of floating point type (i.e., scalar,
+   tensor or vector) and returns one result of the same type. It has no standard
+   attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar natural exponential.
+       %a = math.exp2 %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.exp2'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: exp2(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExpM1Op(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   expm1(x) := exp(x) - 1
+
+   The ``expm1`` operation takes one operand of floating point type (i.e.,
+   scalar, tensor or vector) and returns one result of the same type. It has no
+   standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar natural exponential minus 1.
+       %a = math.expm1 %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.expm1'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: expm1(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExpOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``exp`` operation takes one operand of floating point type (i.e., scalar,
+   tensor or vector) and returns one result of the same type. It has no standard
+   attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar natural exponential.
+       %a = math.exp %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.exp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: exp(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FPowIOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``fpowi`` operation takes a ``base`` operand of floating point type
+   (i.e. scalar, tensor or vector) and a ``power`` operand of integer type
+   (also scalar, tensor or vector) and returns one result of the same type
+   as ``base``. The result is ``base`` raised to the power of ``power``.
+   The operation is elementwise for non-scalars, e.g.:
+
+   .. code:: mlir
+
+       %v = math.fpowi %base, %power : vector<2xf32>, vector<2xi32
+
+   The result is a vector of:
+
+   .. code::
+
+       [<math.fpowi %base[0], %power[0]>, <math.fpowi %base[1], %power[1]>]
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar exponentiation.
+       %a = math.fpowi %base, %power : f64, i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.fpowi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: fpowi(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FloorOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``floor`` operation computes the floor of a given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.  It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar floor value.
+       %a = math.floor %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.floor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: floor(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FmaOp(a, b, c, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``fma`` operation takes three operands and returns one result, each of
+   these is required to be the same type. Operands must be of floating point type
+   (i.e., scalar, tensor or vector).
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar fused multiply-add: d = a*b + c
+       %d = math.fma %a, %b, %c : f64
+
+   The semantics of the operation correspond to those of the ``llvm.fma``
+   `intrinsic <https://llvm.org/docs/LangRef.html#llvm-fma-intrinsic>`_. In the
+   particular case of lowering to LLVM, this is guaranteed to lower
+   to the ``llvm.fma.*`` intrinsic.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.fma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir
+
+
+   .. py:method:: b() -> _ods_ir
+
+
+   .. py:method:: c() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: fma(a, b, c, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IPowIOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``ipowi`` operation takes two operands of integer type (i.e., scalar,
+   tensor or vector) and returns one result of the same type. Operands
+   must have the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar signed integer exponentiation.
+       %a = math.ipowi %b, %c : i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.ipowi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: ipowi(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IsFiniteOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Determines if the given floating-point number has finite value i.e. it
+   is normal, subnormal or zero, but not infinite or NaN.
+
+   Example:
+
+   .. code:: mlir
+
+       %f = math.isfinite %a : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.isfinite'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: isfinite(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IsInfOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Determines if the given floating-point number is positive or negative
+   infinity.
+
+   Example:
+
+   .. code:: mlir
+
+       %f = math.isinf %a : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.isinf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: isinf(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IsNaNOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Determines if the given floating-point number is a not-a-number (NaN)
+   value.
+
+   Example:
+
+   .. code:: mlir
+
+       %f = math.isnan %a : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.isnan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: isnan(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: IsNormalOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Determines if the given floating-point number is normal, i.e. is neither
+   zero, subnormal, infinite, nor NaN.
+
+   Example:
+
+   .. code:: mlir
+
+       %f = math.isnormal %a : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.isnormal'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: isnormal(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Log1pOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the base-e logarithm of one plus the given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.
+
+   log1p(x) := log(1 + x)
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar log1p operation.
+       %y = math.log1p %x : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.log1p'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log1p(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Log2Op(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the base-2 logarithm of the given value. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result of
+   the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar log2 operation.
+       %y = math.log2 %x : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.log2'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log2(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Log10Op(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the base-10 logarithm of the given value. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result of
+   the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar log10 operation.
+       %y = math.log10 %x : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.log10'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log10(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LogOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the base-e logarithm of the given value. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result of
+   the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar log operation.
+       %y = math.log %x : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.log'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PowFOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``powf`` operation takes two operands of floating point type (i.e.,
+   scalar, tensor or vector) and returns one result of the same type. Operands
+   must have the same type.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar exponentiation.
+       %a = math.powf %b, %c : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.powf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: powf(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RoundEvenOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``roundeven`` operation returns the operand rounded to the nearest integer
+   value in floating-point format. It takes one operand of floating point type
+   (i.e., scalar, tensor or vector) and produces one result of the same type.  The
+   operation rounds the argument to the nearest integer value in floating-point
+   format, rounding halfway cases to even, regardless of the current
+   rounding direction.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar round operation.
+       %a = math.roundeven %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.roundeven'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: roundeven(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RoundOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``round`` operation returns the operand rounded to the nearest integer
+   value in floating-point format. It takes one operand of floating point type
+   (i.e., scalar, tensor or vector) and produces one result of the same type.  The
+   operation rounds the argument to the nearest integer value in floating-point
+   format, rounding halfway cases away from zero, regardless of the current
+   rounding direction.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar round operation.
+       %a = math.round %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.round'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: round(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RsqrtOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``rsqrt`` operation computes the reciprocal of the square root. It takes
+   one operand of floating point type (i.e., scalar, tensor or vector) and returns
+   one result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar reciprocal square root value.
+       %a = math.rsqrt %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: rsqrt(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SinOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sin`` operation computes the sine of a given value. It takes one
+   operand of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type.  It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar sine value.
+       %a = math.sin %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.sin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sin(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SincosOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sincos`` operation computes both the sine and cosine of a given value
+   simultaneously. It takes one operand of floating point type (i.e., scalar,
+   tensor or vector) and returns two results of the same type. This operation
+   can be more efficient than computing sine and cosine separately when both
+   values are needed.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar sine and cosine values.
+       %sin, %cos = math.sincos %input : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.sincos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: sin() -> _ods_ir
+
+
+   .. py:method:: cos() -> _ods_ir
+
+
+.. py:function:: sincos(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SinhOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sinh`` operation computes the hyperbolic sine. It takes one operand
+   of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar hyperbolic sine value.
+       %a = math.sinh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.sinh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sinh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SqrtOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sqrt`` operation computes the square root. It takes one operand of
+   floating point type (i.e., scalar, tensor or vector) and returns one result of
+   the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar square root value.
+       %a = math.sqrt %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.sqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sqrt(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TanOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tan`` operation computes the tangent. It takes one operand
+   of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar tangent value.
+       %a = math.tan %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.tan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: tan(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TanhOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tanh`` operation computes the hyperbolic tangent. It takes one operand
+   of floating point type (i.e., scalar, tensor or vector) and returns one
+   result of the same type. It has no standard attributes.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar hyperbolic tangent value.
+       %a = math.tanh %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.tanh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: tanh(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TruncOp(operand, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``trunc`` operation returns the operand rounded to the nearest integer
+   value in floating-point format. It takes one operand of floating point type
+   (i.e., scalar, tensor or vector) and produces one result of the same type.
+   The operation always rounds to the nearest integer not larger in magnitude
+   than the operand, regardless of the current rounding direction.
+
+   Example:
+
+   .. code:: mlir
+
+       // Scalar trunc operation.
+       %a = math.trunc %b : f64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'math.trunc'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: trunc(operand, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+

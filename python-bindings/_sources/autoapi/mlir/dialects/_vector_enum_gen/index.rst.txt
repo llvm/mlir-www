@@ -1,0 +1,205 @@
+mlir.dialects._vector_enum_gen
+==============================
+
+.. py:module:: mlir.dialects._vector_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_enum_gen.CombiningKind
+   mlir.dialects._vector_enum_gen.PrintPunctuation
+   mlir.dialects._vector_enum_gen.IteratorType
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_enum_gen.register_attribute_builder
+   mlir.dialects._vector_enum_gen._combiningkind
+   mlir.dialects._vector_enum_gen._printpunctuation
+   mlir.dialects._vector_enum_gen._vector_iteratortype
+   mlir.dialects._vector_enum_gen._vector_combiningkindattr
+   mlir.dialects._vector_enum_gen._vector_iteratortypeenum
+   mlir.dialects._vector_enum_gen._vector_printpunctuation
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: CombiningKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Kind of combining function for contractions and reductions
+
+
+   .. py:attribute:: ADD
+      :value: 0
+
+
+
+   .. py:attribute:: MUL
+      :value: 1
+
+
+
+   .. py:attribute:: MINUI
+      :value: 2
+
+
+
+   .. py:attribute:: MINSI
+      :value: 3
+
+
+
+   .. py:attribute:: MINNUMF
+      :value: 4
+
+
+
+   .. py:attribute:: MAXUI
+      :value: 5
+
+
+
+   .. py:attribute:: MAXSI
+      :value: 6
+
+
+
+   .. py:attribute:: MAXNUMF
+      :value: 7
+
+
+
+   .. py:attribute:: AND
+      :value: 8
+
+
+
+   .. py:attribute:: OR
+      :value: 9
+
+
+
+   .. py:attribute:: XOR
+      :value: 10
+
+
+
+   .. py:attribute:: MAXIMUMF
+      :value: 12
+
+
+
+   .. py:attribute:: MINIMUMF
+      :value: 11
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _combiningkind(x, context)
+
+.. py:class:: PrintPunctuation
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Punctuation for separating vectors or vector elements
+
+
+   .. py:attribute:: NoPunctuation
+      :value: 0
+
+
+
+   .. py:attribute:: NewLine
+      :value: 1
+
+
+
+   .. py:attribute:: Comma
+      :value: 2
+
+
+
+   .. py:attribute:: Open
+      :value: 3
+
+
+
+   .. py:attribute:: Close
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _printpunctuation(x, context)
+
+.. py:class:: IteratorType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Iterator type
+
+
+   .. py:attribute:: parallel
+      :value: 0
+
+
+
+   .. py:attribute:: reduction
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _vector_iteratortype(x, context)
+
+.. py:function:: _vector_combiningkindattr(x, context)
+
+.. py:function:: _vector_iteratortypeenum(x, context)
+
+.. py:function:: _vector_printpunctuation(x, context)
+

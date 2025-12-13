@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Traits on MLIR</title><link>https://mlir.llvm.org/docs/Traits/</link><description>Recent content in Traits on MLIR</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 01 Jan 1970 00:00:00 +0000</lastBuildDate><atom:link href="https://mlir.llvm.org/docs/Traits/index.xml" rel="self" type="application/rss+xml"/><item><title>The `Broadcastable` Trait</title><link>https://mlir.llvm.org/docs/Traits/Broadcastable/</link><pubDate>Thu, 01 Jan 1970 00:00:00 +0000</pubDate><guid>https://mlir.llvm.org/docs/Traits/Broadcastable/</guid><description>Description Dimension inference Shape inference Verification Examples Description The Broadcastable trait enforces the following properties on an operation:
+The operation has at least one input operand.
+The operation has exactly one result.
+All input operands and result are of type tensor or vector.
+A shape inference mechanism is able to compute the result shape solely based on input operand shapes.
+Input operands have broadcast-compatible shapes, according to the verification rules presented below.</description></item></channel></rss>

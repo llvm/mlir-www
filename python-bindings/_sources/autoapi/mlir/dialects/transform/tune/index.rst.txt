@@ -1,0 +1,182 @@
+mlir.dialects.transform.tune
+============================
+
+.. py:module:: mlir.dialects.transform.tune
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tune.AlternativesOp
+   mlir.dialects.transform.tune.KnobOp
+   mlir.dialects.transform.tune.KnobOp
+   mlir.dialects.transform.tune.AlternativesOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tune.tune_alternatives
+   mlir.dialects.transform.tune.tune_knob
+   mlir.dialects.transform.tune.knob
+   mlir.dialects.transform.tune.alternatives
+
+
+Module Contents
+---------------
+
+.. py:class:: AlternativesOp(results_, name, num_alternatives, *, selected_region_attr=None, selected_region_param=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op represents a choice over which of its regions is to be used.
+
+   When ``selected_region`` is provided, the semantics are that this op is to be
+   substituted for by the selected region, meaning the region's results become
+   the results of this op. Without a provided ``selected_region``, the semantics
+   are that this non-deterministic choice is yet to be resolved -- which in
+   terms of the op's interpreted semantics is a failure.
+
+   The ``selected_region`` argument is either an ``IntegerAttr`` or a param holding
+   an ``IntegerAttr``, which should provide a valid zero-based index with respect
+   to the number of alternatives, i.e. regions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.alternatives'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, False)
+
+
+
+   .. py:method:: selected_region_param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: selected_region_attr() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: alternatives() -> _ods_ir
+
+
+.. py:function:: tune_alternatives(results_, name, num_alternatives, *, selected_region_attr=None, selected_region_param=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, AlternativesOp]
+
+.. py:class:: KnobOp(result, name, options, *, selected=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Provides a representation for "tunables" within schedules.
+
+   Each op represents a single tunable, which has a ``name`` and a set
+   of valid ``options`` described by an attribute. Without a specified
+   ``selected`` option, this op represents a non-deterministic choice
+   that has yet to be resolved -- as such, the interpreter runtime
+   semantics is to raise a failure.
+
+   The non-deterministic choice is resolved through providing a
+   ``selected`` attribute. When provided, the interpreter runtime
+   semantics are to return the ``selected`` attribute as a param through
+   the op's result.
+
+   In case the ``options`` attribute is an ``ArrayAttr``, the verifier
+   checks that the provided ``selected`` attribute occurs in ``options``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.knob'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: selected() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: tune_knob(result, name, options, *, selected=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: KnobOp(result: mlir.ir.Type, name: Union[mlir.ir.StringAttr, str], options: Union[mlir.ir.ArrayAttr, Sequence[Union[mlir.ir.Attribute, bool, int, float, str]], mlir.ir.Attribute], *, selected: Optional[Union[mlir.ir.Attribute, bool, int, float, str]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`KnobOp`
+
+
+   
+   Provides a representation for "tunables" within schedules.
+
+   Each op represents a single tunable, which has a ``name`` and a set
+   of valid ``options`` described by an attribute. Without a specified
+   ``selected`` option, this op represents a non-deterministic choice
+   that has yet to be resolved -- as such, the interpreter runtime
+   semantics is to raise a failure.
+
+   The non-deterministic choice is resolved through providing a
+   ``selected`` attribute. When provided, the interpreter runtime
+   semantics are to return the ``selected`` attribute as a param through
+   the op's result.
+
+   In case the ``options`` attribute is an ``ArrayAttr``, the verifier
+   checks that the provided ``selected`` attribute occurs in ``options``.
+
+
+.. py:function:: knob(result: mlir.ir.Type, name: Union[mlir.ir.StringAttr, str], options: Union[mlir.ir.ArrayAttr, Sequence[Union[mlir.ir.Attribute, bool, int, float, str]], mlir.ir.Attribute], *, selected: Optional[Union[mlir.ir.Attribute, bool, int, float, str]] = None, loc=None, ip=None)
+
+.. py:class:: AlternativesOp(results: Sequence[mlir.ir.Type], name: Union[mlir.ir.StringAttr, str], num_alternatives: int, *, selected_region: Optional[Union[int, mlir.ir.IntegerAttr, mlir.ir.Value, mlir.ir.Operation, mlir.ir.OpView]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`AlternativesOp`
+
+
+   
+   This op represents a choice over which of its regions is to be used.
+
+   When ``selected_region`` is provided, the semantics are that this op is to be
+   substituted for by the selected region, meaning the region's results become
+   the results of this op. Without a provided ``selected_region``, the semantics
+   are that this non-deterministic choice is yet to be resolved -- which in
+   terms of the op's interpreted semantics is a failure.
+
+   The ``selected_region`` argument is either an ``IntegerAttr`` or a param holding
+   an ``IntegerAttr``, which should provide a valid zero-based index with respect
+   to the number of alternatives, i.e. regions.
+
+
+.. py:function:: alternatives(results: Sequence[mlir.ir.Type], name: Union[mlir.ir.StringAttr, str], num_alternatives: int, *, selected_region: Optional[Union[int, mlir.ir.IntegerAttr, mlir.ir.Value, mlir.ir.Operation, mlir.ir.OpView]] = None, loc=None, ip=None)
+

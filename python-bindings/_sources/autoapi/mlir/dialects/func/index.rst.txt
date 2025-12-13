@@ -1,0 +1,410 @@
+mlir.dialects.func
+==================
+
+.. py:module:: mlir.dialects.func
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.func.ARGUMENT_ATTRIBUTE_NAME
+   mlir.dialects.func.RESULT_ATTRIBUTE_NAME
+   mlir.dialects.func.func
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.func.CallIndirectOp
+   mlir.dialects.func.CallOp
+   mlir.dialects.func.ConstantOp
+   mlir.dialects.func.FuncOp
+   mlir.dialects.func.ReturnOp
+   mlir.dialects.func.ConstantOp
+   mlir.dialects.func.FuncOp
+   mlir.dialects.func.CallOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.func.call_indirect
+   mlir.dialects.func.call
+   mlir.dialects.func.constant
+   mlir.dialects.func.func
+   mlir.dialects.func.return_
+
+
+Module Contents
+---------------
+
+.. py:class:: CallIndirectOp(results_, callee, callee_operands, *, arg_attrs=None, res_attrs=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``func.call_indirect`` operation represents an indirect call to a value
+   of function type. The operands and result types of the call must match the
+   specified function type.
+
+   Function values can be created with the
+   ```func.constant`` operation <#funcconstant-constantop>`_.
+
+   Example:
+
+   .. code:: mlir
+
+       %func = func.constant @my_func : (tensor<16xf32>, tensor<16xf32>) -> tensor<16xf32>
+       %result = func.call_indirect %func(%0, %1) : (tensor<16xf32>, tensor<16xf32>) -> tensor<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'func.call_indirect'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: callee() -> _ods_ir
+
+
+   .. py:method:: callee_operands() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+.. py:function:: call_indirect(results_, callee, callee_operands, *, arg_attrs=None, res_attrs=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CallIndirectOp]
+
+.. py:class:: CallOp(result, callee, operands_, *, arg_attrs=None, res_attrs=None, no_inline=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``func.call`` operation represents a direct call to a function that is
+   within the same symbol scope as the call. The operands and result types of
+   the call must match the specified function type. The callee is encoded as a
+   symbol reference attribute named "callee".
+
+   Example:
+
+   .. code:: mlir
+
+       %2 = func.call @my_add(%0, %1) : (f32, f32) -> f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'func.call'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+   .. py:method:: callee() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: no_inline() -> bool
+
+
+.. py:function:: call(result, callee, operands_, *, arg_attrs=None, res_attrs=None, no_inline=None, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, CallOp]
+
+.. py:class:: ConstantOp(result, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``func.constant`` operation produces an SSA value from a symbol reference
+   to a ``func.func`` operation
+
+   Example:
+
+   .. code:: mlir
+
+       // Reference to function @myfn.
+       %2 = func.constant @myfn : (tensor<16xf32>, f32) -> tensor<16xf32>
+       
+       // Equivalent generic forms
+       %2 = "func.constant"() { value = @myfn } : () -> ((tensor<16xf32>, f32) -> tensor<16xf32>)
+
+   MLIR does not allow direct references to functions in SSA operands because
+   the compiler is multithreaded, and disallowing SSA values to directly
+   reference a function simplifies this
+   (`rationale <../Rationale/Rationale.md#multithreading-the-compiler>`_).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'func.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:function:: constant(result, value, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: FuncOp(sym_name, function_type, *, sym_visibility=None, arg_attrs=None, res_attrs=None, no_inline=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Operations within the function cannot implicitly capture values defined
+   outside of the function, i.e. Functions are ``IsolatedFromAbove``. All
+   external references must use function arguments or attributes that establish
+   a symbolic connection (e.g. symbols referenced by name via a string
+   attribute like SymbolRefAttr). An external function declaration (used when
+   referring to a function declared in some other module) has no body. While
+   the MLIR textual form provides a nice inline syntax for function arguments,
+   they are internally represented as “block arguments” to the first block in
+   the region.
+
+   Only dialect attribute names may be specified in the attribute dictionaries
+   for function arguments, results, or the function itself.
+
+   Example:
+
+   .. code:: mlir
+
+       // External function definitions.
+       func.func private @abort()
+       func.func private @scribble(i32, i64, memref<? x 128 x f32, #layout_map0>) -> f64
+       
+       // A function that returns its argument twice:
+       func.func @count(%x: i64) -> (i64, i64)
+         attributes {fruit = "banana"} {
+         return %x, %x: i64, i64
+       }
+       
+       // A function with an argument attribute
+       func.func private @example_fn_arg(%x: i32 {swift.self = unit})
+       
+       // A function with a result attribute
+       func.func private @example_fn_result() -> (f64 {dialectName.attrName = 0 : i64})
+       
+       // A function with an attribute
+       func.func private @example_fn_attr() attributes {dialectName.attrName = false}
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'func.func'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: no_inline() -> bool
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: func(sym_name, function_type, *, sym_visibility=None, arg_attrs=None, res_attrs=None, no_inline=None, loc=None, ip=None) -> FuncOp
+
+.. py:class:: ReturnOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``func.return`` operation represents a return operation within a function.
+   The operation takes variable number of operands and produces no results.
+   The operand number and types must match the signature of the function
+   that contains the operation.
+
+   Example:
+
+   .. code:: mlir
+
+       func.func @foo() -> (i32, f8) {
+         ...
+         return %0, %1 : i32, f8
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'func.return'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: return_(operands_, *, loc=None, ip=None) -> ReturnOp
+
+.. py:data:: ARGUMENT_ATTRIBUTE_NAME
+   :value: 'arg_attrs'
+
+
+.. py:data:: RESULT_ATTRIBUTE_NAME
+   :value: 'res_attrs'
+
+
+.. py:class:: ConstantOp(result, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`ConstantOp`
+
+
+   
+   Specialization for the constant op class.
+
+
+   .. py:property:: type
+
+
+.. py:class:: FuncOp(name, type, *, visibility=None, body_builder=None, loc=None, ip=None)
+
+   Bases: :py:obj:`FuncOp`
+
+
+   
+   Specialization for the func op class.
+
+
+   .. py:property:: is_external
+
+
+   .. py:property:: body
+
+
+   .. py:property:: type
+
+
+   .. py:property:: visibility
+
+
+   .. py:property:: name
+      :type: StringAttr
+
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:property:: entry_block
+
+
+   .. py:method:: add_entry_block(arg_locs: Optional[Sequence[Location]] = None)
+
+      
+      Add an entry block to the function body using the function signature to
+      infer block arguments.
+      Returns the newly created block
+
+
+
+   .. py:property:: arg_attrs
+
+
+   .. py:property:: arguments
+
+
+   .. py:property:: result_attrs
+
+
+   .. py:method:: from_py_func(*inputs: Type, results: Optional[Sequence[Type]] = None, name: Optional[str] = None)
+      :classmethod:
+
+
+      
+      Decorator to define an MLIR FuncOp specified as a python function.
+
+      Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+      active for the current thread (i.e. established in a ``with`` block).
+
+      When applied as a decorator to a Python function, an entry block will
+      be constructed for the FuncOp with types as specified in ``*inputs``. The
+      block arguments will be passed positionally to the Python function. In
+      addition, if the Python function accepts keyword arguments generally or
+      has a corresponding keyword argument, the following will be passed:
+
+      * ``func_op``: The ``func`` op being defined.
+
+      By default, the function name will be the Python function ``__name__``. This
+      can be overriden by passing the ``name`` argument to the decorator.
+
+      If ``results`` is not specified, then the decorator will implicitly
+      insert a ``ReturnOp`` with the ``Value``'s returned from the decorated
+      function. It will also set the ``FuncOp`` type with the actual return
+      value types. If ``results`` is specified, then the decorated function
+      must return ``None`` and no implicit ``ReturnOp`` is added (nor are the result
+      types updated). The implicit behavior is intended for simple, single-block
+      cases, and users should specify result types explicitly for any complicated
+      cases.
+
+      The decorated function can further be called from Python and will insert
+      a ``CallOp`` at the then-current insertion point, returning either None (
+      if no return values), a unary Value (for one result), or a list of Values).
+      This mechanism cannot be used to emit recursive calls (by construction).
+
+
+
+.. py:data:: func
+
+.. py:class:: CallOp(calleeOrResults: Union[FuncOp, List[Type]], argumentsOrCallee: Union[List, FlatSymbolRefAttr, str], arguments: Optional[List] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`CallOp`
+
+
+   
+   Specialization for the call op class.
+
+

@@ -1,0 +1,177 @@
+mlir.runtime
+============
+
+.. py:module:: mlir.runtime
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/runtime/np_to_memref/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.runtime.ml_dtypes
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.runtime.C128
+   mlir.runtime.C64
+   mlir.runtime.F16
+   mlir.runtime.BF16
+   mlir.runtime.F8E5M2
+   mlir.runtime.UnrankedMemRefDescriptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.runtime.as_ctype
+   mlir.runtime.to_numpy
+   mlir.runtime.make_nd_memref_descriptor
+   mlir.runtime.make_zero_d_memref_descriptor
+   mlir.runtime.get_ranked_memref_descriptor
+   mlir.runtime.get_unranked_memref_descriptor
+   mlir.runtime.move_aligned_ptr_by_offset
+   mlir.runtime.unranked_memref_to_numpy
+   mlir.runtime.ranked_memref_to_numpy
+
+
+Package Contents
+----------------
+
+.. py:data:: ml_dtypes
+   :value: None
+
+
+.. py:class:: C128
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   A ctype representation for MLIR's Double Complex.
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:class:: C64
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   A ctype representation for MLIR's Float Complex.
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:class:: F16
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   A ctype representation for MLIR's Float16.
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:class:: BF16
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   A ctype representation for MLIR's BFloat16.
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:class:: F8E5M2
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   A ctype representation for MLIR's Float8E5M2.
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:function:: as_ctype(dtp)
+
+   
+   Converts dtype to ctype.
+
+
+.. py:function:: to_numpy(array)
+
+   
+   Converts ctypes array back to numpy dtype array.
+
+
+.. py:function:: make_nd_memref_descriptor(rank, dtype)
+
+.. py:function:: make_zero_d_memref_descriptor(dtype)
+
+.. py:class:: UnrankedMemRefDescriptor
+
+   Bases: :py:obj:`ctypes.Structure`
+
+
+   
+   Creates a ctype struct for memref descriptor
+
+
+   .. py:attribute:: _fields_
+
+
+.. py:function:: get_ranked_memref_descriptor(nparray)
+
+   
+   Returns a ranked memref descriptor for the given numpy array.
+
+
+.. py:function:: get_unranked_memref_descriptor(nparray)
+
+   
+   Returns a generic/unranked memref descriptor for the given numpy array.
+
+
+.. py:function:: move_aligned_ptr_by_offset(aligned_ptr, offset)
+
+   
+   Moves the supplied ctypes pointer ahead by ``offset`` elements.
+
+
+.. py:function:: unranked_memref_to_numpy(unranked_memref, np_dtype)
+
+   
+   Converts unranked memrefs to numpy arrays.
+
+
+.. py:function:: ranked_memref_to_numpy(ranked_memref)
+
+   
+   Converts ranked memrefs to numpy arrays.
+
+

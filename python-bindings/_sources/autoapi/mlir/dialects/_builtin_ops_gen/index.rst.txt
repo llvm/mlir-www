@@ -1,0 +1,148 @@
+mlir.dialects._builtin_ops_gen
+==============================
+
+.. py:module:: mlir.dialects._builtin_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._builtin_ops_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._builtin_ops_gen._Dialect
+   mlir.dialects._builtin_ops_gen.ModuleOp
+   mlir.dialects._builtin_ops_gen.UnrealizedConversionCastOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._builtin_ops_gen.module
+   mlir.dialects._builtin_ops_gen.unrealized_conversion_cast
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:class:: _Dialect(descriptor: object)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'builtin'
+
+
+
+.. py:class:: ModuleOp(*, sym_name=None, sym_visibility=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A ``module`` represents a top-level container operation. It contains a single
+   `graph region <../LangRef.md#control-flow-and-ssacfg-regions>`_ containing a single block
+   which can contain any operations and does not have a terminator. Operations
+   within this region cannot implicitly capture values defined outside the module,
+   i.e. Modules are `IsolatedFromAbove <../Traits#isolatedfromabove>`_. Modules have
+   an optional `symbol name <../SymbolsAndSymbolTables.md>`_ which can be used to refer
+   to them in operations.
+
+   Example:
+
+   .. code:: mlir
+
+       module {
+         func.func @foo()
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'builtin.module'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> Optional[_ods_ir]
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: bodyRegion() -> _ods_ir
+
+
+.. py:function:: module(*, sym_name=None, sym_visibility=None, loc=None, ip=None) -> ModuleOp
+
+.. py:class:: UnrealizedConversionCastOp(outputs, inputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   An ``unrealized_conversion_cast`` operation represents an unrealized
+   conversion from one set of types to another, that is used to enable the
+   inter-mixing of different type systems. This operation should not be
+   attributed any special representational or execution semantics, and is
+   generally only intended to be used to satisfy the temporary intermixing of
+   type systems during the conversion of one type system to another.
+
+   This operation may produce results of arity 1-N, and accept as input
+   operands of arity 0-N.
+
+   Example:
+
+   .. code:: mlir
+
+       // An unrealized 0-1 conversion. These types of conversions are useful in
+       // cases where a type is removed from the type system, but not all uses have
+       // been converted. For example, imagine we have a tuple type that is
+       // expanded to its element types. If only some uses of an empty tuple type
+       // instance are converted we still need an instance of the tuple type, but
+       // have no inputs to the unrealized conversion.
+       %result = unrealized_conversion_cast to !bar.tuple_type<>
+       
+       // An unrealized 1-1 conversion.
+       %result1 = unrealized_conversion_cast %operand : !foo.type to !bar.lowered_type
+       
+       // An unrealized 1-N conversion.
+       %results2:2 = unrealized_conversion_cast %tuple_operand : !foo.tuple_type<!foo.type, !foo.type> to !foo.type, !foo.type
+       
+       // An unrealized N-1 conversion.
+       %result3 = unrealized_conversion_cast %operand, %operand : !foo.type, !foo.type to !bar.tuple_type<!foo.type, !foo.type>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'builtin.unrealized_conversion_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+.. py:function:: unrealized_conversion_cast(outputs, inputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, UnrealizedConversionCastOp]
+

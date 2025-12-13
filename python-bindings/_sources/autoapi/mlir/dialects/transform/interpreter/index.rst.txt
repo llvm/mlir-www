@@ -1,0 +1,49 @@
+mlir.dialects.transform.interpreter
+===================================
+
+.. py:module:: mlir.dialects.transform.interpreter
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.interpreter.TransformOptions
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.interpreter._unpack_operation
+   mlir.dialects.transform.interpreter.apply_named_sequence
+   mlir.dialects.transform.interpreter.copy_symbols_and_merge_into
+
+
+Package Contents
+----------------
+
+.. py:data:: TransformOptions
+
+.. py:function:: _unpack_operation(op)
+
+.. py:function:: apply_named_sequence(payload_root, transform_root, transform_module, transform_options=None)
+
+   
+   Applies the transformation script starting at the given transform root
+   operation to the given payload operation. The module containing the
+   transform root as well as the transform options should be provided.
+   The transform operation must implement TransformOpInterface and the module
+   must be a ModuleOp.
+
+
+.. py:function:: copy_symbols_and_merge_into(target, other)
+
+   
+   Copies symbols from other into target, renaming private symbols to avoid
+   duplicates. Raises an error if copying would lead to duplicate public
+   symbols.
+
+

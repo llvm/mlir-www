@@ -1,0 +1,121 @@
+mlir._mlir_libs._mlir.passmanager
+=================================
+
+.. py:module:: mlir._mlir_libs._mlir.passmanager
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.passmanager.PassDisplayMode
+   mlir._mlir_libs._mlir.passmanager.ExternalPass
+   mlir._mlir_libs._mlir.passmanager.PassManager
+
+
+Module Contents
+---------------
+
+.. py:class:: PassDisplayMode
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: LIST
+      :value: 0
+
+
+
+   .. py:attribute:: PIPELINE
+      :value: 1
+
+
+
+.. py:class:: ExternalPass
+
+   .. py:method:: signal_pass_failure() -> None
+
+
+.. py:class:: PassManager(anchor_op: str = 'any', context: mlir.ir.Context | None = None)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+
+   .. py:method:: _CAPICreate() -> object
+
+
+   .. py:method:: _testing_release() -> None
+
+      
+      Releases (leaks) the backing pass manager (testing)
+
+
+
+   .. py:method:: enable_ir_printing(print_before_all: bool = False, print_after_all: bool = True, print_module_scope: bool = False, print_after_change: bool = False, print_after_failure: bool = False, large_elements_limit: int | None = None, large_resource_limit: int | None = None, enable_debug_info: bool = False, print_generic_op_form: bool = False, tree_printing_dir_path: str | None = None) -> None
+
+      
+      Enable IR printing, default as mlir-print-ir-after-all.
+
+
+
+   .. py:method:: enable_verifier(enable: bool) -> None
+
+      
+      Enable / disable verify-each.
+
+
+
+   .. py:method:: enable_timing() -> None
+
+      
+      Enable pass timing.
+
+
+
+   .. py:method:: enable_statistics(displayMode: PassDisplayMode = PassDisplayMode.PIPELINE) -> None
+
+      
+      Enable pass statistics.
+
+
+
+   .. py:method:: parse(pipeline: str, context: mlir.ir.Context | None = None) -> PassManager
+      :staticmethod:
+
+
+      
+      Parse a textual pass-pipeline and return a top-level PassManager that can be applied on a Module. Throw a ValueError if the pipeline can't be parsed
+
+
+
+   .. py:method:: add(pipeline: str) -> None
+                  add(run: collections.abc.Callable, name: str | None = None, argument: str | None = '', description: str | None = '', op_name: str | None = '') -> None
+
+      
+      Add a python-defined pass to the pass manager.
+
+
+
+   .. py:method:: run(operation: mlir.ir._OperationBase) -> None
+
+      
+      Run the pass manager on the provided operation, raising an MLIRError on failure.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Print the textual representation for this PassManager, suitable to be passed to ``parse`` for round-tripping.
+
+
+

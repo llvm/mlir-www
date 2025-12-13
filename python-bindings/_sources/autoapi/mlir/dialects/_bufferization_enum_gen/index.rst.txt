@@ -1,0 +1,71 @@
+mlir.dialects._bufferization_enum_gen
+=====================================
+
+.. py:module:: mlir.dialects._bufferization_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_enum_gen.LayoutMapOption
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._bufferization_enum_gen.register_attribute_builder
+   mlir.dialects._bufferization_enum_gen._layoutmapoption
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: LayoutMapOption
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   option for map layout
+
+
+   .. py:attribute:: InferLayoutMap
+      :value: 0
+
+
+
+   .. py:attribute:: IdentityLayoutMap
+      :value: 1
+
+
+
+   .. py:attribute:: FullyDynamicLayoutMap
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _layoutmapoption(x, context)
+

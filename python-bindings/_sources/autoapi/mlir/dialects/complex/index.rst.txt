@@ -1,0 +1,1255 @@
+mlir.dialects.complex
+=====================
+
+.. py:module:: mlir.dialects.complex
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.complex.AbsOp
+   mlir.dialects.complex.AddOp
+   mlir.dialects.complex.AngleOp
+   mlir.dialects.complex.Atan2Op
+   mlir.dialects.complex.BitcastOp
+   mlir.dialects.complex.ConjOp
+   mlir.dialects.complex.ConstantOp
+   mlir.dialects.complex.CosOp
+   mlir.dialects.complex.CreateOp
+   mlir.dialects.complex.DivOp
+   mlir.dialects.complex.EqualOp
+   mlir.dialects.complex.ExpOp
+   mlir.dialects.complex.Expm1Op
+   mlir.dialects.complex.ImOp
+   mlir.dialects.complex.Log1pOp
+   mlir.dialects.complex.LogOp
+   mlir.dialects.complex.MulOp
+   mlir.dialects.complex.NegOp
+   mlir.dialects.complex.NotEqualOp
+   mlir.dialects.complex.PowOp
+   mlir.dialects.complex.PowiOp
+   mlir.dialects.complex.ReOp
+   mlir.dialects.complex.RsqrtOp
+   mlir.dialects.complex.SignOp
+   mlir.dialects.complex.SinOp
+   mlir.dialects.complex.SqrtOp
+   mlir.dialects.complex.SubOp
+   mlir.dialects.complex.TanOp
+   mlir.dialects.complex.TanhOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.complex.abs
+   mlir.dialects.complex.add
+   mlir.dialects.complex.angle
+   mlir.dialects.complex.atan2
+   mlir.dialects.complex.bitcast
+   mlir.dialects.complex.conj
+   mlir.dialects.complex.constant
+   mlir.dialects.complex.cos
+   mlir.dialects.complex.create_
+   mlir.dialects.complex.div
+   mlir.dialects.complex.eq
+   mlir.dialects.complex.exp
+   mlir.dialects.complex.expm1
+   mlir.dialects.complex.im
+   mlir.dialects.complex.log1p
+   mlir.dialects.complex.log
+   mlir.dialects.complex.mul
+   mlir.dialects.complex.neg
+   mlir.dialects.complex.neq
+   mlir.dialects.complex.pow
+   mlir.dialects.complex.powi
+   mlir.dialects.complex.re
+   mlir.dialects.complex.rsqrt
+   mlir.dialects.complex.sign
+   mlir.dialects.complex.sin
+   mlir.dialects.complex.sqrt
+   mlir.dialects.complex.sub
+   mlir.dialects.complex.tan
+   mlir.dialects.complex.tanh
+
+
+Module Contents
+---------------
+
+.. py:class:: AbsOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``abs`` op takes a single complex number and computes its absolute value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.abs %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.abs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: abs(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AddOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``add`` operation takes two complex numbers and returns their sum.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.add %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: add(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: AngleOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``angle`` op takes a single complex number and computes its argument value with a branch cut along the negative real axis.
+
+   Example:
+
+   .. code:: mlir
+
+            %a = complex.angle %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.angle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: angle(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Atan2Op(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   For complex numbers it is expressed using complex logarithm
+   atan2(y, x) = -i * log((x + i * y) / sqrt(x**2 + y**2))
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.atan2 %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.atan2'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: atan2(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: BitcastOp(result, operand, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Example:
+
+   .. code:: mlir
+
+            %a = complex.bitcast %b : complex<f32> -> i64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.bitcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: bitcast(result, operand, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ConjOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``conj`` op takes a single complex number and computes the
+   complex conjugate.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.conj %b: complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.conj'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: conj(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ConstantOp(complex, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``complex.constant`` operation creates a constant complex number from an
+   attribute containing the real and imaginary parts.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.constant [0.1, -1.0] : complex<f64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: constant(complex, value, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CosOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cos`` op takes a single complex number and computes the cosine of
+   it, i.e. ``cos(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.cos %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.cos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: cos(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: CreateOp(complex, real, imaginary, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``complex.create`` operation creates a complex number from two
+   floating-point operands, the real and the imaginary part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.create %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.create'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: real() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: imaginary() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: create_(complex, real, imaginary, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: DivOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``div`` operation takes two complex numbers and returns result of their
+   division:
+
+   .. code:: mlir
+
+       %a = complex.div %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.div'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: div(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: EqualOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``eq`` op takes two complex numbers and returns whether they are equal.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.eq %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.eq'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: eq(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ExpOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``exp`` op takes a single complex number and computes the exponential of
+   it, i.e. ``exp(x)`` or ``e^(x)``, where ``x`` is the input value.
+   ``e`` denotes Euler's number and is approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.exp %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.exp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: exp(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Expm1Op(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   complex.expm1(x) := complex.exp(x) - 1
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.expm1 %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.expm1'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: expm1(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ImOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``im`` op takes a single complex number and extracts the imaginary part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.im %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.im'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: imaginary() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: im(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: Log1pOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``log`` op takes a single complex number and computes the natural
+   logarithm of one plus the given value, i.e. ``log(1 + x)`` or ``log_e(1 + x)``,
+   where ``x`` is the input value. ``e`` denotes Euler's number and is
+   approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.log1p %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log1p'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log1p(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: LogOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``log`` op takes a single complex number and computes the natural
+   logarithm of it, i.e. ``log(x)`` or ``log_e(x)``, where ``x`` is the input value.
+   ``e`` denotes Euler's number and is approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.log %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: log(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MulOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``mul`` operation takes two complex numbers and returns their product:
+
+   .. code:: mlir
+
+       %a = complex.mul %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: mul(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: NegOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``neg`` op takes a single complex number ``complex`` and returns ``-complex``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.neg %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neg'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: neg(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: NotEqualOp(lhs, rhs, *, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``neq`` op takes two complex numbers and returns whether they are not
+   equal.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.neq %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neq'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: neq(lhs, rhs, *, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PowOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``pow`` operation takes a complex number raises it to the given complex
+   exponent.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.pow %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.pow'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: pow(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: PowiOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``powi`` operation takes a ``base`` operand of complex type and a ``power``
+   operand of signed integer type and returns one result of the same type
+   as ``base``. The result is ``base`` raised to the power of ``power``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.powi %b, %c : complex<f32>, i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.powi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: powi(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: ReOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``re`` op takes a single complex number and extracts the real part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.re %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.re'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: real() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: re(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: RsqrtOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``rsqrt`` operation computes reciprocal of square root.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.rsqrt %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: rsqrt(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SignOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sign`` op takes a single complex number and computes the sign of
+   it, i.e. ``y = sign(x) = x / |x|`` if ``x != 0``, otherwise ``y = 0``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sign %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sign'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sign(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SinOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sin`` op takes a single complex number and computes the sine of
+   it, i.e. ``sin(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sin %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sin(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SqrtOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sqrt`` operation takes a complex number and returns its square root.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sqrt %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sqrt(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: SubOp(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sub`` operation takes two complex numbers and returns their difference.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sub %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sub'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: sub(lhs, rhs, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TanOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tan`` op takes a single complex number and computes the tangent of
+   it, i.e. ``tan(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.tan %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: tan(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: TanhOp(complex, *, fastmath=None, results=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tanh`` operation takes a complex number and returns its hyperbolic
+   tangent.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.tanh %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tanh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: tanh(complex, *, fastmath=None, results=None, loc=None, ip=None) -> _ods_ir
+

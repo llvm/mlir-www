@@ -1,0 +1,165 @@
+mlir.dialects._sparse_tensor_enum_gen
+=====================================
+
+.. py:module:: mlir.dialects._sparse_tensor_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._sparse_tensor_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._sparse_tensor_enum_gen.CrdTransDirectionKind
+   mlir.dialects._sparse_tensor_enum_gen.SparseTensorSortKind
+   mlir.dialects._sparse_tensor_enum_gen.StorageSpecifierKind
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._sparse_tensor_enum_gen.register_attribute_builder
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorcrdtransdirectionenum
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorsortkindenum
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorstoragespecifierkindenum
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorcrdtransdirectionattr
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorsortkindattr
+   mlir.dialects._sparse_tensor_enum_gen._sparsetensorstoragespecifierkindattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: CrdTransDirectionKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   sparse tensor coordinate translation direction
+
+
+   .. py:attribute:: dim2lvl
+      :value: 0
+
+
+
+   .. py:attribute:: lvl2dim
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _sparsetensorcrdtransdirectionenum(x, context)
+
+.. py:class:: SparseTensorSortKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   sparse tensor sort algorithm
+
+
+   .. py:attribute:: HybridQuickSort
+      :value: 0
+
+
+
+   .. py:attribute:: InsertionSortStable
+      :value: 1
+
+
+
+   .. py:attribute:: QuickSort
+      :value: 2
+
+
+
+   .. py:attribute:: HeapSort
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _sparsetensorsortkindenum(x, context)
+
+.. py:class:: StorageSpecifierKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   sparse tensor storage specifier kind
+
+
+   .. py:attribute:: LvlSize
+      :value: 0
+
+
+
+   .. py:attribute:: PosMemSize
+      :value: 1
+
+
+
+   .. py:attribute:: CrdMemSize
+      :value: 2
+
+
+
+   .. py:attribute:: ValMemSize
+      :value: 3
+
+
+
+   .. py:attribute:: DimOffset
+      :value: 4
+
+
+
+   .. py:attribute:: DimStride
+      :value: 5
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _sparsetensorstoragespecifierkindenum(x, context)
+
+.. py:function:: _sparsetensorcrdtransdirectionattr(x, context)
+
+.. py:function:: _sparsetensorsortkindattr(x, context)
+
+.. py:function:: _sparsetensorstoragespecifierkindattr(x, context)
+

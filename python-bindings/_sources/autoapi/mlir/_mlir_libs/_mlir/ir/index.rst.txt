@@ -1,0 +1,6813 @@
+mlir._mlir_libs._mlir.ir
+========================
+
+.. py:module:: mlir._mlir_libs._mlir.ir
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.ir._T
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.ir.DiagnosticSeverity
+   mlir._mlir_libs._mlir.ir.WalkOrder
+   mlir._mlir_libs._mlir.ir.WalkResult
+   mlir._mlir_libs._mlir.ir.Diagnostic
+   mlir._mlir_libs._mlir.ir.DiagnosticInfo
+   mlir._mlir_libs._mlir.ir.DiagnosticHandler
+   mlir._mlir_libs._mlir.ir.ThreadPool
+   mlir._mlir_libs._mlir.ir.Context
+   mlir._mlir_libs._mlir.ir.DialectDescriptor
+   mlir._mlir_libs._mlir.ir.Dialects
+   mlir._mlir_libs._mlir.ir.Dialect
+   mlir._mlir_libs._mlir.ir.DialectRegistry
+   mlir._mlir_libs._mlir.ir.Location
+   mlir._mlir_libs._mlir.ir.Module
+   mlir._mlir_libs._mlir.ir._OperationBase
+   mlir._mlir_libs._mlir.ir.Operation
+   mlir._mlir_libs._mlir.ir.OpView
+   mlir._mlir_libs._mlir.ir.Region
+   mlir._mlir_libs._mlir.ir.Block
+   mlir._mlir_libs._mlir.ir.InsertionPoint
+   mlir._mlir_libs._mlir.ir.Attribute
+   mlir._mlir_libs._mlir.ir.NamedAttribute
+   mlir._mlir_libs._mlir.ir.Type
+   mlir._mlir_libs._mlir.ir.TypeID
+   mlir._mlir_libs._mlir.ir.Value
+   mlir._mlir_libs._mlir.ir.BlockArgument
+   mlir._mlir_libs._mlir.ir.OpResult
+   mlir._mlir_libs._mlir.ir.OpOperand
+   mlir._mlir_libs._mlir.ir.AsmState
+   mlir._mlir_libs._mlir.ir.SymbolTable
+   mlir._mlir_libs._mlir.ir.BlockArgumentList
+   mlir._mlir_libs._mlir.ir.BlockIterator
+   mlir._mlir_libs._mlir.ir.BlockList
+   mlir._mlir_libs._mlir.ir.BlockSuccessors
+   mlir._mlir_libs._mlir.ir.BlockPredecessors
+   mlir._mlir_libs._mlir.ir.OperationIterator
+   mlir._mlir_libs._mlir.ir.OperationList
+   mlir._mlir_libs._mlir.ir.OpAttributeMap
+   mlir._mlir_libs._mlir.ir.OpOperandIterator
+   mlir._mlir_libs._mlir.ir.OpOperandList
+   mlir._mlir_libs._mlir.ir.OpResultList
+   mlir._mlir_libs._mlir.ir.OpSuccessors
+   mlir._mlir_libs._mlir.ir.RegionIterator
+   mlir._mlir_libs._mlir.ir.RegionSequence
+   mlir._mlir_libs._mlir.ir._GlobalDebug
+   mlir._mlir_libs._mlir.ir.AttrBuilder
+   mlir._mlir_libs._mlir.ir.AffineExpr
+   mlir._mlir_libs._mlir.ir.AffineConstantExpr
+   mlir._mlir_libs._mlir.ir.AffineDimExpr
+   mlir._mlir_libs._mlir.ir.AffineSymbolExpr
+   mlir._mlir_libs._mlir.ir.AffineBinaryExpr
+   mlir._mlir_libs._mlir.ir.AffineAddExpr
+   mlir._mlir_libs._mlir.ir.AffineMulExpr
+   mlir._mlir_libs._mlir.ir.AffineModExpr
+   mlir._mlir_libs._mlir.ir.AffineFloorDivExpr
+   mlir._mlir_libs._mlir.ir.AffineCeilDivExpr
+   mlir._mlir_libs._mlir.ir.AffineMap
+   mlir._mlir_libs._mlir.ir.AffineExprList
+   mlir._mlir_libs._mlir.ir.IntegerSet
+   mlir._mlir_libs._mlir.ir.IntegerSetConstraint
+   mlir._mlir_libs._mlir.ir.IntegerSetConstraintList
+   mlir._mlir_libs._mlir.ir.AffineMapAttr
+   mlir._mlir_libs._mlir.ir.DenseBoolArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseBoolArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseI8ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseI8ArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseI16ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseI16ArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseI32ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseI32ArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseI64ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseI64ArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseF32ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseF32ArrayIterator
+   mlir._mlir_libs._mlir.ir.DenseF64ArrayAttr
+   mlir._mlir_libs._mlir.ir.DenseF64ArrayIterator
+   mlir._mlir_libs._mlir.ir.ArrayAttr
+   mlir._mlir_libs._mlir.ir.ArrayAttributeIterator
+   mlir._mlir_libs._mlir.ir.BoolAttr
+   mlir._mlir_libs._mlir.ir.DenseElementsAttr
+   mlir._mlir_libs._mlir.ir.DenseFPElementsAttr
+   mlir._mlir_libs._mlir.ir.DenseIntElementsAttr
+   mlir._mlir_libs._mlir.ir.DenseResourceElementsAttr
+   mlir._mlir_libs._mlir.ir.DictAttr
+   mlir._mlir_libs._mlir.ir.SymbolRefAttr
+   mlir._mlir_libs._mlir.ir.FlatSymbolRefAttr
+   mlir._mlir_libs._mlir.ir.OpaqueAttr
+   mlir._mlir_libs._mlir.ir.FloatAttr
+   mlir._mlir_libs._mlir.ir.IntegerAttr
+   mlir._mlir_libs._mlir.ir.IntegerSetAttr
+   mlir._mlir_libs._mlir.ir.StringAttr
+   mlir._mlir_libs._mlir.ir.TypeAttr
+   mlir._mlir_libs._mlir.ir.UnitAttr
+   mlir._mlir_libs._mlir.ir.StridedLayoutAttr
+   mlir._mlir_libs._mlir.ir.InferTypeOpInterface
+   mlir._mlir_libs._mlir.ir.ShapedTypeComponents
+   mlir._mlir_libs._mlir.ir.InferShapedTypeOpInterface
+   mlir._mlir_libs._mlir.ir.IntegerType
+   mlir._mlir_libs._mlir.ir.FloatType
+   mlir._mlir_libs._mlir.ir.IndexType
+   mlir._mlir_libs._mlir.ir.Float4E2M1FNType
+   mlir._mlir_libs._mlir.ir.Float6E2M3FNType
+   mlir._mlir_libs._mlir.ir.Float6E3M2FNType
+   mlir._mlir_libs._mlir.ir.Float8E4M3FNType
+   mlir._mlir_libs._mlir.ir.Float8E5M2Type
+   mlir._mlir_libs._mlir.ir.Float8E4M3Type
+   mlir._mlir_libs._mlir.ir.Float8E4M3FNUZType
+   mlir._mlir_libs._mlir.ir.Float8E4M3B11FNUZType
+   mlir._mlir_libs._mlir.ir.Float8E5M2FNUZType
+   mlir._mlir_libs._mlir.ir.Float8E3M4Type
+   mlir._mlir_libs._mlir.ir.Float8E8M0FNUType
+   mlir._mlir_libs._mlir.ir.BF16Type
+   mlir._mlir_libs._mlir.ir.F16Type
+   mlir._mlir_libs._mlir.ir.FloatTF32Type
+   mlir._mlir_libs._mlir.ir.F32Type
+   mlir._mlir_libs._mlir.ir.F64Type
+   mlir._mlir_libs._mlir.ir.NoneType
+   mlir._mlir_libs._mlir.ir.ComplexType
+   mlir._mlir_libs._mlir.ir.ShapedType
+   mlir._mlir_libs._mlir.ir.VectorType
+   mlir._mlir_libs._mlir.ir.RankedTensorType
+   mlir._mlir_libs._mlir.ir.UnrankedTensorType
+   mlir._mlir_libs._mlir.ir.MemRefType
+   mlir._mlir_libs._mlir.ir.UnrankedMemRefType
+   mlir._mlir_libs._mlir.ir.TupleType
+   mlir._mlir_libs._mlir.ir.FunctionType
+   mlir._mlir_libs._mlir.ir.OpaqueType
+
+
+Module Contents
+---------------
+
+.. py:class:: DiagnosticSeverity
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: ERROR
+      :value: 0
+
+
+
+   .. py:attribute:: WARNING
+      :value: 1
+
+
+
+   .. py:attribute:: NOTE
+      :value: 2
+
+
+
+   .. py:attribute:: REMARK
+      :value: 3
+
+
+
+.. py:class:: WalkOrder
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: PRE_ORDER
+      :value: 0
+
+
+
+   .. py:attribute:: POST_ORDER
+      :value: 1
+
+
+
+.. py:class:: WalkResult
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: ADVANCE
+      :value: 0
+
+
+
+   .. py:attribute:: INTERRUPT
+      :value: 1
+
+
+
+   .. py:attribute:: SKIP
+      :value: 2
+
+
+
+.. py:class:: Diagnostic
+
+   .. py:property:: severity
+      :type: DiagnosticSeverity
+
+
+      
+      Returns the severity of the diagnostic.
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      Returns the location associated with the diagnostic.
+
+
+
+   .. py:property:: message
+      :type: str
+
+
+      
+      Returns the message text of the diagnostic.
+
+
+
+   .. py:property:: notes
+      :type: tuple
+
+
+      
+      Returns a tuple of attached note diagnostics.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the diagnostic message as a string.
+
+
+
+.. py:class:: DiagnosticInfo(diag: Diagnostic)
+
+   .. py:property:: severity
+      :type: DiagnosticSeverity
+
+
+      
+      The severity level of the diagnostic.
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      The location associated with the diagnostic.
+
+
+
+   .. py:property:: message
+      :type: str
+
+
+      
+      The message text of the diagnostic.
+
+
+
+   .. py:property:: notes
+      :type: list[DiagnosticInfo]
+
+
+      
+      List of attached note diagnostics.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the diagnostic message as a string.
+
+
+
+.. py:class:: DiagnosticHandler
+
+   .. py:method:: detach() -> None
+
+      
+      Detaches the diagnostic handler from the context.
+
+
+
+   .. py:property:: attached
+      :type: bool
+
+
+      
+      Returns True if the handler is attached to a context.
+
+
+
+   .. py:property:: had_error
+      :type: bool
+
+
+      
+      Returns True if an error was encountered during diagnostic handling.
+
+
+
+   .. py:method:: __enter__() -> object
+
+      
+      Enters the diagnostic handler as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the diagnostic handler context manager.
+
+
+
+.. py:class:: ThreadPool
+
+   .. py:method:: get_max_concurrency() -> int
+
+      
+      Returns the maximum number of threads in the pool.
+
+
+
+   .. py:method:: _mlir_thread_pool_ptr() -> str
+
+      
+      Returns the raw pointer to the LLVM thread pool as a string.
+
+
+
+.. py:class:: Context
+
+   .. py:method:: _get_live_count() -> int
+      :staticmethod:
+
+
+      
+      Gets the number of live Context objects.
+
+
+
+   .. py:method:: _get_context_again() -> Context
+
+      
+      Gets another reference to the same context.
+
+
+
+   .. py:method:: _get_live_module_count() -> int
+
+      
+      Gets the number of live modules owned by this context.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirContext.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates a Context from a capsule wrapping MlirContext.
+
+
+
+   .. py:method:: __enter__() -> object
+
+      
+      Enters the context as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the context manager.
+
+
+
+   .. py:attribute:: current
+      :type:  Context | None
+      :value: Ellipsis
+
+
+      
+      Gets the Context bound to the current thread or returns None if no context is set.
+
+
+
+   .. py:property:: dialects
+      :type: Dialects
+
+
+      
+      Gets a container for accessing dialects by name.
+
+
+
+   .. py:property:: d
+      :type: Dialects
+
+
+      
+      Alias for ``dialects``.
+
+
+
+   .. py:method:: get_dialect_descriptor(dialect_name: str) -> DialectDescriptor
+
+      
+      Gets or loads a dialect by name, returning its descriptor object.
+
+
+
+   .. py:property:: allow_unregistered_dialects
+      :type: bool
+
+
+      
+      Controls whether unregistered dialects are allowed in this context.
+
+
+
+   .. py:method:: attach_diagnostic_handler(callback: object) -> object
+
+      
+      Attaches a diagnostic handler that will receive callbacks.
+
+
+
+   .. py:method:: enable_multithreading(enable: bool) -> None
+
+      Enables or disables multi-threading support in the context.
+
+      :param enable: Whether to enable (True) or disable (False) multi-threading.
+
+
+
+   .. py:method:: set_thread_pool(arg: ThreadPool, /) -> None
+
+      Sets a custom thread pool for the context to use.
+
+      :param pool: A ThreadPool object to use for parallel operations.
+
+      .. note:: Multi-threading is automatically disabled before setting the thread pool.
+
+
+
+   .. py:method:: get_num_threads() -> int
+
+      
+      Gets the number of threads in the context's thread pool.
+
+
+
+   .. py:method:: _mlir_thread_pool_ptr() -> str
+
+      
+      Gets the raw pointer to the LLVM thread pool as a string.
+
+
+
+   .. py:method:: is_registered_operation(operation_name: str) -> bool
+
+      Checks whether an operation with the given name is registered.
+
+      :param operation_name: The fully qualified name of the operation (e.g., `arith.addf`).
+
+      :returns: True if the operation is registered, False otherwise.
+
+
+
+   .. py:method:: append_dialect_registry(registry: DialectRegistry) -> None
+
+      Appends the contents of a dialect registry to the context.
+
+      :param registry: A DialectRegistry containing dialects to append.
+
+
+
+   .. py:property:: emit_error_diagnostics
+      :type: bool
+
+
+      
+      Controls whether error diagnostics are emitted to diagnostic handlers.
+
+      By default, error diagnostics are captured and reported through MLIRError exceptions.
+
+
+
+   .. py:method:: load_all_available_dialects() -> None
+
+      
+      Loads all dialects available in the registry into the context.
+
+      This eagerly loads all dialects that have been registered, making them
+      immediately available for use.
+
+
+
+.. py:class:: DialectDescriptor
+
+   .. py:property:: namespace
+      :type: str
+
+
+      
+      Returns the namespace of the dialect.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the dialect descriptor.
+
+
+
+.. py:class:: Dialects
+
+   .. py:method:: __getitem__(arg: str, /) -> object
+
+      
+      Gets a dialect by name using subscript notation.
+
+
+
+   .. py:method:: __getattr__(arg: str, /) -> object
+
+      
+      Gets a dialect by name using attribute notation.
+
+
+
+.. py:class:: Dialect(descriptor: object)
+
+   .. py:property:: descriptor
+      :type: object
+
+
+      
+      Returns the DialectDescriptor for this dialect.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the dialect.
+
+
+
+.. py:class:: DialectRegistry
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirDialectRegistry.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> DialectRegistry
+      :staticmethod:
+
+
+      
+      Creates a DialectRegistry from a capsule wrapping ``MlirDialectRegistry``.
+
+
+
+.. py:class:: Location
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirLocation.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Location
+      :staticmethod:
+
+
+      
+      Creates a Location from a capsule wrapping MlirLocation.
+
+
+
+   .. py:method:: __enter__() -> object
+
+      
+      Enters the location as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the location context manager.
+
+
+
+   .. py:method:: __eq__(arg: Location, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares location with non-location object (always returns False).
+
+
+
+   .. py:attribute:: current
+      :type:  Location | None
+      :value: Ellipsis
+
+
+      
+      Gets the Location bound to the current thread or raises ValueError.
+
+
+
+   .. py:method:: unknown(context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location representing an unknown location.
+
+
+
+   .. py:method:: callsite(callee: Location, frames: collections.abc.Sequence[Location], context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location representing a caller and callsite.
+
+
+
+   .. py:method:: is_a_callsite() -> bool
+
+      
+      Returns True if this location is a CallSiteLoc.
+
+
+
+   .. py:property:: callee
+      :type: Location
+
+
+      
+      Gets the callee location from a CallSiteLoc.
+
+
+
+   .. py:property:: caller
+      :type: Location
+
+
+      
+      Gets the caller location from a CallSiteLoc.
+
+
+
+   .. py:method:: file(filename: str, line: int, col: int, context: Context | None = None) -> Location
+                  file(filename: str, start_line: int, start_col: int, end_line: int, end_col: int, context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location representing a file, line and column range.
+
+
+
+   .. py:method:: is_a_file() -> bool
+
+      
+      Returns True if this location is a FileLineColLoc.
+
+
+
+   .. py:property:: filename
+      :type: str
+
+
+      
+      Gets the filename from a FileLineColLoc.
+
+
+
+   .. py:property:: start_line
+      :type: int
+
+
+      
+      Gets the start line number from a ``FileLineColLoc``.
+
+
+
+   .. py:property:: start_col
+      :type: int
+
+
+      
+      Gets the start column number from a ``FileLineColLoc``.
+
+
+
+   .. py:property:: end_line
+      :type: int
+
+
+      
+      Gets the end line number from a ``FileLineColLoc``.
+
+
+
+   .. py:property:: end_col
+      :type: int
+
+
+      
+      Gets the end column number from a ``FileLineColLoc``.
+
+
+
+   .. py:method:: fused(locations: collections.abc.Sequence[Location], metadata: Attribute | None = None, context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location representing a fused location with optional metadata.
+
+
+
+   .. py:method:: is_a_fused() -> bool
+
+      
+      Returns True if this location is a ``FusedLoc``.
+
+
+
+   .. py:property:: locations
+      :type: list[Location]
+
+
+      
+      Gets the list of locations from a ``FusedLoc``.
+
+
+
+   .. py:method:: name(name: str, childLoc: Location | None = None, context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location representing a named location with optional child location.
+
+
+
+   .. py:method:: is_a_name() -> bool
+
+      
+      Returns True if this location is a ``NameLoc``.
+
+
+
+   .. py:property:: name_str
+      :type: str
+
+
+      
+      Gets the name string from a ``NameLoc``.
+
+
+
+   .. py:property:: child_loc
+      :type: Location
+
+
+      
+      Gets the child location from a ``NameLoc``.
+
+
+
+   .. py:method:: from_attr(attribute: Attribute, context: Context | None = None) -> Location
+      :staticmethod:
+
+
+      
+      Gets a Location from a ``LocationAttr``.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Location``.
+
+
+
+   .. py:property:: attr
+      :type: Attribute
+
+
+      
+      Get the underlying ``LocationAttr``.
+
+
+
+   .. py:method:: emit_error(message: str) -> None
+
+      Emits an error diagnostic at this location.
+
+      :param message: The error message to emit.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns the assembly representation of the location.
+
+
+
+.. py:class:: Module
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirModule.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates a Module from a ``MlirModule`` wrapped by a capsule (i.e. ``module._CAPIPtr``).
+
+      This returns a new object **BUT** ``_clear_mlir_module(module)`` must be called to
+      prevent double-frees (of the underlying ``mlir::Module``).
+
+
+
+   .. py:method:: _clear_mlir_module() -> None
+
+      
+      Clears the internal MLIR module reference.
+
+      This is used internally to prevent double-free when ownership is transferred
+      via the C API capsule mechanism. Not intended for normal use.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Module
+                  parse(asm: bytes, context: Context | None = None) -> Module
+      :staticmethod:
+
+
+
+   .. py:method:: parseFile(path: str, context: Context | None = None) -> Module
+      :staticmethod:
+
+
+      
+      Parses a module's assembly format from a string.
+
+      Returns a new MlirModule or raises an MLIRError if the parsing fails.
+
+      See also: https://mlir.llvm.org/docs/LangRef/
+
+
+
+   .. py:method:: create(loc: Location | None = None) -> Module
+      :staticmethod:
+
+
+      
+      Creates an empty module.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that created the ``Module``.
+
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Accesses the module as an operation.
+
+
+
+   .. py:property:: body
+      :type: Block
+
+
+      
+      Return the block for this module.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Gets the assembly form of the operation with default options.
+
+      If more advanced control over the assembly formatting or I/O options is needed,
+      use the dedicated print or get_asm method, which supports keyword arguments to
+      customize behavior.
+
+
+
+   .. py:method:: __eq__(other: Module) -> bool
+
+      
+      Compares two modules for equality.
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the module.
+
+
+
+.. py:class:: _OperationBase
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirOperation``.
+
+
+
+   .. py:method:: __eq__(arg: _OperationBase, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares operation with non-operation object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the operation.
+
+
+
+   .. py:property:: attributes
+      :type: OpAttributeMap
+
+
+      
+      Returns a dictionary-like map of operation attributes.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the operation.
+
+
+
+   .. py:property:: name
+      :type: str
+
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:property:: operands
+      :type: OpOperandList
+
+
+      
+      Returns the list of operation operands.
+
+
+
+   .. py:property:: regions
+      :type: RegionSequence
+
+
+      
+      Returns the list of operation regions.
+
+
+
+   .. py:property:: results
+      :type: OpResultList
+
+
+      
+      Returns the list of Operation results.
+
+
+
+   .. py:property:: result
+      :type: OpResult
+
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      Returns the source location the operation was defined or derived from.
+
+
+
+   .. py:property:: parent
+      :type: Operation | None
+
+
+      
+      Returns the parent operation, or ``None`` if at top level.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the operation.
+
+
+
+   .. py:method:: print(state: AsmState, file: object | None = None, binary: bool = False) -> None
+                  print(large_elements_limit: int | None = None, large_resource_limit: int | None = None, enable_debug_info: bool = False, pretty_debug_info: bool = False, print_generic_op_form: bool = False, use_local_scope: bool = False, use_name_loc_as_prefix: bool = False, assume_verified: bool = False, file: object | None = None, binary: bool = False, skip_regions: bool = False) -> None
+
+      Prints the assembly form of the operation to a file like object.
+
+      :param large_elements_limit: Whether to elide elements attributes above this
+                                   number of elements. Defaults to None (no limit).
+      :param large_resource_limit: Whether to elide resource attributes above this
+                                   number of characters. Defaults to None (no limit). If large_elements_limit
+                                   is set and this is None, the behavior will be to use large_elements_limit
+                                   as large_resource_limit.
+      :param enable_debug_info: Whether to print debug/location information. Defaults
+                                to False.
+      :param pretty_debug_info: Whether to format debug information for easier reading
+                                by a human (warning: the result is unparseable). Defaults to False.
+      :param print_generic_op_form: Whether to print the generic assembly forms of all
+                                    ops. Defaults to False.
+      :param use_local_scope: Whether to print in a way that is more optimized for
+                              multi-threaded access but may not be consistent with how the overall
+                              module prints.
+      :param use_name_loc_as_prefix: Whether to use location attributes (NameLoc) as
+                                     prefixes for the SSA identifiers. Defaults to False.
+      :param assume_verified: By default, if not printing generic form, the verifier
+                              will be run and if it fails, generic form will be printed with a comment
+                              about failed verification. While a reasonable default for interactive use,
+                              for systematic use, it is often better for the caller to verify explicitly
+                              and report failures in a more robust fashion. Set this to True if doing this
+                              in order to avoid running a redundant verification. If the IR is actually
+                              invalid, behavior is undefined.
+      :param file: The file like object to write to. Defaults to sys.stdout.
+      :param binary: Whether to write bytes (True) or str (False). Defaults to False.
+      :param skip_regions: Whether to skip printing regions. Defaults to False.
+
+
+
+   .. py:method:: write_bytecode(file: object, desired_version: int | None = None) -> None
+
+      Write the bytecode form of the operation to a file like object.
+
+      :param file: The file like object to write to.
+      :param desired_version: Optional version of bytecode to emit.
+
+      :returns: The bytecode writer status.
+
+
+
+   .. py:method:: get_asm(binary: bool = False, large_elements_limit: int | None = None, large_resource_limit: int | None = None, enable_debug_info: bool = False, pretty_debug_info: bool = False, print_generic_op_form: bool = False, use_local_scope: bool = False, use_name_loc_as_prefix: bool = False, assume_verified: bool = False, skip_regions: bool = False) -> object
+
+      Gets the assembly form of the operation with all options available.
+
+      :param binary: Whether to return a bytes (True) or str (False) object. Defaults to
+                     False.
+      :param ... others ...: See the print() method for common keyword arguments for
+                             configuring the printout.
+
+      :returns: Either a bytes or str object, depending on the setting of the `binary`
+                argument.
+
+
+
+   .. py:method:: verify() -> bool
+
+      
+      Verify the operation. Raises MLIRError if verification fails, and returns true otherwise.
+
+
+
+   .. py:method:: move_after(other: _OperationBase) -> None
+
+      
+      Puts self immediately after the other operation in its parent block.
+
+
+
+   .. py:method:: move_before(other: _OperationBase) -> None
+
+      
+      Puts self immediately before the other operation in its parent block.
+
+
+
+   .. py:method:: is_before_in_block(other: _OperationBase) -> bool
+
+      Checks if this operation is before another in the same block.
+
+      :param other: Another operation in the same parent block.
+
+      :returns: True if this operation is before `other` in the operation list of the parent block.
+
+
+
+   .. py:method:: clone(ip: object | None = None) -> Operation
+
+      Creates a deep copy of the operation.
+
+      :param ip: Optional insertion point where the cloned operation should be inserted.
+                 If None, the current insertion point is used. If False, the operation
+                 remains detached.
+
+      :returns: A new Operation that is a clone of this operation.
+
+
+
+   .. py:method:: detach_from_parent() -> OpView
+
+      
+      Detaches the operation from its parent block.
+
+
+
+   .. py:property:: attached
+      :type: bool
+
+
+      
+      Reports if the operation is attached to its parent block.
+
+
+
+   .. py:method:: erase() -> None
+
+      
+      Erases the operation and frees its memory.
+
+      Note:
+      After erasing, any Python references to the operation become invalid.
+
+
+
+   .. py:method:: walk(callback: collections.abc.Callable[[Operation], WalkResult], walk_order: WalkOrder) -> None
+
+      Walks the operation tree with a callback function.
+
+      :param callback: A callable that takes an Operation and returns a WalkResult.
+      :param walk_order: The order of traversal (PRE_ORDER or POST_ORDER).
+
+
+
+.. py:class:: Operation
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:method:: create(name: str, results: collections.abc.Sequence[Type] | None = None, operands: collections.abc.Sequence[Value] | None = None, attributes: dict | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int = 0, loc: Location | None = None, ip: object | None = None, infer_type: bool = False) -> Operation
+      :staticmethod:
+
+
+      Creates a new operation.
+
+      :param name: Operation name (e.g. `dialect.operation`).
+      :param results: Optional sequence of Type representing op result types.
+      :param operands: Optional operands of the operation.
+      :param attributes: Optional Dict of {str: Attribute}.
+      :param successors: Optional List of Block for the operation's successors.
+      :param regions: Number of regions to create (default = 0).
+      :param location: Optional Location object (defaults to resolve from context manager).
+      :param ip: Optional InsertionPoint (defaults to resolve from context manager or set to False to disable insertion, even with an insertion point set in the context manager).
+      :param infer_type: Whether to infer result types (default = False).
+
+      :returns: A new detached Operation object. Detached operations can be added to blocks, which causes them to become attached.
+
+
+
+   .. py:method:: parse(source: str, *, source_name: str = '', context: Context | None = None) -> OpView
+      :staticmethod:
+
+
+      
+      Parses an operation. Supports both text assembly format and binary bytecode format.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirOperation.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates an Operation from a capsule wrapping MlirOperation.
+
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns self (the operation).
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView of this operation.
+
+      Note:
+      If the operation has a registered and loaded dialect then this OpView will
+      be concrete wrapper class.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block containing this operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: replace_uses_of_with(of: Value, with_: Value) -> None
+
+      
+      Replaces uses of the 'of' value with the 'with' value inside the operation.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+.. py:class:: OpView(operation: Operation)
+              OpView(name: str, opRegionSpec: tuple[int, bool], operandSegmentSpecObj: object | None = None, resultSegmentSpecObj: object | None = None, results: list | None = None, operands: list | None = None, attributes: dict | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int | None = None, loc: Location | None = None, ip: object | None = None)
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :type:  tuple
+      :value: (0, True)
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :type:  None
+      :value: None
+
+
+
+   .. py:attribute:: _ODS_RESULT_SEGMENTS
+      :type:  None
+      :value: None
+
+
+
+   .. py:method:: build_generic(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      (cls: object, results: list | None = None, operands: list | None = None, attributes: dict | None = None, successors: collections.abc.Sequence[_mlir.ir.Block] | None = None, regions: int | None = None, loc: _mlir.ir.Location | None = None, ip: object | None = None) -> object
+
+      Builds a specific, generated OpView based on class level attributes.
+
+
+
+   .. py:method:: parse(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      (cls: object, source: str, *, source_name: str = '', context: Context | None = None) -> _mlir.ir.OpView
+
+      Parses a specific, generated OpView based on class level attributes.
+
+
+
+.. py:class:: Region
+
+   .. py:property:: blocks
+      :type: BlockList
+
+
+      
+      Returns a forward-optimized sequence of blocks.
+
+
+
+   .. py:property:: owner
+      :type: OpView
+
+
+      
+      Returns the operation owning this region.
+
+
+
+   .. py:method:: __iter__() -> BlockIterator
+
+      
+      Iterates over blocks in the region.
+
+
+
+   .. py:method:: __eq__(arg: Region, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares region with non-region object (always returns False).
+
+
+
+.. py:class:: Block
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirBlock.
+
+
+
+   .. py:property:: owner
+      :type: OpView
+
+
+      
+      Returns the owning operation of this block.
+
+
+
+   .. py:property:: region
+      :type: Region
+
+
+      
+      Returns the owning region of this block.
+
+
+
+   .. py:property:: arguments
+      :type: BlockArgumentList
+
+
+      
+      Returns a list of block arguments.
+
+
+
+   .. py:method:: add_argument(type: Type, loc: Location) -> BlockArgument
+
+      Appends an argument of the specified type to the block.
+
+      :param type: The type of the argument to add.
+      :param loc: The source location for the argument.
+
+      :returns: The newly added block argument.
+
+
+
+   .. py:method:: erase_argument(index: int) -> None
+
+      Erases the argument at the specified index.
+
+      :param index: The index of the argument to erase.
+
+
+
+   .. py:property:: operations
+      :type: OperationList
+
+
+      
+      Returns a forward-optimized sequence of operations.
+
+
+
+   .. py:method:: create_at_start(parent: Region, arg_types: collections.abc.Sequence = [], arg_locs: collections.abc.Sequence | None = None) -> Block
+      :staticmethod:
+
+
+      
+      Creates and returns a new Block at the beginning of the given region (with given argument types and locations).
+
+
+
+   .. py:method:: append_to(region: Region) -> None
+
+      Appends this block to a region.
+
+      Transfers ownership if the block is currently owned by another region.
+
+      :param region: The region to append the block to.
+
+
+
+   .. py:method:: create_before(*arg_types, arg_locs: collections.abc.Sequence | None = None) -> Block
+
+      
+      Creates and returns a new Block before this block (with given argument types and locations).
+
+
+
+   .. py:method:: create_after(*arg_types, arg_locs: collections.abc.Sequence | None = None) -> Block
+
+      
+      Creates and returns a new Block after this block (with given argument types and locations).
+
+
+
+   .. py:method:: __iter__() -> OperationIterator
+
+      
+      Iterates over operations in the block.
+
+
+
+   .. py:method:: __eq__(arg: Block, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares block with non-block object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the block.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the block.
+
+
+
+   .. py:method:: append(operation: _OperationBase) -> None
+
+      Appends an operation to this block.
+
+      If the operation is currently in another block, it will be moved.
+
+      :param operation: The operation to append to the block.
+
+
+
+   .. py:property:: successors
+      :type: BlockSuccessors
+
+
+      
+      Returns the list of Block successors.
+
+
+
+   .. py:property:: predecessors
+      :type: BlockPredecessors
+
+
+      
+      Returns the list of Block predecessors.
+
+
+
+.. py:class:: InsertionPoint(block: Block)
+              InsertionPoint(beforeOperation: _OperationBase)
+
+   .. py:method:: __enter__() -> object
+
+      
+      Enters the insertion point as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the insertion point context manager.
+
+
+
+   .. py:attribute:: current
+      :type:  InsertionPoint
+      :value: Ellipsis
+
+
+      
+      Gets the InsertionPoint bound to the current thread or raises ValueError if none has been set.
+
+
+
+   .. py:method:: at_block_begin(block: Block) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point at the beginning of a block.
+
+      :param block: The block at whose beginning operations should be inserted.
+
+      :returns: An InsertionPoint at the block's beginning.
+
+
+
+   .. py:method:: at_block_terminator(block: Block) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point before a block's terminator.
+
+      :param block: The block whose terminator to insert before.
+
+      :returns: An InsertionPoint before the terminator.
+
+      :raises ValueError: If the block has no terminator.
+
+
+
+   .. py:method:: after(operation: _OperationBase) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point immediately after an operation.
+
+      :param operation: The operation after which to insert.
+
+      :returns: An InsertionPoint after the operation.
+
+
+
+   .. py:method:: insert(operation: _OperationBase) -> None
+
+      Inserts an operation at this insertion point.
+
+      :param operation: The operation to insert.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block that this ``InsertionPoint`` points to.
+
+
+
+   .. py:property:: ref_operation
+      :type: Operation | None
+
+
+      
+      The reference operation before which new operations are inserted, or None if the insertion point is at the end of the block.
+
+
+
+.. py:class:: Attribute(cast_from_type: Attribute)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirAttribute.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Attribute
+      :staticmethod:
+
+
+      
+      Creates an Attribute from a capsule wrapping ``MlirAttribute``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Attribute
+      :staticmethod:
+
+
+      
+      Parses an attribute from an assembly form. Raises an ``MLIRError`` on failure.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Attribute``.
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:method:: get_named(arg: str, /) -> NamedAttribute
+
+      Binds a name to the attribute, creating a `NamedAttribute`.
+
+      :param name: The name to bind to the `Attribute`.
+
+      :returns: A `NamedAttribute` with the given name and this attribute.
+
+
+
+   .. py:method:: __eq__(arg: Attribute, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares attribute with non-attribute object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the attribute.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the Attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: maybe_downcast() -> Attribute
+
+      
+      Downcasts the attribute to a more specific attribute if possible.
+
+
+
+.. py:class:: NamedAttribute
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the named attribute.
+
+
+
+   .. py:property:: name
+      :type: str
+
+
+      
+      The name of the ``NamedAttribute`` binding.
+
+
+
+   .. py:property:: attr
+      :type: Attribute
+
+
+      
+      The underlying generic attribute of the ``NamedAttribute`` binding.
+
+
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: TypeID
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirTypeID``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> TypeID
+      :staticmethod:
+
+
+      
+      Creates a ``TypeID`` from a capsule wrapping ``MlirTypeID``.
+
+
+
+   .. py:method:: __eq__(arg: TypeID, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares TypeID with non-TypeID object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``TypeID``.
+
+
+
+.. py:data:: _T
+
+.. py:class:: Value(value: Value)
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`_T`\ ]
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirValue``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Value
+      :staticmethod:
+
+
+      
+      Creates a ``Value`` from a capsule wrapping ``MlirValue``.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context in which the value lives.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:property:: owner
+      :type: object
+
+
+      
+      Returns the owner of the value (``Operation`` for results, ``Block`` for arguments).
+
+
+
+   .. py:property:: uses
+      :type: OpOperandIterator
+
+
+      
+      Returns an iterator over uses of this value.
+
+
+
+   .. py:method:: __eq__(arg: Value, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares value with non-value object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the value.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the string form of the value.
+
+      If the value is a block argument, this is the assembly form of its type and the
+      position in the argument list. If the value is an operation result, this is
+      equivalent to printing the operation that produced it.
+
+
+
+   .. py:method:: get_name(use_local_scope: bool = False, use_name_loc_as_prefix: bool = False) -> str
+                  get_name(state: AsmState) -> str
+
+      
+      Returns the string form of value as an operand (i.e., the ValueID).
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the value.
+
+
+
+   .. py:method:: set_type(type: _T)
+
+      
+      Sets the type of the value.
+
+
+
+   .. py:method:: replace_all_uses_with(arg: Value, /) -> None
+
+      
+      Replace all uses of value with the new value, updating anything in the IR that uses ``self`` to use the other value instead.
+
+
+
+   .. py:method:: replace_all_uses_except(with_: Value, exceptions: Operation) -> None
+                  replace_all_uses_except(with_: Value, exceptions: list) -> None
+                  replace_all_uses_except(with_: Value, exceptions: Operation) -> None
+                  replace_all_uses_except(with_: Value, exceptions: collections.abc.Sequence[Operation]) -> None
+
+
+   .. py:method:: maybe_downcast() -> Value
+
+      
+      Downcasts the ``Value`` to a more specific kind if possible.
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      Returns the source location of the value.
+
+
+
+.. py:class:: BlockArgument(value: Value)
+
+   Bases: :py:obj:`Value`\ [\ :py:obj:`_T`\ ]
+
+
+   .. py:method:: isinstance(other_value: Value) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: maybe_downcast() -> BlockArgument
+
+
+   .. py:property:: owner
+      :type: Block
+
+
+      
+      Returns the block that owns this argument.
+
+
+
+   .. py:property:: arg_number
+      :type: int
+
+
+      
+      Returns the position of this argument in the block's argument list.
+
+
+
+   .. py:method:: set_type(type: Type) -> None
+
+      
+      Sets the type of this block argument.
+
+
+
+   .. py:method:: set_location(loc: Location) -> None
+
+      
+      Sets the location of this block argument.
+
+
+
+.. py:class:: OpResult(value: Value)
+
+   Bases: :py:obj:`Value`\ [\ :py:obj:`_T`\ ]
+
+
+   .. py:method:: isinstance(other_value: Value) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: maybe_downcast() -> OpResult
+
+
+   .. py:property:: owner
+      :type: Operation
+
+
+      
+      Returns the operation that produces this result.
+
+
+
+   .. py:property:: result_number
+      :type: int
+
+
+      
+      Returns the position of this result in the operation's result list.
+
+
+
+.. py:class:: OpOperand
+
+   .. py:property:: owner
+      :type: OpView
+
+
+      
+      Returns the operation that owns this operand.
+
+
+
+   .. py:property:: operand_number
+      :type: int
+
+
+      
+      Returns the operand number in the owning operation.
+
+
+
+.. py:class:: AsmState(value: Value, use_local_scope: bool = False)
+              AsmState(op: _OperationBase, use_local_scope: bool = False)
+
+.. py:class:: SymbolTable(arg: _OperationBase, /)
+
+   .. py:method:: __getitem__(arg: str, /) -> OpView
+
+      Looks up a symbol by name in the symbol table.
+
+      :param name: The name of the symbol to look up.
+
+      :returns: The operation defining the symbol.
+
+      :raises KeyError: If the symbol is not found.
+
+
+
+   .. py:method:: insert(operation: _OperationBase) -> StringAttr
+
+      Inserts a symbol operation into the symbol table.
+
+      :param operation: An operation with a symbol name to insert.
+
+      :returns: The symbol name attribute of the inserted operation.
+
+      :raises ValueError: If the operation does not have a symbol name.
+
+
+
+   .. py:method:: erase(operation: _OperationBase) -> None
+
+      Erases a symbol operation from the symbol table.
+
+      :param operation: The symbol operation to erase.
+
+      .. note:: The operation is also erased from the IR and invalidated.
+
+
+
+   .. py:method:: __delitem__(arg: str, /) -> None
+
+      
+      Deletes a symbol by name from the symbol table.
+
+
+
+   .. py:method:: __contains__(arg: str, /) -> bool
+
+      
+      Checks if a symbol with the given name exists in the table.
+
+
+
+   .. py:method:: set_symbol_name(symbol: _OperationBase, name: str) -> None
+      :staticmethod:
+
+
+      
+      Sets the symbol name for a symbol operation.
+
+
+
+   .. py:method:: get_symbol_name(symbol: _OperationBase) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets the symbol name from a symbol operation.
+
+
+
+   .. py:method:: get_visibility(symbol: _OperationBase) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets the visibility attribute of a symbol operation.
+
+
+
+   .. py:method:: set_visibility(symbol: _OperationBase, visibility: str) -> None
+      :staticmethod:
+
+
+      
+      Sets the visibility attribute of a symbol operation.
+
+
+
+   .. py:method:: replace_all_symbol_uses(old_symbol: str, new_symbol: str, from_op: _OperationBase) -> None
+      :staticmethod:
+
+
+      
+      Replaces all uses of a symbol with a new symbol name within the given operation.
+
+
+
+   .. py:method:: walk_symbol_tables(from_op: _OperationBase, all_sym_uses_visible: bool, callback: object) -> None
+      :staticmethod:
+
+
+      
+      Walks symbol tables starting from an operation with a callback function.
+
+
+
+.. py:class:: BlockArgumentList
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`BlockArgument`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: BlockArgumentList, /) -> list[BlockArgument]
+
+
+   .. py:property:: types
+      :type: list[Type]
+
+
+      
+      Returns a list of types for all arguments in this argument list.
+
+
+
+.. py:class:: BlockIterator
+
+   .. py:method:: __iter__() -> BlockIterator
+
+      
+      Returns an iterator over the blocks in the operation's region.
+
+
+
+   .. py:method:: __next__() -> Block
+
+      
+      Returns the next block in the iteration.
+
+
+
+.. py:class:: BlockList
+
+   .. py:method:: __getitem__(arg: int, /) -> Block
+
+      
+      Returns the block at the specified index.
+
+
+
+   .. py:method:: __iter__() -> BlockIterator
+
+      
+      Returns an iterator over blocks in the operation's region.
+
+
+
+   .. py:method:: __len__() -> int
+
+      
+      Returns the number of blocks in the operation's region.
+
+
+
+   .. py:method:: append(*args, arg_locs: collections.abc.Sequence | None = None) -> Block
+
+      Appends a new block, with argument types as positional args.
+
+      :returns: The created block.
+
+
+
+.. py:class:: BlockSuccessors
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`Block`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: BlockSuccessors, /) -> list[Block]
+
+
+.. py:class:: BlockPredecessors
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`Block`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: BlockPredecessors, /) -> list[Block]
+
+
+.. py:class:: OperationIterator
+
+   .. py:method:: __iter__() -> OperationIterator
+
+      
+      Returns an iterator over the operations in an operation's block.
+
+
+
+   .. py:method:: __next__() -> OpView
+
+      
+      Returns the next operation in the iteration.
+
+
+
+.. py:class:: OperationList
+
+   .. py:method:: __getitem__(arg: int, /) -> OpView
+
+      
+      Returns the operation at the specified index.
+
+
+
+   .. py:method:: __iter__() -> OperationIterator
+
+      
+      Returns an iterator over operations in the list.
+
+
+
+   .. py:method:: __len__() -> int
+
+      
+      Returns the number of operations in the list.
+
+
+
+.. py:class:: OpAttributeMap
+
+   .. py:method:: __contains__(name: str) -> bool
+
+      
+      Checks if an attribute with the given name exists in the map.
+
+
+
+   .. py:method:: __len__() -> int
+
+      
+      Returns the number of attributes in the map.
+
+
+
+   .. py:method:: __getitem__(name: str) -> Attribute
+                  __getitem__(index: int) -> NamedAttribute
+
+      
+      Gets a named attribute by index.
+
+
+
+   .. py:method:: __setitem__(name: str, attr: Attribute) -> None
+
+      
+      Sets an attribute with the given name.
+
+
+
+   .. py:method:: __delitem__(name: str) -> None
+
+      
+      Deletes an attribute with the given name.
+
+
+
+   .. py:method:: __iter__() -> collections.abc.Iterator
+
+      
+      Iterates over attribute names.
+
+
+
+   .. py:method:: keys() -> list
+
+      
+      Returns a list of attribute names.
+
+
+
+   .. py:method:: values() -> list
+
+      
+      Returns a list of attribute values.
+
+
+
+   .. py:method:: items() -> list
+
+      
+      Returns a list of ``(name, attribute)`` tuples.
+
+
+
+.. py:class:: OpOperandIterator
+
+   .. py:method:: __iter__() -> OpOperandIterator
+
+      
+      Returns an iterator over operands.
+
+
+
+   .. py:method:: __next__() -> OpOperand
+
+      
+      Returns the next operand in the iteration.
+
+
+
+.. py:class:: OpOperandList
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`Value`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: OpOperandList, /) -> list[Value]
+
+
+   .. py:method:: __setitem__(index: int, value: Value) -> None
+
+      
+      Sets the operand at the specified index to a new value.
+
+
+
+.. py:class:: OpResultList
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`OpResult`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: OpResultList, /) -> list[OpResult]
+
+
+   .. py:property:: types
+      :type: list[Type]
+
+
+      
+      Returns a list of types for all results in this result list.
+
+
+
+   .. py:property:: owner
+      :type: OpView
+
+
+      
+      Returns the operation that owns this result list.
+
+
+
+.. py:class:: OpSuccessors
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`Block`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: OpSuccessors, /) -> list[Block]
+
+
+   .. py:method:: __setitem__(index: int, block: Block) -> None
+
+      
+      Sets the successor block at the specified index.
+
+
+
+.. py:class:: RegionIterator
+
+   .. py:method:: __iter__() -> RegionIterator
+
+      
+      Returns an iterator over the regions in the operation.
+
+
+
+   .. py:method:: __next__() -> Region
+
+      
+      Returns the next region in the iteration.
+
+
+
+.. py:class:: RegionSequence
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`Region`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: RegionSequence, /) -> list[Region]
+
+
+   .. py:method:: __iter__() -> RegionIterator
+
+      
+      Returns an iterator over the regions in the sequence.
+
+
+
+.. py:class:: _GlobalDebug
+
+   .. py:attribute:: flag
+      :type:  bool
+      :value: Ellipsis
+
+
+      
+      LLVM-wide debug flag.
+
+
+
+   .. py:method:: set_types(types: str) -> None
+                  set_types(types: collections.abc.Sequence[str]) -> None
+      :staticmethod:
+
+
+      
+      Sets multiple specific debug types to be produced by LLVM.
+
+
+
+.. py:class:: AttrBuilder
+
+   .. py:method:: contains(attribute_kind: str) -> bool
+      :staticmethod:
+
+
+      
+      Checks whether an attribute builder is registered for the given attribute kind.
+
+
+
+   .. py:method:: get(attribute_kind: str) -> collections.abc.Callable
+      :staticmethod:
+
+
+      
+      Gets the registered attribute builder for the given attribute kind.
+
+
+
+   .. py:method:: insert(attribute_kind: str, attr_builder: collections.abc.Callable, replace: bool = False) -> None
+      :staticmethod:
+
+
+      
+      Register an attribute builder for building MLIR attributes from Python values.
+
+
+
+.. py:class:: AffineExpr
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+
+   .. py:method:: _CAPICreate() -> AffineExpr
+
+
+   .. py:method:: __add__(arg: AffineExpr, /) -> AffineAddExpr
+                  __add__(arg: int, /) -> AffineAddExpr
+
+
+   .. py:method:: __radd__(arg: int, /) -> AffineAddExpr
+
+
+   .. py:method:: __mul__(arg: AffineExpr, /) -> AffineMulExpr
+                  __mul__(arg: int, /) -> AffineMulExpr
+
+
+   .. py:method:: __rmul__(arg: int, /) -> AffineMulExpr
+
+
+   .. py:method:: __mod__(arg: AffineExpr, /) -> AffineModExpr
+                  __mod__(arg: int, /) -> AffineModExpr
+
+
+   .. py:method:: __rmod__(arg: int, /) -> AffineModExpr
+
+
+   .. py:method:: __sub__(arg: AffineExpr, /) -> AffineAddExpr
+                  __sub__(arg: int, /) -> AffineAddExpr
+
+
+   .. py:method:: __rsub__(arg: int, /) -> AffineAddExpr
+
+
+   .. py:method:: __eq__(arg: AffineExpr, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+
+   .. py:method:: __str__() -> str
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: __hash__() -> int
+
+
+   .. py:property:: context
+      :type: Context
+
+
+
+   .. py:method:: compose(arg: AffineMap, /) -> AffineExpr
+
+
+   .. py:method:: shift_dims(num_dims: int, shift: int, offset: int = 0) -> AffineExpr
+
+
+   .. py:method:: shift_symbols(num_symbols: int, shift: int, offset: int = 0) -> AffineExpr
+
+
+   .. py:method:: simplify_affine_expr(expr: AffineExpr, num_dims: int, num_symbols: int) -> AffineExpr
+      :staticmethod:
+
+
+      
+      Simplify an affine expression by flattening and some amount of simple analysis.
+
+
+
+   .. py:method:: get_add(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineAddExpr
+                  get_add(arg0: int, arg1: AffineExpr, /) -> AffineAddExpr
+                  get_add(arg0: AffineExpr, arg1: int, /) -> AffineAddExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression containing a sum of an expression and a constant.
+
+
+
+   .. py:method:: get_mul(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineMulExpr
+                  get_mul(arg0: int, arg1: AffineExpr, /) -> AffineMulExpr
+                  get_mul(arg0: AffineExpr, arg1: int, /) -> AffineMulExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression containing a product of an expression and a constant.
+
+
+
+   .. py:method:: get_mod(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineModExpr
+                  get_mod(arg0: int, arg1: AffineExpr, /) -> AffineModExpr
+                  get_mod(arg0: AffineExpr, arg1: int, /) -> AffineModExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression containing the module of dividingan expression by a constant.
+
+
+
+   .. py:method:: get_floor_div(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineFloorDivExpr
+                  get_floor_div(arg0: int, arg1: AffineExpr, /) -> AffineFloorDivExpr
+                  get_floor_div(arg0: AffineExpr, arg1: int, /) -> AffineFloorDivExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression containing the rounded-down result of dividing an expression by a constant.
+
+
+
+   .. py:method:: get_ceil_div(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineCeilDivExpr
+                  get_ceil_div(arg0: int, arg1: AffineExpr, /) -> AffineCeilDivExpr
+                  get_ceil_div(arg0: AffineExpr, arg1: int, /) -> AffineCeilDivExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression containing the rounded-up result of dividing an expression by a constant.
+
+
+
+   .. py:method:: get_constant(value: int, context: Context | None = None) -> AffineConstantExpr
+      :staticmethod:
+
+
+      
+      Gets a constant affine expression with the given value.
+
+
+
+   .. py:method:: get_dim(position: int, context: Context | None = None) -> AffineDimExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression of a dimension at the given position.
+
+
+
+   .. py:method:: get_symbol(position: int, context: Context | None = None) -> AffineSymbolExpr
+      :staticmethod:
+
+
+      
+      Gets an affine expression of a symbol at the given position.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+.. py:class:: AffineConstantExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(value: int, context: Context | None = None) -> AffineConstantExpr
+      :staticmethod:
+
+
+
+   .. py:property:: value
+      :type: int
+
+
+
+.. py:class:: AffineDimExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(position: int, context: Context | None = None) -> AffineDimExpr
+      :staticmethod:
+
+
+
+   .. py:property:: position
+      :type: int
+
+
+
+.. py:class:: AffineSymbolExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(position: int, context: Context | None = None) -> AffineSymbolExpr
+      :staticmethod:
+
+
+
+   .. py:property:: position
+      :type: int
+
+
+
+.. py:class:: AffineBinaryExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: lhs
+      :type: AffineExpr
+
+
+
+   .. py:property:: rhs
+      :type: AffineExpr
+
+
+
+.. py:class:: AffineAddExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineBinaryExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineAddExpr
+      :staticmethod:
+
+
+
+.. py:class:: AffineMulExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineBinaryExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineMulExpr
+      :staticmethod:
+
+
+
+.. py:class:: AffineModExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineBinaryExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineModExpr
+      :staticmethod:
+
+
+
+.. py:class:: AffineFloorDivExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineBinaryExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineFloorDivExpr
+      :staticmethod:
+
+
+
+.. py:class:: AffineCeilDivExpr(expr: AffineExpr)
+
+   Bases: :py:obj:`AffineBinaryExpr`
+
+
+   .. py:method:: isinstance(other: AffineExpr) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(arg0: AffineExpr, arg1: AffineExpr, /) -> AffineCeilDivExpr
+      :staticmethod:
+
+
+
+.. py:class:: AffineMap
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+
+   .. py:method:: _CAPICreate() -> AffineMap
+
+
+   .. py:method:: __eq__(arg: AffineMap, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+
+   .. py:method:: __str__() -> str
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: __hash__() -> int
+
+
+   .. py:method:: compress_unused_symbols(arg0: list, arg1: Context, /) -> list[AffineMap]
+      :staticmethod:
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the Affine Map
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: get(dim_count: int, symbol_count: int, exprs: list, context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets a map with the given expressions as results.
+
+
+
+   .. py:method:: get_constant(value: int, context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets an affine map with a single constant result
+
+
+
+   .. py:method:: get_empty(context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets an empty affine map.
+
+
+
+   .. py:method:: get_identity(n_dims: int, context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets an identity map with the given number of dimensions.
+
+
+
+   .. py:method:: get_minor_identity(n_dims: int, n_results: int, context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets a minor identity map with the given number of dimensions and results.
+
+
+
+   .. py:method:: get_permutation(permutation: collections.abc.Sequence[int], context: Context | None = None) -> AffineMap
+      :staticmethod:
+
+
+      
+      Gets an affine map that permutes its inputs.
+
+
+
+   .. py:method:: get_submap(result_positions: collections.abc.Sequence[int]) -> AffineMap
+
+
+   .. py:method:: get_major_submap(n_results: int) -> AffineMap
+
+
+   .. py:method:: get_minor_submap(n_results: int) -> AffineMap
+
+
+   .. py:method:: replace(expr: AffineExpr, replacement: AffineExpr, n_result_dims: int, n_result_syms: int) -> AffineMap
+
+
+   .. py:property:: is_permutation
+      :type: bool
+
+
+
+   .. py:property:: is_projected_permutation
+      :type: bool
+
+
+
+   .. py:property:: n_dims
+      :type: int
+
+
+
+   .. py:property:: n_inputs
+      :type: int
+
+
+
+   .. py:property:: n_symbols
+      :type: int
+
+
+
+   .. py:property:: results
+      :type: AffineExprList
+
+
+
+.. py:class:: AffineExprList
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`AffineExpr`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: AffineExprList, /) -> list[AffineExpr]
+
+
+.. py:class:: IntegerSet
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+
+   .. py:method:: _CAPICreate() -> IntegerSet
+
+
+   .. py:method:: __eq__(arg: IntegerSet, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+
+   .. py:method:: __str__() -> str
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: __hash__() -> int
+
+
+   .. py:property:: context
+      :type: Context
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: get(num_dims: int, num_symbols: int, exprs: list, eq_flags: collections.abc.Sequence[bool], context: Context | None = None) -> IntegerSet
+      :staticmethod:
+
+
+
+   .. py:method:: get_empty(num_dims: int, num_symbols: int, context: Context | None = None) -> IntegerSet
+      :staticmethod:
+
+
+
+   .. py:method:: get_replaced(dim_exprs: list, symbol_exprs: list, num_result_dims: int, num_result_symbols: int) -> IntegerSet
+
+
+   .. py:property:: is_canonical_empty
+      :type: bool
+
+
+
+   .. py:property:: n_dims
+      :type: int
+
+
+
+   .. py:property:: n_symbols
+      :type: int
+
+
+
+   .. py:property:: n_inputs
+      :type: int
+
+
+
+   .. py:property:: n_equalities
+      :type: int
+
+
+
+   .. py:property:: n_inequalities
+      :type: int
+
+
+
+   .. py:property:: constraints
+      :type: IntegerSetConstraintList
+
+
+
+.. py:class:: IntegerSetConstraint
+
+   .. py:property:: expr
+      :type: AffineExpr
+
+
+
+   .. py:property:: is_eq
+      :type: bool
+
+
+
+.. py:class:: IntegerSetConstraintList
+
+   Bases: :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`IntegerSetConstraint`\ ]
+
+
+   
+   All the operations on a read-only sequence.
+
+   Concrete subclasses must override **new** or **init**,
+   **getitem**, and **len**.
+
+
+   .. py:method:: __add__(arg: IntegerSetConstraintList, /) -> list[IntegerSetConstraint]
+
+
+.. py:class:: AffineMapAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(affine_map: AffineMap) -> AffineMapAttr
+      :staticmethod:
+
+
+      
+      Gets an attribute wrapping an AffineMap.
+
+
+
+   .. py:property:: value
+      :type: AffineMap
+
+
+      
+      Returns the value of the AffineMap attribute
+
+
+
+.. py:class:: DenseBoolArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence, context: Context | None = None) -> DenseBoolArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> bool
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseBoolArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseBoolArrayAttr
+
+
+.. py:class:: DenseBoolArrayIterator
+
+   .. py:method:: __iter__() -> DenseBoolArrayIterator
+
+
+   .. py:method:: __next__() -> bool
+
+
+.. py:class:: DenseI8ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[int], context: Context | None = None) -> DenseI8ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> int
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseI8ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseI8ArrayAttr
+
+
+.. py:class:: DenseI8ArrayIterator
+
+   .. py:method:: __iter__() -> DenseI8ArrayIterator
+
+
+   .. py:method:: __next__() -> int
+
+
+.. py:class:: DenseI16ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[int], context: Context | None = None) -> DenseI16ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> int
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseI16ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseI16ArrayAttr
+
+
+.. py:class:: DenseI16ArrayIterator
+
+   .. py:method:: __iter__() -> DenseI16ArrayIterator
+
+
+   .. py:method:: __next__() -> int
+
+
+.. py:class:: DenseI32ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[int], context: Context | None = None) -> DenseI32ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> int
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseI32ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseI32ArrayAttr
+
+
+.. py:class:: DenseI32ArrayIterator
+
+   .. py:method:: __iter__() -> DenseI32ArrayIterator
+
+
+   .. py:method:: __next__() -> int
+
+
+.. py:class:: DenseI64ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[int], context: Context | None = None) -> DenseI64ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> int
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseI64ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseI64ArrayAttr
+
+
+.. py:class:: DenseI64ArrayIterator
+
+   .. py:method:: __iter__() -> DenseI64ArrayIterator
+
+
+   .. py:method:: __next__() -> int
+
+
+.. py:class:: DenseF32ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[float], context: Context | None = None) -> DenseF32ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> float
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseF32ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseF32ArrayAttr
+
+
+.. py:class:: DenseF32ArrayIterator
+
+   .. py:method:: __iter__() -> DenseF32ArrayIterator
+
+
+   .. py:method:: __next__() -> float
+
+
+.. py:class:: DenseF64ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(values: collections.abc.Sequence[float], context: Context | None = None) -> DenseF64ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued dense array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> float
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> DenseF64ArrayIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> DenseF64ArrayAttr
+
+
+.. py:class:: DenseF64ArrayIterator
+
+   .. py:method:: __iter__() -> DenseF64ArrayIterator
+
+
+   .. py:method:: __next__() -> float
+
+
+.. py:class:: ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(attributes: list, context: Context | None = None) -> ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued Array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> Attribute
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> ArrayAttributeIterator
+
+
+   .. py:method:: __add__(arg: list, /) -> ArrayAttr
+
+
+.. py:class:: ArrayAttributeIterator
+
+   .. py:method:: __iter__() -> ArrayAttributeIterator
+
+
+   .. py:method:: __next__() -> Attribute
+
+
+.. py:class:: BoolAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(value: bool, context: Context | None = None) -> BoolAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued bool attribute
+
+
+
+   .. py:property:: value
+      :type: bool
+
+
+      
+      Returns the value of the bool attribute
+
+
+
+   .. py:method:: __bool__() -> bool
+
+      
+      Converts the value of the bool attribute to a Python bool
+
+
+
+.. py:class:: DenseElementsAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: get(array: typing_extensions.Buffer, signless: bool = True, type: Type | None = None, shape: collections.abc.Sequence[int] | None = None, context: Context | None = None) -> DenseElementsAttr
+                  get(attrs: list, type: Type | None = None, context: Context | None = None) -> DenseElementsAttr
+      :staticmethod:
+
+
+      Gets a DenseElementsAttr from a Python list of attributes.
+
+      Note that it can be expensive to construct attributes individually.
+      For a large number of elements, consider using a Python buffer or array instead.
+
+      :param attrs: A list of attributes.
+      :param type: The desired shape and type of the resulting DenseElementsAttr.
+                   If not provided, the element type is determined based on the type
+                   of the 0th attribute and the shape is `[len(attrs)]`.
+      :param context: Explicit context, if not from context manager.
+
+      :returns: DenseElementsAttr on success.
+
+      :raises ValueError: If the type of the attributes does not match the type
+          specified by `shaped_type`.
+
+
+
+   .. py:method:: get_splat(shaped_type: Type, element_attr: Attribute) -> DenseElementsAttr
+      :staticmethod:
+
+
+      
+      Gets a DenseElementsAttr where all values are the same
+
+
+
+   .. py:property:: is_splat
+      :type: bool
+
+
+
+   .. py:method:: get_splat_value() -> Attribute
+
+
+.. py:class:: DenseFPElementsAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`DenseElementsAttr`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> float
+
+
+.. py:class:: DenseIntElementsAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`DenseElementsAttr`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> int
+
+
+.. py:class:: DenseResourceElementsAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get_from_buffer(array: typing_extensions.Buffer, name: str, type: Type, alignment: int | None = None, is_mutable: bool = False, context: Context | None = None) -> DenseResourceElementsAttr
+      :staticmethod:
+
+
+      Gets a DenseResourceElementsAttr from a Python buffer or array.
+
+      This function does minimal validation or massaging of the data, and it is
+      up to the caller to ensure that the buffer meets the characteristics
+      implied by the shape.
+
+      The backing buffer and any user objects will be retained for the lifetime
+      of the resource blob. This is typically bounded to the context but the
+      resource can have a shorter lifespan depending on how it is used in
+      subsequent processing.
+
+      :param buffer: The array or buffer to convert.
+      :param name: Name to provide to the resource (may be changed upon collision).
+      :param type: The explicit ShapedType to construct the attribute with.
+      :param context: Explicit context, if not from context manager.
+
+      :returns: DenseResourceElementsAttr on success.
+
+      :raises ValueError: If the type of the buffer or array cannot be matched to an MLIR
+          type or if the buffer does not meet expectations.
+
+
+
+.. py:class:: DictAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: __contains__(arg: str, /) -> bool
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: get(value: dict = {}, context: Context | None = None) -> DictAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued dict attribute
+
+
+
+   .. py:method:: __getitem__(arg: str, /) -> Attribute
+                  __getitem__(arg: int, /) -> NamedAttribute
+
+
+.. py:class:: SymbolRefAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(symbols: collections.abc.Sequence[str], context: Context | None = None) -> SymbolRefAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued SymbolRef attribute from a list of symbol names
+
+
+
+   .. py:property:: value
+      :type: list[str]
+
+
+      
+      Returns the value of the SymbolRef attribute as a list[str]
+
+
+
+.. py:class:: FlatSymbolRefAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(value: str, context: Context | None = None) -> FlatSymbolRefAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued FlatSymbolRef attribute
+
+
+
+   .. py:property:: value
+      :type: str
+
+
+      
+      Returns the value of the FlatSymbolRef attribute as a string
+
+
+
+.. py:class:: OpaqueAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(dialect_namespace: str, buffer: typing_extensions.Buffer, type: Type, context: Context | None = None) -> OpaqueAttr
+      :staticmethod:
+
+
+      
+      Gets an Opaque attribute.
+
+
+
+   .. py:property:: dialect_namespace
+      :type: str
+
+
+      
+      Returns the dialect namespace for the Opaque attribute as a string
+
+
+
+   .. py:property:: data
+      :type: bytes
+
+
+      
+      Returns the data for the Opaqued attributes as ``bytes``
+
+
+
+.. py:class:: FloatAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(type: Type, value: float, loc: Location | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a type
+
+
+
+   .. py:method:: get_unchecked(type: Type, value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a type
+
+
+
+   .. py:method:: get_f32(value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a f32 type
+
+
+
+   .. py:method:: get_f64(value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a f64 type
+
+
+
+   .. py:property:: value
+      :type: float
+
+
+      
+      Returns the value of the float attribute
+
+
+
+   .. py:method:: __float__() -> float
+
+      
+      Converts the value of the float attribute to a Python float
+
+
+
+.. py:class:: IntegerAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(type: Type, value: int) -> IntegerAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued integer attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: int
+
+
+      
+      Returns the value of the integer attribute
+
+
+
+   .. py:method:: __int__() -> int
+
+      
+      Converts the value of the integer attribute to a Python int
+
+
+
+.. py:class:: IntegerSetAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(integer_set: IntegerSet) -> IntegerSetAttr
+      :staticmethod:
+
+
+      
+      Gets an attribute wrapping an IntegerSet.
+
+
+
+.. py:class:: StringAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(value: str, context: Context | None = None) -> StringAttr
+                  get(value: bytes, context: Context | None = None) -> StringAttr
+      :staticmethod:
+
+
+
+   .. py:method:: get_typed(type: Type, value: str) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued string attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: str
+
+
+      
+      Returns the value of the string attribute
+
+
+
+   .. py:property:: value_bytes
+      :type: bytes
+
+
+      
+      Returns the value of the string attribute as ``bytes``
+
+
+
+.. py:class:: TypeAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(value: Type, context: Context | None = None) -> TypeAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued Type attribute
+
+
+
+   .. py:property:: value
+      :type: Type
+
+
+
+.. py:class:: UnitAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> UnitAttr
+      :staticmethod:
+
+
+      
+      Create a Unit attribute.
+
+
+
+.. py:class:: StridedLayoutAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:method:: isinstance(other: Attribute) -> bool
+      :staticmethod:
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(offset: int, strides: collections.abc.Sequence[int], context: Context | None = None) -> StridedLayoutAttr
+      :staticmethod:
+
+
+      
+      Gets a strided layout attribute.
+
+
+
+   .. py:method:: get_fully_dynamic(rank: int, context: Context | None = None) -> StridedLayoutAttr
+      :staticmethod:
+
+
+      
+      Gets a strided layout attribute with dynamic offset and strides of a given rank.
+
+
+
+   .. py:property:: offset
+      :type: int
+
+
+      
+      Returns the value of the float point attribute
+
+
+
+   .. py:property:: strides
+      :type: list[int]
+
+
+      
+      Returns the value of the float point attribute
+
+
+
+.. py:class:: InferTypeOpInterface(object: InferTypeOpInterface.__init__.object, context: Context | None = None)
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns an Operation for which the interface was constructed.
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView subclass *instance* for which the interface was
+      constructed
+
+
+
+   .. py:method:: inferReturnTypes(operands: list | None = None, attributes: Attribute | None = None, properties: typing_extensions.CapsuleType | None = None, regions: collections.abc.Sequence[Region] | None = None, context: Context | None = None, loc: Location | None = None) -> list[Type]
+
+      
+      Given the arguments required to build an operation, attempts to infer
+      its return types. Raises ValueError on failure.
+
+
+
+.. py:class:: ShapedTypeComponents
+
+   .. py:property:: element_type
+      :type: Type
+
+
+      
+      Returns the element type of the shaped type components.
+
+
+
+   .. py:method:: get(element_type: Type) -> ShapedTypeComponents
+                  get(shape: list, element_type: Type) -> ShapedTypeComponents
+                  get(shape: list, element_type: Type, attribute: Attribute) -> ShapedTypeComponents
+      :staticmethod:
+
+
+      
+      Create a ranked shaped type components object with attribute.
+
+
+
+   .. py:property:: has_rank
+      :type: bool
+
+
+      
+      Returns whether the given shaped type component is ranked.
+
+
+
+   .. py:property:: rank
+      :type: int | None
+
+
+      
+      Returns the rank of the given ranked shaped type components. If the shaped type components does not have a rank, None is returned.
+
+
+
+   .. py:property:: shape
+      :type: list | None
+
+
+      
+      Returns the shape of the ranked shaped type components as a list of integers. Returns none if the shaped type component does not have a rank.
+
+
+
+.. py:class:: InferShapedTypeOpInterface(object: InferShapedTypeOpInterface.__init__.object, context: Context | None = None)
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns an Operation for which the interface was constructed.
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView subclass *instance* for which the interface was
+      constructed
+
+
+
+   .. py:method:: inferReturnTypeComponents(operands: list | None = None, attributes: Attribute | None = None, regions: typing_extensions.CapsuleType | None = None, properties: collections.abc.Sequence[Region] | None = None, context: Context | None = None, loc: Location | None = None) -> list[ShapedTypeComponents]
+
+      
+      Given the arguments required to build an operation, attempts to infer
+      its return shaped type components. Raises ValueError on failure.
+
+
+
+.. py:class:: IntegerType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get_signless(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signless integer type
+
+
+
+   .. py:method:: get_signed(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signed integer type
+
+
+
+   .. py:method:: get_unsigned(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create an unsigned integer type
+
+
+
+   .. py:property:: width
+      :type: int
+
+
+      
+      Returns the width of the integer type
+
+
+
+   .. py:property:: is_signless
+      :type: bool
+
+
+      
+      Returns whether this is a signless integer
+
+
+
+   .. py:property:: is_signed
+      :type: bool
+
+
+      
+      Returns whether this is a signed integer
+
+
+
+   .. py:property:: is_unsigned
+      :type: bool
+
+
+      
+      Returns whether this is an unsigned integer
+
+
+
+.. py:class:: FloatType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:property:: width
+      :type: int
+
+
+      
+      Returns the width of the floating-point type
+
+
+
+.. py:class:: IndexType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> IndexType
+      :staticmethod:
+
+
+      
+      Create a index type.
+
+
+
+.. py:class:: Float4E2M1FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float4E2M1FNType
+      :staticmethod:
+
+
+      
+      Create a float4_e2m1fn type.
+
+
+
+.. py:class:: Float6E2M3FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float6E2M3FNType
+      :staticmethod:
+
+
+      
+      Create a float6_e2m3fn type.
+
+
+
+.. py:class:: Float6E3M2FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float6E3M2FNType
+      :staticmethod:
+
+
+      
+      Create a float6_e3m2fn type.
+
+
+
+.. py:class:: Float8E4M3FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3FNType
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3fn type.
+
+
+
+.. py:class:: Float8E5M2Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E5M2Type
+      :staticmethod:
+
+
+      
+      Create a float8_e5m2 type.
+
+
+
+.. py:class:: Float8E4M3Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3Type
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3 type.
+
+
+
+.. py:class:: Float8E4M3FNUZType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3FNUZType
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3fnuz type.
+
+
+
+.. py:class:: Float8E4M3B11FNUZType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3B11FNUZType
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3b11fnuz type.
+
+
+
+.. py:class:: Float8E5M2FNUZType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E5M2FNUZType
+      :staticmethod:
+
+
+      
+      Create a float8_e5m2fnuz type.
+
+
+
+.. py:class:: Float8E3M4Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E3M4Type
+      :staticmethod:
+
+
+      
+      Create a float8_e3m4 type.
+
+
+
+.. py:class:: Float8E8M0FNUType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E8M0FNUType
+      :staticmethod:
+
+
+      
+      Create a float8_e8m0fnu type.
+
+
+
+.. py:class:: BF16Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> BF16Type
+      :staticmethod:
+
+
+      
+      Create a bf16 type.
+
+
+
+.. py:class:: F16Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F16Type
+      :staticmethod:
+
+
+      
+      Create a f16 type.
+
+
+
+.. py:class:: FloatTF32Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> FloatTF32Type
+      :staticmethod:
+
+
+      
+      Create a tf32 type.
+
+
+
+.. py:class:: F32Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F32Type
+      :staticmethod:
+
+
+      
+      Create a f32 type.
+
+
+
+.. py:class:: F64Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F64Type
+      :staticmethod:
+
+
+      
+      Create a f64 type.
+
+
+
+.. py:class:: NoneType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> NoneType
+      :staticmethod:
+
+
+      
+      Create a none type.
+
+
+
+.. py:class:: ComplexType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(arg: Type, /) -> ComplexType
+      :staticmethod:
+
+
+      
+      Create a complex type
+
+
+
+   .. py:property:: element_type
+      :type: Type
+
+
+      
+      Returns element type.
+
+
+
+.. py:class:: ShapedType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:property:: element_type
+      :type: Type
+
+
+      
+      Returns the element type of the shaped type.
+
+
+
+   .. py:property:: has_rank
+      :type: bool
+
+
+      
+      Returns whether the given shaped type is ranked.
+
+
+
+   .. py:property:: rank
+      :type: int
+
+
+      
+      Returns the rank of the given ranked shaped type.
+
+
+
+   .. py:property:: has_static_shape
+      :type: bool
+
+
+      
+      Returns whether the given shaped type has a static shape.
+
+
+
+   .. py:method:: is_dynamic_dim(dim: int) -> bool
+
+      
+      Returns whether the dim-th dimension of the given shaped type is dynamic.
+
+
+
+   .. py:method:: is_static_dim(dim: int) -> bool
+
+      
+      Returns whether the dim-th dimension of the given shaped type is static.
+
+
+
+   .. py:method:: get_dim_size(dim: int) -> int
+
+      
+      Returns the dim-th dimension of the given ranked shaped type.
+
+
+
+   .. py:method:: is_dynamic_size(dim_size: int) -> bool
+      :staticmethod:
+
+
+      
+      Returns whether the given dimension size indicates a dynamic dimension.
+
+
+
+   .. py:method:: is_static_size(dim_size: int) -> bool
+      :staticmethod:
+
+
+      
+      Returns whether the given dimension size indicates a static dimension.
+
+
+
+   .. py:method:: is_dynamic_stride_or_offset(dim_size: int) -> bool
+
+      
+      Returns whether the given value is used as a placeholder for dynamic strides and offsets in shaped types.
+
+
+
+   .. py:method:: is_static_stride_or_offset(dim_size: int) -> bool
+
+      
+      Returns whether the given shaped type stride or offset value is statically-sized.
+
+
+
+   .. py:property:: shape
+      :type: list[int]
+
+
+      
+      Returns the shape of the ranked shaped type as a list of integers.
+
+
+
+   .. py:method:: get_dynamic_size() -> int
+      :staticmethod:
+
+
+      
+      Returns the value used to indicate dynamic dimensions in shaped types.
+
+
+
+   .. py:method:: get_dynamic_stride_or_offset() -> int
+      :staticmethod:
+
+
+      
+      Returns the value used to indicate dynamic strides or offsets in shaped types.
+
+
+
+.. py:class:: VectorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, *, scalable: list | None = None, scalable_dims: collections.abc.Sequence[int] | None = None, loc: Location | None = None) -> VectorType
+      :staticmethod:
+
+
+      
+      Create a vector type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, *, scalable: list | None = None, scalable_dims: collections.abc.Sequence[int] | None = None, context: Context | None = None) -> VectorType
+      :staticmethod:
+
+
+      
+      Create a vector type
+
+
+
+   .. py:property:: scalable
+      :type: bool
+
+
+
+   .. py:property:: scalable_dims
+      :type: list[bool]
+
+
+
+.. py:class:: RankedTensorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, encoding: Attribute | None = None, loc: Location | None = None) -> RankedTensorType
+      :staticmethod:
+
+
+      
+      Create a ranked tensor type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, encoding: Attribute | None = None, context: Context | None = None) -> RankedTensorType
+      :staticmethod:
+
+
+      
+      Create a ranked tensor type
+
+
+
+   .. py:property:: encoding
+      :type: Attribute | None
+
+
+
+.. py:class:: UnrankedTensorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(element_type: Type, loc: Location | None = None) -> UnrankedTensorType
+      :staticmethod:
+
+
+      
+      Create a unranked tensor type
+
+
+
+   .. py:method:: get_unchecked(element_type: Type, context: Context | None = None) -> UnrankedTensorType
+      :staticmethod:
+
+
+      
+      Create a unranked tensor type
+
+
+
+.. py:class:: MemRefType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, layout: Attribute | None = None, memory_space: Attribute | None = None, loc: Location | None = None) -> MemRefType
+      :staticmethod:
+
+
+      
+      Create a memref type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, layout: Attribute | None = None, memory_space: Attribute | None = None, context: Context | None = None) -> MemRefType
+      :staticmethod:
+
+
+      
+      Create a memref type
+
+
+
+   .. py:property:: layout
+      :type: Attribute
+
+
+      
+      The layout of the MemRef type.
+
+
+
+   .. py:method:: get_strides_and_offset() -> tuple[list[int], int]
+
+      
+      The strides and offset of the MemRef type.
+
+
+
+   .. py:property:: affine_map
+      :type: AffineMap
+
+
+      
+      The layout of the MemRef type as an affine map.
+
+
+
+   .. py:property:: memory_space
+      :type: Attribute | None
+
+
+      
+      Returns the memory space of the given MemRef type.
+
+
+
+.. py:class:: UnrankedMemRefType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(element_type: Type, memory_space: Attribute | None, loc: Location | None = None) -> UnrankedMemRefType
+      :staticmethod:
+
+
+      
+      Create a unranked memref type
+
+
+
+   .. py:method:: get_unchecked(element_type: Type, memory_space: Attribute | None, context: Context | None = None) -> UnrankedMemRefType
+      :staticmethod:
+
+
+      
+      Create a unranked memref type
+
+
+
+   .. py:property:: memory_space
+      :type: Attribute | None
+
+
+      
+      Returns the memory space of the given Unranked MemRef type.
+
+
+
+.. py:class:: TupleType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get_tuple(elements: collections.abc.Sequence[Type], context: Context | None = None) -> TupleType
+                  get_tuple(elements: collections.abc.Sequence[Type], context: Context | None = None) -> TupleType
+      :staticmethod:
+
+
+
+   .. py:method:: get_type(pos: int) -> Type
+
+      
+      Returns the pos-th type in the tuple type.
+
+
+
+   .. py:property:: num_types
+      :type: int
+
+
+      
+      Returns the number of types contained in a tuple.
+
+
+
+.. py:class:: FunctionType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(inputs: collections.abc.Sequence[Type], results: collections.abc.Sequence[Type], context: Context | None = None) -> FunctionType
+                  get(inputs: collections.abc.Sequence[Type], results: collections.abc.Sequence[Type], context: Context | None = None) -> FunctionType
+      :staticmethod:
+
+
+
+   .. py:property:: inputs
+      :type: list
+
+
+      
+      Returns the list of input types in the FunctionType.
+
+
+
+   .. py:property:: results
+      :type: list
+
+
+      
+      Returns the list of result types in the FunctionType.
+
+
+
+.. py:class:: OpaqueType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:method:: isinstance(other: Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  TypeID
+      :value: Ellipsis
+
+
+      
+      static_typeid(/) -> TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(dialect_namespace: str, buffer: str, context: Context | None = None) -> OpaqueType
+      :staticmethod:
+
+
+      
+      Create an unregistered (opaque) dialect type.
+
+
+
+   .. py:property:: dialect_namespace
+      :type: str
+
+
+      
+      Returns the dialect namespace for the Opaque type as a string.
+
+
+
+   .. py:property:: data
+      :type: str
+
+
+      
+      Returns the data for the Opaque type as a string.
+
+
+

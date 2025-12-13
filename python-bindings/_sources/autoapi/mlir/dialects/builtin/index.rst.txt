@@ -1,0 +1,172 @@
+mlir.dialects.builtin
+=====================
+
+.. py:module:: mlir.dialects.builtin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.builtin.ModuleOp
+   mlir.dialects.builtin.UnrealizedConversionCastOp
+   mlir.dialects.builtin.ModuleOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.builtin.module
+   mlir.dialects.builtin.unrealized_conversion_cast
+   mlir.dialects.builtin.region_op
+   mlir.dialects.builtin.module
+
+
+Module Contents
+---------------
+
+.. py:class:: ModuleOp(*, sym_name=None, sym_visibility=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A ``module`` represents a top-level container operation. It contains a single
+   `graph region <../LangRef.md#control-flow-and-ssacfg-regions>`_ containing a single block
+   which can contain any operations and does not have a terminator. Operations
+   within this region cannot implicitly capture values defined outside the module,
+   i.e. Modules are `IsolatedFromAbove <../Traits#isolatedfromabove>`_. Modules have
+   an optional `symbol name <../SymbolsAndSymbolTables.md>`_ which can be used to refer
+   to them in operations.
+
+   Example:
+
+   .. code:: mlir
+
+       module {
+         func.func @foo()
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'builtin.module'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> Optional[_ods_ir]
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: bodyRegion() -> _ods_ir
+
+
+.. py:function:: module(*, sym_name=None, sym_visibility=None, loc=None, ip=None) -> ModuleOp
+
+.. py:class:: UnrealizedConversionCastOp(outputs, inputs, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   An ``unrealized_conversion_cast`` operation represents an unrealized
+   conversion from one set of types to another, that is used to enable the
+   inter-mixing of different type systems. This operation should not be
+   attributed any special representational or execution semantics, and is
+   generally only intended to be used to satisfy the temporary intermixing of
+   type systems during the conversion of one type system to another.
+
+   This operation may produce results of arity 1-N, and accept as input
+   operands of arity 0-N.
+
+   Example:
+
+   .. code:: mlir
+
+       // An unrealized 0-1 conversion. These types of conversions are useful in
+       // cases where a type is removed from the type system, but not all uses have
+       // been converted. For example, imagine we have a tuple type that is
+       // expanded to its element types. If only some uses of an empty tuple type
+       // instance are converted we still need an instance of the tuple type, but
+       // have no inputs to the unrealized conversion.
+       %result = unrealized_conversion_cast to !bar.tuple_type<>
+       
+       // An unrealized 1-1 conversion.
+       %result1 = unrealized_conversion_cast %operand : !foo.type to !bar.lowered_type
+       
+       // An unrealized 1-N conversion.
+       %results2:2 = unrealized_conversion_cast %tuple_operand : !foo.tuple_type<!foo.type, !foo.type> to !foo.type, !foo.type
+       
+       // An unrealized N-1 conversion.
+       %result3 = unrealized_conversion_cast %operand, %operand : !foo.type, !foo.type to !bar.tuple_type<!foo.type, !foo.type>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'builtin.unrealized_conversion_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+   .. py:method:: outputs() -> _ods_ir
+
+
+.. py:function:: unrealized_conversion_cast(outputs, inputs, *, loc=None, ip=None) -> Union[_ods_ir, _ods_ir, UnrealizedConversionCastOp]
+
+.. py:function:: region_op(op_constructor, terminator=None)
+
+   
+   Decorator to define an MLIR Op specified as a python function.
+
+   Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+   active for the current thread (i.e. established in a ``with`` block).
+
+   Supports "naked" usage i.e., no parens if no args need to be passed to the Op constructor.
+
+   When applied as a decorator to a Python function, an entry block will
+   be constructed for the Op with types as specified **as type hints on the args of the function**.
+   The block arguments will be passed positionally to the Python function.
+
+   If a terminator is specified then the return from the decorated function will be passed
+   to the terminator as the last statement in the entry block. Note, the API for the terminator
+   is a (possibly empty) list; terminator accepting single values should be wrapped in a
+   ``lambda args: term(args[0])``
+
+   The identifier (name) of the function will become:
+
+   #. A single value result if the Op returns a single value;
+   #. An OpResultList (as a list) if the Op returns multiple values;
+   #. The Operation if the Op returns no results.
+
+   See examples in tensor.py and transform.extras.
+
+
+.. py:class:: ModuleOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`ModuleOp`
+
+
+   
+   Specialization for the module op class.
+
+
+   .. py:property:: body
+
+
+.. py:function:: module(*, sym_name=None, sym_visibility=None, attrs: Optional[Dict[str, Attribute]] = None, loc=None, ip=None)
+

@@ -1,0 +1,109 @@
+<map id="mlir::Pass" name="mlir::Pass">
+<area shape="rect" id="Node000001" title="The abstract base pass class." alt="" coords="5,2330,91,2355"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="514,2128,670,2168"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,2316,89,2253,111,2217,138,2184,180,2141,216,2111,257,2088,313,2068,358,2056,396,2052,434,2056,480,2068,506,2079,531,2094,572,2126,568,2130,528,2099,504,2084,478,2073,433,2061,396,2057,359,2061,314,2073,259,2093,219,2115,183,2145,142,2187,116,2220,93,2255,62,2319"/>
+<area shape="rect" id="Node000006" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="505,389,679,429"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="47,2316,53,2183,67,1971,94,1717,113,1586,137,1458,175,1308,213,1193,311,935,335,857,350,788,372,667,387,611,411,556,447,499,501,439,517,427,520,432,504,443,452,502,416,558,392,613,377,668,355,789,340,859,316,937,218,1195,180,1309,143,1459,118,1587,99,1718,72,1972,58,2183,53,2316"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="516,2324,668,2364"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="104,2331,178,2321,272,2312,375,2309,479,2315,517,2321,517,2327,478,2320,375,2314,272,2317,179,2326,105,2336"/>
+<area shape="rect" id="Node000015" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="507,453,677,493"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="49,2316,57,2218,74,2070,100,1895,137,1718,191,1523,253,1326,320,1135,387,956,506,661,579,492,584,494,511,663,392,958,325,1137,259,1328,196,1524,143,1719,106,1896,79,2071,63,2219,54,2317"/>
+<area shape="rect" id="Node000025" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="517,1432,667,1472"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="48,2316,62,2187,78,2093,102,1989,136,1878,181,1768,208,1714,239,1663,273,1614,311,1569,358,1530,411,1500,465,1478,516,1464,517,1469,467,1483,413,1505,361,1534,315,1573,277,1617,243,1666,213,1717,186,1770,141,1880,108,1990,84,2094,68,2187,53,2317"/>
+<area shape="rect" id="Node000061" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="517,2452,667,2492"/>
+<area shape="poly" id="edge43_Node000001_Node000061" title=" " alt="" coords="86,2360,186,2407,249,2432,314,2451,366,2461,420,2467,517,2471,517,2476,419,2472,365,2466,313,2456,248,2437,184,2412,83,2364"/>
+<area shape="rect" id="Node000115" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="503,2517,681,2557"/>
+<area shape="poly" id="edge44_Node000001_Node000115" title=" " alt="" coords="67,2365,99,2407,142,2450,185,2483,222,2506,261,2523,314,2537,362,2546,411,2549,503,2546,503,2552,411,2554,361,2551,313,2543,259,2528,219,2511,182,2488,138,2454,95,2411,63,2368"/>
+<area shape="rect" id="Node000119" href="$classmlir_1_1OperationPass.html" title=" " alt="" coords="513,2388,671,2428"/>
+<area shape="poly" id="edge45_Node000001_Node000119" title=" " alt="" coords="105,2347,513,2396,513,2401,104,2352"/>
+<area shape="rect" id="Node000126" href="$classmlir_1_1OperationPass_3_01void_01_4.html" title="Pass to transform an operation." alt="" coords="517,2584,667,2624"/>
+<area shape="poly" id="edge46_Node000001_Node000126" title=" " alt="" coords="55,2369,63,2410,79,2460,105,2509,122,2530,142,2549,185,2576,233,2596,283,2610,334,2619,433,2624,517,2619,517,2624,433,2630,334,2624,282,2615,231,2601,183,2580,138,2553,118,2534,100,2512,74,2462,58,2412,50,2370"/>
+<area shape="poly" id="edge58_Node000001_Node000126" title=" " alt="" coords="58,2368,67,2404,84,2447,108,2490,142,2525,185,2552,233,2572,283,2586,334,2596,433,2604,517,2603,517,2608,433,2609,334,2601,282,2592,231,2577,183,2556,138,2529,104,2493,79,2450,62,2406,52,2370"/>
+<area shape="rect" id="Node000127" href="$classmlir_1_1ExternalPass.html" title="This pass class wraps external passes defined in other languages using the MLIR C&#45;interface." alt="" coords="145,2654,284,2679"/>
+<area shape="poly" id="edge47_Node000001_Node000127" title=" " alt="" coords="55,2369,75,2511,93,2585,104,2613,117,2633,130,2644,146,2653,144,2657,127,2649,113,2636,100,2616,88,2586,70,2512,49,2369"/>
+<area shape="rect" id="Node000128" href="$classmlir_1_1OperationPass.html" title="Pass to transform an operation of a specific type." alt="" coords="140,2197,289,2237"/>
+<area shape="poly" id="edge48_Node000001_Node000128" title=" " alt="" coords="69,2318,113,2278,176,2235,179,2240,116,2282,72,2322"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1LLVM_1_1impl_1_1DIScopeForLLVMFuncOpPassBase.html" title=" " alt="" coords="754,2173,950,2227"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="684,2164,754,2178,753,2183,683,2169"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1LLVM_1_1impl_1_1LLVMAddComdatsBase.html" title=" " alt="" coords="751,2252,953,2292"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="631,2174,678,2206,732,2236,767,2249,765,2254,730,2241,675,2211,628,2179"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1LLVM_1_1impl_1_1LLVMUseDefaultVisibilityPassBase.html" title=" " alt="" coords="755,2094,949,2149"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="683,2136,754,2129,755,2134,684,2141"/>
+<area shape="rect" id="Node000007" href="$classmlir_1_1LLVM_1_1impl_1_1LLVMRequestCWrappersPassBase.html" title=" " alt="" coords="731,5,973,45"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="594,375,605,308,628,222,646,176,668,132,696,91,729,55,746,43,749,48,732,59,700,95,673,135,651,178,633,223,610,309,599,376"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1acc_1_1impl_1_1ACCImplicitDataBase.html" title=" " alt="" coords="753,2539,951,2579"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="679,2370,683,2374,698,2394,705,2414,708,2452,711,2489,718,2507,732,2525,754,2540,751,2544,729,2529,714,2510,706,2490,703,2452,700,2415,693,2396,679,2378,676,2374"/>
+<area shape="rect" id="Node000010" href="$classmlir_1_1acc_1_1impl_1_1ACCImplicitDeclareBase.html" title=" " alt="" coords="753,2603,951,2643"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="680,2371,683,2374,694,2393,700,2420,708,2484,716,2547,723,2572,733,2589,754,2604,751,2609,729,2592,718,2574,710,2548,703,2484,695,2421,689,2395,679,2378,676,2375"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1acc_1_1impl_1_1ACCImplicitRoutineBase.html" title=" " alt="" coords="753,2667,951,2707"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="680,2371,684,2374,696,2399,703,2433,708,2516,713,2598,720,2630,733,2653,754,2669,751,2673,729,2656,715,2632,708,2599,703,2516,697,2434,691,2401,679,2378,676,2374"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1arm__sme_1_1impl_1_1VectorLegalizationBase.html" title=" " alt="" coords="761,2317,943,2371"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="682,2341,761,2341,761,2347,682,2347"/>
+<area shape="rect" id="Node000013" href="$classmlir_1_1spirv_1_1impl_1_1SPIRVCompositeTypeLayoutPassBase.html" title=" " alt="" coords="735,2395,969,2450"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="673,2365,762,2393,760,2398,671,2371"/>
+<area shape="rect" id="Node000014" href="$classmlir_1_1tosa_1_1impl_1_1TosaValidationBase.html" title=" " alt="" coords="741,2475,963,2515"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="677,2369,683,2374,701,2397,708,2419,715,2440,732,2461,752,2472,749,2477,729,2465,711,2443,703,2421,696,2399,679,2378,673,2373"/>
+<area shape="rect" id="Node000016" href="$classmlir_1_1acc_1_1impl_1_1ACCLegalizeSerialBase.html" title=" " alt="" coords="750,277,954,317"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="675,443,679,439,691,426,697,412,703,384,709,356,716,341,729,327,748,315,751,319,732,331,720,344,714,357,708,385,703,414,695,429,683,443,678,447"/>
+<area shape="rect" id="Node000017" href="$classmlir_1_1acc_1_1impl_1_1ACCLoopTilingBase.html" title=" " alt="" coords="761,341,943,381"/>
+<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="669,445,680,439,694,427,704,415,714,403,729,391,760,377,762,382,732,396,717,407,708,419,698,431,683,444,672,450"/>
+<area shape="rect" id="Node000018" href="$classmlir_1_1acc_1_1impl_1_1LegalizeDataValuesInRegionBase.html" title=" " alt="" coords="759,406,945,461"/>
+<area shape="poly" id="edge17_Node000015_Node000018" title=" " alt="" coords="691,455,759,445,760,450,692,461"/>
+<area shape="rect" id="Node000019" href="$classmlir_1_1arm__sme_1_1impl_1_1EnableArmStreamingBase.html" title=" " alt="" coords="752,485,952,539"/>
+<area shape="poly" id="edge18_Node000015_Node000019" title=" " alt="" coords="692,485,752,495,752,500,691,491"/>
+<area shape="rect" id="Node000020" href="$classmlir_1_1arm__sme_1_1impl_1_1OuterProductFusionBase.html" title=" " alt="" coords="757,563,947,618"/>
+<area shape="poly" id="edge19_Node000015_Node000020" title=" " alt="" coords="638,498,732,548,763,561,761,566,730,553,635,503"/>
+<area shape="rect" id="Node000021" href="$classmlir_1_1arm__sme_1_1impl_1_1TestTileAllocationBase.html" title=" " alt="" coords="763,642,941,697"/>
+<area shape="poly" id="edge20_Node000015_Node000021" title=" " alt="" coords="616,503,664,566,696,599,732,627,764,644,762,649,729,632,693,603,660,570,612,507"/>
+<area shape="rect" id="Node000022" href="$classmlir_1_1arm__sve_1_1impl_1_1LegalizeVectorStorageBase.html" title=" " alt="" coords="749,70,955,125"/>
+<area shape="poly" id="edge21_Node000015_Node000022" title=" " alt="" coords="676,443,679,440,691,411,697,368,703,290,705,245,703,208,707,173,715,155,729,136,747,120,750,124,733,139,719,158,712,175,708,208,710,245,708,291,702,369,696,412,684,443,680,446"/>
+<area shape="rect" id="Node000023" href="$classmlir_1_1impl_1_1GpuEliminateBarriersBase.html" title=" " alt="" coords="755,149,949,189"/>
+<area shape="poly" id="edge22_Node000015_Node000023" title=" " alt="" coords="676,443,679,440,690,420,696,392,703,320,710,249,717,220,729,200,753,182,756,186,733,203,722,222,715,250,708,321,701,392,695,422,684,443,680,446"/>
+<area shape="rect" id="Node000024" href="$classmlir_1_1impl_1_1GpuMapParallelLoopsPassBase.html" title=" " alt="" coords="747,213,957,253"/>
+<area shape="poly" id="edge23_Node000015_Node000024" title=" " alt="" coords="676,443,679,440,688,425,694,405,703,352,712,300,719,279,729,264,745,251,748,255,733,267,724,281,717,301,708,353,699,406,693,427,683,443,680,447"/>
+<area shape="rect" id="Node000026" href="$classmlir_1_1affine_1_1impl_1_1AffineDataCopyGenerationBase.html" title=" " alt="" coords="750,914,954,969"/>
+<area shape="poly" id="edge25_Node000025_Node000026" title=" " alt="" coords="590,1418,595,1331,602,1275,614,1214,631,1151,655,1088,688,1030,729,978,748,963,751,967,733,982,692,1033,660,1091,636,1152,619,1215,607,1276,600,1332,596,1419"/>
+<area shape="rect" id="Node000027" href="$classmlir_1_1affine_1_1impl_1_1AffineLoopInvariantCodeMotionBase.html" title=" " alt="" coords="735,993,969,1047"/>
+<area shape="poly" id="edge26_Node000025_Node000027" title=" " alt="" coords="593,1418,602,1344,624,1248,641,1196,664,1146,693,1099,729,1057,743,1045,746,1050,733,1061,698,1102,669,1148,646,1198,629,1249,607,1345,598,1419"/>
+<area shape="rect" id="Node000028" href="$classmlir_1_1affine_1_1impl_1_1AffineLoopNormalizeBase.html" title=" " alt="" coords="753,1071,951,1126"/>
+<area shape="poly" id="edge27_Node000025_Node000028" title=" " alt="" coords="596,1418,610,1357,635,1282,652,1242,673,1203,699,1167,729,1135,751,1120,754,1124,732,1139,703,1171,678,1206,657,1244,640,1284,615,1359,601,1419"/>
+<area shape="rect" id="Node000029" href="$classmlir_1_1affine_1_1impl_1_1AffineLoopTilingBase.html" title=" " alt="" coords="769,1150,935,1205"/>
+<area shape="poly" id="edge28_Node000025_Node000029" title=" " alt="" coords="601,1418,619,1372,646,1317,683,1262,705,1236,729,1214,767,1193,770,1197,732,1218,708,1240,687,1265,651,1320,624,1374,606,1420"/>
+<area shape="rect" id="Node000030" href="$classmlir_1_1affine_1_1impl_1_1AffineParallelizeBase.html" title=" " alt="" coords="769,1229,935,1283"/>
+<area shape="poly" id="edge29_Node000025_Node000030" title=" " alt="" coords="611,1418,660,1355,693,1321,729,1292,767,1273,770,1278,732,1297,696,1325,664,1358,616,1421"/>
+<area shape="rect" id="Node000031" href="$classmlir_1_1affine_1_1impl_1_1AffinePipelineDataTransferBase.html" title=" " alt="" coords="751,1307,953,1362"/>
+<area shape="poly" id="edge30_Node000025_Node000031" title=" " alt="" coords="634,1422,679,1396,730,1371,758,1360,760,1365,732,1376,682,1401,637,1427"/>
+<area shape="rect" id="Node000032" href="$classmlir_1_1affine_1_1impl_1_1AffineScalarReplacementBase.html" title=" " alt="" coords="739,1386,965,1441"/>
+<area shape="poly" id="edge31_Node000025_Node000032" title=" " alt="" coords="680,1436,738,1428,739,1433,680,1442"/>
+<area shape="rect" id="Node000033" href="$classmlir_1_1affine_1_1impl_1_1AffineVectorizeBase.html" title=" " alt="" coords="772,1465,932,1519"/>
+<area shape="poly" id="edge32_Node000025_Node000033" title=" " alt="" coords="681,1463,772,1477,771,1482,680,1468"/>
+<area shape="rect" id="Node000034" href="$classmlir_1_1affine_1_1impl_1_1LoopCoalescingBase.html" title=" " alt="" coords="770,1543,934,1598"/>
+<area shape="poly" id="edge33_Node000025_Node000034" title=" " alt="" coords="637,1477,682,1503,732,1528,771,1544,769,1549,730,1533,680,1508,635,1482"/>
+<area shape="rect" id="Node000035" href="$classmlir_1_1affine_1_1impl_1_1RaiseMemrefDialectBase.html" title=" " alt="" coords="755,1622,949,1677"/>
+<area shape="poly" id="edge34_Node000025_Node000035" title=" " alt="" coords="616,1482,664,1546,696,1579,732,1607,755,1620,753,1625,729,1612,693,1583,660,1549,611,1486"/>
+<area shape="rect" id="Node000036" href="$classmlir_1_1affine_1_1impl_1_1SimplifyAffineStructuresBase.html" title=" " alt="" coords="759,1701,945,1755"/>
+<area shape="poly" id="edge35_Node000025_Node000036" title=" " alt="" coords="606,1484,624,1529,651,1584,687,1639,709,1664,732,1686,760,1703,757,1707,729,1690,705,1667,683,1642,646,1586,619,1532,601,1486"/>
+<area shape="rect" id="Node000037" href="$classmlir_1_1bufferization_1_1impl_1_1BufferHoistingPassBase.html" title=" " alt="" coords="757,1779,947,1834"/>
+<area shape="poly" id="edge36_Node000025_Node000037" title=" " alt="" coords="601,1485,615,1545,640,1620,657,1659,678,1698,703,1733,732,1765,759,1782,756,1787,729,1769,699,1737,674,1700,652,1662,635,1622,610,1546,596,1486"/>
+<area shape="rect" id="Node000038" href="$classmlir_1_1bufferization_1_1impl_1_1BufferLoopHoistingPassBase.html" title=" " alt="" coords="757,1858,947,1913"/>
+<area shape="poly" id="edge37_Node000025_Node000038" title=" " alt="" coords="598,1486,607,1559,629,1655,647,1706,669,1756,698,1802,732,1843,758,1862,755,1866,729,1847,693,1805,665,1758,642,1708,624,1657,602,1560,593,1486"/>
+<area shape="rect" id="Node000039" href="$classmlir_1_1bufferization_1_1impl_1_1OptimizeAllocationLivenessPassBase.html" title=" " alt="" coords="737,1937,967,1991"/>
+<area shape="poly" id="edge38_Node000025_Node000039" title=" " alt="" coords="596,1486,601,1573,608,1629,620,1689,637,1752,661,1813,692,1871,733,1922,748,1935,744,1939,729,1926,688,1874,656,1816,632,1754,614,1691,603,1630,595,1573,590,1486"/>
+<area shape="rect" id="Node000040" href="$classmlir_1_1bufferization_1_1impl_1_1PromoteBuffersToStackPassBase.html" title=" " alt="" coords="743,2015,961,2070"/>
+<area shape="poly" id="edge39_Node000025_Node000040" title=" " alt="" coords="600,1486,617,1601,645,1755,663,1833,684,1904,707,1962,733,2001,747,2013,743,2017,729,2004,703,1964,679,1905,658,1834,640,1757,612,1602,595,1487"/>
+<area shape="rect" id="Node000041" href="$classmlir_1_1impl_1_1GpuAsyncRegionPassBase.html" title=" " alt="" coords="751,721,953,761"/>
+<area shape="poly" id="edge40_Node000025_Node000041" title=" " alt="" coords="593,1418,604,1277,627,1083,645,984,668,894,695,821,711,793,729,771,749,757,752,762,732,775,716,796,700,823,673,896,651,985,633,1083,609,1278,598,1418"/>
+<area shape="rect" id="Node000042" href="$classmlir_1_1impl_1_1LowerForeachToSCFBase.html" title=" " alt="" coords="761,785,943,825"/>
+<area shape="poly" id="edge41_Node000025_Node000042" title=" " alt="" coords="593,1418,607,1289,632,1114,651,1026,672,945,698,880,713,855,729,835,759,816,762,821,732,839,717,858,703,882,678,947,656,1027,638,1115,612,1290,599,1418"/>
+<area shape="rect" id="Node000043" href="$classmlir_1_1impl_1_1LowerSparseIterationToSCFBase.html" title=" " alt="" coords="737,849,967,889"/>
+<area shape="poly" id="edge42_Node000025_Node000043" title=" " alt="" coords="595,1418,610,1302,638,1146,656,1068,677,997,702,939,729,900,744,887,748,892,733,903,706,942,682,999,661,1070,643,1148,616,1303,600,1419"/>
+<area shape="poly" id="edge49_Node000128_Node000002" title=" " alt="" coords="269,2190,313,2175,417,2156,513,2148,514,2153,418,2161,314,2180,271,2195"/>
+<area shape="poly" id="edge50_Node000128_Node000006" title=" " alt="" coords="216,2183,249,1862,277,1633,311,1398,500,440,514,427,518,432,505,443,316,1399,283,1634,255,1863,222,2184"/>
+<area shape="poly" id="edge51_Node000128_Node000008" title=" " alt="" coords="303,2212,404,2215,448,2220,480,2228,512,2248,540,2273,580,2322,576,2326,536,2277,509,2252,478,2233,447,2225,403,2220,303,2218"/>
+<area shape="poly" id="edge52_Node000128_Node000015" title=" " alt="" coords="218,2184,248,2001,275,1881,311,1760,332,1707,353,1663,396,1591,438,1519,458,1475,476,1421,511,1282,538,1138,558,996,572,860,585,631,588,493,593,494,591,631,577,861,563,996,543,1139,516,1283,481,1422,463,1477,443,1521,401,1594,358,1665,337,1709,316,1762,281,1882,254,2002,223,2184"/>
+<area shape="poly" id="edge53_Node000128_Node000025" title=" " alt="" coords="236,2185,347,2017,415,1903,476,1783,513,1694,544,1604,583,1471,588,1473,549,1606,518,1696,481,1785,419,1905,351,2020,241,2188"/>
+<area shape="poly" id="edge54_Node000128_Node000061" title=" " alt="" coords="236,2247,269,2295,291,2319,315,2339,337,2352,358,2360,398,2367,437,2374,458,2383,480,2398,489,2409,493,2419,497,2429,504,2438,522,2450,519,2454,501,2442,492,2431,488,2421,485,2411,477,2402,456,2388,436,2379,397,2372,357,2365,335,2357,312,2344,287,2322,265,2298,232,2250"/>
+<area shape="poly" id="edge55_Node000128_Node000115" title=" " alt="" coords="225,2250,237,2290,255,2338,281,2385,315,2426,336,2442,355,2452,392,2461,432,2467,480,2484,504,2502,532,2515,530,2520,501,2506,477,2489,431,2472,391,2466,353,2457,333,2446,311,2430,276,2388,250,2340,232,2292,220,2252"/>
+<area shape="poly" id="edge56_Node000128_Node000119" title=" " alt="" coords="275,2240,314,2256,362,2269,403,2274,440,2284,460,2295,481,2312,491,2328,493,2344,495,2359,505,2374,520,2386,517,2390,501,2378,490,2361,488,2345,486,2330,477,2315,457,2299,438,2289,402,2279,361,2274,313,2261,273,2245"/>
+<area shape="poly" id="edge57_Node000128_Node000126" title=" " alt="" coords="220,2251,227,2307,242,2378,254,2414,270,2450,290,2483,315,2513,342,2526,393,2544,518,2581,516,2587,391,2549,340,2531,312,2517,286,2486,266,2452,249,2416,237,2379,221,2308,215,2251"/>
+</map>

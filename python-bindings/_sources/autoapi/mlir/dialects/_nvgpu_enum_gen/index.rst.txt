@@ -1,0 +1,241 @@
+mlir.dialects._nvgpu_enum_gen
+=============================
+
+.. py:module:: mlir.dialects._nvgpu_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._nvgpu_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._nvgpu_enum_gen.RcpRoundingMode
+   mlir.dialects._nvgpu_enum_gen.TensorMapInterleaveKind
+   mlir.dialects._nvgpu_enum_gen.TensorMapL2PromoKind
+   mlir.dialects._nvgpu_enum_gen.TensorMapOOBKind
+   mlir.dialects._nvgpu_enum_gen.TensorMapSwizzleKind
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._nvgpu_enum_gen.register_attribute_builder
+   mlir.dialects._nvgpu_enum_gen._rcproundingmode
+   mlir.dialects._nvgpu_enum_gen._tensormapinterleavekind
+   mlir.dialects._nvgpu_enum_gen._tensormapl2promokind
+   mlir.dialects._nvgpu_enum_gen._tensormapoobkind
+   mlir.dialects._nvgpu_enum_gen._tensormapswizzlekind
+   mlir.dialects._nvgpu_enum_gen._rcproundingmodeattr
+   mlir.dialects._nvgpu_enum_gen._tensormapinterleaveattr
+   mlir.dialects._nvgpu_enum_gen._tensormapl2promoattr
+   mlir.dialects._nvgpu_enum_gen._tensormapoobattr
+   mlir.dialects._nvgpu_enum_gen._tensormapswizzleattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: RcpRoundingMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Rounding mode of rcp
+
+
+   .. py:attribute:: APPROX
+      :value: 0
+
+
+
+   .. py:attribute:: RN
+      :value: 1
+
+
+
+   .. py:attribute:: RZ
+      :value: 2
+
+
+
+   .. py:attribute:: RM
+      :value: 3
+
+
+
+   .. py:attribute:: RP
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _rcproundingmode(x, context)
+
+.. py:class:: TensorMapInterleaveKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Tensor map interleave layout type
+
+
+   .. py:attribute:: INTERLEAVE_NONE
+      :value: 0
+
+
+
+   .. py:attribute:: INTERLEAVE_16B
+      :value: 1
+
+
+
+   .. py:attribute:: INTERLEAVE_32B
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tensormapinterleavekind(x, context)
+
+.. py:class:: TensorMapL2PromoKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Tensor map L2 promotion type
+
+
+   .. py:attribute:: L2PROMO_NONE
+      :value: 0
+
+
+
+   .. py:attribute:: L2PROMO_64B
+      :value: 1
+
+
+
+   .. py:attribute:: L2PROMO_128B
+      :value: 2
+
+
+
+   .. py:attribute:: L2PROMO_256B
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tensormapl2promokind(x, context)
+
+.. py:class:: TensorMapOOBKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Tensor map out-of-bounds fill type
+
+
+   .. py:attribute:: OOB_ZERO
+      :value: 0
+
+
+
+   .. py:attribute:: OOB_NAN
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tensormapoobkind(x, context)
+
+.. py:class:: TensorMapSwizzleKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Tensor map swizzling mode of shared memory banks
+
+
+   .. py:attribute:: SWIZZLE_NONE
+      :value: 0
+
+
+
+   .. py:attribute:: SWIZZLE_32B
+      :value: 1
+
+
+
+   .. py:attribute:: SWIZZLE_64B
+      :value: 2
+
+
+
+   .. py:attribute:: SWIZZLE_128B
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tensormapswizzlekind(x, context)
+
+.. py:function:: _rcproundingmodeattr(x, context)
+
+.. py:function:: _tensormapinterleaveattr(x, context)
+
+.. py:function:: _tensormapl2promoattr(x, context)
+
+.. py:function:: _tensormapoobattr(x, context)
+
+.. py:function:: _tensormapswizzleattr(x, context)
+

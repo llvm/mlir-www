@@ -1,0 +1,658 @@
+mlir.dialects._gpu_enum_gen
+===========================
+
+.. py:module:: mlir.dialects._gpu_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._gpu_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._gpu_enum_gen.AddressSpace
+   mlir.dialects._gpu_enum_gen.AllReduceOperation
+   mlir.dialects._gpu_enum_gen.BroadcastType
+   mlir.dialects._gpu_enum_gen.CompilationTarget
+   mlir.dialects._gpu_enum_gen.Dimension
+   mlir.dialects._gpu_enum_gen.Prune2To4SpMatFlag
+   mlir.dialects._gpu_enum_gen.ShuffleMode
+   mlir.dialects._gpu_enum_gen.SpGEMMWorkEstimationOrComputeKind
+   mlir.dialects._gpu_enum_gen.TransposeMode
+   mlir.dialects._gpu_enum_gen.MMAElementwiseOp
+   mlir.dialects._gpu_enum_gen.MappingId
+   mlir.dialects._gpu_enum_gen.Processor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._gpu_enum_gen.register_attribute_builder
+   mlir.dialects._gpu_enum_gen._gpu_addressspaceenum
+   mlir.dialects._gpu_enum_gen._gpu_allreduceoperation
+   mlir.dialects._gpu_enum_gen._gpu_broadcasttype
+   mlir.dialects._gpu_enum_gen._gpu_compilationtargetenum
+   mlir.dialects._gpu_enum_gen._gpu_dimension
+   mlir.dialects._gpu_enum_gen._gpu_prune2to4spmatflag
+   mlir.dialects._gpu_enum_gen._gpu_shufflemode
+   mlir.dialects._gpu_enum_gen._gpu_spgemmworkestimationorcomputekind
+   mlir.dialects._gpu_enum_gen._gpu_transposemode
+   mlir.dialects._gpu_enum_gen._mmaelementwise
+   mlir.dialects._gpu_enum_gen._mappingidenum
+   mlir.dialects._gpu_enum_gen._processorenum
+   mlir.dialects._gpu_enum_gen._gpu_addressspaceattr
+   mlir.dialects._gpu_enum_gen._gpu_allreduceoperationattr
+   mlir.dialects._gpu_enum_gen._gpu_broadcasttypeattr
+   mlir.dialects._gpu_enum_gen._gpu_dimensionattr
+   mlir.dialects._gpu_enum_gen._gpu_prune2to4spmatflagattr
+   mlir.dialects._gpu_enum_gen._gpu_shufflemodeattr
+   mlir.dialects._gpu_enum_gen._gpu_spgemmworkestimationorcomputekindattr
+   mlir.dialects._gpu_enum_gen._gpu_transposemodeattr
+   mlir.dialects._gpu_enum_gen._mmaelementwiseattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: AddressSpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   GPU address space
+
+
+   .. py:attribute:: Global
+      :value: 1
+
+
+
+   .. py:attribute:: Workgroup
+      :value: 2
+
+
+
+   .. py:attribute:: Private
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_addressspaceenum(x, context)
+
+.. py:class:: AllReduceOperation
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   built-in reduction operations supported by gpu.allreduce.
+
+
+   .. py:attribute:: ADD
+      :value: 0
+
+
+
+   .. py:attribute:: MUL
+      :value: 1
+
+
+
+   .. py:attribute:: MINUI
+      :value: 2
+
+
+
+   .. py:attribute:: MINSI
+      :value: 3
+
+
+
+   .. py:attribute:: MINNUMF
+      :value: 4
+
+
+
+   .. py:attribute:: MAXUI
+      :value: 5
+
+
+
+   .. py:attribute:: MAXSI
+      :value: 6
+
+
+
+   .. py:attribute:: MAXNUMF
+      :value: 7
+
+
+
+   .. py:attribute:: AND
+      :value: 8
+
+
+
+   .. py:attribute:: OR
+      :value: 9
+
+
+
+   .. py:attribute:: XOR
+      :value: 10
+
+
+
+   .. py:attribute:: MINIMUMF
+      :value: 11
+
+
+
+   .. py:attribute:: MAXIMUMF
+      :value: 12
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_allreduceoperation(x, context)
+
+.. py:class:: BroadcastType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   a lane to broadcast from
+
+
+   .. py:attribute:: first_active_lane
+      :value: 0
+
+
+
+   .. py:attribute:: specific_lane
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_broadcasttype(x, context)
+
+.. py:class:: CompilationTarget
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   GPU compilation format
+
+
+   .. py:attribute:: Offload
+      :value: 1
+
+
+
+   .. py:attribute:: Assembly
+      :value: 2
+
+
+
+   .. py:attribute:: Binary
+      :value: 3
+
+
+
+   .. py:attribute:: Fatbin
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_compilationtargetenum(x, context)
+
+.. py:class:: Dimension
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   a dimension, either 'x', 'y', or 'z'
+
+
+   .. py:attribute:: x
+      :value: 0
+
+
+
+   .. py:attribute:: y
+      :value: 1
+
+
+
+   .. py:attribute:: z
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_dimension(x, context)
+
+.. py:class:: Prune2To4SpMatFlag
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   pruning strategy for 2:4 sparse matrix
+
+
+   .. py:attribute:: NONE
+      :value: 0
+
+
+
+   .. py:attribute:: PRUNE_ONLY
+      :value: 1
+
+
+
+   .. py:attribute:: PRUNE_AND_CHECK
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_prune2to4spmatflag(x, context)
+
+.. py:class:: ShuffleMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Indexing modes supported by gpu.shuffle.
+
+
+   .. py:attribute:: XOR
+      :value: 0
+
+
+
+   .. py:attribute:: UP
+      :value: 2
+
+
+
+   .. py:attribute:: DOWN
+      :value: 1
+
+
+
+   .. py:attribute:: IDX
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_shufflemode(x, context)
+
+.. py:class:: SpGEMMWorkEstimationOrComputeKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   choose whether spgemm_work_estimation_or_compute does work estimation or compute
+
+
+   .. py:attribute:: WORK_ESTIMATION
+      :value: 0
+
+
+
+   .. py:attribute:: COMPUTE
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_spgemmworkestimationorcomputekind(x, context)
+
+.. py:class:: TransposeMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   transpose mode of sparse matrix supported by sparse tensor ops
+
+
+   .. py:attribute:: NON_TRANSPOSE
+      :value: 0
+
+
+
+   .. py:attribute:: TRANSPOSE
+      :value: 1
+
+
+
+   .. py:attribute:: CONJUGATE_TRANSPOSE
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _gpu_transposemode(x, context)
+
+.. py:class:: MMAElementwiseOp
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   elementwise operation to apply to mma matrix
+
+
+   .. py:attribute:: ADDF
+      :value: 0
+
+
+
+   .. py:attribute:: MULF
+      :value: 1
+
+
+
+   .. py:attribute:: SUBF
+      :value: 2
+
+
+
+   .. py:attribute:: MAXF
+      :value: 3
+
+
+
+   .. py:attribute:: MINF
+      :value: 4
+
+
+
+   .. py:attribute:: DIVF
+      :value: 5
+
+
+
+   .. py:attribute:: ADDI
+      :value: 6
+
+
+
+   .. py:attribute:: MULI
+      :value: 7
+
+
+
+   .. py:attribute:: SUBI
+      :value: 8
+
+
+
+   .. py:attribute:: DIVS
+      :value: 9
+
+
+
+   .. py:attribute:: DIVU
+      :value: 10
+
+
+
+   .. py:attribute:: NEGATEF
+      :value: 11
+
+
+
+   .. py:attribute:: NEGATES
+      :value: 12
+
+
+
+   .. py:attribute:: EXTF
+      :value: 13
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mmaelementwise(x, context)
+
+.. py:class:: MappingId
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Mapping ids for loop mapping
+
+
+   .. py:attribute:: DimX
+      :value: 0
+
+
+
+   .. py:attribute:: DimY
+      :value: 1
+
+
+
+   .. py:attribute:: DimZ
+      :value: 2
+
+
+
+   .. py:attribute:: LinearDim0
+      :value: 3
+
+
+
+   .. py:attribute:: LinearDim1
+      :value: 4
+
+
+
+   .. py:attribute:: LinearDim2
+      :value: 5
+
+
+
+   .. py:attribute:: LinearDim3
+      :value: 6
+
+
+
+   .. py:attribute:: LinearDim4
+      :value: 7
+
+
+
+   .. py:attribute:: LinearDim5
+      :value: 8
+
+
+
+   .. py:attribute:: LinearDim6
+      :value: 9
+
+
+
+   .. py:attribute:: LinearDim7
+      :value: 10
+
+
+
+   .. py:attribute:: LinearDim8
+      :value: 11
+
+
+
+   .. py:attribute:: LinearDim9
+      :value: 12
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _mappingidenum(x, context)
+
+.. py:class:: Processor
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   processor for loop mapping
+
+
+   .. py:attribute:: BlockX
+      :value: 0
+
+
+
+   .. py:attribute:: BlockY
+      :value: 1
+
+
+
+   .. py:attribute:: BlockZ
+      :value: 2
+
+
+
+   .. py:attribute:: ThreadX
+      :value: 3
+
+
+
+   .. py:attribute:: ThreadY
+      :value: 4
+
+
+
+   .. py:attribute:: ThreadZ
+      :value: 5
+
+
+
+   .. py:attribute:: Sequential
+      :value: 6
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _processorenum(x, context)
+
+.. py:function:: _gpu_addressspaceattr(x, context)
+
+.. py:function:: _gpu_allreduceoperationattr(x, context)
+
+.. py:function:: _gpu_broadcasttypeattr(x, context)
+
+.. py:function:: _gpu_dimensionattr(x, context)
+
+.. py:function:: _gpu_prune2to4spmatflagattr(x, context)
+
+.. py:function:: _gpu_shufflemodeattr(x, context)
+
+.. py:function:: _gpu_spgemmworkestimationorcomputekindattr(x, context)
+
+.. py:function:: _gpu_transposemodeattr(x, context)
+
+.. py:function:: _mmaelementwiseattr(x, context)
+

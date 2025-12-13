@@ -1,0 +1,309 @@
+mlir.dialects._amdgpu_enum_gen
+==============================
+
+.. py:module:: mlir.dialects._amdgpu_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen.AddressSpace
+   mlir.dialects._amdgpu_enum_gen.DPPPerm
+   mlir.dialects._amdgpu_enum_gen.MFMAPermB
+   mlir.dialects._amdgpu_enum_gen.sched_barrier_opt_enum
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen.register_attribute_builder
+   mlir.dialects._amdgpu_enum_gen._amdgpu_addressspace
+   mlir.dialects._amdgpu_enum_gen._amdgpu_dppperm
+   mlir.dialects._amdgpu_enum_gen._amdgpu_mfmapermb
+   mlir.dialects._amdgpu_enum_gen._amdgpu_schedbarrieropopt
+   mlir.dialects._amdgpu_enum_gen._amdgpu_addressspaceattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_dpppermattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_mfmapermbattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_schedbarrieropoptattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: AddressSpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   AMDGPU-specific address spaces
+
+
+   .. py:attribute:: FatRawBuffer
+      :value: 0
+
+
+
+   .. py:attribute:: BufferRsrc
+      :value: 1
+
+
+
+   .. py:attribute:: FatStructuredBuffer
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _amdgpu_addressspace(x, context)
+
+.. py:class:: DPPPerm
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   The possible permutations for a DPP operation
+
+
+   .. py:attribute:: quad_perm
+      :value: 0
+
+
+
+   .. py:attribute:: row_shl
+      :value: 1
+
+
+
+   .. py:attribute:: row_shr
+      :value: 2
+
+
+
+   .. py:attribute:: row_ror
+      :value: 3
+
+
+
+   .. py:attribute:: wave_shl
+      :value: 4
+
+
+
+   .. py:attribute:: wave_shr
+      :value: 5
+
+
+
+   .. py:attribute:: wave_ror
+      :value: 6
+
+
+
+   .. py:attribute:: wave_rol
+      :value: 7
+
+
+
+   .. py:attribute:: row_mirror
+      :value: 8
+
+
+
+   .. py:attribute:: row_half_mirror
+      :value: 9
+
+
+
+   .. py:attribute:: row_bcast_15
+      :value: 10
+
+
+
+   .. py:attribute:: row_bcast_31
+      :value: 11
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _amdgpu_dppperm(x, context)
+
+.. py:class:: MFMAPermB
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   The possible permutations of the lanes storing B available in an MFMA
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: bcast_first_32
+      :value: 1
+
+
+
+   .. py:attribute:: bcast_second_32
+      :value: 2
+
+
+
+   .. py:attribute:: rotate_16_right
+      :value: 3
+
+
+
+   .. py:attribute:: bcast_first_16
+      :value: 4
+
+
+
+   .. py:attribute:: bcast_second_16
+      :value: 5
+
+
+
+   .. py:attribute:: bcast_third_16
+      :value: 6
+
+
+
+   .. py:attribute:: bcast_fourth_16
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _amdgpu_mfmapermb(x, context)
+
+.. py:class:: sched_barrier_opt_enum
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   The possible options for scheduling barriers
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: non_mem_non_sideffect
+      :value: 1
+
+
+
+   .. py:attribute:: valu
+      :value: 2
+
+
+
+   .. py:attribute:: salu
+      :value: 4
+
+
+
+   .. py:attribute:: mfma_wmma
+      :value: 8
+
+
+
+   .. py:attribute:: all_vmem
+      :value: 16
+
+
+
+   .. py:attribute:: vmem_read
+      :value: 32
+
+
+
+   .. py:attribute:: vmem_write
+      :value: 64
+
+
+
+   .. py:attribute:: all_ds
+      :value: 128
+
+
+
+   .. py:attribute:: ds_read
+      :value: 256
+
+
+
+   .. py:attribute:: ds_write
+      :value: 512
+
+
+
+   .. py:attribute:: transcendental
+      :value: 1024
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _amdgpu_schedbarrieropopt(x, context)
+
+.. py:function:: _amdgpu_addressspaceattr(x, context)
+
+.. py:function:: _amdgpu_dpppermattr(x, context)
+
+.. py:function:: _amdgpu_mfmapermbattr(x, context)
+
+.. py:function:: _amdgpu_schedbarrieropoptattr(x, context)
+

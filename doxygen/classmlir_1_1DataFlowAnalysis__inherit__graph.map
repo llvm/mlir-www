@@ -1,0 +1,41 @@
+<map id="mlir::DataFlowAnalysis" name="mlir::DataFlowAnalysis">
+<area shape="rect" id="Node000001" title="Base class for all data&#45;flow analyses." alt="" coords="5,175,179,201"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1dataflow_1_1AbstractDenseBackwardDataFlowAnalysis.html" title="Base class for dense backward dataflow analyses." alt="" coords="229,8,473,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,164,164,122,227,78,293,46,295,51,229,82,168,126,118,168"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1dataflow_1_1AbstractDenseForwardDataFlowAnalysis.html" title="Base class for dense forward data&#45;flow analyses." alt="" coords="235,92,467,132"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,169,281,130,283,135,150,174"/>
+<area shape="rect" id="Node000006" href="$classmlir_1_1dataflow_1_1AbstractSparseBackwardDataFlowAnalysis.html" title="Base class for sparse backward data&#45;flow analyses." alt="" coords="228,168,475,208"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="192,185,228,185,228,191,192,191"/>
+<area shape="rect" id="Node000010" href="$classmlir_1_1dataflow_1_1AbstractSparseForwardDataFlowAnalysis.html" title="Base class for sparse forward data&#45;flow analyses." alt="" coords="234,276,469,316"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="138,204,303,273,301,278,136,209"/>
+<area shape="rect" id="Node000018" href="$classmlir_1_1dataflow_1_1DeadCodeAnalysis.html" title="Dead code analysis analyzes control&#45;flow, as understood by RegionBranchOpInterface and BranchOpInterf..." alt="" coords="258,340,445,380"/>
+<area shape="poly" id="edge21_Node000001_Node000018" title=" " alt="" coords="112,210,160,269,193,300,229,326,259,339,257,344,227,330,189,304,156,272,108,214"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1dataflow_1_1DenseBackwardDataFlowAnalysis.html" title="A dense backward dataflow analysis propagating lattices after and before the execution of every opera..." alt="" coords="525,5,749,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="487,24,525,24,525,29,487,29"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1dataflow_1_1DenseForwardDataFlowAnalysis.html" title="A dense forward data&#45;flow analysis for propagating lattices before and after the execution of every o..." alt="" coords="527,69,748,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="481,99,526,95,527,101,481,104"/>
+<area shape="rect" id="Node000007" href="$classmlir_1_1dataflow_1_1SparseBackwardDataFlowAnalysis.html" title=" " alt="" coords="1056,169,1283,209"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="488,172,524,169,765,156,871,157,1007,164,1056,169,1056,174,1006,169,871,162,765,162,524,175,489,177"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1dataflow_1_1SparseBackwardDataFlowAnalysis.html" title="A sparse (backward) data&#45;flow analysis for propagating SSA value lattices backwards across the IR by ..." alt="" coords="524,184,751,224"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="488,193,524,195,523,200,488,198"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1dataflow_1_1LivenessAnalysis.html" title="An analysis that, by going backwards along the dataflow graph, annotates each value with a boolean st..." alt="" coords="1383,169,1559,209"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1296,187,1382,187,1382,192,1296,192"/>
+<area shape="poly" id="edge9_Node000009_Node000007" title=" " alt="" coords="764,198,1056,190,1056,195,764,203"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="1031,242,1308,297"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="483,288,775,277,1030,270,1031,275,775,283,483,293"/>
+<area shape="rect" id="Node000013" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="1062,347,1277,402"/>
+<area shape="poly" id="edge13_Node000010_Node000013" title=" " alt="" coords="461,318,476,326,491,336,501,348,511,358,525,368,592,402,651,426,705,443,758,453,811,456,868,454,1006,433,1060,419,1110,400,1112,405,1062,424,1007,439,869,459,811,462,757,458,704,449,649,431,590,406,523,373,507,362,497,351,488,340,473,330,458,323"/>
+<area shape="rect" id="Node000015" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title=" " alt="" coords="1038,461,1301,515"/>
+<area shape="poly" id="edge15_Node000010_Node000015" title=" " alt="" coords="471,321,477,326,490,343,497,360,500,395,504,428,512,443,526,457,588,493,657,518,729,532,802,539,875,538,944,533,1064,513,1065,518,944,538,875,544,802,544,728,538,655,523,586,498,522,461,507,446,499,429,495,396,492,361,486,345,473,330,468,326"/>
+<area shape="rect" id="Node000017" href="$classmlir_1_1dataflow_1_1SparseForwardDataFlowAnalysis.html" title="A sparse forward data&#45;flow analysis for propagating SSA value lattices across the IR by implementing ..." alt="" coords="530,319,745,359"/>
+<area shape="poly" id="edge17_Node000010_Node000017" title=" " alt="" coords="482,313,530,320,529,325,482,318"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1dataflow_1_1IntegerRangeAnalysis.html" title="Integer range analysis determines the integer value range of SSA values using operations that define ..." alt="" coords="1367,249,1574,289"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1322,267,1367,267,1367,272,1322,272"/>
+<area shape="rect" id="Node000014" href="$classmlir_1_1dataflow_1_1SparseConstantPropagation.html" title="This analysis implements sparse constant propagation, which attempts to determine constant&#45;valued res..." alt="" coords="1360,355,1581,395"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1290,372,1359,372,1359,377,1290,377"/>
+<area shape="rect" id="Node000016" href="$classmlir_1_1dataflow_1_1StridedMetadataRangeAnalysis.html" title="Strided metadata range analysis determines the strided metadata ranges of SSA values using operations..." alt="" coords="1357,468,1584,508"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="1314,485,1357,485,1357,491,1314,491"/>
+<area shape="poly" id="edge18_Node000017_Node000011" title=" " alt="" coords="758,328,878,316,1006,300,1041,294,1042,299,1007,305,879,322,759,333"/>
+<area shape="poly" id="edge19_Node000017_Node000013" title=" " alt="" coords="759,352,775,353,925,363,1062,369,1062,375,925,369,774,359,758,357"/>
+<area shape="poly" id="edge20_Node000017_Node000015" title=" " alt="" coords="694,362,776,395,910,433,1039,462,1037,467,909,438,774,400,692,367"/>
+</map>

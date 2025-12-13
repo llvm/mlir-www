@@ -1,0 +1,375 @@
+mlir.dialects.transform.extras
+==============================
+
+.. py:module:: mlir.dialects.transform.extras
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.extras.sequence
+   mlir.dialects.transform.extras.named_sequence
+   mlir.dialects.transform.extras.apply_patterns
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.extras.NamedSequenceOp
+   mlir.dialects.transform.extras.YieldOp
+   mlir.dialects.transform.extras.SequenceOp
+   mlir.dialects.transform.extras.ApplyPatternsOp
+   mlir.dialects.transform.extras.Handle
+   mlir.dialects.transform.extras.OpHandle
+   mlir.dialects.transform.extras.ParamHandle
+   mlir.dialects.transform.extras.ValueHandle
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.extras.region_op
+   mlir.dialects.transform.extras.constant_param
+   mlir.dialects.transform.extras.insert_transform_script
+
+
+Package Contents
+----------------
+
+.. py:function:: region_op(op_constructor, terminator=None)
+
+   
+   Decorator to define an MLIR Op specified as a python function.
+
+   Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+   active for the current thread (i.e. established in a ``with`` block).
+
+   Supports "naked" usage i.e., no parens if no args need to be passed to the Op constructor.
+
+   When applied as a decorator to a Python function, an entry block will
+   be constructed for the Op with types as specified **as type hints on the args of the function**.
+   The block arguments will be passed positionally to the Python function.
+
+   If a terminator is specified then the return from the decorated function will be passed
+   to the terminator as the last statement in the entry block. Note, the API for the terminator
+   is a (possibly empty) list; terminator accepting single values should be wrapped in a
+   ``lambda args: term(args[0])``
+
+   The identifier (name) of the function will become:
+
+   #. A single value result if the Op returns a single value;
+   #. An OpResultList (as a list) if the Op returns multiple values;
+   #. The Operation if the Op returns no results.
+
+   See examples in tensor.py and transform.extras.
+
+
+.. py:class:: NamedSequenceOp(sym_name: Union[str, SymbolRefAttr], input_types: Sequence[Type], result_types: Sequence[Type], *, sym_visibility: Optional[Union[str, StringAttr]] = None, arg_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, res_attrs: Optional[Union[Sequence[dict], DictArrayAttr]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`NamedSequenceOp`
+
+
+   
+   Defines a named (callable, function-like) sequence of other Transform
+   dialect operations that can be included using ``transform.include`` as part of
+   another Transform dialect construct. This sequence is not processed
+   immediately but rather dispatched to when the inclusion is processed. The
+   arguments and results can be used to communicate a subset of mapping into
+   the named sequence. The sequence must consist of a single block and end with
+   a ``transform.yield`` terminator. The operands of the terminator become the
+   results of the ``transform.include``.
+
+   When dispatched to, the operations in the named sequence are executed one by
+   one, similarly to the regular unnamed sequence. The failure propagation mode
+   is specified on the ``transform.include``. Different inclusions may use
+   different failure propagation modes. This transform operation always
+   succeeds by itself, but the inclusion may fail if any of the operations
+   fail.
+
+   Named sequences can only appear at the top-level of the Transform dialect
+   nesting structure. That is, they cannot be nested in other Transform dialect
+   operations. Furthermore, one of the ancestors must have the ``SymbolTable``
+   trait and have the ``transform.with_named_sequence`` attribute attached.
+
+   Named sequences may include other named sequences via ``transform.include``,
+   but recursion is *not* allowed.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+
+   .. py:property:: bodyTarget
+      :type: Value
+
+
+
+   .. py:property:: bodyExtraArgs
+      :type: BlockArgumentList
+
+
+
+   .. py:method:: apply(payload: Module, transform_options: Optional[interpreter.TransformOptions] = None) -> Module
+
+
+.. py:class:: YieldOp(operands: Optional[Union[Operation, Sequence[Value]]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`YieldOp`
+
+
+   
+   This terminator operation yields operation handles from regions of the
+   transform IR ops back to the containing op. It is not itself associated with
+   any transformation on the payload IR and is used for flow purposes only.
+
+
+.. py:class:: SequenceOp(failure_propagation_mode: mlir.dialects._transform_enum_gen.FailurePropagationMode, results: Sequence[Type], target: Union[Operation, Value, Type], extra_bindings: Optional[Union[Sequence[Value], Sequence[Type], Operation, OpView]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`SequenceOp`
+
+
+   
+   The transformations indicated by the sequence are applied in order of their
+   appearance. Each value produced by a transformation within the sequence
+   corresponds to a group of operations or values in the payload IR, or to a
+   group of parameters, depending on the type of the value. The behavior of the
+   operation when a nested transformation produces a silenceable error is
+   controlled by the ``failure_propagation_mode`` attribute. When set to
+   ``propagate``, the failure of any nested transformation in the sequence
+   implies immediate failure of the entire sequence with a silenceable error,
+   and no further transformation is attempted. When set to ``suppress``,
+   silenceable errors in nested operations are ignored and further
+   transformations are applied. Beware that even silenceable errors may leave
+   the payload IR in a state unsuitable for further transformations. It is the
+   responsibility of the caller to ensure the following transformations are
+   robust enough when errors are suppressed. Definite errors reported by nested
+   transformations abort the sequence regardless of the propagation mode. The
+   set of modes may be extended in the future, e.g., to collect silenceable
+   errors and report them after attempting all transformations in the sequence.
+
+   The entry block of this operation has a single argument that maps to either
+   the operand if provided or the top-level container operation of the payload
+   IR, typically the root operation of the pass interpreting the transform
+   dialect. Operand omission is only allowed for sequences not contained in
+   another sequence.
+
+   The type of the block argument must match the type of the operand. If the
+   sequence is a top-level transform (without an operand), it can be used for
+   matching operations if the specified type within the top-level container
+   payload IR (including the container op itself). E.g.:
+
+   .. code:: mlir
+
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.any_op):
+         // %arg1 is mapped to the top-level container of the payload IR, which is
+         // typically a module
+       }
+       
+       transform.sequence failures(propagate) {
+       ^bb1(%arg1: !transform.op<"func.func>"):
+         // %arg1 is mapped to all "func.func" ops within and including the
+         // top-level container of the payload IR. Nested operations that have the
+         // specified op type are not included.
+       }
+
+   The body of the sequence terminates with an implicit or explicit
+   ``transform.yield`` op. The operands of the terminator are returned as the
+   results of the sequence op.
+
+
+   .. py:property:: body
+      :type: Block
+
+
+
+   .. py:property:: bodyTarget
+      :type: Value
+
+
+
+   .. py:property:: bodyExtraArgs
+      :type: BlockArgumentList
+
+
+
+.. py:class:: ApplyPatternsOp(target: Union[Operation, Value, OpView], apply_cse: bool = False, max_iterations: Optional[Union[IntegerAttr, int]] = None, max_num_rewrites: Optional[Union[IntegerAttr, int]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`ApplyPatternsOp`
+
+
+   
+   This transform greedily applies the specified patterns to the body of the
+   targeted op until a fixpoint was reached. Patterns are not applied to the
+   targeted op itself.
+
+   The patterns that should be applied are specified in the graph region of
+   this op. They must implement the ``PatternDescriptorOpInterface``. The order
+   in which patterns are applied is unspecified; i.e., the ordering of ops in
+   the region of this op is irrelevant.
+
+   If ``apple_cse`` is set, the greedy pattern rewrite is interleaved with
+   common subexpression elimination (CSE): both are repeated until a fixpoint
+   is reached.
+
+   This transform only reads the target handle and modifies the payload. If a
+   pattern erases or replaces a tracked op, the mapping is updated accordingly.
+
+   Only replacements via ``RewriterBase::replaceOp`` or ``replaceOpWithNewOp`` are
+   considered "payload op replacements". Furthermore, only if the replacement
+   values are defined by the same op and that op has the same type as the
+   original op, the mapping is updated. Otherwise, this transform produces a
+   silenceable failure. More details can be found at the documentation site of
+   ``TrackingListener``.
+
+   This transform also produces a silenceable failure if the pattern
+   application did not converge within the default number of
+   iterations/rewrites of the greedy pattern rewrite driver.
+
+
+   .. py:property:: patterns
+      :type: Block
+
+
+
+.. py:class:: Handle(v: mlir.ir.Value, *, parent: Optional[Handle] = None, children: Optional[Sequence[Handle]] = None)
+
+   Bases: :py:obj:`mlir.ir.Value`
+
+
+   
+   Base class for wrappers around different types of transform handle with
+   methods to chain further transforms.
+
+   The fields ``children`` and ``parent`` are used to capture the relation of
+   handles statically in order to enable further analysis. The payload
+   operation of a child handle is nested into a region of the payload operation
+   of the corresponding parent handle.
+
+
+   .. py:attribute:: parent
+      :value: None
+
+
+
+   .. py:attribute:: children
+      :value: None
+
+
+
+.. py:class:: OpHandle(v: mlir.ir.Value, *, parent: Optional[Handle] = None, children: Optional[Sequence[Handle]] = None)
+
+   Bases: :py:obj:`Handle`
+
+
+   
+   Wrapper around a transform operation handle with methods to chain further
+   transforms.
+
+
+   .. py:method:: get_result(indices: Sequence[int] = [0]) -> ValueHandle
+
+      
+      Emits a ``transform.GetResultOp``.
+      Returns a handle to the result of the payload operation at the given
+      indices.
+
+
+
+   .. py:method:: match_ops(ops: Union[str, mlir.ir.OpView, mlir.dialects.transform.structured.MatchInterfaceEnum, Sequence[Union[str, mlir.ir.OpView]]]) -> OpHandle
+
+      
+      Emits a ``transform.structured.MatchOp``.
+      Returns a handle to payload ops that match the given names, types, or
+      interface. If only a single type is given, the value wrapped by the
+      resulting handle is populated with the respective type.
+
+
+
+   .. py:method:: print(name: Optional[str] = None) -> OpHandle
+
+      
+      Emits a ``transform.PrintOp`` to print this handle and an optional message.
+      Returns the existing handle to facilitate further chaining.
+
+
+
+.. py:class:: ParamHandle(v: mlir.ir.Value, *, parent: Optional[Handle] = None, children: Optional[Sequence[Handle]] = None)
+
+   Bases: :py:obj:`Handle`
+
+
+   
+   Wrapper around a transform param handle.
+
+
+.. py:class:: ValueHandle(v: mlir.ir.Value, *, parent: Optional[Handle] = None, children: Optional[Sequence[Handle]] = None)
+
+   Bases: :py:obj:`Handle`
+
+
+   
+   Wrapper around a transform value handle with methods to chain further
+   transforms.
+
+
+   .. py:method:: get_defining_op() -> OpHandle
+
+      
+      Emits a ``transform.GetDefiningOpOp``.
+      Returns a handle to the defining op of the wrapped value.
+
+
+
+.. py:function:: constant_param(value: Union[mlir.ir.Attribute, int]) -> ParamHandle
+
+   
+   Emits a ``transform.ParamConstantOp``.
+   Returns a handle to the newly created parameter. The type of the parameter
+   is ``transfrom.any_param`` if the value is not an integer, otherwise the type
+   is ``transform.param`` parametrized with the according integer type.
+
+
+.. py:function:: insert_transform_script(block_or_insertion_point: Union[mlir.ir.Block, mlir.ir.InsertionPoint], script: Callable[[OpHandle], None], dump_script: bool = False) -> None
+
+   
+   Inserts the transform script of the schedule into the module. The script
+   should accept an instance of OpHandle as argument, which will be called with
+   the block arg of the newly created named_sequence op.
+
+   Example:
+   This python code
+
+   .. code::
+
+       module = ir.Module.create()
+       def test_match_ops_single(module: OpHandle):
+           module.match_ops(scf.ForOp)
+       insert_transform_script(module.body, script)
+
+   generates the following IR:
+
+   .. code::
+
+       module {
+           transform.named_sequence @__transform_main(%arg0: !transform.any_op) {
+           ^bb0(%arg0: !transform.any_op):
+               %0 = transform.structured.match ops{["scf.for"]} in %arg0
+                    : (!transform.any_op) -> !transform.op<"scf.for">
+           }
+       }
+
+
+.. py:data:: sequence
+
+.. py:data:: named_sequence
+
+.. py:data:: apply_patterns
+

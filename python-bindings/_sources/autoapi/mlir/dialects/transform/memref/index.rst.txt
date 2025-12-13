@@ -1,0 +1,491 @@
+mlir.dialects.transform.memref
+==============================
+
+.. py:module:: mlir.dialects.transform.memref
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.memref.ApplyAllocToAllocaOp
+   mlir.dialects.transform.memref.ApplyExpandOpsPatternsOp
+   mlir.dialects.transform.memref.ApplyExpandStridedMetadataPatternsOp
+   mlir.dialects.transform.memref.ApplyExtractAddressComputationsPatternsOp
+   mlir.dialects.transform.memref.ApplyFoldMemrefAliasOpsPatternsOp
+   mlir.dialects.transform.memref.ApplyResolveRankedShapedTypeResultDimsPatternsOp
+   mlir.dialects.transform.memref.MemRefAllocaToGlobalOp
+   mlir.dialects.transform.memref.MemRefEraseDeadAllocAndStoresOp
+   mlir.dialects.transform.memref.MemRefMakeLoopIndependentOp
+   mlir.dialects.transform.memref.MemRefMultiBufferOp
+   mlir.dialects.transform.memref.MemrefToLLVMTypeConverterOp
+   mlir.dialects.transform.memref.MemRefAllocaToGlobalOp
+   mlir.dialects.transform.memref.MemRefMultiBufferOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.memref.apply_patterns_memref_alloc_to_alloca
+   mlir.dialects.transform.memref.apply_patterns_memref_expand_ops
+   mlir.dialects.transform.memref.apply_patterns_memref_expand_strided_metadata
+   mlir.dialects.transform.memref.apply_patterns_memref_extract_address_computations
+   mlir.dialects.transform.memref.apply_patterns_memref_fold_memref_alias_ops
+   mlir.dialects.transform.memref.apply_patterns_memref_resolve_ranked_shaped_type_result_dims
+   mlir.dialects.transform.memref.memref_alloca_to_global
+   mlir.dialects.transform.memref.memref_erase_dead_alloc_and_stores
+   mlir.dialects.transform.memref.memref_make_loop_independent
+   mlir.dialects.transform.memref.memref_multibuffer
+   mlir.dialects.transform.memref.apply_conversion_patterns_memref_memref_to_llvm_type_converter
+
+
+Module Contents
+---------------
+
+.. py:class:: ApplyAllocToAllocaOp(*, size_limit=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns to rewrite scoped dynamic allocation (``alloc``/``dealloc``
+   pairs) into automatic allocation (``alloca``) in the same scope, for memrefs
+   of static shape.
+
+   The ``size_limit`` attribute controls the maximum allocated memory (in bytes,
+   subject to data layout) for which the pattern applies.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.alloc_to_alloca'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: size_limit() -> Optional[_ods_ir]
+
+
+.. py:function:: apply_patterns_memref_alloc_to_alloca(*, size_limit=None, loc=None, ip=None) -> ApplyAllocToAllocaOp
+
+.. py:class:: ApplyExpandOpsPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns to rewrite ops within the memref dialect.
+
+   * Converts ``atomic_rmw`` that cannot be lowered to a simple atomic op with
+   AtomicRMWOpLowering pattern, e.g. with "minf" or "maxf" attributes, to
+   ``memref.generic_atomic_rmw`` with the expanded code.
+   * Converts ``memref.reshape`` that has a target shape of a statically-known
+   size to ``memref.reinterpret_cast``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.expand_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_memref_expand_ops(*, loc=None, ip=None) -> ApplyExpandOpsPatternsOp
+
+.. py:class:: ApplyExpandStridedMetadataPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns for expanding memref operations that modify the metadata
+   (sizes, offset, strides) of a memref into easier to analyze constructs.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.expand_strided_metadata'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_memref_expand_strided_metadata(*, loc=None, ip=None) -> ApplyExpandStridedMetadataPatternsOp
+
+.. py:class:: ApplyExtractAddressComputationsPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns for extracting address computations from operations
+   with memory accesses such that these memory accesses use only a base
+   pointer.
+
+   For instance,
+
+   .. code:: mlir
+
+       memref.load %base[%off0, ...]
+
+   Will be rewritten in:
+
+   .. code:: mlir
+
+       %new_base = memref.subview %base[%off0,...][1,...][1,...]
+       memref.load %new_base[%c0,...]
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.extract_address_computations'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_memref_extract_address_computations(*, loc=None, ip=None) -> ApplyExtractAddressComputationsPatternsOp
+
+.. py:class:: ApplyFoldMemrefAliasOpsPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns for folding memref aliasing ops (memref.subview) into
+   consumer load/store ops (affine.load, memref.load, nvgpu.ldmatrix,
+   vector.load, vector.transfer_read, affine.store, memref.store, etc.) and
+   other ops (e.g., memref.subview).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.fold_memref_alias_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_memref_fold_memref_alias_ops(*, loc=None, ip=None) -> ApplyFoldMemrefAliasOpsPatternsOp
+
+.. py:class:: ApplyResolveRankedShapedTypeResultDimsPatternsOp(*, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns that resolve ``memref.dim`` operations with values that are
+   defined by operations that implement the ``ReifyRankedShapedTypeOpInterface``,
+   in terms of shapes of its input operands.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.memref.resolve_ranked_shaped_type_result_dims'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:function:: apply_patterns_memref_resolve_ranked_shaped_type_result_dims(*, loc=None, ip=None) -> ApplyResolveRankedShapedTypeResultDimsPatternsOp
+
+.. py:class:: MemRefAllocaToGlobalOp(getGlobal, global_, alloca, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Inserts a new ``memref.global`` for each provided ``memref.alloca`` into the
+   nearest symbol table (e.g., a ``builtin.module``) and replaces it with a
+   ``memref.get_global``. This is useful, for example, for allocations that
+   should reside in the shared memory of a GPU, which have to be declared as
+   globals.
+
+   Example
+   -------
+
+   Consider the following transform op:
+
+   .. code:: mlir
+
+       %get_global, %global =
+           transform.memref.alloca_to_global %alloca
+             : (!transform.op<"memref.alloca">)
+               -> (!transform.any_op, !transform.any_op)
+
+   and the following input payload:
+
+   .. code:: mlir
+
+       module {
+         func.func @func() {
+           %alloca = memref.alloca() : memref<2x32xf32>
+           // usages of %alloca...
+         }
+       }
+
+   then applying the transform op to the payload would result in the following
+   output IR:
+
+   .. code:: mlir
+
+       module {
+         memref.global "private" @alloc : memref<2x32xf32>
+         func.func @func() {
+           %alloca = memref.get_global @alloc : memref<2x32xf32>
+           // usages of %alloca...
+         }
+       }
+
+   Return modes
+   ------------
+
+   Succeeds always. The returned handles refer to the ``memref.get_global`` and
+   ``memref.global`` ops that were inserted by the transformation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.memref.alloca_to_global'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: alloca() -> _ods_ir
+
+
+   .. py:method:: getGlobal() -> _ods_ir
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+.. py:function:: memref_alloca_to_global(get_global, global_, alloca, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MemRefEraseDeadAllocAndStoresOp(target, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This applies memory optimization on memref. In particular it does store to
+   load forwarding, dead store elimination and dead alloc/alloca elimination.
+
+   Return modes
+   ------------
+
+   This operation applies a set of memory optimization on the whole region of
+   the operand.
+
+   The transformation does not consume the target handle. It modifies the
+   payload. Dead allocations, loads and stores are silently dropped from all
+   mappings.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.memref.erase_dead_alloc_and_stores'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: memref_erase_dead_alloc_and_stores(target, *, loc=None, ip=None) -> MemRefEraseDeadAllocAndStoresOp
+
+.. py:class:: MemRefMakeLoopIndependentOp(transformed, target, num_loops, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Rewrite the targeted ops such that their index-typed operands no longer
+   depend on any loop induction variable of the ``num_loop`` enclosing ``scf.for``
+   loops. I.e., compute an upper bound that is independent of any such loop IV
+   for every tensor dimension. The transformed op could then be hoisted from
+   the ``num_loop`` enclosing loops. To preserve the original semantics, place a
+   ``memref.subview`` inside the loop.
+
+   Currently supported operations are:
+
+   * memref.alloca: Replaced with a new memref.alloca with upper bound sizes,
+   followed by a memref.subview.
+
+   Return modes
+   ------------
+
+   This operation fails if at least one induction variable could not be
+   eliminated. In case the targeted op is already independent of induction
+   variables, this transform succeeds and returns the unmodified target op.
+
+   Otherwise, the returned handle points to a subset of the produced ops:
+
+   * memref.alloca: The returned handle points to the memref.subview op.
+
+   This transform op consumes the target handle and produces a result handle.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.memref.make_loop_independent'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: num_loops() -> _ods_ir
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: memref_make_loop_independent(transformed, target, num_loops, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MemRefMultiBufferOp(transformed, target, factor, *, skip_analysis=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Transformation to do multi-buffering/array expansion to remove
+   dependencies on the temporary allocation between consecutive loop
+   iterations. This transform expands the size of an allocation by
+   a given multiplicative factor and fixes up any users of the
+   multibuffered allocation.
+   If skip analysis is not set the transformation will only apply
+   if it can prove that there is no data being carried across loop
+   iterations.
+
+   Return modes
+   ------------
+
+   This operation returns the new allocation if multi-buffering
+   succeeds, and failure otherwise.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.memref.multibuffer'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: factor() -> _ods_ir
+
+
+   .. py:method:: skip_analysis() -> bool
+
+
+   .. py:method:: transformed() -> _ods_ir
+
+
+.. py:function:: memref_multibuffer(transformed, target, factor, *, skip_analysis=None, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: MemrefToLLVMTypeConverterOp(*, use_aligned_alloc=None, index_bitwidth=None, use_generic_functions=None, use_bare_ptr_call_conv=None, data_layout=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation provides an "LLVMTypeConverter" that lowers memref types to
+   LLVM types.
+
+   The type converter can be customized as follows:
+
+   * ``use_aligned_alloc``: Use aligned_alloc in place of malloc for heap
+   allocations.
+   * ``index_bitwidth``: Bitwidth of the index type, "0" indicates the size of a
+   machine word.
+   * ``use_generic_functions``: Use generic allocation and deallocation functions
+   instead of the classic "malloc", "aligned_alloc" and "free" functions.
+   // TODO: the following two options don't really make sense for
+   // memref_to_llvm_type_converter specifically.
+   // We should have a single to_llvm_type_converter.
+   * ``use_bare_ptr_call_conv``: Replace FuncOp's MemRef arguments with bare
+   pointers to the MemRef element types.
+   * ``data-layout``: String description (LLVM format) of the data layout that is
+   expected on the produced module.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.memref.memref_to_llvm_type_converter'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: use_aligned_alloc() -> Optional[_ods_ir]
+
+
+   .. py:method:: index_bitwidth() -> Optional[_ods_ir]
+
+
+   .. py:method:: use_generic_functions() -> Optional[_ods_ir]
+
+
+   .. py:method:: use_bare_ptr_call_conv() -> Optional[_ods_ir]
+
+
+   .. py:method:: data_layout() -> Optional[_ods_ir]
+
+
+.. py:function:: apply_conversion_patterns_memref_memref_to_llvm_type_converter(*, use_aligned_alloc=None, index_bitwidth=None, use_generic_functions=None, use_bare_ptr_call_conv=None, data_layout=None, loc=None, ip=None) -> MemrefToLLVMTypeConverterOp
+
+.. py:class:: MemRefAllocaToGlobalOp(get_global_type: Type, global_type: Type, alloca: Union[Operation, OpView, Value], *, loc=None, ip=None)
+              MemRefAllocaToGlobalOp(alloca: Union[Operation, OpView, Value], *, loc=None, ip=None)
+
+   Bases: :py:obj:`MemRefAllocaToGlobalOp`
+
+
+   
+   Specialization for MemRefAllocaToGlobalOp class.
+
+
+.. py:class:: MemRefMultiBufferOp(transformed_type: Type, target: Union[Operation, OpView, Value], factor: Union[int, IntegerAttr], *, skip_analysis: Optional[bool] = None, loc=None, ip=None)
+              MemRefMultiBufferOp(target: Union[Operation, OpView, Value], factor: Union[int, IntegerAttr], *, skip_analysis: Optional[bool] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`MemRefMultiBufferOp`
+
+
+   
+   Specialization for MemRefMultiBufferOp class.
+
+

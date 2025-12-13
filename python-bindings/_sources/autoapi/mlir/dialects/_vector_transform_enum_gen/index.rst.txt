@@ -1,0 +1,186 @@
+mlir.dialects._vector_transform_enum_gen
+========================================
+
+.. py:module:: mlir.dialects._vector_transform_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_transform_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_transform_enum_gen.VectorContractLowering
+   mlir.dialects._vector_transform_enum_gen.VectorMultiReductionLowering
+   mlir.dialects._vector_transform_enum_gen.VectorTransferSplit
+   mlir.dialects._vector_transform_enum_gen.VectorTransposeLowering
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._vector_transform_enum_gen.register_attribute_builder
+   mlir.dialects._vector_transform_enum_gen._vectorcontractloweringattr
+   mlir.dialects._vector_transform_enum_gen._vectormultireductionloweringattr
+   mlir.dialects._vector_transform_enum_gen._vectortransfersplitattr
+   mlir.dialects._vector_transform_enum_gen._vectortransposeloweringattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: VectorContractLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.contract`` operations.
+
+
+   .. py:attribute:: Dot
+      :value: 0
+
+
+
+   .. py:attribute:: LLVMIntr
+      :value: 1
+
+
+
+   .. py:attribute:: OuterProduct
+      :value: 2
+
+
+
+   .. py:attribute:: ParallelArith
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _vectorcontractloweringattr(x, context)
+
+.. py:class:: VectorMultiReductionLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.multi_reduction``.
+
+
+   .. py:attribute:: InnerParallel
+      :value: 0
+
+
+
+   .. py:attribute:: InnerReduction
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _vectormultireductionloweringattr(x, context)
+
+.. py:class:: VectorTransferSplit
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the splitting of ``vector.transfer`` operations into in-bounds and out-of-bounds variants.
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: VectorTransfer
+      :value: 1
+
+
+
+   .. py:attribute:: LinalgCopy
+      :value: 2
+
+
+
+   .. py:attribute:: ForceInBounds
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _vectortransfersplitattr(x, context)
+
+.. py:class:: VectorTransposeLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.transpose`` operations.
+
+
+   .. py:attribute:: EltWise
+      :value: 0
+
+
+
+   .. py:attribute:: LLVMIntr
+      :value: 1
+
+
+
+   .. py:attribute:: Shuffle1D
+      :value: 2
+
+
+
+   .. py:attribute:: Shuffle16x16
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _vectortransposeloweringattr(x, context)
+

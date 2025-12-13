@@ -1,0 +1,1724 @@
+mlir.dialects._llvm_enum_gen
+============================
+
+.. py:module:: mlir.dialects._llvm_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._llvm_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._llvm_enum_gen.AsmDialect
+   mlir.dialects._llvm_enum_gen.AtomicBinOp
+   mlir.dialects._llvm_enum_gen.AtomicOrdering
+   mlir.dialects._llvm_enum_gen.CConv
+   mlir.dialects._llvm_enum_gen.Comdat
+   mlir.dialects._llvm_enum_gen.DIFlags
+   mlir.dialects._llvm_enum_gen.DISubprogramFlags
+   mlir.dialects._llvm_enum_gen.FCmpPredicate
+   mlir.dialects._llvm_enum_gen.FPExceptionBehavior
+   mlir.dialects._llvm_enum_gen.FastmathFlags
+   mlir.dialects._llvm_enum_gen.FramePointerKind
+   mlir.dialects._llvm_enum_gen.GEPNoWrapFlags
+   mlir.dialects._llvm_enum_gen.ICmpPredicate
+   mlir.dialects._llvm_enum_gen.IntegerOverflowFlags
+   mlir.dialects._llvm_enum_gen.DIEmissionKind
+   mlir.dialects._llvm_enum_gen.DINameTableKind
+   mlir.dialects._llvm_enum_gen.ProfileSummaryFormatKind
+   mlir.dialects._llvm_enum_gen.Linkage
+   mlir.dialects._llvm_enum_gen.ModFlagBehavior
+   mlir.dialects._llvm_enum_gen.ModRefInfo
+   mlir.dialects._llvm_enum_gen.RoundingMode
+   mlir.dialects._llvm_enum_gen.TailCallKind
+   mlir.dialects._llvm_enum_gen.UWTableKind
+   mlir.dialects._llvm_enum_gen.UnnamedAddr
+   mlir.dialects._llvm_enum_gen.Visibility
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._llvm_enum_gen.register_attribute_builder
+   mlir.dialects._llvm_enum_gen._asmattorintel
+   mlir.dialects._llvm_enum_gen._atomicbinop
+   mlir.dialects._llvm_enum_gen._atomicordering
+   mlir.dialects._llvm_enum_gen._cconvenum
+   mlir.dialects._llvm_enum_gen._comdat
+   mlir.dialects._llvm_enum_gen._diflags
+   mlir.dialects._llvm_enum_gen._disubprogramflags
+   mlir.dialects._llvm_enum_gen._fcmppredicate
+   mlir.dialects._llvm_enum_gen._fpexceptionbehaviorattr
+   mlir.dialects._llvm_enum_gen._fastmathflags
+   mlir.dialects._llvm_enum_gen._framepointerkindenum
+   mlir.dialects._llvm_enum_gen._icmppredicate
+   mlir.dialects._llvm_enum_gen._llvm_diemissionkind
+   mlir.dialects._llvm_enum_gen._llvm_dinametablekind
+   mlir.dialects._llvm_enum_gen._llvm_profilesummaryformatkind
+   mlir.dialects._llvm_enum_gen._linkageenum
+   mlir.dialects._llvm_enum_gen._modflagbehaviorattr
+   mlir.dialects._llvm_enum_gen._modrefinfoenum
+   mlir.dialects._llvm_enum_gen._roundingmodeattr
+   mlir.dialects._llvm_enum_gen._tailcallkindenum
+   mlir.dialects._llvm_enum_gen._uwtablekindenum
+   mlir.dialects._llvm_enum_gen._unnamedaddr
+   mlir.dialects._llvm_enum_gen._visibility
+   mlir.dialects._llvm_enum_gen._llvm_fastmathflagsattr
+   mlir.dialects._llvm_enum_gen._llvm_integeroverflowflagsattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: AsmDialect
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   ATT (0) or Intel (1) asm dialect
+
+
+   .. py:attribute:: AD_ATT
+      :value: 0
+
+
+
+   .. py:attribute:: AD_Intel
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _asmattorintel(x, context)
+
+.. py:class:: AtomicBinOp
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   llvm.atomicrmw binary operations
+
+
+   .. py:attribute:: xchg
+      :value: 0
+
+
+
+   .. py:attribute:: add
+      :value: 1
+
+
+
+   .. py:attribute:: sub
+      :value: 2
+
+
+
+   .. py:attribute:: _and
+      :value: 3
+
+
+
+   .. py:attribute:: nand
+      :value: 4
+
+
+
+   .. py:attribute:: _or
+      :value: 5
+
+
+
+   .. py:attribute:: _xor
+      :value: 6
+
+
+
+   .. py:attribute:: max
+      :value: 7
+
+
+
+   .. py:attribute:: min
+      :value: 8
+
+
+
+   .. py:attribute:: umax
+      :value: 9
+
+
+
+   .. py:attribute:: umin
+      :value: 10
+
+
+
+   .. py:attribute:: fadd
+      :value: 11
+
+
+
+   .. py:attribute:: fsub
+      :value: 12
+
+
+
+   .. py:attribute:: fmax
+      :value: 13
+
+
+
+   .. py:attribute:: fmin
+      :value: 14
+
+
+
+   .. py:attribute:: uinc_wrap
+      :value: 15
+
+
+
+   .. py:attribute:: udec_wrap
+      :value: 16
+
+
+
+   .. py:attribute:: usub_cond
+      :value: 17
+
+
+
+   .. py:attribute:: usub_sat
+      :value: 18
+
+
+
+   .. py:attribute:: fmaximum
+      :value: 19
+
+
+
+   .. py:attribute:: fminimum
+      :value: 20
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _atomicbinop(x, context)
+
+.. py:class:: AtomicOrdering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Atomic ordering for LLVM's memory model
+
+
+   .. py:attribute:: not_atomic
+      :value: 0
+
+
+
+   .. py:attribute:: unordered
+      :value: 1
+
+
+
+   .. py:attribute:: monotonic
+      :value: 2
+
+
+
+   .. py:attribute:: acquire
+      :value: 4
+
+
+
+   .. py:attribute:: release
+      :value: 5
+
+
+
+   .. py:attribute:: acq_rel
+      :value: 6
+
+
+
+   .. py:attribute:: seq_cst
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _atomicordering(x, context)
+
+.. py:class:: CConv
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Calling Conventions
+
+
+   .. py:attribute:: C
+      :value: 0
+
+
+
+   .. py:attribute:: Fast
+      :value: 8
+
+
+
+   .. py:attribute:: Cold
+      :value: 9
+
+
+
+   .. py:attribute:: GHC
+      :value: 10
+
+
+
+   .. py:attribute:: HiPE
+      :value: 11
+
+
+
+   .. py:attribute:: AnyReg
+      :value: 13
+
+
+
+   .. py:attribute:: PreserveMost
+      :value: 14
+
+
+
+   .. py:attribute:: PreserveAll
+      :value: 15
+
+
+
+   .. py:attribute:: Swift
+      :value: 16
+
+
+
+   .. py:attribute:: CXX_FAST_TLS
+      :value: 17
+
+
+
+   .. py:attribute:: Tail
+      :value: 18
+
+
+
+   .. py:attribute:: CFGuard_Check
+      :value: 19
+
+
+
+   .. py:attribute:: SwiftTail
+      :value: 20
+
+
+
+   .. py:attribute:: X86_StdCall
+      :value: 64
+
+
+
+   .. py:attribute:: X86_FastCall
+      :value: 65
+
+
+
+   .. py:attribute:: ARM_APCS
+      :value: 66
+
+
+
+   .. py:attribute:: ARM_AAPCS
+      :value: 67
+
+
+
+   .. py:attribute:: ARM_AAPCS_VFP
+      :value: 68
+
+
+
+   .. py:attribute:: MSP430_INTR
+      :value: 69
+
+
+
+   .. py:attribute:: X86_ThisCall
+      :value: 70
+
+
+
+   .. py:attribute:: PTX_Kernel
+      :value: 71
+
+
+
+   .. py:attribute:: PTX_Device
+      :value: 72
+
+
+
+   .. py:attribute:: SPIR_FUNC
+      :value: 75
+
+
+
+   .. py:attribute:: SPIR_KERNEL
+      :value: 76
+
+
+
+   .. py:attribute:: Intel_OCL_BI
+      :value: 77
+
+
+
+   .. py:attribute:: X86_64_SysV
+      :value: 78
+
+
+
+   .. py:attribute:: Win64
+      :value: 79
+
+
+
+   .. py:attribute:: X86_VectorCall
+      :value: 80
+
+
+
+   .. py:attribute:: DUMMY_HHVM
+      :value: 81
+
+
+
+   .. py:attribute:: DUMMY_HHVM_C
+      :value: 82
+
+
+
+   .. py:attribute:: X86_INTR
+      :value: 83
+
+
+
+   .. py:attribute:: AVR_INTR
+      :value: 84
+
+
+
+   .. py:attribute:: AVR_BUILTIN
+      :value: 86
+
+
+
+   .. py:attribute:: AMDGPU_VS
+      :value: 87
+
+
+
+   .. py:attribute:: AMDGPU_GS
+      :value: 88
+
+
+
+   .. py:attribute:: AMDGPU_CS
+      :value: 90
+
+
+
+   .. py:attribute:: AMDGPU_KERNEL
+      :value: 91
+
+
+
+   .. py:attribute:: X86_RegCall
+      :value: 92
+
+
+
+   .. py:attribute:: AMDGPU_HS
+      :value: 93
+
+
+
+   .. py:attribute:: MSP430_BUILTIN
+      :value: 94
+
+
+
+   .. py:attribute:: AMDGPU_LS
+      :value: 95
+
+
+
+   .. py:attribute:: AMDGPU_ES
+      :value: 96
+
+
+
+   .. py:attribute:: AArch64_VectorCall
+      :value: 97
+
+
+
+   .. py:attribute:: AArch64_SVE_VectorCall
+      :value: 98
+
+
+
+   .. py:attribute:: WASM_EmscriptenInvoke
+      :value: 99
+
+
+
+   .. py:attribute:: AMDGPU_Gfx
+      :value: 100
+
+
+
+   .. py:attribute:: M68k_INTR
+      :value: 101
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _cconvenum(x, context)
+
+.. py:class:: Comdat
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM Comdat Types
+
+
+   .. py:attribute:: Any
+      :value: 0
+
+
+
+   .. py:attribute:: ExactMatch
+      :value: 1
+
+
+
+   .. py:attribute:: Largest
+      :value: 2
+
+
+
+   .. py:attribute:: NoDeduplicate
+      :value: 3
+
+
+
+   .. py:attribute:: SameSize
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _comdat(x, context)
+
+.. py:class:: DIFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   LLVM DI flags
+
+
+   .. py:attribute:: Zero
+      :value: 0
+
+
+
+   .. py:attribute:: Bit0
+      :value: 1
+
+
+
+   .. py:attribute:: Bit1
+      :value: 2
+
+
+
+   .. py:attribute:: Private
+      :value: 1
+
+
+
+   .. py:attribute:: Protected
+      :value: 2
+
+
+
+   .. py:attribute:: Public
+      :value: 3
+
+
+
+   .. py:attribute:: FwdDecl
+      :value: 4
+
+
+
+   .. py:attribute:: AppleBlock
+      :value: 8
+
+
+
+   .. py:attribute:: ReservedBit4
+      :value: 16
+
+
+
+   .. py:attribute:: Virtual
+      :value: 32
+
+
+
+   .. py:attribute:: Artificial
+      :value: 64
+
+
+
+   .. py:attribute:: Explicit
+      :value: 128
+
+
+
+   .. py:attribute:: Prototyped
+      :value: 256
+
+
+
+   .. py:attribute:: ObjcClassComplete
+      :value: 512
+
+
+
+   .. py:attribute:: ObjectPointer
+      :value: 1024
+
+
+
+   .. py:attribute:: Vector
+      :value: 2048
+
+
+
+   .. py:attribute:: StaticMember
+      :value: 4096
+
+
+
+   .. py:attribute:: LValueReference
+      :value: 8192
+
+
+
+   .. py:attribute:: RValueReference
+      :value: 16384
+
+
+
+   .. py:attribute:: ExportSymbols
+      :value: 32768
+
+
+
+   .. py:attribute:: SingleInheritance
+      :value: 65536
+
+
+
+   .. py:attribute:: MultipleInheritance
+      :value: 65536
+
+
+
+   .. py:attribute:: VirtualInheritance
+      :value: 65536
+
+
+
+   .. py:attribute:: IntroducedVirtual
+      :value: 262144
+
+
+
+   .. py:attribute:: BitField
+      :value: 524288
+
+
+
+   .. py:attribute:: NoReturn
+      :value: 1048576
+
+
+
+   .. py:attribute:: TypePassByValue
+      :value: 4194304
+
+
+
+   .. py:attribute:: TypePassByReference
+      :value: 8388608
+
+
+
+   .. py:attribute:: EnumClass
+      :value: 16777216
+
+
+
+   .. py:attribute:: Thunk
+      :value: 33554432
+
+
+
+   .. py:attribute:: NonTrivial
+      :value: 67108864
+
+
+
+   .. py:attribute:: BigEndian
+      :value: 134217728
+
+
+
+   .. py:attribute:: LittleEndian
+      :value: 268435456
+
+
+
+   .. py:attribute:: AllCallsDescribed
+      :value: 536870912
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _diflags(x, context)
+
+.. py:class:: DISubprogramFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   LLVM DISubprogram flags
+
+
+   .. py:attribute:: Virtual
+      :value: 1
+
+
+
+   .. py:attribute:: PureVirtual
+      :value: 2
+
+
+
+   .. py:attribute:: LocalToUnit
+      :value: 4
+
+
+
+   .. py:attribute:: Definition
+      :value: 8
+
+
+
+   .. py:attribute:: Optimized
+      :value: 16
+
+
+
+   .. py:attribute:: Pure
+      :value: 32
+
+
+
+   .. py:attribute:: Elemental
+      :value: 64
+
+
+
+   .. py:attribute:: Recursive
+      :value: 128
+
+
+
+   .. py:attribute:: MainSubprogram
+      :value: 256
+
+
+
+   .. py:attribute:: Deleted
+      :value: 512
+
+
+
+   .. py:attribute:: ObjCDirect
+      :value: 2048
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _disubprogramflags(x, context)
+
+.. py:class:: FCmpPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   llvm.fcmp comparison predicate
+
+
+   .. py:attribute:: _false
+      :value: 0
+
+
+
+   .. py:attribute:: oeq
+      :value: 1
+
+
+
+   .. py:attribute:: ogt
+      :value: 2
+
+
+
+   .. py:attribute:: oge
+      :value: 3
+
+
+
+   .. py:attribute:: olt
+      :value: 4
+
+
+
+   .. py:attribute:: ole
+      :value: 5
+
+
+
+   .. py:attribute:: one
+      :value: 6
+
+
+
+   .. py:attribute:: ord
+      :value: 7
+
+
+
+   .. py:attribute:: ueq
+      :value: 8
+
+
+
+   .. py:attribute:: ugt
+      :value: 9
+
+
+
+   .. py:attribute:: uge
+      :value: 10
+
+
+
+   .. py:attribute:: ult
+      :value: 11
+
+
+
+   .. py:attribute:: ule
+      :value: 12
+
+
+
+   .. py:attribute:: une
+      :value: 13
+
+
+
+   .. py:attribute:: uno
+      :value: 14
+
+
+
+   .. py:attribute:: _true
+      :value: 15
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _fcmppredicate(x, context)
+
+.. py:class:: FPExceptionBehavior
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM Exception Behavior
+
+
+   .. py:attribute:: Ignore
+      :value: 0
+
+
+
+   .. py:attribute:: MayTrap
+      :value: 1
+
+
+
+   .. py:attribute:: Strict
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _fpexceptionbehaviorattr(x, context)
+
+.. py:class:: FastmathFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   LLVM fastmath flags
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: nnan
+      :value: 1
+
+
+
+   .. py:attribute:: ninf
+      :value: 2
+
+
+
+   .. py:attribute:: nsz
+      :value: 4
+
+
+
+   .. py:attribute:: arcp
+      :value: 8
+
+
+
+   .. py:attribute:: contract
+      :value: 16
+
+
+
+   .. py:attribute:: afn
+      :value: 32
+
+
+
+   .. py:attribute:: reassoc
+      :value: 64
+
+
+
+   .. py:attribute:: fast
+      :value: 127
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _fastmathflags(x, context)
+
+.. py:class:: FramePointerKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM FramePointerKind
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: NonLeaf
+      :value: 1
+
+
+
+   .. py:attribute:: All
+      :value: 2
+
+
+
+   .. py:attribute:: Reserved
+      :value: 3
+
+
+
+   .. py:attribute:: NonLeafNoReserve
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _framepointerkindenum(x, context)
+
+.. py:class:: GEPNoWrapFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   ::mlir::LLVM::GEPNoWrapFlags
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: inboundsFlag
+      :value: 1
+
+
+
+   .. py:attribute:: nusw
+      :value: 2
+
+
+
+   .. py:attribute:: nuw
+      :value: 4
+
+
+
+   .. py:attribute:: inbounds
+      :value: 3
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: ICmpPredicate
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   llvm.icmp comparison predicate
+
+
+   .. py:attribute:: eq
+      :value: 0
+
+
+
+   .. py:attribute:: ne
+      :value: 1
+
+
+
+   .. py:attribute:: slt
+      :value: 2
+
+
+
+   .. py:attribute:: sle
+      :value: 3
+
+
+
+   .. py:attribute:: sgt
+      :value: 4
+
+
+
+   .. py:attribute:: sge
+      :value: 5
+
+
+
+   .. py:attribute:: ult
+      :value: 6
+
+
+
+   .. py:attribute:: ule
+      :value: 7
+
+
+
+   .. py:attribute:: ugt
+      :value: 8
+
+
+
+   .. py:attribute:: uge
+      :value: 9
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _icmppredicate(x, context)
+
+.. py:class:: IntegerOverflowFlags
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   LLVM integer overflow flags
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: nsw
+      :value: 1
+
+
+
+   .. py:attribute:: nuw
+      :value: 2
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: DIEmissionKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM debug emission kind
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: Full
+      :value: 1
+
+
+
+   .. py:attribute:: LineTablesOnly
+      :value: 2
+
+
+
+   .. py:attribute:: DebugDirectivesOnly
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _llvm_diemissionkind(x, context)
+
+.. py:class:: DINameTableKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM debug name table kind
+
+
+   .. py:attribute:: Default
+      :value: 0
+
+
+
+   .. py:attribute:: GNU
+      :value: 1
+
+
+
+   .. py:attribute:: None_
+      :value: 2
+
+
+
+   .. py:attribute:: Apple
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _llvm_dinametablekind(x, context)
+
+.. py:class:: ProfileSummaryFormatKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM ProfileSummary format kinds
+
+
+   .. py:attribute:: SampleProfile
+      :value: 0
+
+
+
+   .. py:attribute:: InstrProf
+      :value: 1
+
+
+
+   .. py:attribute:: CSInstrProf
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _llvm_profilesummaryformatkind(x, context)
+
+.. py:class:: Linkage
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM linkage types
+
+
+   .. py:attribute:: External
+      :value: 0
+
+
+
+   .. py:attribute:: AvailableExternally
+      :value: 1
+
+
+
+   .. py:attribute:: Linkonce
+      :value: 2
+
+
+
+   .. py:attribute:: LinkonceODR
+      :value: 3
+
+
+
+   .. py:attribute:: Weak
+      :value: 4
+
+
+
+   .. py:attribute:: WeakODR
+      :value: 5
+
+
+
+   .. py:attribute:: Appending
+      :value: 6
+
+
+
+   .. py:attribute:: Internal
+      :value: 7
+
+
+
+   .. py:attribute:: Private
+      :value: 8
+
+
+
+   .. py:attribute:: ExternWeak
+      :value: 9
+
+
+
+   .. py:attribute:: Common
+      :value: 10
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _linkageenum(x, context)
+
+.. py:class:: ModFlagBehavior
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM Module Flag Behavior
+
+
+   .. py:attribute:: Error
+      :value: 1
+
+
+
+   .. py:attribute:: Warning
+      :value: 2
+
+
+
+   .. py:attribute:: Require
+      :value: 3
+
+
+
+   .. py:attribute:: Override
+      :value: 4
+
+
+
+   .. py:attribute:: Append
+      :value: 5
+
+
+
+   .. py:attribute:: AppendUnique
+      :value: 6
+
+
+
+   .. py:attribute:: Max
+      :value: 7
+
+
+
+   .. py:attribute:: Min
+      :value: 8
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _modflagbehaviorattr(x, context)
+
+.. py:class:: ModRefInfo
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM ModRefInfo
+
+
+   .. py:attribute:: NoModRef
+      :value: 0
+
+
+
+   .. py:attribute:: Ref
+      :value: 1
+
+
+
+   .. py:attribute:: Mod
+      :value: 2
+
+
+
+   .. py:attribute:: ModRef
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _modrefinfoenum(x, context)
+
+.. py:class:: RoundingMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM Rounding Mode
+
+
+   .. py:attribute:: TowardZero
+      :value: 0
+
+
+
+   .. py:attribute:: NearestTiesToEven
+      :value: 1
+
+
+
+   .. py:attribute:: TowardPositive
+      :value: 2
+
+
+
+   .. py:attribute:: TowardNegative
+      :value: 3
+
+
+
+   .. py:attribute:: NearestTiesToAway
+      :value: 4
+
+
+
+   .. py:attribute:: Dynamic
+      :value: 7
+
+
+
+   .. py:attribute:: Invalid
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _roundingmodeattr(x, context)
+
+.. py:class:: TailCallKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Tail Call Kind
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: NoTail
+      :value: 3
+
+
+
+   .. py:attribute:: MustTail
+      :value: 2
+
+
+
+   .. py:attribute:: Tail
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _tailcallkindenum(x, context)
+
+.. py:class:: UWTableKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM Unwind Behavior
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: Sync
+      :value: 1
+
+
+
+   .. py:attribute:: Async
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _uwtablekindenum(x, context)
+
+.. py:class:: UnnamedAddr
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM GlobalValue UnnamedAddr
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: Local
+      :value: 1
+
+
+
+   .. py:attribute:: Global
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _unnamedaddr(x, context)
+
+.. py:class:: Visibility
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   LLVM GlobalValue Visibility
+
+
+   .. py:attribute:: Default
+      :value: 0
+
+
+
+   .. py:attribute:: Hidden
+      :value: 1
+
+
+
+   .. py:attribute:: Protected
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _visibility(x, context)
+
+.. py:function:: _llvm_fastmathflagsattr(x, context)
+
+.. py:function:: _llvm_integeroverflowflagsattr(x, context)
+

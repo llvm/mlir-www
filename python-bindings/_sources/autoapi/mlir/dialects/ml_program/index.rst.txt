@@ -1,0 +1,592 @@
+mlir.dialects.ml_program
+========================
+
+.. py:module:: mlir.dialects.ml_program
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.ml_program.ARGUMENT_ATTRIBUTE_NAME
+   mlir.dialects.ml_program.RESULT_ATTRIBUTE_NAME
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.ml_program.FuncOp
+   mlir.dialects.ml_program.GlobalLoadConstOp
+   mlir.dialects.ml_program.GlobalLoadGraphOp
+   mlir.dialects.ml_program.GlobalLoadOp
+   mlir.dialects.ml_program.GlobalOp
+   mlir.dialects.ml_program.GlobalStoreGraphOp
+   mlir.dialects.ml_program.GlobalStoreOp
+   mlir.dialects.ml_program.OutputOp
+   mlir.dialects.ml_program.ReturnOp
+   mlir.dialects.ml_program.SubgraphOp
+   mlir.dialects.ml_program.TokenOp
+   mlir.dialects.ml_program.FuncOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.ml_program.func
+   mlir.dialects.ml_program.global_load_const
+   mlir.dialects.ml_program.global_load_graph
+   mlir.dialects.ml_program.global_load
+   mlir.dialects.ml_program.global_
+   mlir.dialects.ml_program.global_store_graph
+   mlir.dialects.ml_program.global_store
+   mlir.dialects.ml_program.output
+   mlir.dialects.ml_program.return_
+   mlir.dialects.ml_program.subgraph
+   mlir.dialects.ml_program.token
+
+
+Module Contents
+---------------
+
+.. py:class:: FuncOp(sym_name, function_type, *, arg_attrs=None, res_attrs=None, sym_visibility=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This simple function container represents callables in an ML program where
+   the body is an ``SSACFG`` region. It must be terminated by a ``return`` op which
+   yields values with the same arity and types as the ``FunctionType`` results
+   of the containing ``func``.
+
+   This op is a ``Symbol`` but does not introduce a new ``SymbolTable``. As such,
+   it cannot represent nested symbols.
+
+   Example:
+
+   .. code:: mlir
+
+       ml_program.func private @some_extern(i32) -> i32
+       ml_program.func @compute(%arg0 : i32) -> i32 {
+         ml_program.return %arg0 : i32
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.func'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: func(sym_name, function_type, *, arg_attrs=None, res_attrs=None, sym_visibility=None, loc=None, ip=None) -> FuncOp
+
+.. py:class:: GlobalLoadConstOp(result, global_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Loads a constant (immutable) value from a global directly by symbol.
+
+   This op is only legal for globals that are not mutable and exists because
+   such a load can be considered to have no side effects.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = ml_program.global_load_const @foobar : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global_load_const'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: global_load_const(result, global_, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GlobalLoadGraphOp(result, produceToken, global_, consumeTokens, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a non-atomic, non-volatile, non-synchronized load from a global
+   that may be mutable.
+
+   It is fully expected that these constraints are not suitable for all
+   situations, and alternative ops should be defined and used for more advanced
+   cases.
+
+   This op is side effecting and may not be valid to use in graph regions
+   without additional consideration to evaluation order constraints.
+
+   Example:
+
+   .. code:: mlir
+
+       %0, %cstr = ml_program.global_load_graph @foobar
+         ordering (%token -> !ml_program.token) : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global_load_graph'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: consumeTokens() -> _ods_ir
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+   .. py:method:: produceToken() -> _ods_ir
+
+
+.. py:function:: global_load_graph(result, produce_token, global_, consume_tokens, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GlobalLoadOp(result, global_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a non-atomic, non-volatile, non-synchronized load from a global
+   that may be mutable.
+
+   It is fully expected that these constraints are not suitable for
+   all situations, and alternative ops should be defined and used for more
+   advanced cases.
+
+   This op is side effecting and may not be valid to use in graph regions
+   without additional consideration to evaluation order constraints. See
+   ``global_load_graph`` for op which allows for explicit ordering constraints.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = ml_program.global_load @foobar : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global_load'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:function:: global_load(result, global_, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GlobalOp(sym_name, type_, *, is_mutable=None, value=None, sym_visibility=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Declares a named global variable (or constant).
+
+   A global contains a value of a specified type which can be accessed at
+   runtime via appropriate load/store operations. It can be mutable or
+   constant, optionally taking an initial value or declared as
+   extern (in which case, the initial value is found in external storage
+   by symbol name).
+
+   Generally, the type of the global and the type of the initial value
+   will be the same. However, for type hierarchies which can have a more
+   generalized bounding type that can be assigned from a narrow type, this
+   is allowed (but not verified).
+
+   Examples:
+
+   .. code:: mlir
+
+       // Constant global.
+       ml_program.global @foobar(dense<4> : tensor<4xi32>) : tensor<?xi32>
+       
+       // Constant with external linkage.
+       ml_program.global mutable @foobar(#ml_program.extern<tensor<4xi32>>)
+         : tensor<?xi32>
+       
+       // Mutable global with an undefined initial value.
+       ml_program.global mutable @foobar : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: is_mutable() -> bool
+
+
+   .. py:method:: value() -> Optional[_ods_ir]
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+.. py:function:: global_(sym_name, type_, *, is_mutable=None, value=None, sym_visibility=None, loc=None, ip=None) -> GlobalOp
+
+.. py:class:: GlobalStoreGraphOp(produceToken, global_, value, consumeTokens, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a non-atomic, non-volatile, non-synchronized store to a mutable
+   global.
+
+   It is fully expected that these constraints are not suitable for
+   all situations, and alternative ops should be defined and used for more
+   advanced cases.
+
+   This op is side effecting and may not be valid to use in graph regions
+   without additional consideration to evaluation order constraints.
+
+   Example:
+
+   .. code:: mlir
+
+       %token = ml_program.global_store @foobar = %0 : tensor<?xi32>
+         ordering (%in_token -> !ml_program.token) : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global_store_graph'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: consumeTokens() -> _ods_ir
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+   .. py:method:: produceToken() -> _ods_ir
+
+
+.. py:function:: global_store_graph(produce_token, global_, value, consume_tokens, *, loc=None, ip=None) -> _ods_ir
+
+.. py:class:: GlobalStoreOp(global_, value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a non-atomic, non-volatile, non-synchronized store to a mutable
+   global.
+
+   It is fully expected that these constraints are not suitable for
+   all situations, and alternative ops should be defined and used for more
+   advanced cases.
+
+   This op is side effecting and may not be valid to use in graph regions
+   without additional consideration to evaluation order constraints. See
+   ``global_store_graph`` for op which allows for explicit ordering constraints.
+
+   Example:
+
+   .. code:: mlir
+
+       ml_program.global_store @foobar = %0 : tensor<?xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.global_store'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: global_() -> _ods_ir
+
+
+.. py:function:: global_store(global_, value, *, loc=None, ip=None) -> GlobalStoreOp
+
+.. py:class:: OutputOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``output`` operation terminates a subgraph by yielding values
+   to the caller.
+   The operation takes variable number of operands and produces no results.
+   The operand number and types must match the signature of the function
+   that contains the operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.output'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: output(operands_, *, loc=None, ip=None) -> OutputOp
+
+.. py:class:: ReturnOp(operands_, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``return`` operation terminates a ``func`` function by yielding values
+   to the caller.
+   The operation takes variable number of operands and produces no results.
+   The operand number and types must match the signature of the function
+   that contains the operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.return'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: return_(operands_, *, loc=None, ip=None) -> ReturnOp
+
+.. py:class:: SubgraphOp(sym_name, function_type, *, arg_attrs=None, res_attrs=None, sym_visibility=None, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This simple function container represents callables in an ML program where
+   the body is a ``Graph`` region containing a single block. It must be
+   terminated by an ``output`` op which yields values with the same arity and
+   types as the ``FunctionType`` results of the containing ``subgraph``.
+
+   This op is a ``Symbol`` but does not introduce a new ``SymbolTable``. As such,
+   it cannot represented nested symbols.
+
+   Example:
+
+   .. code:: mlir
+
+       ml_program.subgraph private @some_extern(i32) -> i32
+       ml_program.subgraph @compute(%arg0 : i32) -> i32 {
+         ml_program.output %arg0 : i32
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.subgraph'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:function:: subgraph(sym_name, function_type, *, arg_attrs=None, res_attrs=None, sym_visibility=None, loc=None, ip=None) -> SubgraphOp
+
+.. py:class:: TokenOp(token, *, loc=None, ip=None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Token values are used to chain side effecting ops in a graph so as to
+   establish an execution order. This op produces a token.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ml_program.token'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: token() -> _ods_ir
+
+
+.. py:function:: token(token, *, loc=None, ip=None) -> _ods_ir
+
+.. py:data:: ARGUMENT_ATTRIBUTE_NAME
+   :value: 'arg_attrs'
+
+
+.. py:data:: RESULT_ATTRIBUTE_NAME
+   :value: 'res_attrs'
+
+
+.. py:class:: FuncOp(name, type, *, visibility=None, body_builder=None, loc=None, ip=None)
+
+   Bases: :py:obj:`FuncOp`
+
+
+   
+   Specialization for the func op class.
+
+
+   .. py:property:: is_external
+
+
+   .. py:property:: body
+
+
+   .. py:property:: type
+
+
+   .. py:property:: visibility
+
+
+   .. py:property:: name
+      :type: StringAttr
+
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:property:: entry_block
+
+
+   .. py:method:: add_entry_block()
+
+      
+      Add an entry block to the function body using the function signature to
+      infer block arguments.
+      Returns the newly created block
+
+
+
+   .. py:property:: arg_attrs
+
+
+   .. py:property:: arguments
+
+
+   .. py:property:: result_attrs
+
+

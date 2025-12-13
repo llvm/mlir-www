@@ -1,0 +1,539 @@
+mlir.dialects._linalg_enum_gen
+==============================
+
+.. py:module:: mlir.dialects._linalg_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_enum_gen.BinaryFn
+   mlir.dialects._linalg_enum_gen.ElementwiseArityGroup
+   mlir.dialects._linalg_enum_gen.ElementwiseCaseLimits
+   mlir.dialects._linalg_enum_gen.ElementwiseKind
+   mlir.dialects._linalg_enum_gen.IteratorType
+   mlir.dialects._linalg_enum_gen.TernaryFn
+   mlir.dialects._linalg_enum_gen.TypeFn
+   mlir.dialects._linalg_enum_gen.UnaryFn
+   mlir.dialects._linalg_enum_gen.WinogradConv2DFmr
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._linalg_enum_gen.register_attribute_builder
+   mlir.dialects._linalg_enum_gen._binaryfn
+   mlir.dialects._linalg_enum_gen._elementwisearitygroup
+   mlir.dialects._linalg_enum_gen._elementwisecaselimits
+   mlir.dialects._linalg_enum_gen._elementwisekind
+   mlir.dialects._linalg_enum_gen._iteratortype
+   mlir.dialects._linalg_enum_gen._ternaryfn
+   mlir.dialects._linalg_enum_gen._typefn
+   mlir.dialects._linalg_enum_gen._unaryfn
+   mlir.dialects._linalg_enum_gen._winogradconv2dfmr
+   mlir.dialects._linalg_enum_gen._binaryfnattr
+   mlir.dialects._linalg_enum_gen._elementwisekindattr
+   mlir.dialects._linalg_enum_gen._iteratortypeenum
+   mlir.dialects._linalg_enum_gen._ternaryfnattr
+   mlir.dialects._linalg_enum_gen._typefnattr
+   mlir.dialects._linalg_enum_gen._unaryfnattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: BinaryFn
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+
+   .. py:attribute:: add
+      :value: 0
+
+
+
+   .. py:attribute:: sub
+      :value: 1
+
+
+
+   .. py:attribute:: mul
+      :value: 2
+
+
+
+   .. py:attribute:: div
+      :value: 3
+
+
+
+   .. py:attribute:: div_unsigned
+      :value: 4
+
+
+
+   .. py:attribute:: max_signed
+      :value: 5
+
+
+
+   .. py:attribute:: min_signed
+      :value: 6
+
+
+
+   .. py:attribute:: max_unsigned
+      :value: 7
+
+
+
+   .. py:attribute:: min_unsigned
+      :value: 8
+
+
+
+   .. py:attribute:: powf
+      :value: 9
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _binaryfn(x, context)
+
+.. py:class:: ElementwiseArityGroup
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 1, 2, 3
+
+
+   .. py:attribute:: Unary
+      :value: 1
+
+
+
+   .. py:attribute:: Binary
+      :value: 2
+
+
+
+   .. py:attribute:: Ternary
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _elementwisearitygroup(x, context)
+
+.. py:class:: ElementwiseCaseLimits
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases:
+
+
+   .. py:attribute:: LastUnary
+      :value: 13
+
+
+
+   .. py:attribute:: LastBinary
+      :value: 23
+
+
+
+   .. py:attribute:: LastTernary
+      :value: 24
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _elementwisecaselimits(x, context)
+
+.. py:class:: ElementwiseKind
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+
+
+   .. py:attribute:: exp
+      :value: 0
+
+
+
+   .. py:attribute:: log
+      :value: 1
+
+
+
+   .. py:attribute:: abs
+      :value: 2
+
+
+
+   .. py:attribute:: ceil
+      :value: 3
+
+
+
+   .. py:attribute:: floor
+      :value: 4
+
+
+
+   .. py:attribute:: negf
+      :value: 5
+
+
+
+   .. py:attribute:: reciprocal
+      :value: 6
+
+
+
+   .. py:attribute:: round
+      :value: 7
+
+
+
+   .. py:attribute:: sqrt
+      :value: 8
+
+
+
+   .. py:attribute:: rsqrt
+      :value: 9
+
+
+
+   .. py:attribute:: square
+      :value: 10
+
+
+
+   .. py:attribute:: tanh
+      :value: 11
+
+
+
+   .. py:attribute:: erf
+      :value: 12
+
+
+
+   .. py:attribute:: add
+      :value: 13
+
+
+
+   .. py:attribute:: sub
+      :value: 14
+
+
+
+   .. py:attribute:: mul
+      :value: 15
+
+
+
+   .. py:attribute:: div
+      :value: 16
+
+
+
+   .. py:attribute:: div_unsigned
+      :value: 17
+
+
+
+   .. py:attribute:: max_signed
+      :value: 18
+
+
+
+   .. py:attribute:: min_signed
+      :value: 19
+
+
+
+   .. py:attribute:: max_unsigned
+      :value: 20
+
+
+
+   .. py:attribute:: min_unsigned
+      :value: 21
+
+
+
+   .. py:attribute:: powf
+      :value: 22
+
+
+
+   .. py:attribute:: select
+      :value: 23
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _elementwisekind(x, context)
+
+.. py:class:: IteratorType
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   Iterator type
+
+
+   .. py:attribute:: parallel
+      :value: 0
+
+
+
+   .. py:attribute:: reduction
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _iteratortype(x, context)
+
+.. py:class:: TernaryFn
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0
+
+
+   .. py:attribute:: select
+      :value: 0
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _ternaryfn(x, context)
+
+.. py:class:: TypeFn
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1
+
+
+   .. py:attribute:: cast_signed
+      :value: 0
+
+
+
+   .. py:attribute:: cast_unsigned
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _typefn(x, context)
+
+.. py:class:: UnaryFn
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+
+
+   .. py:attribute:: exp
+      :value: 0
+
+
+
+   .. py:attribute:: log
+      :value: 1
+
+
+
+   .. py:attribute:: abs
+      :value: 2
+
+
+
+   .. py:attribute:: ceil
+      :value: 3
+
+
+
+   .. py:attribute:: floor
+      :value: 4
+
+
+
+   .. py:attribute:: negf
+      :value: 5
+
+
+
+   .. py:attribute:: reciprocal
+      :value: 6
+
+
+
+   .. py:attribute:: round
+      :value: 7
+
+
+
+   .. py:attribute:: sqrt
+      :value: 8
+
+
+
+   .. py:attribute:: rsqrt
+      :value: 9
+
+
+
+   .. py:attribute:: square
+      :value: 10
+
+
+
+   .. py:attribute:: tanh
+      :value: 11
+
+
+
+   .. py:attribute:: erf
+      :value: 12
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _unaryfn(x, context)
+
+.. py:class:: WinogradConv2DFmr
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   allowed 32-bit signless integer cases: 0, 1, 2
+
+
+   .. py:attribute:: F_2_3
+      :value: 0
+
+
+
+   .. py:attribute:: F_4_3
+      :value: 1
+
+
+
+   .. py:attribute:: F_2_5
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _winogradconv2dfmr(x, context)
+
+.. py:function:: _binaryfnattr(x, context)
+
+.. py:function:: _elementwisekindattr(x, context)
+
+.. py:function:: _iteratortypeenum(x, context)
+
+.. py:function:: _ternaryfnattr(x, context)
+
+.. py:function:: _typefnattr(x, context)
+
+.. py:function:: _unaryfnattr(x, context)
+
