@@ -37,6 +37,7 @@ autoapi_dirs = list(mlir.__path__)
 autoapi_python_use_implicit_namespaces = True
 
 import autoapi._parser as _autoapi_parser
+import autoapi._mapper as _autoapi_mapper
 import commonmark
 from sphinx.ext.napoleon.docstring import GoogleDocstring
 
@@ -59,6 +60,23 @@ def prepare_docstring(doc):
         docstring = commonmark.ReStructuredTextRenderer().render(ast)
     return docstring
 _autoapi_parser._prepare_docstring = prepare_docstring
+
+# Hook Mapper._hide_yo_kids to make imported members available
+# This function comes from https://github.com/readthedocs/sphinx-autoapi/blob/v3.6.1/autoapi/_mapper.py#L516
+# and it is modified to remove the `hide` field for imported members
+def _hide_yo_kids(self):
+    for module in self.paths.values():
+        if module["all"] is not None:
+            all_names = set(module["all"])
+            for child in module["children"]:
+                if child["qual_name"] not in all_names:
+                    child["hide"] = True
+        elif module["type"] == "module":
+            for child in module["children"]:
+                if "original_path" in child and child["name"].startswith("_"):
+                    child["hide"] = True
+
+_autoapi_mapper.Mapper._hide_yo_kids = _hide_yo_kids
 
 html_static_path = ['_static']
 html_css_files = [
