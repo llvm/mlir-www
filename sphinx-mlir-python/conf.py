@@ -73,8 +73,8 @@ def _hide_yo_kids(self):
                     child["hide"] = True
         elif module["type"] == "module":
             for child in module["children"]:
-                if "original_path" in child:
-                    pass # child["hide"] = True
+                if "original_path" in child and child["name"].startswith("_"):
+                    child["hide"] = True
 
 _autoapi_mapper.Mapper._hide_yo_kids = _hide_yo_kids
 
