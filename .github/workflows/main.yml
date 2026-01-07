@@ -97,7 +97,7 @@ jobs:
         python3 build_pattern_catalog_index.py $HOME/pattern_catalog.txt website/static/pattern-search/pattern-index.json
 
     - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
+      uses: peaceiris/actions-hugo@v3
       with:
         hugo-version: '0.119.0'
         extended: false
