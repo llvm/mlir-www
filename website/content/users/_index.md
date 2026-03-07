@@ -22,9 +22,9 @@ in a modular and composable manner. It supports progressive hardware customizati
 reusable parameterized kernel templates, and composable schedules on top of MLIR
 for productive hardware development.
 
-## [Ascend NPU-IR](https://gitcode.com/Ascend/AscendNPU-IR)
+## [AscendNPU IR](https://gitcode.com/Ascend/AscendNPU-IR)
 
-AscendNPU-IR is an MLIR-based intermediate representation and compiler targeting the Ascend family of NPUs from Huawei. It provides complete support for Ascend hardware capabilities with a comprehensive suite of compiler optimizations.
+AscendNPU IR is an MLIR-based intermediate representation and compiler targeting the Ascend family of NPUs from Huawei. It provides complete support for Ascend hardware capabilities with a comprehensive suite of compiler optimizations.
 
 ## [Beaver](https://github.com/beaver-lodge/beaver)
 
