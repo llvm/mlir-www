@@ -24,7 +24,7 @@ for productive hardware development.
 
 ## [AscendNPU IR](https://gitcode.com/Ascend/AscendNPU-IR)
 
-AscendNPU IR is an MLIR-based intermediate representation and compiler targeting the Ascend family of NPUs from Huawei. It provides complete support for Ascend hardware capabilities with a comprehensive suite of compiler optimizations.
+AscendNPU IR is an MLIR-based intermediate representation and compiler framework specifically designed for Ascend hardware. It enables the efficient execution of computational workloads on the Ascend NPU by applying a rich set of compiler optimizations that fully leverage the hardware's capabilities.
 
 ## [Beaver](https://github.com/beaver-lodge/beaver)
 
