@@ -44,4 +44,5 @@ weight: 1
 * [TinyIREE: An ML Execution Environment for Embedded Systems from Compilation to Deployment](https://doi.org/10.1109/MM.2022.3178068)
 * [Polygeist: Raising C to Polyhedral MLIR](https://ieeexplore.ieee.org/document/9563011)
 * [High-Performance GPU-to-CPU Transpilation and Optimization via High-Level Parallel Constructs](https://arxiv.org/abs/2207.00257)
+* [PolyMorphous: An MLIR-Based Polyhedral Compiler with Loop Transformation Primitives](https://ieeexplore.ieee.org/document/11078508)
 
