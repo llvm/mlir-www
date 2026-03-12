@@ -291,6 +291,13 @@ See both the polyhedral Polygeist paper
 and the GPU Polygeist paper
 [High-Performance GPU-to-CPU Transpilation and Optimization via High-Level Parallel Constructs](https://arxiv.org/abs/2207.00257)
 
+## [PyDSL](https://github.com/Huawei-CPLLab/PyDSL): A pythonic frontend for MLIR
+
+PyDSL aims to provide an interface between Python and MLIR. 
+The project aims for simplicity, i.e. The project should be easy to maintain with a 
+thin layer of translation, as well as that the syntax for PyDSL should be as close 
+to legal Python as possible, while maintaining the precision of MLIR.
+
 ## [Pylir](https://github.com/zero9178/Pylir)
 
 Pylir aims to be an optimizing Ahead-of-Time Python Compiler with high language
