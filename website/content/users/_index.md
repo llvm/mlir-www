@@ -294,7 +294,7 @@ and the GPU Polygeist paper
 ## [PyDSL](https://github.com/Huawei-CPLLab/PyDSL): A pythonic frontend for MLIR
 
 PyDSL aims to provide an interface between Python and MLIR. 
-The project aims for simplicity, i.e. The project should be easy to maintain with a 
+The project aims for simplicity, i.e., the project should be easy to maintain with a 
 thin layer of translation, as well as that the syntax for PyDSL should be as close 
 to legal Python as possible, while maintaining the precision of MLIR.
 
