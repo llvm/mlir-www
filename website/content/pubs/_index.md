@@ -45,4 +45,4 @@ weight: 1
 * [Polygeist: Raising C to Polyhedral MLIR](https://ieeexplore.ieee.org/document/9563011)
 * [High-Performance GPU-to-CPU Transpilation and Optimization via High-Level Parallel Constructs](https://arxiv.org/abs/2207.00257)
 * [PolyMorphous: An MLIR-Based Polyhedral Compiler with Loop Transformation Primitives](https://ieeexplore.ieee.org/document/11078508)
-
+* [PolyBlocks: A Compiler Infrastructure for AI Chips and Programming Frameworks](https://arxiv.org/abs/2603.06731)
