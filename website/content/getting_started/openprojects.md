@@ -7,7 +7,7 @@ weight: 25
 
 Below is a list of projects that can be suitable for [Google Summer of Code
 (GSOC)](https://summerofcode.withgoogle.com/) or just for someone to get started
-with contributing to MLIR. See also [the "beginner" issues](https://github.com/llvm/llvm-project/issues?q=is%3Aopen+label%3Amlir%3Allvm+label%3Abeginner)
+with contributing to MLIR. See also ["good first issue"](https://github.com/llvm/llvm-project/issues?q=is%3Aopen%20label%3Amlir%3Allvm%20label%3A%22good%20first%20issue%22)
 on the bugtracker.
 If you're interested in one of these projects, feel free to discuss it on
 the MLIR section of the [LLVM forums](https://llvm.discourse.group/c/mlir/31)
@@ -21,7 +21,7 @@ starting on these projects.
   control-flow (symbolic execution of a for loop for example). The idea would be to revamp
   this to ultimately allow to have features like "constexpr evaluation" of functions in MLIR.
 * [llvm-canon](https://llvm.org/devmtg/2019-10/slides/Paszkowski-LLVMCanon.pdf) kind of tool for MLIR (mentor: Mehdi Amini, Jacques Pienaar)
-* MLIR sparsifier (aka sparse compiler) [starter tasks](https://github.com/llvm/llvm-project/labels/mlir%3Asparse) (mentor: Aart Bik)
+* MLIR sparsifier (aka sparse compiler) [starter tasks](https://github.com/llvm/llvm-project/issues?q=state%3Aopen%20label%3Amlir%3Asparsetensor) (mentor: Aart Bik)
 * Improving [mlir-reduce](https://mlir.llvm.org/docs/Tools/mlir-reduce/) (mentor: Jacques Pienaar, Mehdi Amini).
   This tools is basic in its current form and needs investment to make it really useful in practice.
   That means developing new reduction pattern and strategies. Possibly interfaces for dialects
