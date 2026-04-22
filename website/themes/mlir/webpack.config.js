@@ -10,6 +10,9 @@ module.exports = {
 				test: /.jsx?$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
+				options: {
+					presets: [require.resolve('@babel/preset-env')]
+				}
 			},
 		],
 	},
