@@ -416,7 +416,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "游ゴシック体", YuGothic, "メイリオ", Meiryo, "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-feature-settings: 'pwid';
   line-height: 1.8;
-  background: #ffffff;
   margin: 0;
 }
 
@@ -503,7 +502,6 @@ ul,
 ol {
   font-size: 100%;
   margin: 0;
-  margin-left: 1.5rem;
 }
 
 ul.unstyled {
@@ -704,7 +702,7 @@ main * + figure, .edit-meta,
 .button,
 .gist,
 .twitter-tweet {
-  margin-top: 1.8rem;
+  margin-top: 1rem;
 }
 
 .no-stack, figure > figcaption, .pagination > * {
@@ -732,6 +730,8 @@ body {
   display: flex;
   flex-flow: column nowrap;
   margin: auto;
+  border-left: solid 1px #eee;
+  border-right: solid 1px #eee;
 }
 
 .content-container {
@@ -895,8 +895,8 @@ figure > figcaption h4 {
 }
 
 header {
-  color: var(--custom-font-color, #fff);
-  background: var(--custom-background-color, #1D3C5D);
+  color: var(--custom-font-color, #000);
+  background: var(--custom-background-color, #FFFFFF);
   padding: 0.5rem 1.2rem;
 }
 
@@ -917,7 +917,7 @@ header .github {
 
 .global-menu {
   color: var(--custom-font-color, #fff);
-  background: var(--custom-background-color, #1D3C5D);
+  background: var(--custom-background-color, #173559);
   padding: 0.2rem 1.2rem;
 }
 
@@ -944,7 +944,7 @@ header .github {
 
 .global-menu ul.sub-menu li {
   padding: 0.2rem 1.2rem;
-  background: var(--custom-background-color, #1D3C5D);
+  background: var(--custom-background-color, #4E96D1);
   width: 140px;
   font-size: 80%;
 }
@@ -1012,11 +1012,6 @@ main {
   }
 }
 
-.container {
-  border-left: solid 1px #eee;
-  border-right: solid 1px #eee;
-}
-
 .sidebar {
   font-size: 90%;
   background: #f9f9f9;
@@ -1027,6 +1022,7 @@ main {
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-left: 10px;
 }
 
 .sidebar a {
@@ -1046,11 +1042,11 @@ main {
 }
 
 .sidebar nav > ul > li li a {
-  padding-left: 2rem;
+  padding-left: 1rem;
 }
 
 .sidebar nav > ul ul > li li a {
-  padding-left: 3rem;
+  padding-left: 1rem;
 }
 
 @media screen and (max-width: 480px) {
@@ -1099,4 +1095,15 @@ main {
   font-size: 80%;
   text-align: right;
   color: #999;
+}
+
+
+
+/* custom MLIR
+ */
+
+a.headline-hash {
+  color: #555;
+  text-decoration:none;
+  text-style:italic;
 }
