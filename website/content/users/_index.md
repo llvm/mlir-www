@@ -267,6 +267,20 @@ filters, etc.) process packets.
 backend for the P4 reference compiler that uses MLIR, via new dialects to model P4's
 semantics.
 
+## [PhoebeDB](https://www.phoebedb.io/): A PostgreSQL-compatible HTAP database for AI agents
+
+PhoebeDB is a PostgreSQL-compatible HTAP database designed for production AI agent
+systems, in which relational state, vector memory, and execution traces commit (or
+roll back) together as a single atomic unit, with vector indexes participating in
+MVCC alongside relational data.
+
+PhoebeDB uses a custom MLIR pipeline to JIT-compile queries to native machine
+code, with progressive lowering through multiple dialects before reaching LLVM IR.
+This layered design keeps each lowering step narrow and auditable, making it
+easier to add new operators or backends without emitting LLVM IR directly.
+
+For more details, see the [MLIR JIT compilation deep-dive](https://www.phoebedb.io/blog/mlir-jit-compilation).
+
 ## [PlaidML](https://github.com/plaidml/plaidml)
 
 PlaidML is a tensor compiler that facilitates reusable and performance portable
