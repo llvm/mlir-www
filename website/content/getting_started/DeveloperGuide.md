@@ -143,22 +143,26 @@ avoided.
 
 ### Structural Invariants
 
-Structural invariants of an operation may be checked in the verifier, even
-though they may not be local to the operation.
+Certain structural invariants of an operation are considered to be "local to
+the operation" and may be checked in the verifier.
 
 * Ops with regions may verify that a region has a certain number of blocks.
   Relevant op traits / constraints: `SingleBlock`, `SizedRegion`,
   `MinSizedRegion`, `MaxSizedRegion`.
 * Ops with regions may verify that block terminators are of a certain op kind.
   Relevant op trait: `SingleBlockImplicitTerminator`.
+* Ops with regions may verify that operands that are yielded from terminators
+  have a compatible type. Relevant op interface method: `areTypesCompatible`.
+* Token users may verify that the token was produced by a compatible operation.
+
+Some structural invariants are not really "local to the operation" but are
+sometimes checked for composability reasons.
+
 * Ops may verify that they are nested within a supported op.
   Relevant op traits: `HasParent`, `ParentOneOf`, `HasAncestor`,
   `AncestorOneOf`.
 * Symbol tables and symbol users may verify the uniqueness and compatibility of
   of symbols. Relevant op interface method: `verifySymbolUses`.
-* Ops with regions may verify that operands that are yielded from terminators
-  have a compatible type. Relevant op interface method: `areTypesCompatible`.
-* Token users may verify that the token was produced by a compatible operation.
 
 ## Testing guidelines
 
