@@ -144,7 +144,8 @@ avoided.
 ### Structural Invariants
 
 Certain structural invariants of an operation are considered to be "local to
-the operation" and may be checked in the verifier.
+the operation" and may be checked in the verifier. For examples here are common
+cases:
 
 * Ops with regions may verify that a region has a certain number of blocks.
   Relevant op traits / constraints: `SingleBlock`, `SizedRegion`,
