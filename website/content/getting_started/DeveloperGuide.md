@@ -98,6 +98,11 @@ single pass. Because the process is aborted when a verifier is failing, they
 must only fire on things that are definitive broken invariant, and not on
 "possibly invalid" cases.
 
+For details on the order in which the various verifiers attached to an
+operation are run (structural traits, ODS-generated `verifyInvariants`,
+trait/interface verifiers, custom verifier, region verifiers), see
+[Verification Ordering](/docs/DefiningDialects/Operations/#verification-ordering).
+
 ### Example: Undefined Behavior
 
 While it is encouraged to verify as much invariants as possible in order to
@@ -144,8 +149,8 @@ avoided.
 ### Structural Invariants
 
 Certain structural invariants of an operation are considered to be "local to
-the operation" and may be checked in the verifier. For examples here are common
-cases:
+the operation" and may be checked in the verifier. Here is a non-exhaustive
+list of examples:
 
 * Ops with regions may verify that a region has a certain number of blocks.
   Relevant op traits / constraints: `SingleBlock`, `SizedRegion`,
