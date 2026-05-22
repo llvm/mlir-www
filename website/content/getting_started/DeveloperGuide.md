@@ -98,6 +98,13 @@ single pass. Because the process is aborted when a verifier is failing, they
 must only fire on things that are definitive broken invariant, and not on
 "possibly invalid" cases.
 
+For details on the order in which the various verifiers attached to an
+operation are run (structural traits, ODS-generated `verifyInvariants`,
+trait/interface verifiers, custom verifier, region verifiers), see
+[Verification Ordering](/docs/DefiningDialects/Operations/#verification-ordering).
+
+### Example: Undefined Behavior
+
 While it is encouraged to verify as much invariants as possible in order to
 catch bugs during development as soon as possible, there is some important
 aspect to keep in mind. In particular a common point of confusion is about how
@@ -138,6 +145,30 @@ This is why the guidelines to write verifier is to stick to information local
 to an operation (think "what I see when I print this operation alone").
 Looking through operands or results is extremely unusual and should be
 avoided.
+
+### Structural Invariants
+
+Certain structural invariants of an operation are considered to be "local to
+the operation" and may be checked in the verifier. Here is a non-exhaustive
+list of examples:
+
+* Ops with regions may verify that a region has a certain number of blocks.
+  Relevant op traits / constraints: `SingleBlock`, `SizedRegion`,
+  `MinSizedRegion`, `MaxSizedRegion`.
+* Ops with regions may verify that block terminators are of a certain op kind.
+  Relevant op trait: `SingleBlockImplicitTerminator`.
+* Ops with regions may verify that operands that are yielded from terminators
+  have a compatible type. Relevant op interface method: `areTypesCompatible`.
+* Token users may verify that the token was produced by a compatible operation.
+
+Some structural invariants are not really "local to the operation" but are
+sometimes checked for composability reasons.
+
+* Ops may verify that they are nested within a supported op.
+  Relevant op traits: `HasParent`, `ParentOneOf`, `HasAncestor`,
+  `AncestorOneOf`.
+* Symbol tables and symbol users may verify the uniqueness and compatibility of
+  of symbols. Relevant op interface method: `verifySymbolUses`.
 
 ## Testing guidelines
 
