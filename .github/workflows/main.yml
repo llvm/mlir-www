@@ -54,6 +54,8 @@ jobs:
         mkdir llvm_src/build
         cd llvm_src/build
         pip install -r ../mlir/python/requirements.txt
+        pip install 'nanobind<2.13'
+        python3 -c 'import importlib.metadata as m; print("nanobind", m.version("nanobind"))'
         # Assert mode is needed for the pattern search index
         cmake ../llvm -GNinja \
           -DLLVM_CCACHE_BUILD=ON \
