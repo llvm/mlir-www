@@ -1,0 +1,1486 @@
+mlir.dialects._async_ops_gen
+============================
+
+.. py:module:: mlir.dialects._async_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._async_ops_gen._ods_ir
+   mlir.dialects._async_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._async_ops_gen._Dialect
+   mlir.dialects._async_ops_gen.AddToGroupOp
+   mlir.dialects._async_ops_gen.AddToGroupOpAdaptor
+   mlir.dialects._async_ops_gen.AwaitAllOp
+   mlir.dialects._async_ops_gen.AwaitAllOpAdaptor
+   mlir.dialects._async_ops_gen.AwaitOp
+   mlir.dialects._async_ops_gen.AwaitOpAdaptor
+   mlir.dialects._async_ops_gen.CallOp
+   mlir.dialects._async_ops_gen.CallOpAdaptor
+   mlir.dialects._async_ops_gen.CoroBeginOp
+   mlir.dialects._async_ops_gen.CoroBeginOpAdaptor
+   mlir.dialects._async_ops_gen.CoroEndOp
+   mlir.dialects._async_ops_gen.CoroEndOpAdaptor
+   mlir.dialects._async_ops_gen.CoroFreeOp
+   mlir.dialects._async_ops_gen.CoroFreeOpAdaptor
+   mlir.dialects._async_ops_gen.CoroIdOp
+   mlir.dialects._async_ops_gen.CoroIdOpAdaptor
+   mlir.dialects._async_ops_gen.CoroSaveOp
+   mlir.dialects._async_ops_gen.CoroSaveOpAdaptor
+   mlir.dialects._async_ops_gen.CoroSuspendOp
+   mlir.dialects._async_ops_gen.CoroSuspendOpAdaptor
+   mlir.dialects._async_ops_gen.CreateGroupOp
+   mlir.dialects._async_ops_gen.CreateGroupOpAdaptor
+   mlir.dialects._async_ops_gen.ExecuteOp
+   mlir.dialects._async_ops_gen.ExecuteOpAdaptor
+   mlir.dialects._async_ops_gen.FuncOp
+   mlir.dialects._async_ops_gen.FuncOpAdaptor
+   mlir.dialects._async_ops_gen.ReturnOp
+   mlir.dialects._async_ops_gen.ReturnOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeAddRefOp
+   mlir.dialects._async_ops_gen.RuntimeAddRefOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeAddToGroupOp
+   mlir.dialects._async_ops_gen.RuntimeAddToGroupOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeAwaitAndResumeOp
+   mlir.dialects._async_ops_gen.RuntimeAwaitAndResumeOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeAwaitOp
+   mlir.dialects._async_ops_gen.RuntimeAwaitOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeCreateGroupOp
+   mlir.dialects._async_ops_gen.RuntimeCreateGroupOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeCreateOp
+   mlir.dialects._async_ops_gen.RuntimeCreateOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeDropRefOp
+   mlir.dialects._async_ops_gen.RuntimeDropRefOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeIsErrorOp
+   mlir.dialects._async_ops_gen.RuntimeIsErrorOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeLoadOp
+   mlir.dialects._async_ops_gen.RuntimeLoadOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeNumWorkerThreadsOp
+   mlir.dialects._async_ops_gen.RuntimeNumWorkerThreadsOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeResumeOp
+   mlir.dialects._async_ops_gen.RuntimeResumeOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeSetAvailableOp
+   mlir.dialects._async_ops_gen.RuntimeSetAvailableOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeSetErrorOp
+   mlir.dialects._async_ops_gen.RuntimeSetErrorOpAdaptor
+   mlir.dialects._async_ops_gen.RuntimeStoreOp
+   mlir.dialects._async_ops_gen.RuntimeStoreOpAdaptor
+   mlir.dialects._async_ops_gen.YieldOp
+   mlir.dialects._async_ops_gen.YieldOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._async_ops_gen.add_to_group
+   mlir.dialects._async_ops_gen.await_all
+   mlir.dialects._async_ops_gen.await_
+   mlir.dialects._async_ops_gen.call
+   mlir.dialects._async_ops_gen.coro_begin
+   mlir.dialects._async_ops_gen.coro_end
+   mlir.dialects._async_ops_gen.coro_free
+   mlir.dialects._async_ops_gen.coro_id
+   mlir.dialects._async_ops_gen.coro_save
+   mlir.dialects._async_ops_gen.coro_suspend
+   mlir.dialects._async_ops_gen.create_group
+   mlir.dialects._async_ops_gen.execute
+   mlir.dialects._async_ops_gen.func
+   mlir.dialects._async_ops_gen.return_
+   mlir.dialects._async_ops_gen.runtime_add_ref
+   mlir.dialects._async_ops_gen.runtime_add_to_group
+   mlir.dialects._async_ops_gen.runtime_await_and_resume
+   mlir.dialects._async_ops_gen.runtime_await
+   mlir.dialects._async_ops_gen.runtime_create_group
+   mlir.dialects._async_ops_gen.runtime_create
+   mlir.dialects._async_ops_gen.runtime_drop_ref
+   mlir.dialects._async_ops_gen.runtime_is_error
+   mlir.dialects._async_ops_gen.runtime_load
+   mlir.dialects._async_ops_gen.runtime_num_worker_threads
+   mlir.dialects._async_ops_gen.runtime_resume
+   mlir.dialects._async_ops_gen.runtime_set_available
+   mlir.dialects._async_ops_gen.runtime_set_error
+   mlir.dialects._async_ops_gen.runtime_store
+   mlir.dialects._async_ops_gen.yield_
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: _Dialect
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'async'
+
+
+
+.. py:class:: AddToGroupOp(operand: _ods_ir, group: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.add_to_group`` adds an async token or value to the async group.
+   Returns the rank of the added element in the group. This rank is fixed
+   for the group lifetime.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = async.create_group %size : !async.group
+       %1 = ... : !async.token
+       %2 = async.add_to_group %1, %0 : !async.token
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.add_to_group'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: group() -> _ods_ir
+
+
+   .. py:method:: rank() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AddToGroupOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.add_to_group'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: group() -> _ods_ir
+
+
+.. py:function:: add_to_group(operand: _ods_ir, group: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: AwaitAllOp(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.await_all`` operation waits until all the tokens or values in the
+   group become ready.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = async.create_group %size : !async.group
+       
+       %1 = ... : !async.token
+       %2 = async.add_to_group %1, %0 : !async.token
+       
+       %3 = ... : !async.token
+       %4 = async.add_to_group %2, %0 : !async.token
+       
+       async.await_all %0
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.await_all'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:class:: AwaitAllOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.await_all'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: await_all(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> AwaitAllOp
+
+.. py:class:: AwaitOp(result: Optional[_ods_ir], operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.await`` operation waits until the argument becomes ready, and for
+   the ``async.value`` arguments it unwraps the underlying value
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = ... : !async.token
+       async.await %0 : !async.token
+       
+       %1 = ... : !async.value<f32>
+       %2 = async.await %1 : !async.value<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.await'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> Optional[_ods_ir]
+
+
+.. py:class:: AwaitOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.await'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: await_(result: Optional[_ods_ir], operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, AwaitOp]
+
+.. py:class:: CallOp(result: Sequence[_ods_ir], callee: Union[str, _ods_ir], operands_: Sequence[_ods_ir], *, arg_attrs: Optional[Union[Any, _ods_ir]] = None, res_attrs: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.call`` operation represents a direct call to an async function
+   that is within the same symbol scope as the call. The operands and result
+   types of the call must match the specified async function type. The callee
+   is encoded as a symbol reference attribute named "callee".
+
+   Example:
+
+   .. code:: mlir
+
+       %2 = async.call @my_add(%0, %1) : (f32, f32) -> !async.value<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.call'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+   .. py:method:: callee() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+.. py:class:: CallOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.call'
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+   .. py:method:: callee() -> _ods_ir
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+.. py:function:: call(result: Sequence[_ods_ir], callee: Union[str, _ods_ir], operands_: Sequence[_ods_ir], *, arg_attrs: Optional[Union[Any, _ods_ir]] = None, res_attrs: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, CallOp]
+
+.. py:class:: CoroBeginOp(id: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.begin`` allocates a coroutine frame and returns a handle to
+   the coroutine.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.begin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: id() -> _ods_ir
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:class:: CoroBeginOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.begin'
+
+
+
+   .. py:method:: id() -> _ods_ir
+
+
+.. py:function:: coro_begin(id: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CoroEndOp(handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.end`` marks the point where a coroutine needs to return
+   control back to the caller if it is not an initial invocation of the
+   coroutine. It the start part of the coroutine is is no-op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.end'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:class:: CoroEndOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.end'
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:function:: coro_end(handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> CoroEndOp
+
+.. py:class:: CoroFreeOp(id: _ods_ir, handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.free`` deallocates the coroutine frame created by the
+   async.coro.begin operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.free'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: id() -> _ods_ir
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:class:: CoroFreeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.free'
+
+
+
+   .. py:method:: id() -> _ods_ir
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:function:: coro_free(id: _ods_ir, handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> CoroFreeOp
+
+.. py:class:: CoroIdOp(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.id`` returns a switched-resume coroutine identifier.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.id'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: id() -> _ods_ir
+
+
+.. py:class:: CoroIdOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.id'
+
+
+
+.. py:function:: coro_id(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CoroSaveOp(handle: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.saves`` saves the coroutine state.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.save'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+   .. py:method:: state() -> _ods_ir
+
+
+.. py:class:: CoroSaveOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.save'
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:function:: coro_save(handle: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CoroSuspendOp(state: _ods_ir, suspendDest: _ods_ir, resumeDest: _ods_ir, cleanupDest: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.coro.suspend`` suspends the coroutine and transfers control to the
+   ``suspend`` successor. If suspended coroutine later resumed it will transfer
+   control to the ``resume`` successor. If it is destroyed it will transfer
+   control to the the ``cleanup`` successor.
+
+   In switched-resume lowering coroutine can be already in resumed state when
+   suspend operation is called, in this case control will be transferred to the
+   ``resume`` successor skipping the ``suspend`` successor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.suspend'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: state() -> _ods_ir
+
+
+.. py:class:: CoroSuspendOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.coro.suspend'
+
+
+
+   .. py:method:: state() -> _ods_ir
+
+
+.. py:function:: coro_suspend(state: _ods_ir, suspend_dest: _ods_ir, resume_dest: _ods_ir, cleanup_dest: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> CoroSuspendOp
+
+.. py:class:: CreateGroupOp(size: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.create_group`` allocates an empty async group. Async tokens or
+   values can be added to this group later. The size of the group must be
+   specified at construction time, and ``await_all`` operation will first
+   wait until the number of added tokens or values reaches the group size.
+
+   Example:
+
+   .. code:: mlir
+
+       %size = ... : index
+       %group = async.create_group %size : !async.group
+       ...
+       async.await_all %group
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.create_group'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: size() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: CreateGroupOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.create_group'
+
+
+
+   .. py:method:: size() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: create_group(size: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ExecuteOp(token: _ods_ir, bodyResults: Sequence[_ods_ir], dependencies: Sequence[_ods_ir], bodyOperands: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``body`` region attached to the ``async.execute`` operation semantically
+   can be executed concurrently with the successor operation. In the followup
+   example "compute0" can be executed concurrently with "compute1".
+
+   The actual concurrency semantics depends on the dialect lowering to the
+   executable format. Fully sequential execution ("compute0" completes before
+   "compute1" starts) is a completely legal execution.
+
+   Because concurrent execution is not guaranteed, it is illegal to create an
+   implicit dependency from "compute1" to "compute0" (e.g. via shared global
+   state). All dependencies must be made explicit with async execute arguments
+   (``async.token`` or ``async.value``).
+
+   ``async.execute`` operation takes ``async.token`` dependencies and ``async.value``
+   operands separately, and starts execution of the attached body region only
+   when all tokens and values become ready.
+
+   Example:
+
+   .. code:: mlir
+
+       %dependency = ... : !async.token
+       %value = ... : !async.value<f32>
+       
+       %token, %results =
+         async.execute [%dependency](%value as %unwrapped: !async.value<f32>)
+                    -> !async.value<!some.type>
+         {
+           %0 = "compute0"(%unwrapped): (f32) -> !some.type
+           async.yield %0 : !some.type
+         }
+       
+       %1 = "compute1"(...) : !some.type
+
+   In the example above asynchronous execution starts only after dependency
+   token and value argument become ready. Unwrapped value passed to the
+   attached body region as an %unwrapped value of f32 type.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.execute'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: dependencies() -> _ods_ir
+
+
+   .. py:method:: bodyOperands() -> _ods_ir
+
+
+   .. py:method:: token() -> _ods_ir
+
+
+   .. py:method:: bodyResults() -> _ods_ir
+
+
+   .. py:method:: bodyRegion() -> _ods_ir
+
+
+.. py:class:: ExecuteOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.execute'
+
+
+
+   .. py:method:: dependencies() -> _ods_ir
+
+
+   .. py:method:: bodyOperands() -> _ods_ir
+
+
+.. py:function:: execute(token: _ods_ir, body_results: Sequence[_ods_ir], dependencies: Sequence[_ods_ir], body_operands: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, ExecuteOp]
+
+.. py:class:: FuncOp(sym_name: Union[str, _ods_ir], function_type: Union[Any, _ods_ir], *, sym_visibility: Optional[Union[str, _ods_ir]] = None, arg_attrs: Optional[Union[Any, _ods_ir]] = None, res_attrs: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   An async function is like a normal function, but supports non-blocking
+   await. Internally, async function is lowered to the LLVM coroutinue with
+   async runtime intrinsic. It can return an async token and/or async values.
+   The token represents the execution state of async function and can be used
+   when users want to express dependencies on some side effects, e.g.,
+   the token becomes available once every thing in the func body is executed.
+
+   Example:
+
+   .. code:: mlir
+
+       // Async function can't return void, it always must be some async thing.
+       async.func @async.0() -> !async.token {
+         return
+       }
+       
+       // Function returns only async value.
+       async.func @async.1() -> !async.value<i32> {
+         %0 = arith.constant 42 : i32
+         return %0 : i32
+       }
+       
+       // Implicit token can be added to return types.
+       async.func @async.2() -> !async.token, !async.value<i32> {
+         %0 = arith.constant 42 : i32
+         return %0 : i32
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.func'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:class:: FuncOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.func'
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: function_type() -> _ods_ir
+
+
+   .. py:method:: sym_visibility() -> Optional[_ods_ir]
+
+
+   .. py:method:: arg_attrs() -> Optional[_ods_ir]
+
+
+   .. py:method:: res_attrs() -> Optional[_ods_ir]
+
+
+.. py:function:: func(sym_name: Union[str, _ods_ir], function_type: Union[Any, _ods_ir], *, sym_visibility: Optional[Union[str, _ods_ir]] = None, arg_attrs: Optional[Union[Any, _ods_ir]] = None, res_attrs: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> FuncOp
+
+.. py:class:: ReturnOp(operands_: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.return`` is a special terminator operation for Async function.
+
+   Example:
+
+   .. code:: mlir
+
+       async.func @foo() : !async.token {
+         return
+       }
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.return'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:class:: ReturnOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.return'
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: return_(operands_: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ReturnOp
+
+.. py:class:: RuntimeAddRefOp(operand: _ods_ir, count: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.add_ref`` operation adds a reference(s) to async value
+   (token, value or group).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.add_ref'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:class:: RuntimeAddRefOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.add_ref'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:function:: runtime_add_ref(operand: _ods_ir, count: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeAddRefOp
+
+.. py:class:: RuntimeAddToGroupOp(operand: _ods_ir, group: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.add_to_group`` adds an async token or value to the async
+   group. Returns the rank of the added element in the group.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.add_to_group'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: group() -> _ods_ir
+
+
+   .. py:method:: rank() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: RuntimeAddToGroupOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.add_to_group'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: group() -> _ods_ir
+
+
+.. py:function:: runtime_add_to_group(operand: _ods_ir, group: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: RuntimeAwaitAndResumeOp(operand: _ods_ir, handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.await_and_resume`` operation awaits for the operand to
+   become available or error and resumes the coroutine on a thread managed by
+   the runtime.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.await_and_resume'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:class:: RuntimeAwaitAndResumeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.await_and_resume'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:function:: runtime_await_and_resume(operand: _ods_ir, handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeAwaitAndResumeOp
+
+.. py:class:: RuntimeAwaitOp(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.await`` operation blocks the caller thread until the
+   operand becomes available or error.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.await'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:class:: RuntimeAwaitOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.await'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: runtime_await(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeAwaitOp
+
+.. py:class:: RuntimeCreateGroupOp(size: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.create_group`` operation creates an async dialect group
+   of the given size. Group created in the empty state.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.create_group'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: size() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: RuntimeCreateGroupOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.create_group'
+
+
+
+   .. py:method:: size() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: runtime_create_group(size: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RuntimeCreateOp(result: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.create`` operation creates an async dialect token or
+   value. Tokens and values are created in the non-ready state.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.create'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: RuntimeCreateOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.create'
+
+
+
+.. py:function:: runtime_create(result: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RuntimeDropRefOp(operand: _ods_ir, count: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.drop_ref`` operation drops a reference(s) to async value
+   (token, value or group).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.drop_ref'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:class:: RuntimeDropRefOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.drop_ref'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: count() -> _ods_ir
+
+
+.. py:function:: runtime_drop_ref(operand: _ods_ir, count: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeDropRefOp
+
+.. py:class:: RuntimeIsErrorOp(operand: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.is_error`` operation returns true if the token, value or
+   group (any of the async runtime values) is in the error state. It is the
+   caller responsibility to check error state after the call to ``await`` or
+   resuming after ``await_and_resume``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.is_error'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: is_error() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: RuntimeIsErrorOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.is_error'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: runtime_is_error(operand: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: RuntimeLoadOp(storage: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.load`` operation loads the value from the runtime
+   async.value storage.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.load'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: storage() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: RuntimeLoadOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.load'
+
+
+
+   .. py:method:: storage() -> _ods_ir
+
+
+.. py:function:: runtime_load(storage: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RuntimeNumWorkerThreadsOp(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.num_worker_threads`` operation gets the number of threads
+   in the threadpool from the runtime.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.num_worker_threads'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: RuntimeNumWorkerThreadsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.num_worker_threads'
+
+
+
+.. py:function:: runtime_num_worker_threads(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: RuntimeResumeOp(handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.resume`` operation resumes the coroutine on a thread
+   managed by the runtime.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.resume'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:class:: RuntimeResumeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.resume'
+
+
+
+   .. py:method:: handle() -> _ods_ir
+
+
+.. py:function:: runtime_resume(handle: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeResumeOp
+
+.. py:class:: RuntimeSetAvailableOp(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.set_available`` operation switches async token or value
+   state to available.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.set_available'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:class:: RuntimeSetAvailableOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.set_available'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: runtime_set_available(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeSetAvailableOp
+
+.. py:class:: RuntimeSetErrorOp(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.set_error`` operation switches async token or value
+   state to error.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.set_error'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:class:: RuntimeSetErrorOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.set_error'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: runtime_set_error(operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeSetErrorOp
+
+.. py:class:: RuntimeStoreOp(value: _ods_ir, storage: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.runtime.store`` operation stores the value into the runtime
+   async.value storage.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.store'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: storage() -> _ods_ir
+
+
+.. py:class:: RuntimeStoreOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.runtime.store'
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: storage() -> _ods_ir
+
+
+.. py:function:: runtime_store(value: _ods_ir, storage: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> RuntimeStoreOp
+
+.. py:class:: YieldOp(operands_: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``async.yield`` is a special terminator operation for the block inside
+   ``async.execute`` operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:class:: YieldOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'async.yield'
+
+
+
+   .. py:method:: operands_() -> _ods_ir
+
+
+.. py:function:: yield_(operands_: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> YieldOp
+

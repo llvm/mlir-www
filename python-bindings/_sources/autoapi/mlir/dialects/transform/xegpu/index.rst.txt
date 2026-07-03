@@ -1,0 +1,479 @@
+mlir.dialects.transform.xegpu
+=============================
+
+.. py:module:: mlir.dialects.transform.xegpu
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.xegpu.ConvertLayoutOp
+   mlir.dialects.transform.xegpu.ConvertLayoutOpAdaptor
+   mlir.dialects.transform.xegpu.GetLoadOp
+   mlir.dialects.transform.xegpu.GetLoadOpAdaptor
+   mlir.dialects.transform.xegpu.InsertPrefetchOp
+   mlir.dialects.transform.xegpu.InsertPrefetchOpAdaptor
+   mlir.dialects.transform.xegpu.SetAnchorLayoutOp
+   mlir.dialects.transform.xegpu.SetAnchorLayoutOpAdaptor
+   mlir.dialects.transform.xegpu.SetGPULaunchThreadsOp
+   mlir.dialects.transform.xegpu.SetGPULaunchThreadsOpAdaptor
+   mlir.dialects.transform.xegpu.GetLoadOp
+   mlir.dialects.transform.xegpu.SetAnchorLayoutOp
+   mlir.dialects.transform.xegpu.SetGPULaunchThreadsOp
+   mlir.dialects.transform.xegpu.InsertPrefetchOp
+   mlir.dialects.transform.xegpu.ConvertLayoutOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.xegpu.xegpu_convert_layout
+   mlir.dialects.transform.xegpu.xegpu_get_load_op
+   mlir.dialects.transform.xegpu.xegpu_insert_prefetch
+   mlir.dialects.transform.xegpu.xegpu_set_anchor_layout
+   mlir.dialects.transform.xegpu.xegpu_set_gpu_launch_threads
+   mlir.dialects.transform.xegpu.get_load_op
+   mlir.dialects.transform.xegpu.set_anchor_layout
+   mlir.dialects.transform.xegpu.set_gpu_launch_threads
+   mlir.dialects.transform.xegpu.insert_prefetch
+   mlir.dialects.transform.xegpu.convert_layout
+
+
+Module Contents
+---------------
+
+.. py:class:: ConvertLayoutOp(newConvertOp: _ods_ir, target: _ods_ir, input_sg_layout: Sequence[_ods_ir], input_sg_data: Sequence[_ods_ir], input_inst_data: Sequence[_ods_ir], target_sg_layout: Sequence[_ods_ir], target_sg_data: Sequence[_ods_ir], target_inst_data: Sequence[_ods_ir], *, input_order: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, target_order: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Adds an ``xegpu.convert_layout`` op to convert the ``xegpu.layout`` attribute
+   of a value before its first use. The input and target layouts are defined
+   by the ``*sg_layout``, ``*sg_data`` and optional ``*inst_data`` and ``*order``
+   attributes. Returns a handle to the emitted ``xegpu.convert_layout`` op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.convert_layout'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: input_sg_layout() -> _ods_ir
+
+
+   .. py:method:: input_sg_data() -> _ods_ir
+
+
+   .. py:method:: input_inst_data() -> _ods_ir
+
+
+   .. py:method:: target_sg_layout() -> _ods_ir
+
+
+   .. py:method:: target_sg_data() -> _ods_ir
+
+
+   .. py:method:: target_inst_data() -> _ods_ir
+
+
+   .. py:method:: input_order() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: target_order() -> Optional[_ods_ir]
+
+
+   .. py:method:: newConvertOp() -> _ods_ir
+
+
+.. py:class:: ConvertLayoutOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.convert_layout'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: input_sg_layout() -> _ods_ir
+
+
+   .. py:method:: input_sg_data() -> _ods_ir
+
+
+   .. py:method:: input_inst_data() -> _ods_ir
+
+
+   .. py:method:: target_sg_layout() -> _ods_ir
+
+
+   .. py:method:: target_sg_data() -> _ods_ir
+
+
+   .. py:method:: target_inst_data() -> _ods_ir
+
+
+   .. py:method:: input_order() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_input_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_target_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: target_order() -> Optional[_ods_ir]
+
+
+.. py:function:: xegpu_convert_layout(new_convert_op: _ods_ir, target: _ods_ir, input_sg_layout: Sequence[_ods_ir], input_sg_data: Sequence[_ods_ir], input_inst_data: Sequence[_ods_ir], target_sg_layout: Sequence[_ods_ir], target_sg_data: Sequence[_ods_ir], target_inst_data: Sequence[_ods_ir], *, input_order: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_input_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_target_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, target_order: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: GetLoadOp(loadNdHandle: _ods_ir, target: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Traces the producers of the given value until an ``xegpu.load_nd`` or
+   ``xegpu.load`` op is found. Returns a handle to it. Currently traces
+   producers by following only the first operand of producer ops.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.get_load_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: loadNdHandle() -> _ods_ir
+
+
+.. py:class:: GetLoadOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.get_load_op'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: xegpu_get_load_op(load_nd_handle: _ods_ir, target: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: InsertPrefetchOp(desc_op: _ods_ir, target: _ods_ir, *, dynamic_nb_prefetch: Optional[_ods_ir] = None, static_nb_prefetch: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Inserts ``xegpu.prefetch_nd`` operations for the given ``xegpu.load_nd`` op.
+   The load op must reside within the ``scf.for`` loop. Number of prefetch steps
+   is set by the ``nb_prefetch`` argument (default value is 1). Returns a handle
+   to the created ``xegpu.create_nd_desc`` op.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.insert_prefetch'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: dynamic_nb_prefetch() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_nb_prefetch() -> Optional[_ods_ir]
+
+
+   .. py:method:: desc_op() -> _ods_ir
+
+
+.. py:class:: InsertPrefetchOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.insert_prefetch'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: dynamic_nb_prefetch() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_nb_prefetch() -> Optional[_ods_ir]
+
+
+.. py:function:: xegpu_insert_prefetch(desc_op: _ods_ir, target: _ods_ir, *, dynamic_nb_prefetch: Optional[_ods_ir] = None, static_nb_prefetch: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SetAnchorLayoutOp(target: _ods_ir, sg_layout: Sequence[_ods_ir], sg_data: Sequence[_ods_ir], inst_data: Sequence[_ods_ir], *, index: Optional[Union[int, _ods_ir]] = None, static_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, order: Optional[Union[Sequence[int], _ods_ir]] = None, slice_dims: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Sets the ``xegpu.layout`` anchor layout for XeGPU ops that support it. The
+   target operand value can be set by the ``index`` argument (currently only
+   applicable to a DPAS op). The layout is defined by the ``sg_layout``,
+   ``sg_data`` and optional ``inst_data`` and ``order`` attributes. If ``slice_dims``
+   is provided, the ``xegpu.layout`` attribute is wrapped in an
+   ``xegpu.slice<..., dims=slice_dims>`` attribute. Emits a silenceable failure
+   if the target op does not support anchor layouts.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_anchor_layout'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: sg_layout() -> _ods_ir
+
+
+   .. py:method:: sg_data() -> _ods_ir
+
+
+   .. py:method:: inst_data() -> _ods_ir
+
+
+   .. py:method:: index() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: order() -> Optional[_ods_ir]
+
+
+   .. py:method:: slice_dims() -> Optional[_ods_ir]
+
+
+.. py:class:: SetAnchorLayoutOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_anchor_layout'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: sg_layout() -> _ods_ir
+
+
+   .. py:method:: sg_data() -> _ods_ir
+
+
+   .. py:method:: inst_data() -> _ods_ir
+
+
+   .. py:method:: index() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_sg_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: static_inst_data() -> Optional[_ods_ir]
+
+
+   .. py:method:: order() -> Optional[_ods_ir]
+
+
+   .. py:method:: slice_dims() -> Optional[_ods_ir]
+
+
+.. py:function:: xegpu_set_anchor_layout(target: _ods_ir, sg_layout: Sequence[_ods_ir], sg_data: Sequence[_ods_ir], inst_data: Sequence[_ods_ir], *, index: Optional[Union[int, _ods_ir]] = None, static_sg_layout: Optional[Union[Sequence[int], _ods_ir]] = None, static_sg_data: Optional[Union[Sequence[int], _ods_ir]] = None, static_inst_data: Optional[Union[Sequence[int], _ods_ir]] = None, order: Optional[Union[Sequence[int], _ods_ir]] = None, slice_dims: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> SetAnchorLayoutOp
+
+.. py:class:: SetGPULaunchThreadsOp(target: _ods_ir, threads: Sequence[_ods_ir], *, static_threads: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Overrides the x,y,z threads operands of a given ``gpu.launch`` operation in-place.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_gpu_launch_threads'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: threads() -> _ods_ir
+
+
+   .. py:method:: static_threads() -> Optional[_ods_ir]
+
+
+.. py:class:: SetGPULaunchThreadsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.xegpu.set_gpu_launch_threads'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: threads() -> _ods_ir
+
+
+   .. py:method:: static_threads() -> Optional[_ods_ir]
+
+
+.. py:function:: xegpu_set_gpu_launch_threads(target: _ods_ir, threads: Sequence[_ods_ir], *, static_threads: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> SetGPULaunchThreadsOp
+
+.. py:class:: GetLoadOp(target: Value, *, loc=None, ip=None)
+
+   Bases: :py:obj:`GetLoadOp`
+
+
+   
+   Specialization for GetLoadOp class.
+
+
+.. py:function:: get_load_op(target: Value, *, loc=None, ip=None) -> OpResult
+
+.. py:class:: SetAnchorLayoutOp(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, order: Optional[mlir.dialects._ods_common.MixedInt] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, index: Optional[Union[int, Attribute]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`SetAnchorLayoutOp`
+
+
+   
+   Specialization for SetAnchorLayoutOp class.
+
+
+.. py:function:: set_anchor_layout(target: Union[Operation, Value], sg_layout: mlir.dialects._ods_common.MixedValues, sg_data: mlir.dialects._ods_common.MixedValues, *, inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, order: Optional[mlir.dialects._ods_common.MixedInt] = None, slice_dims: Optional[mlir.dialects._ods_common.MixedInt] = None, index: Optional[Union[int, Attribute]] = None, loc=None, ip=None) -> SetAnchorLayoutOp
+
+.. py:class:: SetGPULaunchThreadsOp(launch_op: Union[Operation, Value], threads: mlir.dialects._ods_common.MixedValues, *, loc=None, ip=None)
+
+   Bases: :py:obj:`SetGPULaunchThreadsOp`
+
+
+   
+   Specialization for SetGPULaunchThreadsOp class.
+
+
+.. py:function:: set_gpu_launch_threads(launch_op: Union[Operation, Value], threads: mlir.dialects._ods_common.MixedValues, *, loc=None, ip=None) -> SetGPULaunchThreadsOp
+
+.. py:class:: InsertPrefetchOp(target: Union[Operation, Value], *, nb_prefetch: Optional[mlir.dialects._ods_common.MixedInt] = 1, loc=None, ip=None)
+
+   Bases: :py:obj:`InsertPrefetchOp`
+
+
+   
+   Specialization for InsertPrefetchOp class.
+
+
+.. py:function:: insert_prefetch(target: Union[Operation, Value], *, nb_prefetch: Optional[mlir.dialects._ods_common.MixedInt] = 1, loc=None, ip=None) -> OpResult
+
+.. py:class:: ConvertLayoutOp(target: Value, input_sg_layout: mlir.dialects._ods_common.MixedValues, input_sg_data: mlir.dialects._ods_common.MixedValues, target_sg_layout: mlir.dialects._ods_common.MixedValues, target_sg_data: mlir.dialects._ods_common.MixedValues, *, input_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, target_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, input_order: Optional[mlir.dialects._ods_common.MixedInt] = None, target_order: Optional[mlir.dialects._ods_common.MixedInt] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`ConvertLayoutOp`
+
+
+   
+   Specialization for ConvertLayoutOp class.
+
+
+.. py:function:: convert_layout(target: Value, input_sg_layout: mlir.dialects._ods_common.MixedValues, input_sg_data: mlir.dialects._ods_common.MixedValues, target_sg_layout: mlir.dialects._ods_common.MixedValues, target_sg_data: mlir.dialects._ods_common.MixedValues, *, input_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, target_inst_data: Optional[mlir.dialects._ods_common.MixedValues] = None, input_order: Optional[mlir.dialects._ods_common.MixedInt] = None, target_order: Optional[mlir.dialects._ods_common.MixedInt] = None, loc=None, ip=None) -> ConvertLayoutOp
+

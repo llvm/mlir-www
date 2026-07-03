@@ -1,0 +1,5938 @@
+mlir.dialects._tosa_ops_gen
+===========================
+
+.. py:module:: mlir.dialects._tosa_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._tosa_ops_gen._ods_ir
+   mlir.dialects._tosa_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._tosa_ops_gen._Dialect
+   mlir.dialects._tosa_ops_gen.AbsOp
+   mlir.dialects._tosa_ops_gen.AbsOpAdaptor
+   mlir.dialects._tosa_ops_gen.AddOp
+   mlir.dialects._tosa_ops_gen.AddOpAdaptor
+   mlir.dialects._tosa_ops_gen.AddShapeOp
+   mlir.dialects._tosa_ops_gen.AddShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.ApplyScaleOp
+   mlir.dialects._tosa_ops_gen.ApplyScaleOpAdaptor
+   mlir.dialects._tosa_ops_gen.ArgMaxOp
+   mlir.dialects._tosa_ops_gen.ArgMaxOpAdaptor
+   mlir.dialects._tosa_ops_gen.ArithmeticRightShiftOp
+   mlir.dialects._tosa_ops_gen.ArithmeticRightShiftOpAdaptor
+   mlir.dialects._tosa_ops_gen.AssertEqualShapeOp
+   mlir.dialects._tosa_ops_gen.AssertEqualShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.AvgPool2dAdaptiveOp
+   mlir.dialects._tosa_ops_gen.AvgPool2dAdaptiveOpAdaptor
+   mlir.dialects._tosa_ops_gen.AvgPool2dOp
+   mlir.dialects._tosa_ops_gen.AvgPool2dOpAdaptor
+   mlir.dialects._tosa_ops_gen.BitwiseAndOp
+   mlir.dialects._tosa_ops_gen.BitwiseAndOpAdaptor
+   mlir.dialects._tosa_ops_gen.BitwiseNotOp
+   mlir.dialects._tosa_ops_gen.BitwiseNotOpAdaptor
+   mlir.dialects._tosa_ops_gen.BitwiseOrOp
+   mlir.dialects._tosa_ops_gen.BitwiseOrOpAdaptor
+   mlir.dialects._tosa_ops_gen.BitwiseXorOp
+   mlir.dialects._tosa_ops_gen.BitwiseXorOpAdaptor
+   mlir.dialects._tosa_ops_gen.CastFromBlockScaledOp
+   mlir.dialects._tosa_ops_gen.CastFromBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.CastOp
+   mlir.dialects._tosa_ops_gen.CastOpAdaptor
+   mlir.dialects._tosa_ops_gen.CastToBlockScaledOp
+   mlir.dialects._tosa_ops_gen.CastToBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.CeilOp
+   mlir.dialects._tosa_ops_gen.CeilOpAdaptor
+   mlir.dialects._tosa_ops_gen.ClampOp
+   mlir.dialects._tosa_ops_gen.ClampOpAdaptor
+   mlir.dialects._tosa_ops_gen.ClzOp
+   mlir.dialects._tosa_ops_gen.ClzOpAdaptor
+   mlir.dialects._tosa_ops_gen.ConcatOp
+   mlir.dialects._tosa_ops_gen.ConcatOpAdaptor
+   mlir.dialects._tosa_ops_gen.ConcatShapeOp
+   mlir.dialects._tosa_ops_gen.ConcatShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.ConstOp
+   mlir.dialects._tosa_ops_gen.ConstOpAdaptor
+   mlir.dialects._tosa_ops_gen.ConstShapeOp
+   mlir.dialects._tosa_ops_gen.ConstShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.Conv2DBlockScaledOp
+   mlir.dialects._tosa_ops_gen.Conv2DBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.Conv2DOp
+   mlir.dialects._tosa_ops_gen.Conv2DOpAdaptor
+   mlir.dialects._tosa_ops_gen.Conv3DOp
+   mlir.dialects._tosa_ops_gen.Conv3DOpAdaptor
+   mlir.dialects._tosa_ops_gen.CosOp
+   mlir.dialects._tosa_ops_gen.CosOpAdaptor
+   mlir.dialects._tosa_ops_gen.CustomOp
+   mlir.dialects._tosa_ops_gen.CustomOpAdaptor
+   mlir.dialects._tosa_ops_gen.DepthwiseConv2DOp
+   mlir.dialects._tosa_ops_gen.DepthwiseConv2DOpAdaptor
+   mlir.dialects._tosa_ops_gen.DimOp
+   mlir.dialects._tosa_ops_gen.DimOpAdaptor
+   mlir.dialects._tosa_ops_gen.DivCeilShapeOp
+   mlir.dialects._tosa_ops_gen.DivCeilShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.DivFloorShapeOp
+   mlir.dialects._tosa_ops_gen.DivFloorShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.EqualOp
+   mlir.dialects._tosa_ops_gen.EqualOpAdaptor
+   mlir.dialects._tosa_ops_gen.ErfOp
+   mlir.dialects._tosa_ops_gen.ErfOpAdaptor
+   mlir.dialects._tosa_ops_gen.Exp2ShapeOp
+   mlir.dialects._tosa_ops_gen.Exp2ShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.ExpOp
+   mlir.dialects._tosa_ops_gen.ExpOpAdaptor
+   mlir.dialects._tosa_ops_gen.FFT2dOp
+   mlir.dialects._tosa_ops_gen.FFT2dOpAdaptor
+   mlir.dialects._tosa_ops_gen.FloorOp
+   mlir.dialects._tosa_ops_gen.FloorOpAdaptor
+   mlir.dialects._tosa_ops_gen.GatherOp
+   mlir.dialects._tosa_ops_gen.GatherOpAdaptor
+   mlir.dialects._tosa_ops_gen.GreaterEqualOp
+   mlir.dialects._tosa_ops_gen.GreaterEqualOpAdaptor
+   mlir.dialects._tosa_ops_gen.GreaterOp
+   mlir.dialects._tosa_ops_gen.GreaterOpAdaptor
+   mlir.dialects._tosa_ops_gen.IdentityOp
+   mlir.dialects._tosa_ops_gen.IdentityOpAdaptor
+   mlir.dialects._tosa_ops_gen.IfOp
+   mlir.dialects._tosa_ops_gen.IfOpAdaptor
+   mlir.dialects._tosa_ops_gen.IntDivOp
+   mlir.dialects._tosa_ops_gen.IntDivOpAdaptor
+   mlir.dialects._tosa_ops_gen.Log2CeilShapeOp
+   mlir.dialects._tosa_ops_gen.Log2CeilShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.Log2FloorShapeOp
+   mlir.dialects._tosa_ops_gen.Log2FloorShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogOp
+   mlir.dialects._tosa_ops_gen.LogOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalAndOp
+   mlir.dialects._tosa_ops_gen.LogicalAndOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalLeftShiftOp
+   mlir.dialects._tosa_ops_gen.LogicalLeftShiftOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalNotOp
+   mlir.dialects._tosa_ops_gen.LogicalNotOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalOrOp
+   mlir.dialects._tosa_ops_gen.LogicalOrOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalRightShiftOp
+   mlir.dialects._tosa_ops_gen.LogicalRightShiftOpAdaptor
+   mlir.dialects._tosa_ops_gen.LogicalXorOp
+   mlir.dialects._tosa_ops_gen.LogicalXorOpAdaptor
+   mlir.dialects._tosa_ops_gen.MatMulOp
+   mlir.dialects._tosa_ops_gen.MatMulOpAdaptor
+   mlir.dialects._tosa_ops_gen.MatMulTOp
+   mlir.dialects._tosa_ops_gen.MatMulTOpAdaptor
+   mlir.dialects._tosa_ops_gen.MatmulTBlockScaledOp
+   mlir.dialects._tosa_ops_gen.MatmulTBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.MaxPool2dAdaptiveOp
+   mlir.dialects._tosa_ops_gen.MaxPool2dAdaptiveOpAdaptor
+   mlir.dialects._tosa_ops_gen.MaxPool2dOp
+   mlir.dialects._tosa_ops_gen.MaxPool2dOpAdaptor
+   mlir.dialects._tosa_ops_gen.MaxShapeOp
+   mlir.dialects._tosa_ops_gen.MaxShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.MaximumOp
+   mlir.dialects._tosa_ops_gen.MaximumOpAdaptor
+   mlir.dialects._tosa_ops_gen.MinShapeOp
+   mlir.dialects._tosa_ops_gen.MinShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.MinimumOp
+   mlir.dialects._tosa_ops_gen.MinimumOpAdaptor
+   mlir.dialects._tosa_ops_gen.ModShapeOp
+   mlir.dialects._tosa_ops_gen.ModShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.MulOp
+   mlir.dialects._tosa_ops_gen.MulOpAdaptor
+   mlir.dialects._tosa_ops_gen.MulShapeOp
+   mlir.dialects._tosa_ops_gen.MulShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.NegateOp
+   mlir.dialects._tosa_ops_gen.NegateOpAdaptor
+   mlir.dialects._tosa_ops_gen.PadOp
+   mlir.dialects._tosa_ops_gen.PadOpAdaptor
+   mlir.dialects._tosa_ops_gen.PowOp
+   mlir.dialects._tosa_ops_gen.PowOpAdaptor
+   mlir.dialects._tosa_ops_gen.RFFT2dOp
+   mlir.dialects._tosa_ops_gen.RFFT2dOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReciprocalOp
+   mlir.dialects._tosa_ops_gen.ReciprocalOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceAllOp
+   mlir.dialects._tosa_ops_gen.ReduceAllOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceAnyOp
+   mlir.dialects._tosa_ops_gen.ReduceAnyOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceMaxOp
+   mlir.dialects._tosa_ops_gen.ReduceMaxOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceMinOp
+   mlir.dialects._tosa_ops_gen.ReduceMinOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceProductOp
+   mlir.dialects._tosa_ops_gen.ReduceProductOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReduceSumOp
+   mlir.dialects._tosa_ops_gen.ReduceSumOpAdaptor
+   mlir.dialects._tosa_ops_gen.RescaleOp
+   mlir.dialects._tosa_ops_gen.RescaleOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReshapeBlockScaledOp
+   mlir.dialects._tosa_ops_gen.ReshapeBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReshapeOp
+   mlir.dialects._tosa_ops_gen.ReshapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.ResizeOp
+   mlir.dialects._tosa_ops_gen.ResizeOpAdaptor
+   mlir.dialects._tosa_ops_gen.ReverseOp
+   mlir.dialects._tosa_ops_gen.ReverseOpAdaptor
+   mlir.dialects._tosa_ops_gen.RowGatherBlockScaledOp
+   mlir.dialects._tosa_ops_gen.RowGatherBlockScaledOpAdaptor
+   mlir.dialects._tosa_ops_gen.RowGatherOp
+   mlir.dialects._tosa_ops_gen.RowGatherOpAdaptor
+   mlir.dialects._tosa_ops_gen.RsqrtOp
+   mlir.dialects._tosa_ops_gen.RsqrtOpAdaptor
+   mlir.dialects._tosa_ops_gen.ScatterOp
+   mlir.dialects._tosa_ops_gen.ScatterOpAdaptor
+   mlir.dialects._tosa_ops_gen.SelectOp
+   mlir.dialects._tosa_ops_gen.SelectOpAdaptor
+   mlir.dialects._tosa_ops_gen.SigmoidOp
+   mlir.dialects._tosa_ops_gen.SigmoidOpAdaptor
+   mlir.dialects._tosa_ops_gen.SinOp
+   mlir.dialects._tosa_ops_gen.SinOpAdaptor
+   mlir.dialects._tosa_ops_gen.SliceOp
+   mlir.dialects._tosa_ops_gen.SliceOpAdaptor
+   mlir.dialects._tosa_ops_gen.SliceShapeOp
+   mlir.dialects._tosa_ops_gen.SliceShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.SubOp
+   mlir.dialects._tosa_ops_gen.SubOpAdaptor
+   mlir.dialects._tosa_ops_gen.SubShapeOp
+   mlir.dialects._tosa_ops_gen.SubShapeOpAdaptor
+   mlir.dialects._tosa_ops_gen.TableOp
+   mlir.dialects._tosa_ops_gen.TableOpAdaptor
+   mlir.dialects._tosa_ops_gen.TanhOp
+   mlir.dialects._tosa_ops_gen.TanhOpAdaptor
+   mlir.dialects._tosa_ops_gen.TileOp
+   mlir.dialects._tosa_ops_gen.TileOpAdaptor
+   mlir.dialects._tosa_ops_gen.TransposeConv2DOp
+   mlir.dialects._tosa_ops_gen.TransposeConv2DOpAdaptor
+   mlir.dialects._tosa_ops_gen.TransposeOp
+   mlir.dialects._tosa_ops_gen.TransposeOpAdaptor
+   mlir.dialects._tosa_ops_gen.VariableOp
+   mlir.dialects._tosa_ops_gen.VariableOpAdaptor
+   mlir.dialects._tosa_ops_gen.VariableReadOp
+   mlir.dialects._tosa_ops_gen.VariableReadOpAdaptor
+   mlir.dialects._tosa_ops_gen.VariableWriteOp
+   mlir.dialects._tosa_ops_gen.VariableWriteOpAdaptor
+   mlir.dialects._tosa_ops_gen.WhileOp
+   mlir.dialects._tosa_ops_gen.WhileOpAdaptor
+   mlir.dialects._tosa_ops_gen.YieldOp
+   mlir.dialects._tosa_ops_gen.YieldOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._tosa_ops_gen.abs
+   mlir.dialects._tosa_ops_gen.add
+   mlir.dialects._tosa_ops_gen.add_shape
+   mlir.dialects._tosa_ops_gen.apply_scale
+   mlir.dialects._tosa_ops_gen.argmax
+   mlir.dialects._tosa_ops_gen.arithmetic_right_shift
+   mlir.dialects._tosa_ops_gen.assert_equal_shape
+   mlir.dialects._tosa_ops_gen.avg_pool2d_adaptive
+   mlir.dialects._tosa_ops_gen.avg_pool2d
+   mlir.dialects._tosa_ops_gen.bitwise_and
+   mlir.dialects._tosa_ops_gen.bitwise_not
+   mlir.dialects._tosa_ops_gen.bitwise_or
+   mlir.dialects._tosa_ops_gen.bitwise_xor
+   mlir.dialects._tosa_ops_gen.cast_from_block_scaled
+   mlir.dialects._tosa_ops_gen.cast
+   mlir.dialects._tosa_ops_gen.cast_to_block_scaled
+   mlir.dialects._tosa_ops_gen.ceil
+   mlir.dialects._tosa_ops_gen.clamp
+   mlir.dialects._tosa_ops_gen.clz
+   mlir.dialects._tosa_ops_gen.concat
+   mlir.dialects._tosa_ops_gen.concat_shape
+   mlir.dialects._tosa_ops_gen.const
+   mlir.dialects._tosa_ops_gen.const_shape
+   mlir.dialects._tosa_ops_gen.conv2d_block_scaled
+   mlir.dialects._tosa_ops_gen.conv2d
+   mlir.dialects._tosa_ops_gen.conv3d
+   mlir.dialects._tosa_ops_gen.cos
+   mlir.dialects._tosa_ops_gen.custom
+   mlir.dialects._tosa_ops_gen.depthwise_conv2d
+   mlir.dialects._tosa_ops_gen.dim
+   mlir.dialects._tosa_ops_gen.div_ceil_shape
+   mlir.dialects._tosa_ops_gen.div_floor_shape
+   mlir.dialects._tosa_ops_gen.equal
+   mlir.dialects._tosa_ops_gen.erf
+   mlir.dialects._tosa_ops_gen.exp2_shape
+   mlir.dialects._tosa_ops_gen.exp
+   mlir.dialects._tosa_ops_gen.fft2d
+   mlir.dialects._tosa_ops_gen.floor
+   mlir.dialects._tosa_ops_gen.gather
+   mlir.dialects._tosa_ops_gen.greater_equal
+   mlir.dialects._tosa_ops_gen.greater
+   mlir.dialects._tosa_ops_gen.identity
+   mlir.dialects._tosa_ops_gen.cond_if
+   mlir.dialects._tosa_ops_gen.intdiv
+   mlir.dialects._tosa_ops_gen.log2_ceil_shape
+   mlir.dialects._tosa_ops_gen.log2_floor_shape
+   mlir.dialects._tosa_ops_gen.log
+   mlir.dialects._tosa_ops_gen.logical_and
+   mlir.dialects._tosa_ops_gen.logical_left_shift
+   mlir.dialects._tosa_ops_gen.logical_not
+   mlir.dialects._tosa_ops_gen.logical_or
+   mlir.dialects._tosa_ops_gen.logical_right_shift
+   mlir.dialects._tosa_ops_gen.logical_xor
+   mlir.dialects._tosa_ops_gen.matmul
+   mlir.dialects._tosa_ops_gen.matmul_t
+   mlir.dialects._tosa_ops_gen.matmul_t_block_scaled
+   mlir.dialects._tosa_ops_gen.max_pool2d_adaptive
+   mlir.dialects._tosa_ops_gen.max_pool2d
+   mlir.dialects._tosa_ops_gen.max_shape
+   mlir.dialects._tosa_ops_gen.maximum
+   mlir.dialects._tosa_ops_gen.min_shape
+   mlir.dialects._tosa_ops_gen.minimum
+   mlir.dialects._tosa_ops_gen.mod_shape
+   mlir.dialects._tosa_ops_gen.mul
+   mlir.dialects._tosa_ops_gen.mul_shape
+   mlir.dialects._tosa_ops_gen.negate
+   mlir.dialects._tosa_ops_gen.pad
+   mlir.dialects._tosa_ops_gen.pow
+   mlir.dialects._tosa_ops_gen.rfft2d
+   mlir.dialects._tosa_ops_gen.reciprocal
+   mlir.dialects._tosa_ops_gen.reduce_all
+   mlir.dialects._tosa_ops_gen.reduce_any
+   mlir.dialects._tosa_ops_gen.reduce_max
+   mlir.dialects._tosa_ops_gen.reduce_min
+   mlir.dialects._tosa_ops_gen.reduce_product
+   mlir.dialects._tosa_ops_gen.reduce_sum
+   mlir.dialects._tosa_ops_gen.rescale
+   mlir.dialects._tosa_ops_gen.reshape_block_scaled
+   mlir.dialects._tosa_ops_gen.reshape
+   mlir.dialects._tosa_ops_gen.resize
+   mlir.dialects._tosa_ops_gen.reverse
+   mlir.dialects._tosa_ops_gen.row_gather_block_scaled
+   mlir.dialects._tosa_ops_gen.row_gather
+   mlir.dialects._tosa_ops_gen.rsqrt
+   mlir.dialects._tosa_ops_gen.scatter
+   mlir.dialects._tosa_ops_gen.select
+   mlir.dialects._tosa_ops_gen.sigmoid
+   mlir.dialects._tosa_ops_gen.sin
+   mlir.dialects._tosa_ops_gen.slice
+   mlir.dialects._tosa_ops_gen.slice_shape
+   mlir.dialects._tosa_ops_gen.sub
+   mlir.dialects._tosa_ops_gen.sub_shape
+   mlir.dialects._tosa_ops_gen.table
+   mlir.dialects._tosa_ops_gen.tanh
+   mlir.dialects._tosa_ops_gen.tile
+   mlir.dialects._tosa_ops_gen.transpose_conv2d
+   mlir.dialects._tosa_ops_gen.transpose
+   mlir.dialects._tosa_ops_gen.variable
+   mlir.dialects._tosa_ops_gen.variable_read
+   mlir.dialects._tosa_ops_gen.variable_write
+   mlir.dialects._tosa_ops_gen.while_loop
+   mlir.dialects._tosa_ops_gen.yield_
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: _Dialect
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'tosa'
+
+
+
+.. py:class:: AbsOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise absolute value operation.
+
+   This operation is not pure. Undefined behaviour may occur if the
+   calculated result underflows.
+
+   Example:
+
+   .. code:: mlir
+
+       %output = tosa.abs(%input1) : (tensor<21x3xf32>) -> tensor<21x3xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.abs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: AbsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.abs'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: abs(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: AddOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise addition of input1 and input2. Axis of size 1 will be broadcast,
+   as necessary. Rank of input tensors must match.
+
+   This operation is not pure. Undefined behaviour may occur if the calculated
+   result overflows.
+
+   Example:
+
+   .. code:: mlir
+
+       // Elementwise addition.
+       %out = tosa.add %input1, %input2 : tensor<12x6xf32>, tensor<12x6xf32> -> tensor<12x6xf32>
+       
+       // Elementwise addition with broadcasting.
+       %out = tosa.add %input1, %input2 : tensor<12x6xsi32>, tensor<1x1xsi32> -> tensor<12x6xsi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: AddOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.add'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: add(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: AddShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise addition of input1 and input2. Size of shapes must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.add_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: AddShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.add_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: add_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ApplyScaleOp(output: _ods_ir, value: _ods_ir, multiplier: _ods_ir, shift: _ods_ir, rounding_mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Applies rescaling for fixed point values. This behavior is replicated in
+   multiple quantized operations (mul, convolution, rescale, matmul, pooling).
+
+   The commonplace implementation is to use i64 operations to avoid integer
+   overflow with target specific implementations can use native operations to
+   avoid wider than necessary types.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.apply_scale'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: multiplier() -> _ods_ir
+
+
+   .. py:method:: shift() -> _ods_ir
+
+
+   .. py:method:: rounding_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ApplyScaleOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.apply_scale'
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: multiplier() -> _ods_ir
+
+
+   .. py:method:: shift() -> _ods_ir
+
+
+   .. py:method:: rounding_mode() -> _ods_ir
+
+
+.. py:function:: apply_scale(output: _ods_ir, value: _ods_ir, multiplier: _ods_ir, shift: _ods_ir, rounding_mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ArgMaxOp(output: _ods_ir, input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This returns the index with the largest value across the given axis of the
+   input tensor. If multiple locations have equal values, returns the first
+   match along the search axis.
+
+   This operation is not pure. Undefined behaviour may occur if the max index
+   is out of bounds for the output data type.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.argmax'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ArgMaxOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.argmax'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: argmax(output: _ods_ir, input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ArithmeticRightShiftOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, round: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise arithmetic right shift of input1 by the amount specified in
+   input2. Axis of size 1 will be broadcast, as necessary. Rank of input tensors
+   must match.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   shift is out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.arithmetic_right_shift'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: round() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ArithmeticRightShiftOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.arithmetic_right_shift'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: round() -> _ods_ir
+
+
+.. py:function:: arithmetic_right_shift(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, round: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: AssertEqualShapeOp(input1: _ods_ir, input2: _ods_ir, allow_broadcast: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Verify input1 and input2 are equal. If allow_broadcast is set, shapes which
+   are broadcast compatible are allowed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.assert_equal_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: allow_broadcast() -> _ods_ir
+
+
+.. py:class:: AssertEqualShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.assert_equal_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: allow_broadcast() -> _ods_ir
+
+
+.. py:function:: assert_equal_shape(input1: _ods_ir, input2: _ods_ir, allow_broadcast: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> AssertEqualShapeOp
+
+.. py:class:: AvgPool2dAdaptiveOp(output: _ods_ir, input: _ods_ir, input_zp: _ods_ir, output_zp: _ods_ir, kernel: _ods_ir, stride: _ods_ir, pad: _ods_ir, acc_type: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This performs an average pooling over the given input tensor. A sliding
+   window of size given by  is passed over the input tensor, with
+   the mean value being placed in the output tensor. When calculating the
+   average, only the number of valid input tensor values, but not padding, are
+   used to calculate the divisor. Compared to avg_pool2d, the kernel/stride/
+   pad values are provided as inputs.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.avg_pool2d_adaptive'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: AvgPool2dAdaptiveOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.avg_pool2d_adaptive'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+.. py:function:: avg_pool2d_adaptive(output: _ods_ir, input: _ods_ir, input_zp: _ods_ir, output_zp: _ods_ir, kernel: _ods_ir, stride: _ods_ir, pad: _ods_ir, acc_type: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: AvgPool2dOp(output: _ods_ir, input: _ods_ir, input_zp: _ods_ir, output_zp: _ods_ir, kernel: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], pad: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This performs an average pooling over the given input tensor. A sliding
+   window of size given by  is passed over the input tensor, with
+   the mean value being placed in the output tensor. When calculating the
+   average, only the number of valid input tensor values, but not padding, are
+   used to calculate the divisor.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.avg_pool2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: AvgPool2dOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.avg_pool2d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+.. py:function:: avg_pool2d(output: _ods_ir, input: _ods_ir, input_zp: _ods_ir, output_zp: _ods_ir, kernel: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], pad: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: BitwiseAndOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise bitwise AND of input1 and input2. Axis of size 1
+   will be broadcast as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_and'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: BitwiseAndOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_and'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: bitwise_and(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: BitwiseNotOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise bitwise NOT of input tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_not'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: BitwiseNotOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_not'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: bitwise_not(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: BitwiseOrOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise bitwise OR of input1 and input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_or'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: BitwiseOrOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_or'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: bitwise_or(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: BitwiseXorOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise bitwise XOR of input1 and input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_xor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: BitwiseXorOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.bitwise_xor'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: bitwise_xor(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CastFromBlockScaledOp(output_data: _ods_ir, input_data: _ods_ir, input_scale: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply the scales from a scale tensor to the values in a value tensor, casting
+   the result to the output type. The block dimension must be the last dimension
+   of the tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast_from_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: input_scale() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output_data() -> _ods_ir
+
+
+.. py:class:: CastFromBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast_from_block_scaled'
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: input_scale() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: cast_from_block_scaled(output_data: _ods_ir, input_data: _ods_ir, input_scale: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CastOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Casts a tensor from one data type to another.
+
+   * This table is showing the supported conversions from the TOSA Specification.
+   * The MLIR dialect here can be used to represent other conversions.
+
+   | Mode                     | Input   | Output  |
+   |--------------------------|---------|---------|
+   | fp16 to fp32             | float16 | float32 |
+   | fp16 to int 16           | float16 | int16   |
+   | fp16 to int 32           | float16 | int32   |
+   | fp16 to int 8            | float16 | int8    |
+   | fp32 to fp16             | float32 | float16 |
+   | fp32 to int 16           | float32 | int16   |
+   | fp32 to int 32           | float32 | int32   |
+   | fp32 to int 8            | float32 | int8    |
+   | int 16 to fp16           | int16   | float16 |
+   | int 16 to fp32           | int16   | float32 |
+   | int 32 to fp16           | int32   | float16 |
+   | int 32 to fp32           | int32   | float32 |
+   | int 8 to fp16            | int8    | float16 |
+   | int 8 to fp32            | int8    | float32 |
+   | bool to int 16           | Boolean | int16   |
+   | bool to int 32           | Boolean | int32   |
+   | bool to int 8            | Boolean | int8    |
+   | int 16 to bool           | int16   | Boolean |
+   | int 16 to int 32         | int16   | int32   |
+   | int 16 to int 8          | int16   | int8    |
+   | int 32 to bool           | int32   | Boolean |
+   | int 32 to int 16         | int32   | int16   |
+   | int 32 to int 8          | int32   | int8    |
+   | int 8 to bool            | int8    | Boolean |
+   | int 8 to int 16          | int8    | int16   |
+   | int 8 to int 32          | int8    | int32   |
+   | bf16 to fp32             | bf16    | float32 |
+   | bf16 to int 16           | bf16    | int16   |
+   | bf16 to int 32           | bf16    | int32   |
+   | bf16 to int 8            | bf16    | int8    |
+   | fp32 to bf16             | float32 | bf16    |
+   | int 16 to bf16           | int16   | bf16    |
+   | int 32 to bf16           | int32   | bf16    |
+   | int 8 to bf16            | int8    | bf16    |
+   | bf16 to fp8e4m3          | bf16    | fp8e4m3 |
+   | fp8e4m3 to bf16          | fp8e4m3 | bf16    |
+   | bf16 to fp8e5m2          | bf16    | fp8e5m2 |
+   | fp8e5m2 to bf16          | fp8e5m2 | bf16    |
+   | fp16 to fp8e4m3          | float16 | fp8e4m3 |
+   | fp32 to fp8e4m3          | float32 | fp8e4m3 |
+   | fp8e4m3 to fp16          | fp8e4m3 | float16 |
+   | fp8e4m3 to fp32          | fp8e4m3 | float32 |
+   | fp16 to fp8e5m2          | float16 | fp8e5m2 |
+   | fp32 to fp8e5m2          | float32 | fp8e5m2 |
+   | fp8e5m2 to fp16          | fp8e5m2 | float16 |
+   | fp8e5m2 to fp32          | fp8e5m2 | float32 |
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: CastOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: cast(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CastToBlockScaledOp(output_data: _ods_ir, output_scale: _ods_ir, input_data: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Calculate a scale value per block of input values and use that to calculate
+   scaled data values from an input tensor. The output tensors are cast to the
+   specified scale and value types. The block dimension will be the last dimension
+   of the tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast_to_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output_data() -> _ods_ir
+
+
+   .. py:method:: output_scale() -> _ods_ir
+
+
+.. py:class:: CastToBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cast_to_block_scaled'
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: cast_to_block_scaled(output_data: _ods_ir, output_scale: _ods_ir, input_data: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CeilOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise ceiling operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.ceil'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: CeilOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.ceil'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: ceil(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ClampOp(output: _ods_ir, input: _ods_ir, min_val: Union[Any, _ods_ir], max_val: Union[Any, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Clamp to an arbitrary minimum and maximum value.
+   Maximum and minimum values are specified as values in the range of the
+   input type.
+   No zero point subtraction is done to the values, thus to clamp to the zero
+   point value, the zero point itself should be supplied as the minimum value.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.clamp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: min_val() -> _ods_ir
+
+
+   .. py:method:: max_val() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ClampOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.clamp'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: min_val() -> _ods_ir
+
+
+   .. py:method:: max_val() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: clamp(output: _ods_ir, input: _ods_ir, min_val: Union[Any, _ods_ir], max_val: Union[Any, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ClzOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise count leading zeros operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.clz'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ClzOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.clz'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: clz(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ConcatOp(input1: Sequence[_ods_ir], axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Concatenate a list of tensors along a given axis.
+   No data conversion happens during a concat operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.concat'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ConcatOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.concat'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: concat(input1: Sequence[_ods_ir], axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ConcatShapeOp(output: _ods_ir, input: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Concatenates a list of shapes into a new shape with length equal to the sum
+   of the lengths of the inputs.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.concat_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ConcatShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.concat_shape'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: concat_shape(output: _ods_ir, input: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ConstOp(values: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A node containing constant data for use as the input to an operation. May
+   hold data in any of the supported data formats.
+
+   Example:
+
+   .. code:: mlir
+
+       // Generic form
+       %out = "tosa.const"() {values = dense<0> : tensor<2x3xi32>} : () -> tensor<2x3xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.const'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ConstOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.const'
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+.. py:function:: const(values: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ConstShapeOp(output: _ods_ir, values: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   A node containing a constant shape.
+
+   Example:
+
+   .. code:: mlir
+
+       // Generic form
+       %out = "tosa.const_shape"() {values = dense<0> : tensor<4xindex>} : () -> !tosa.shape<4>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.const_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ConstShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.const_shape'
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+.. py:function:: const_shape(output: _ods_ir, values: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Conv2DBlockScaledOp(output: _ods_ir, input_data: _ods_ir, input_scale: _ods_ir, weight_data: _ods_ir, weight_scale: _ods_ir, bias: _ods_ir, pad: _ods_ir, stride: _ods_ir, dilation: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a 2D convolution over the given input data and scales, using
+   the weight data and scales. Implementations may choose to skip calculation
+   of multiplies in the padding area.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv2d_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: input_scale() -> _ods_ir
+
+
+   .. py:method:: weight_data() -> _ods_ir
+
+
+   .. py:method:: weight_scale() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Conv2DBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv2d_block_scaled'
+
+
+
+   .. py:method:: input_data() -> _ods_ir
+
+
+   .. py:method:: input_scale() -> _ods_ir
+
+
+   .. py:method:: weight_data() -> _ods_ir
+
+
+   .. py:method:: weight_scale() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: conv2d_block_scaled(output: _ods_ir, input_data: _ods_ir, input_scale: _ods_ir, weight_data: _ods_ir, weight_scale: _ods_ir, bias: _ods_ir, pad: _ods_ir, stride: _ods_ir, dilation: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Conv2DOp(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a 2D convolution over the given tensor input, using the weight
+   tensor. Implementations may choose to skip calculation of multiplies in
+   the padding area.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Conv2DOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv2d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: conv2d(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Conv3DOp(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a 3D convolution over the given input tensor. Implementations
+   may choose to skip calculation of multiplies in the padding area.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv3d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Conv3DOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.conv3d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: conv3d(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CosOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise cosine operation for values given in radians.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: CosOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cos'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: cos(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CustomOp(output_list: Sequence[_ods_ir], operator_name: Union[str, _ods_ir], domain_name: Union[str, _ods_ir], implementation_attrs: Union[str, _ods_ir], input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Hardware implementing TOSA may choose to add additional custom operators
+   that are not expressed in the existing TOSA operations. These operators are
+   not expected to be portable across TOSA implementations. The input and
+   output signatures must be expressed in the corresponding TOSA node.
+
+   ``operator_name`` is a string that tells the backend which custom operator is
+   being called.
+
+   ``domain_name`` is a string identifier which can help avoid name collisions on
+   the identifier field.
+
+   ``implementation_attrs`` is a string which is a backend and identifier specific
+   set of attributes to the custom operator.
+
+   ``input_list`` is the set of tensor inputs to the custom operator.
+
+   ``output_list`` is the list of tensors returned by the operator. The number of operators
+   is backend specific.
+
+   Example:
+
+   .. code:: mlir
+
+       %out = tosa.custom %in {domain_name = "tosa_mlir_test", operator_name =
+              "custom_test", implementation_attrs = ""}: (tensor<10xi32>) ->
+              (tensor<10xi32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.custom'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+   .. py:method:: operator_name() -> _ods_ir
+
+
+   .. py:method:: domain_name() -> _ods_ir
+
+
+   .. py:method:: implementation_attrs() -> _ods_ir
+
+
+   .. py:method:: output_list() -> _ods_ir
+
+
+.. py:class:: CustomOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.custom'
+
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+   .. py:method:: operator_name() -> _ods_ir
+
+
+   .. py:method:: domain_name() -> _ods_ir
+
+
+   .. py:method:: implementation_attrs() -> _ods_ir
+
+
+.. py:function:: custom(output_list: Sequence[_ods_ir], operator_name: Union[str, _ods_ir], domain_name: Union[str, _ods_ir], implementation_attrs: Union[str, _ods_ir], input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, CustomOp]
+
+.. py:class:: DepthwiseConv2DOp(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs 2D convolutions separately over each channel of the given tensor
+   input, using the weight tensor. Implementations may choose to skip
+   calculation of multiplies in the padding area.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.depthwise_conv2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: DepthwiseConv2DOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.depthwise_conv2d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: dilation() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: depthwise_conv2d(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], dilation: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: DimOp(output: _ods_ir, input1: _ods_ir, axis: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Returns a length 1 shape_t of the size of the input tensor for the given axis.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.dim'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: DimOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.dim'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: dim(output: _ods_ir, input1: _ods_ir, axis: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: DivCeilShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise divide of input1 by input2. The result of the divide is rounded up.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.div_ceil_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: DivCeilShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.div_ceil_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: div_ceil_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: DivFloorShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise integer divide of input1 by input2. The result of the divide is rounded down.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.div_floor_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: DivFloorShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.div_floor_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: div_floor_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: EqualOp(input1: _ods_ir, input2: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise comparison operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.equal'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: EqualOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.equal'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: equal(input1: _ods_ir, input2: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ErfOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Gauss error function: $ erf(x) = \frac{2}{\sqrt{\pi}} \int_{0}^{x} e^{-t^2} dt $
+   For quantized integer data types, the TABLE operator should be used instead
+   with the following definition. The ERF table has 513 entries each of
+   16-bit precision and covering the input range -4.0 to +4.0 in steps of 1/64.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.erf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ErfOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.erf'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: erf(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Exp2ShapeOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computation of raising two to the power of each element in input.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.exp2_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Exp2ShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.exp2_shape'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: exp2_shape(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ExpOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise e to the x operation
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.exp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ExpOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.exp'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: exp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: FFT2dOp(output_real: _ods_ir, output_imag: _ods_ir, input_real: _ods_ir, input_imag: _ods_ir, inverse: Union[bool, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a batched complex 2D Fast Fourier Transform over the input. The
+   complex input values are constructed from the corresponding values in the
+   input_real and input_imag tensors. The resulting values in the output are
+   split into the output_real and output_imag tensors. No normalization is
+   applied on either the forward or inverse versions of the operation.
+
+   Example:
+
+   .. code:: mlir
+
+        %output_real, %output_imag = tosa.fft2d %input_real, %input_imag : (tensor<8x9xf32>, tensor<8x9xf32>) -> (tensor<8x9xf32>, tensor<8x9xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.fft2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_real() -> _ods_ir
+
+
+   .. py:method:: input_imag() -> _ods_ir
+
+
+   .. py:method:: inverse() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output_real() -> _ods_ir
+
+
+   .. py:method:: output_imag() -> _ods_ir
+
+
+.. py:class:: FFT2dOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.fft2d'
+
+
+
+   .. py:method:: input_real() -> _ods_ir
+
+
+   .. py:method:: input_imag() -> _ods_ir
+
+
+   .. py:method:: inverse() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: fft2d(output_real: _ods_ir, output_imag: _ods_ir, input_real: _ods_ir, input_imag: _ods_ir, inverse: Union[bool, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: FloorOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise floor operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.floor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: FloorOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.floor'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: floor(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: GatherOp(output: _ods_ir, values: _ods_ir, indices: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Generate a tensor for which each element in the output is a subtensor of the
+   values tensor based on the indices. N is the number of batches, W the number
+   of indices in each batch, K the range of each index and C the number data
+   channels for each index.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   indices are out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.gather'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: GatherOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.gather'
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+.. py:function:: gather(output: _ods_ir, values: _ods_ir, indices: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: GreaterEqualOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise comparison operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.greater_equal'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: GreaterEqualOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.greater_equal'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: greater_equal(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: GreaterOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise greater than comparison operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.greater'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: GreaterOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.greater'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: greater(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: IdentityOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Returns a tensor with the same shape, type, and contents as the input.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.identity'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: IdentityOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.identity'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: identity(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: IfOp(output_list: Sequence[_ods_ir], condition: _ods_ir, input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Evaluates a Boolean condition and then takes one of two distinct execution
+   paths. This implements the semantic If-then-else structure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cond_if'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (2, True)
+
+
+
+   .. py:method:: condition() -> _ods_ir
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+   .. py:method:: output_list() -> _ods_ir
+
+
+   .. py:method:: then_graph() -> _ods_ir
+
+
+   .. py:method:: else_graph() -> _ods_ir
+
+
+.. py:class:: IfOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.cond_if'
+
+
+
+   .. py:method:: condition() -> _ods_ir
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+.. py:function:: cond_if(output_list: Sequence[_ods_ir], condition: _ods_ir, input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, IfOp]
+
+.. py:class:: IntDivOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise integer divide of input1 by input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match. The result of the
+   divide is truncated towards zero. Expected use is for operations on
+   non-scaled integers. Floating point divide should use RECIPROCAL and MUL.
+   Quantized integer divide should use TABLE (for 1/x) and MUL.
+
+   This operation is not pure. Undefined behaviour may occur on division by zero.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.intdiv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: IntDivOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.intdiv'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: intdiv(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Log2CeilShapeOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computation of the base two logarithm of each element in input. Result is rounded up.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log2_ceil_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Log2CeilShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log2_ceil_shape'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: log2_ceil_shape(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Log2FloorShapeOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computation of the base two logarithm of each element in input. Result is rounded down.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log2_floor_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: Log2FloorShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log2_floor_shape'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: log2_floor_shape(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise natural logarithm operation
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.log'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: log(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalAndOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical AND of input1 and input2. Axis of size 1 will be
+   broadcast, as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_and'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalAndOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_and'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: logical_and(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalLeftShiftOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical left-shift of input1 by the amount specified in input2.
+   Axis of size 1 will be broadcast, as necessary.
+   Rank of input tensors must match.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   shift is out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_left_shift'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalLeftShiftOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_left_shift'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: logical_left_shift(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalNotOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical NOT of input.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_not'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalNotOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_not'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: logical_not(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalOrOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical OR of input1 and input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_or'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalOrOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_or'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: logical_or(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalRightShiftOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical right shift of input1 by the amount specified in input2.
+   Axis of size 1 will be broadcast, as necessary. Rank of input tensors must
+   match.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   shift is out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_right_shift'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalRightShiftOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_right_shift'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: logical_right_shift(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LogicalXorOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise logical XOR of input1 and input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_xor'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: LogicalXorOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.logical_xor'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: logical_xor(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MatMulOp(output: _ods_ir, a: _ods_ir, b: _ods_ir, a_zp: _ods_ir, b_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs two dimensional matrix multiplications.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir
+
+
+   .. py:method:: b() -> _ods_ir
+
+
+   .. py:method:: a_zp() -> _ods_ir
+
+
+   .. py:method:: b_zp() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MatMulOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul'
+
+
+
+   .. py:method:: a() -> _ods_ir
+
+
+   .. py:method:: b() -> _ods_ir
+
+
+   .. py:method:: a_zp() -> _ods_ir
+
+
+   .. py:method:: b_zp() -> _ods_ir
+
+
+.. py:function:: matmul(output: _ods_ir, a: _ods_ir, b: _ods_ir, a_zp: _ods_ir, b_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MatMulTOp(output: _ods_ir, a: _ods_ir, b: _ods_ir, a_zp: _ods_ir, b_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs two dimensional matrix multiplications. ``A`` matrix is of shape
+   ``N x H x C``. ``B`` matrix is of shape ``D x W x C``. This is effectively a
+   matrix multiply of ``A`` by the transposed ``B`` matrix. If the batched
+   dimension of input ``B`` is of size 1, the ``B`` matrix is broadcast.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul_t'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir
+
+
+   .. py:method:: b() -> _ods_ir
+
+
+   .. py:method:: a_zp() -> _ods_ir
+
+
+   .. py:method:: b_zp() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MatMulTOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul_t'
+
+
+
+   .. py:method:: a() -> _ods_ir
+
+
+   .. py:method:: b() -> _ods_ir
+
+
+   .. py:method:: a_zp() -> _ods_ir
+
+
+   .. py:method:: b_zp() -> _ods_ir
+
+
+.. py:function:: matmul_t(output: _ods_ir, a: _ods_ir, b: _ods_ir, a_zp: _ods_ir, b_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MatmulTBlockScaledOp(output_data: _ods_ir, a_data: _ods_ir, a_scale: _ods_ir, b_data: _ods_ir, b_scale: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs two dimensional matrix multiplications using block scaled tensors. The block
+   dimension is always the the last dimension of the tensor, so the result is effectively
+   a matrix multiply of A by the transposed B matrix. If the N dimension of input B is of
+   size 1, the B matrix will be broadcast.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul_t_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a_data() -> _ods_ir
+
+
+   .. py:method:: a_scale() -> _ods_ir
+
+
+   .. py:method:: b_data() -> _ods_ir
+
+
+   .. py:method:: b_scale() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output_data() -> _ods_ir
+
+
+.. py:class:: MatmulTBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.matmul_t_block_scaled'
+
+
+
+   .. py:method:: a_data() -> _ods_ir
+
+
+   .. py:method:: a_scale() -> _ods_ir
+
+
+   .. py:method:: b_data() -> _ods_ir
+
+
+   .. py:method:: b_scale() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: matmul_t_block_scaled(output_data: _ods_ir, a_data: _ods_ir, a_scale: _ods_ir, b_data: _ods_ir, b_scale: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MaxPool2dAdaptiveOp(output: _ods_ir, input: _ods_ir, kernel: _ods_ir, stride: _ods_ir, pad: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This performs a max pooling over the given input tensor. A sliding window of
+   size given by  is passed over the input tensor, with the
+   maximum value being placed in the output tensor.
+   Compared to MAX_POOL2D, MAX_POOL2D_ADAPTIVE has the kernel, stride,
+   pad arguments as inputs rather than attributes.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_pool2d_adaptive'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MaxPool2dAdaptiveOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_pool2d_adaptive'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: max_pool2d_adaptive(output: _ods_ir, input: _ods_ir, kernel: _ods_ir, stride: _ods_ir, pad: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MaxPool2dOp(output: _ods_ir, input: _ods_ir, kernel: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], pad: Union[Any, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This performs a max pooling over the given input tensor. A sliding window of
+   size given by  is passed over the input tensor, with the
+   maximum value being placed in the
+   output tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_pool2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MaxPool2dOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_pool2d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: kernel() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: pad() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: max_pool2d(output: _ods_ir, input: _ods_ir, kernel: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], pad: Union[Any, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MaxShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise maximum of input1 and input2.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MaxShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.max_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: max_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MaximumOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise max of input1 and input2. Axis of size 1 will be broadcast, as
+   necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.maximum'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MaximumOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.maximum'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: maximum(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MinShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise minimum of input1 and input2.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.min_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MinShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.min_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: min_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MinimumOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise minimum of input1 and input2. Axis of size 1
+   will be broadcast, as necessary. Rank of input tensors must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.minimum'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MinimumOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.minimum'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: minimum(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, nan_mode: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ModShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise modulo of input1 divided by input2.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mod_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ModShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mod_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: mod_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MulOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, shift: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise multiplication (Hadamard product) of input1 and input2.
+   Axis of size 1 will be broadcast, as necessary. Rank of input tensors must
+   match.
+
+   This operation is not pure. Undefined behaviour may occur if the specifed
+   shift is out of range or the result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: shift() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MulOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mul'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: shift() -> _ods_ir
+
+
+.. py:function:: mul(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, shift: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: MulShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise multiplication of input1 and input2.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mul_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: MulShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.mul_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: mul_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: NegateOp(output: _ods_ir, input1: _ods_ir, input1_zp: _ods_ir, output_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise negation operation.
+
+   This operation is not pure. Undefined behaviour may occur if the calculated
+   result underflows or overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.negate'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input1_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: NegateOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.negate'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input1_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+.. py:function:: negate(output: _ods_ir, input1: _ods_ir, input1_zp: _ods_ir, output_zp: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: PadOp(output: _ods_ir, input1: _ods_ir, padding: _ods_ir, pad_const: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Pads a tensor along the borders of each dimension with a supplied value.
+   Returns a new tensor with the padding included. The pad_const value includes
+   the zero point if the tensor uses a zero point.
+
+   Example:
+
+   .. code:: mlir
+
+       %pad_const = "tosa.const"() {values = dense<3.14> : tensor<1xf32>} : () -> tensor<1xf32>
+       %padding = tosa.const_shape {values = dense<[1, 2, 3, 4]> : tensor<4xindex>} : () -> !tosa.shape<4>
+       tosa.pad %arg0, %padding, %pad_const: (tensor<1x2xf32>, !tosa.shape<4>, tensor<1xf32>)  -> (tensor<4x9xf32>)
+
+   Example 2:
+
+   .. code:: mlir
+
+       %pad_const = "tosa.const"() {values = dense<3.14> : tensor<1xf32>} : () -> tensor<1xf32>
+       %padding = tosa.const_shape {values = dense<[-1, 2, 3, 4]> : tensor<4xindex>} : () -> !tosa.shape<4>
+       tosa.pad %arg0, %padding, %pad_const : (tensor<1x2xf32>, !tosa.shape<4>, tensor<1xf32>)  -> (tensor<?x9xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.pad'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: padding() -> _ods_ir
+
+
+   .. py:method:: pad_const() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: PadOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.pad'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: padding() -> _ods_ir
+
+
+   .. py:method:: pad_const() -> _ods_ir
+
+
+.. py:function:: pad(output: _ods_ir, input1: _ods_ir, padding: _ods_ir, pad_const: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: PowOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise input1 value raised to the power of input2.
+   Axis of size 1 will be broadcast, as necessary. Rank of input tensors must
+   match.
+
+   This operation is not pure. Undefined behaviour may occur if specified
+   exponent is negative.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.pow'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: PowOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.pow'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: pow(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RFFT2dOp(output_real: _ods_ir, output_imag: _ods_ir, input_real: _ods_ir, *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a batched 2D real-valued Fast Fourier Transform over the input where
+   the input tensor consists of real values producing complex valued output. The
+   complex output values will be split into the output_real and output_imag
+   tensor arguments. RFFT2D takes advantage of Hermitian symmetry to only
+   calculate the first half of the final output axis. Implementations may choose
+   to skip calculation of the imaginary values at (0,0), (0,W/2), (H/2,0), and
+   (H/2, W/2). If the calculation is skipped, the result at that location must be
+   zero.
+
+   Example:
+
+   .. code:: mlir
+
+        %ouput_real, %output_imag = tosa.rfft2d %input_real : (tensor<8x16xf32>) -> (tensor<8x9xf32>, tensor<8x9xf32>)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rfft2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input_real() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output_real() -> _ods_ir
+
+
+   .. py:method:: output_imag() -> _ods_ir
+
+
+.. py:class:: RFFT2dOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rfft2d'
+
+
+
+   .. py:method:: input_real() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: rfft2d(output_real: _ods_ir, output_imag: _ods_ir, input_real: _ods_ir, *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReciprocalOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise reciprocal operation. For integer operation, a TABLE should be
+   used with the appropriate ranges.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reciprocal'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReciprocalOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reciprocal'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: reciprocal(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceAllOp(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis with a logical AND operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_all'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceAllOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_all'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: reduce_all(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceAnyOp(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis with a logical OR operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_any'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceAnyOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_any'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: reduce_any(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceMaxOp(input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis with a maximum operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_max'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceMaxOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_max'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: reduce_max(input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceMinOp(input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis with a minimum operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_min'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceMinOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_min'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: nan_mode() -> _ods_ir
+
+
+.. py:function:: reduce_min(input: _ods_ir, axis: Union[int, _ods_ir], *, nan_mode: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceProductOp(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis by computing the product of the axis.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_product'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceProductOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_product'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: reduce_product(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReduceSumOp(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reduce a tensor along the given axis by computing the sum of the axis.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_sum'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReduceSumOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reduce_sum'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: reduce_sum(input: _ods_ir, axis: Union[int, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RescaleOp(output: _ods_ir, input: _ods_ir, multiplier: _ods_ir[_ods_ir], shift: _ods_ir[_ods_ir], input_zp: _ods_ir, output_zp: _ods_ir, scale32: Union[bool, _ods_ir], rounding_mode: Union[Any, _ods_ir], per_channel: Union[bool, _ods_ir], input_unsigned: Union[bool, _ods_ir], output_unsigned: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   RESCALE is defined using an integer multiply, add, and shift.
+
+   Rescale supports two precisions of multiplier: 16-bit and 32-bit. The 32-bit multiplier
+   version supports two rounding modes to enable simpler lowering of existing frameworks
+   that use two stage rounding. All arithmetic is designed so that it does not overflow a
+   64-bit accumulator and that the result fits in 32 bits. In particular, a 48-bit value
+   cannot be scaled with the 32-bit multiplier because the accumulator would need to have
+   80 bits.
+
+   The shift and value range are limited to allow a variety of implementations. The limit
+   of 62 on shift allows the shift to be decomposed as two right shifts of 31.
+
+   This operation is not pure. Undefined behaviour may occur if the calculated
+   result underflows or overflows.
+
+   Supported rescalings:
+
+   * This table is showing the supported conversions from the TOSA Specification.
+   * The MLIR dialect here can be used to represent other conversions.
+
+   | Mode                   | Input | Output | Unsigned input | Unsigned output |
+   |------------------------|-------|--------|----------------|-----------------|
+   | signed 16 to 16        | int16 | int16  |  false         |  false          |
+   | signed 16 to 32        | int16 | int32  |  false         |  false          |
+   | signed 16 to 8         | int16 | int8   |  false         |  false          |
+   | signed 32 to 16        | int32 | int16  |  false         |  false          |
+   | signed 32 to 32        | int32 | int32  |  false         |  false          |
+   | signed 32 to 8         | int32 | int8   |  false         |  false          |
+   | signed 8 to 16         | int8  | int16  |  false         |  false          |
+   | signed 8 to 32         | int8  | int32  |  false         |  false          |
+   | signed 8 to 8          | int8  | int8   |  false         |  false          |
+   | signed 48 to 16        | int48 | int16  |  false         |  false          |
+   | signed 48 to 32        | int48 | int32  |  false         |  false          |
+   | signed 48 to 8         | int48 | int8   |  false         |  false          |
+   | unsigned 8 to signed 8 | uint8 | int8   |  true          |  false          |
+   | signed 8 to unsigned 8 | int8  | uint8  |  false         |  true           |
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rescale'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: multiplier() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: shift() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: scale32() -> _ods_ir
+
+
+   .. py:method:: rounding_mode() -> _ods_ir
+
+
+   .. py:method:: per_channel() -> _ods_ir
+
+
+   .. py:method:: input_unsigned() -> _ods_ir
+
+
+   .. py:method:: output_unsigned() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: RescaleOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rescale'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: multiplier() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: shift() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: output_zp() -> _ods_ir
+
+
+   .. py:method:: scale32() -> _ods_ir
+
+
+   .. py:method:: rounding_mode() -> _ods_ir
+
+
+   .. py:method:: per_channel() -> _ods_ir
+
+
+   .. py:method:: input_unsigned() -> _ods_ir
+
+
+   .. py:method:: output_unsigned() -> _ods_ir
+
+
+.. py:function:: rescale(output: _ods_ir, input: _ods_ir, multiplier: _ods_ir[_ods_ir], shift: _ods_ir[_ods_ir], input_zp: _ods_ir, output_zp: _ods_ir, scale32: Union[bool, _ods_ir], rounding_mode: Union[Any, _ods_ir], per_channel: Union[bool, _ods_ir], input_unsigned: Union[bool, _ods_ir], output_unsigned: Union[bool, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReshapeBlockScaledOp(input: Sequence[_ods_ir], new_value_shape: _ods_ir, block_size: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Returns a tensor-list with the same type/values as the input, with a new
+   shape specified by the shape argument. Reshape may operate on block-scaled
+   tensors (values tensor followed by scale tensor) of rank 1 or higher; or a
+   single non-block-scaled tensor of any rank. No data conversion happens during
+   a reshape operation. Reshape must retain the relationship between values
+   and their scale in a block for block-scaled content.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reshape_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: new_value_shape() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReshapeBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reshape_block_scaled'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: new_value_shape() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: reshape_block_scaled(input: Sequence[_ods_ir], new_value_shape: _ods_ir, block_size: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, ReshapeBlockScaledOp]
+
+.. py:class:: ReshapeOp(input1: _ods_ir, shape: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Returns a tensor with the same type/values as the input, with a new shape
+   specified by the shape argument. Reshape may operate on tensors of any rank.
+   No data conversion happens during a reshape operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reshape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: shape() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReshapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reshape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: shape() -> _ods_ir
+
+
+.. py:function:: reshape(input1: _ods_ir, shape: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ResizeOp(output: _ods_ir, input: _ods_ir, scale: _ods_ir, offset: _ods_ir, border: _ods_ir, mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Resizes a tensor. Resize is only allowed in the H and W dimensions.
+
+   The height dimension is scaled by factor (scale_y_n/scale_y_d). The width
+   dimension is scaled by factor (scale_x_n/scale_x_d).
+
+   The NEAREST_NEIGHBOR mode returns the value of the input tensor closest to
+   the calculated sample position for both floating-point and integer data
+   formats.
+
+   Floating-point BILINEAR mode returns a bilinearly interpolated output value
+   based on the four closest input sample positions.
+
+   For integer BILINEAR interpolation mode, the output value must be scaled by
+   1/(scale_y_n * scale_x_n) in a following operation to complete the
+   interpolation (for example with a RESCALE operator).
+
+   The output dimensions can be derived from the input dimensions by inverting
+   the scale as described in the pseudocode. The [border_y, border_x] values
+   adjust the output size to allow fractional sampling beyond integer input
+   position (IH - 1,IW - 1).
+
+   The limit MAX_SCALE is applied to each scale ratio after reduction of the
+   ratio. Individual scale numerator and denominator values are allowed to be
+   larger than MAX_SCALE.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.resize'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: scale() -> _ods_ir
+
+
+   .. py:method:: offset() -> _ods_ir
+
+
+   .. py:method:: border() -> _ods_ir
+
+
+   .. py:method:: mode() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ResizeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.resize'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: scale() -> _ods_ir
+
+
+   .. py:method:: offset() -> _ods_ir
+
+
+   .. py:method:: border() -> _ods_ir
+
+
+   .. py:method:: mode() -> _ods_ir
+
+
+.. py:function:: resize(output: _ods_ir, input: _ods_ir, scale: _ods_ir, offset: _ods_ir, border: _ods_ir, mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ReverseOp(output: _ods_ir, input1: _ods_ir, axis: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Returns a tensor with the same type/values as the input, with the data
+   reversed along the given axis. No data conversion happens during a reverse
+   operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reverse'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: ReverseOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.reverse'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: axis() -> _ods_ir
+
+
+.. py:function:: reverse(output: _ods_ir, input1: _ods_ir, axis: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RowGatherBlockScaledOp(output: Sequence[_ods_ir], values: Sequence[_ods_ir], indices: _ods_ir, row_count: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Generate a tensor-list which contains a data tensor and an optional scale
+   tensor based on the input indices and row_count. The number of consecutive
+   rows gathered for each index is specified in row_count.
+
+   The variadic ``values`` operands and results model the flattened
+   ``tensor_list_t`` form from the TOSA spec:
+
+   * non-block-scaled: 1 input value tensor and 1 result tensor
+   * block-scaled: data + scale input tensors and data + scale result tensors
+
+   This operation follows the TOSA 1.1 draft specification and may evolve as
+   the specification is updated.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   indices are out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.row_gather_block_scaled'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: row_count() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: RowGatherBlockScaledOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.row_gather_block_scaled'
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: row_count() -> _ods_ir
+
+
+   .. py:method:: block_size() -> _ods_ir
+
+
+.. py:function:: row_gather_block_scaled(output: Sequence[_ods_ir], values: Sequence[_ods_ir], indices: _ods_ir, row_count: _ods_ir, block_size: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, RowGatherBlockScaledOp]
+
+.. py:class:: RowGatherOp(output: _ods_ir, values: _ods_ir, indices: _ods_ir, row_count: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Generate a tensor based on the input indices and row_count. The number of
+   consecutive rows gathered for each index is specified in row_count. N is
+   the number of batches, W is the number of indices in each batch, K is
+   the range of each index, and C is the number of data channels for each
+   index. The values tensor has shape [N, K, C] and the output tensor has shape
+   [N, W * row_count, C].
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   indices are out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.row_gather'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: row_count() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: RowGatherOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.row_gather'
+
+
+
+   .. py:method:: values() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: row_count() -> _ods_ir
+
+
+.. py:function:: row_gather(output: _ods_ir, values: _ods_ir, indices: _ods_ir, row_count: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: RsqrtOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise reciprocal square root operation. For integer operation, a TABLE
+   should be used with the appropriate ranges.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: RsqrtOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.rsqrt'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: rsqrt(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ScatterOp(values_out: _ods_ir, values_in: _ods_ir, indices: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The values_out tensor is set to the values_in tensor with data modified as
+   follows: data from the input tensor is inserted at the positions specified
+   by the indices tensor. N is the number of batches, W the number of indices
+   in each batch, K the range of each index and C the number data channels for
+   each index. It is not permitted to repeat the same output index within a
+   single SCATTER operation and so each output index occurs at most once. It
+   follows that K >= W. In use cases that require multiple updates to the same
+   output position, these must be decomposed into multiple SCATTER operations.
+
+   This operation is not pure. Undefined behaviour may occur if the specified
+   indices are out of range or duplicate indices are provided.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.scatter'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: values_in() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: values_out() -> _ods_ir
+
+
+.. py:class:: ScatterOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.scatter'
+
+
+
+   .. py:method:: values_in() -> _ods_ir
+
+
+   .. py:method:: indices() -> _ods_ir
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: scatter(values_out: _ods_ir, values_in: _ods_ir, indices: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SelectOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, input3: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise select of the output based on a condition.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.select'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: input3() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SelectOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.select'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: input3() -> _ods_ir
+
+
+.. py:function:: select(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, input3: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SigmoidOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Applies the sigmoid logistic function to each element of the input tensor:
+   $ sigmoid(x) = \frac{1}{1 + e^{-x}} $.
+
+   For quantized integer data types, the TABLE operator should be used instead.
+   Each implementation may choose an appropriate TABLE given the scale and zero
+   point of the input data. Eight or sixteen bit precision tables may be used
+   based on the input tensor to the sigmoid function.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sigmoid'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SigmoidOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sigmoid'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: sigmoid(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SinOp(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise sine operation for values given in radians.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SinOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sin'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+.. py:function:: sin(output: _ods_ir, input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SliceOp(output: _ods_ir, input1: _ods_ir, start: _ods_ir, size: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extracts a slice of input1, beginning at the start coordinates,
+   and extending for size elements in each direction.
+   No data conversion happens during a slice operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.slice'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: start() -> _ods_ir
+
+
+   .. py:method:: size() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SliceOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.slice'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: start() -> _ods_ir
+
+
+   .. py:method:: size() -> _ods_ir
+
+
+.. py:function:: slice(output: _ods_ir, input1: _ods_ir, start: _ods_ir, size: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SliceShapeOp(output: _ods_ir, input: _ods_ir, start: _ods_ir, size: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Extract a shape of size from input.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.slice_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: start() -> _ods_ir
+
+
+   .. py:method:: size() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SliceShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.slice_shape'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: start() -> _ods_ir
+
+
+   .. py:method:: size() -> _ods_ir
+
+
+.. py:function:: slice_shape(output: _ods_ir, input: _ods_ir, start: _ods_ir, size: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SubOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise subtraction of input1 and input2. Axis of size 1 will be
+   broadcast as necessary. Rank of input tensors must match.
+
+   This operation is not pure. Undefined behaviour may occur if the calculated
+   result underflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sub'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SubOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sub'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: sub(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SubShapeOp(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Elementwise subtraction of input1 and input2. Size of shapes must match.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sub_shape'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: SubShapeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.sub_shape'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: input2() -> _ods_ir
+
+
+.. py:function:: sub_shape(output: _ods_ir, input1: _ods_ir, input2: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TableOp(output: _ods_ir, input1: _ods_ir, table: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Table lookup operation. For int8_t TABLE operation, perform a 256 entry
+   table lookup returning an int8_t value. For int16_t tables, the int16_t
+   input is treated as a fixed-point 9.7 value. The most significant 9 bits
+   are used to index into the table. The fractional 7 bits are used to
+   interpolate based on table[index] and table[index+1]. For int16_t inputs,
+   the TABLE operator returns a 16.7 interpolated value in an int32_t. This
+   value can then be input to the RESCALE operator to scale to the required
+   output data type. Note that int16_t table has 513 values to handle
+   table[index+1] when index=511.
+
+   An int16_t to int16_t table lookup can be constructed in TOSA as follows:
+
+   * Use the TABLE operator to produce a fixed point 16.7 interpolated result
+   * Use RESCALE (in_t=int32_t, out_t=int16_t, scale=1<<14, shift=21) to
+   scale the output to int16_t range (or alternate scale as required)
+
+   This operation is not pure. Undefined behaviour may occur if the calculated
+   slope is out of range.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.table'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: table() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: TableOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.table'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: table() -> _ods_ir
+
+
+.. py:function:: table(output: _ods_ir, input1: _ods_ir, table: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TanhOp(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Parameterized hyperbolic tangent: $ tanh(x) = \frac{1 - e^{-2x}}{1 + e^{-2x}} $.
+
+   For quantized integer data types, the TABLE operator should be used instead.
+   Each implementation may choose an appropriate TABLE given the scale and zero
+   point of the input data. Eight or sixteen bit precision tables may be used
+   based on the input tensor to the tanh function.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.tanh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: TanhOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.tanh'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+.. py:function:: tanh(output: _ods_ir, input: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TileOp(output: _ods_ir, input1: _ods_ir, multiples: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Replicates input1 multiples times along each dimension.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.tile'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: multiples() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: TileOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.tile'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: multiples() -> _ods_ir
+
+
+.. py:function:: tile(output: _ods_ir, input1: _ods_ir, multiples: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TransposeConv2DOp(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, out_pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Performs a 2D transposed convolution over the given tensor input, using the
+   weights tensor. Implementations may choose to skip calculation of multiplies
+   by zero at fractional input positions.
+
+   This operation is not pure. Undefined behaviour may occur if the accumulated
+   result overflows.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.transpose_conv2d'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: out_pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: TransposeConv2DOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.transpose_conv2d'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: weight() -> _ods_ir
+
+
+   .. py:method:: bias() -> _ods_ir
+
+
+   .. py:method:: input_zp() -> _ods_ir
+
+
+   .. py:method:: weight_zp() -> _ods_ir
+
+
+   .. py:method:: out_pad() -> _ods_ir
+
+
+   .. py:method:: stride() -> _ods_ir
+
+
+   .. py:method:: acc_type() -> _ods_ir
+
+
+   .. py:method:: local_bound() -> Optional[_ods_ir]
+
+
+.. py:function:: transpose_conv2d(output: _ods_ir, input: _ods_ir, weight: _ods_ir, bias: _ods_ir, input_zp: _ods_ir, weight_zp: _ods_ir, out_pad: Union[Any, _ods_ir], stride: Union[Any, _ods_ir], acc_type: Union[Any, _ods_ir], *, local_bound: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TransposeOp(output: _ods_ir, input1: _ods_ir, perms: Union[Sequence[int], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Permutes the dimensions of the input tensor input1 based on the perms
+   argument. Each value in the perms list must be a valid dimension of the
+   input tensor and may not be repeated.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.transpose'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: perms() -> _ods_ir
+
+
+   .. py:method:: output() -> _ods_ir
+
+
+.. py:class:: TransposeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.transpose'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: perms() -> _ods_ir
+
+
+.. py:function:: transpose(output: _ods_ir, input1: _ods_ir, perms: Union[Sequence[int], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: VariableOp(sym_name: Union[str, _ods_ir], var_shape: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], type_: Union[_ods_ir, _ods_ir], *, initial_value: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Defines a new TOSA variable. This is a persistent mutable value across multiple
+   TOSA graph invocations. Modifications are expressed using read/write semantics.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: var_shape() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: initial_value() -> Optional[_ods_ir]
+
+
+.. py:class:: VariableOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable'
+
+
+
+   .. py:method:: sym_name() -> _ods_ir
+
+
+   .. py:method:: var_shape() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: initial_value() -> Optional[_ods_ir]
+
+
+.. py:function:: variable(sym_name: Union[str, _ods_ir], var_shape: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], type_: Union[_ods_ir, _ods_ir], *, initial_value: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> VariableOp
+
+.. py:class:: VariableReadOp(output1: _ods_ir, name: Union[str, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Reads the value from a pseudo-buffer resource holding a persistent mutable tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable_read'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: output1() -> _ods_ir
+
+
+.. py:class:: VariableReadOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable_read'
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+.. py:function:: variable_read(output1: _ods_ir, name: Union[str, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: VariableWriteOp(name: Union[str, _ods_ir], input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Assigns a value to the pseudo-buffer resource holding a persistent mutable tensor.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable_write'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+.. py:class:: VariableWriteOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.variable_write'
+
+
+
+   .. py:method:: input1() -> _ods_ir
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+.. py:function:: variable_write(name: Union[str, _ods_ir], input1: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> VariableWriteOp
+
+.. py:class:: WhileOp(output_list: Sequence[_ods_ir], input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Generates and evaluates a Boolean condition and either executes a loop body
+   or exits the loop. This action is performed repeatedly after
+   updating and re-evaluating the Boolean condition every iteration. This
+   implements the semantic foreach or while iterative loop structure.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.while_loop'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (2, True)
+
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+   .. py:method:: output_list() -> _ods_ir
+
+
+   .. py:method:: cond_graph() -> _ods_ir
+
+
+   .. py:method:: body_graph() -> _ods_ir
+
+
+.. py:class:: WhileOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.while_loop'
+
+
+
+   .. py:method:: input_list() -> _ods_ir
+
+
+.. py:function:: while_loop(output_list: Sequence[_ods_ir], input_list: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, WhileOp]
+
+.. py:class:: YieldOp(inputs: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   return operation within the conditional and body of
+   structured control flow. Operation takes variadic operands
+   but produces no results of its own.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.yield'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+.. py:class:: YieldOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'tosa.yield'
+
+
+
+   .. py:method:: inputs() -> _ods_ir
+
+
+.. py:function:: yield_(inputs: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> YieldOp
+

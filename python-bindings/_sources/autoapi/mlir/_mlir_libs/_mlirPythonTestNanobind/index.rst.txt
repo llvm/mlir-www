@@ -1,0 +1,143 @@
+mlir._mlir_libs._mlirPythonTestNanobind
+=======================================
+
+.. py:module:: mlir._mlir_libs._mlirPythonTestNanobind
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlirPythonTestNanobind.TestAttr
+   mlir._mlir_libs._mlirPythonTestNanobind.TestType
+   mlir._mlir_libs._mlirPythonTestNanobind.TestIntegerRankedTensorType
+   mlir._mlir_libs._mlirPythonTestNanobind.TestTensorValue
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlirPythonTestNanobind.register_python_test_dialect
+   mlir._mlir_libs._mlirPythonTestNanobind.register_dialect
+   mlir._mlir_libs._mlirPythonTestNanobind.test_diagnostics_with_errors_and_notes
+   mlir._mlir_libs._mlirPythonTestNanobind.take_module_or_operation
+
+
+Module Contents
+---------------
+
+.. py:function:: register_python_test_dialect(context: _mlir.ir.Context | None = None, load: bool = True) -> None
+
+.. py:function:: register_dialect(registry: mlir.ir.DialectRegistry) -> None
+
+.. py:function:: test_diagnostics_with_errors_and_notes(context: _mlir.ir.Context | None = None) -> None
+
+.. py:function:: take_module_or_operation(arg: mlir.ir.Operation) -> str
+                 take_module_or_operation(arg: mlir.ir.Module) -> str
+
+.. py:class:: TestAttr(cast_from_attr: mlir._mlir_libs._mlir.ir.Attribute)
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.Attribute`
+
+
+   .. py:property:: type
+      :type: mlir._mlir_libs._mlir.ir.Type
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  mlir._mlir_libs._mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: get(context: _mlir.ir.Context | None = None) -> TestAttr
+      :staticmethod:
+
+
+
+.. py:class:: TestType(cast_from_type: mlir._mlir_libs._mlir.ir.Type)
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  mlir._mlir_libs._mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: get(context: _mlir.ir.Context | None = None) -> TestType
+      :staticmethod:
+
+
+
+.. py:class:: TestIntegerRankedTensorType(cast_from_type: mlir._mlir_libs._mlir.ir.Type)
+
+   Bases: :py:obj:`mlir._mlir_libs._mlir.ir.RankedTensorType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  mlir._mlir_libs._mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: mlir._mlir_libs._mlir.ir.TypeID
+
+
+
+   .. py:method:: __repr__() -> str
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], width: int, context: _mlir.ir.Context | None = None) -> TestIntegerRankedTensorType
+      :staticmethod:
+
+
+
+.. py:class:: TestTensorValue(value: mlir._mlir_libs._mlir.ir.Value)
+
+   Bases: :py:obj:`Value`\ [\ :py:obj:`_T`\ ]
+
+
+   .. py:method:: maybe_downcast() -> TestTensorValue
+
+
+   .. py:method:: __str__() -> str
+
+
+   .. py:method:: is_null() -> bool
+
+

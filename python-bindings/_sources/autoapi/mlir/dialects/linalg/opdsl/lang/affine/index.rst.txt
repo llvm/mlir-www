@@ -1,0 +1,264 @@
+mlir.dialects.linalg.opdsl.lang.affine
+======================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.affine
+
+.. autoapi-nested-parse::
+
+   
+   DSL for constructing affine expressions and maps.
+
+   These python wrappers allow construction of affine expressions in a more
+   pythonic fashion that is later instantiated as an IR AffineExpr. Separating the
+   AST from construction of the map allows for manipulations of symbols and dims
+   beyond the scope of one expression.
+
+   Affine expression construction:
+
+               with _ir.Context():
+               ...   s = AffineBuildState()
+               ...   (S.K + S.M).build(s)
+               ...   (S.K * S.M).build(s)
+               ...   (S.K // S.M).build(s)
+               ...   (S.K / S.M).build(s)
+               ...   (S.K % 4).build(s)
+               ...   (D.i + D.j * 4).build(s)
+               ...   s
+               AffineExpr(s0 + s1)
+               AffineExpr(s0 * s1)
+               AffineExpr(s0 floordiv s1)
+               AffineExpr(s0 ceildiv s1)
+               AffineExpr(s0 mod 4)
+               AffineExpr(d0 + d1 * 4)
+               AffineBuildState<
+               symbols={'K': 0, 'M': 1}
+               dims={'i': 0, 'j': 1}>
+
+   In the DSL, dimensions and symbols are name-uniqued instances of DimDef and
+   SymbolDef. There are shortcut "expando" instances that will create a
+   corresponding DimDef/SymbolDef upon accessing an attribute:
+
+   Referencing a named dimension:
+
+               D.i
+               Dim(i)
+               D.a is D.b
+               False
+               D.a is D.a
+               True
+
+   Referencing a named symbol:
+
+               S.foobar
+               Symbol(foobar)
+               S.a is S.b
+               False
+               S.a is S.a
+               True
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.affine.D
+   mlir.dialects.linalg.opdsl.lang.affine.S
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.affine.AffineBuildState
+   mlir.dialects.linalg.opdsl.lang.affine.AffineExprDef
+   mlir.dialects.linalg.opdsl.lang.affine.DimDef
+   mlir.dialects.linalg.opdsl.lang.affine.SymbolDef
+
+
+Module Contents
+---------------
+
+.. py:class:: AffineBuildState(*, global_state: AffineBuildState = None, allow_new_symbols: bool = True, allow_new_dims: bool = True)
+
+   
+   Internal state for the AffineExprDef._create impls.
+
+   Note that a "local" AffineBuildState can be created relative to a "global"
+   AffineBuildState. In that case, any affine expressions built will inherit
+   symbol and dim bindings from the global state and will update both as new
+   ones are discovered. This allows for building expressions across contexts
+   which share a common symbol and dim space.
+
+
+   .. py:attribute:: local_symbols
+      :type:  Dict[str, int]
+
+
+   .. py:attribute:: local_dims
+      :type:  Dict[str, int]
+
+
+   .. py:attribute:: allow_new_symbols
+      :value: True
+
+
+
+   .. py:attribute:: allow_new_dims
+      :value: True
+
+
+
+   .. py:method:: get_dim(dimname: str) -> int
+
+      
+      Gets the dim position given a name.
+
+
+
+   .. py:method:: get_symbol(symname: str) -> int
+
+      
+      Geta a symbol position given a name.
+
+
+
+   .. py:property:: local_dim_count
+      :type: int
+
+
+
+   .. py:property:: local_symbol_count
+      :type: int
+
+
+
+   .. py:property:: dim_count
+      :type: int
+
+
+
+   .. py:property:: symbol_count
+      :type: int
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: AffineExprDef
+
+   
+   Base class for an affine expression being defined.
+
+
+   .. py:method:: build(state: Optional[AffineBuildState] = None) -> mlir.ir.AffineExpr
+
+      
+      Builds the corresponding _ir.AffineExpr from the definitions.
+
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+      :abstractmethod:
+
+
+
+   .. py:method:: coerce_from(py_value)
+      :staticmethod:
+
+
+
+   .. py:method:: visit_affine_exprs(callback)
+
+      
+      Visits all AffineExprDefs including self.
+
+
+
+   .. py:method:: __add__(rhs)
+
+
+   .. py:method:: __mul__(rhs)
+
+
+   .. py:method:: __mod__(rhs)
+
+
+   .. py:method:: __floordiv__(rhs)
+
+
+   .. py:method:: __truediv__(rhs)
+
+
+.. py:class:: DimDef
+
+   Bases: :py:obj:`AffineExprDef`
+
+
+   
+   Represents a named dimension.
+
+
+   .. py:attribute:: ALL_DIMS
+      :type:  Dict[str, DimDef]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique symbols based on attr access.
+
+
+
+.. py:class:: SymbolDef
+
+   Bases: :py:obj:`AffineExprDef`
+
+
+   
+   Represents a named symbol.
+
+               s1 = SymbolDef("s1")
+               s1
+               Symbol(s1)
+               s2 = SymbolDef("s2")
+               s1 is s2
+               False
+               s1 is SymbolDef("s1")
+               True
+
+
+   .. py:attribute:: ALL_SYMBOLS
+      :type:  Dict[str, SymbolDef]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique symbols based on attr access.
+
+
+
+.. py:data:: D
+
+.. py:data:: S
+

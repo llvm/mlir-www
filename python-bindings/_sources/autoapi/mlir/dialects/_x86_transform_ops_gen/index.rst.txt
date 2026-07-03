@@ -1,0 +1,245 @@
+mlir.dialects._x86_transform_ops_gen
+====================================
+
+.. py:module:: mlir.dialects._x86_transform_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_transform_ops_gen._ods_ir
+   mlir.dialects._x86_transform_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_transform_ops_gen.ApplyShuffleVectorFMAOpsPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplyShuffleVectorFMAOpsPatternsOpAdaptor
+   mlir.dialects._x86_transform_ops_gen.ApplySinkVectorProducerOpsPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplySinkVectorProducerOpsPatternsOpAdaptor
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractBF16ToFMAPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractBF16ToFMAPatternsOpAdaptor
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToAMXDotProductPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToAMXDotProductPatternsOpAdaptor
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToFMAPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToFMAPatternsOpAdaptor
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToPackedTypeDotProductPatternsOp
+   mlir.dialects._x86_transform_ops_gen.ApplyVectorContractToPackedTypeDotProductPatternsOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_shuffle_vector_fma_ops
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_sink_vector_producer_ops
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_vector_contract_bf16_to_fma
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_vector_contract_to_amx_dot_product
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_vector_contract_to_fma
+   mlir.dialects._x86_transform_ops_gen.apply_patterns_x86_vector_contract_to_packed_type_dot_product
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: ApplyShuffleVectorFMAOpsPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to shuffle FMAs with x86 operations as operands
+   such that FMAs are grouped with respect to odd/even packed index.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.shuffle_vector_fma_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyShuffleVectorFMAOpsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.shuffle_vector_fma_ops'
+
+
+
+.. py:function:: apply_patterns_x86_shuffle_vector_fma_ops(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyShuffleVectorFMAOpsPatternsOp
+
+.. py:class:: ApplySinkVectorProducerOpsPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to sink vector producer operations forward in a block to
+   place them immediately before their first use.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.sink_vector_producer_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplySinkVectorProducerOpsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.sink_vector_producer_ops'
+
+
+
+.. py:function:: apply_patterns_x86_sink_vector_producer_ops(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplySinkVectorProducerOpsPatternsOp
+
+.. py:class:: ApplyVectorContractBF16ToFMAPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to lower a BF16 type vector.contract operation
+   to a FMA via emulation lowering using BF16 packed operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_bf16_to_fma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyVectorContractBF16ToFMAPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_bf16_to_fma'
+
+
+
+.. py:function:: apply_patterns_x86_vector_contract_bf16_to_fma(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorContractBF16ToFMAPatternsOp
+
+.. py:class:: ApplyVectorContractToAMXDotProductPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to lower a BF16/Int8 type vector.contract operation
+   to a BF16/Int8 AMX tiled dot-product.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_amx_dot_product'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyVectorContractToAMXDotProductPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_amx_dot_product'
+
+
+
+.. py:function:: apply_patterns_x86_vector_contract_to_amx_dot_product(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorContractToAMXDotProductPatternsOp
+
+.. py:class:: ApplyVectorContractToFMAPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to lower a F32 type vector.contract operation to a FMA.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_fma'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyVectorContractToFMAPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_fma'
+
+
+
+.. py:function:: apply_patterns_x86_vector_contract_to_fma(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorContractToFMAPatternsOp
+
+.. py:class:: ApplyVectorContractToPackedTypeDotProductPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to lower a BF16/Int8 type vector.contract operation
+   to a BF16/Int8 dot-product.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_packed_type_dot_product'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyVectorContractToPackedTypeDotProductPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.x86.vector_contract_to_packed_type_dot_product'
+
+
+
+.. py:function:: apply_patterns_x86_vector_contract_to_packed_type_dot_product(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorContractToPackedTypeDotProductPatternsOp
+

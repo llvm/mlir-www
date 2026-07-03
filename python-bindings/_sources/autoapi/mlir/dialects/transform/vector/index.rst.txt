@@ -1,0 +1,1666 @@
+mlir.dialects.transform.vector
+==============================
+
+.. py:module:: mlir.dialects.transform.vector
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.vector.VectorContractLowering
+   mlir.dialects.transform.vector.VectorMultiReductionLowering
+   mlir.dialects.transform.vector.VectorTransferSplit
+   mlir.dialects.transform.vector.VectorTransposeLowering
+   mlir.dialects.transform.vector.ApplyCastAwayVectorLeadingOneDimPatternsOp
+   mlir.dialects.transform.vector.ApplyCastAwayVectorLeadingOneDimPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyDropInnerMostUnitDimsFromXferOpsPatternsOp
+   mlir.dialects.transform.vector.ApplyDropInnerMostUnitDimsFromXferOpsPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyDropUnitDimWithShapeCastPatternsOp
+   mlir.dialects.transform.vector.ApplyDropUnitDimWithShapeCastPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyFlattenVectorTransferOpsPatternsOp
+   mlir.dialects.transform.vector.ApplyFlattenVectorTransferOpsPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyFoldArithExtensionPatternsOp
+   mlir.dialects.transform.vector.ApplyFoldArithExtensionPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyFoldElementwiseToVectorPatternsOp
+   mlir.dialects.transform.vector.ApplyFoldElementwiseToVectorPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyInterleaveAndDeinterleaveToShufflePatternsOp
+   mlir.dialects.transform.vector.ApplyInterleaveAndDeinterleaveToShufflePatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerBitCastPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerBitCastPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerBroadcastPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerBroadcastPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerContractionPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerContractionPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerCreateMaskPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerCreateMaskPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerGatherPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerGatherPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerInterleavePatternsOp
+   mlir.dialects.transform.vector.ApplyLowerInterleavePatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerMaskedTransfersPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerMaskedTransfersPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerMasksPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerMasksPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerOuterProductPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerOuterProductPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerScanPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerScanPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerShapeCastPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerShapeCastPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerStepPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerStepPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerTransferPatternsOp
+   mlir.dialects.transform.vector.ApplyLowerTransferPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyLowerTransposePatternsOp
+   mlir.dialects.transform.vector.ApplyLowerTransposePatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyMaterializeMasksPatternsOp
+   mlir.dialects.transform.vector.ApplyMaterializeMasksPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyMultiReductionFlatteningPatternsOp
+   mlir.dialects.transform.vector.ApplyMultiReductionFlatteningPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyMultiReductionUnrollingPatternsOp
+   mlir.dialects.transform.vector.ApplyMultiReductionUnrollingPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyRankReducingSubviewPatternsOp
+   mlir.dialects.transform.vector.ApplyRankReducingSubviewPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyReorderMultiReductionPatternsOp
+   mlir.dialects.transform.vector.ApplyReorderMultiReductionPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyRewriteNarrowTypePatternsOp
+   mlir.dialects.transform.vector.ApplyRewriteNarrowTypePatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplySinkVectorMemPatternsOp
+   mlir.dialects.transform.vector.ApplySinkVectorMemPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplySinkVectorPatternsOp
+   mlir.dialects.transform.vector.ApplySinkVectorPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplySplitTransferFullPartialPatternsOp
+   mlir.dialects.transform.vector.ApplySplitTransferFullPartialPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyTransferPermutationPatternsOp
+   mlir.dialects.transform.vector.ApplyTransferPermutationPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyTransferToScfPatternsOp
+   mlir.dialects.transform.vector.ApplyTransferToScfPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyUnrollFromElementsPatternsOp
+   mlir.dialects.transform.vector.ApplyUnrollFromElementsPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyUnrollToElementsPatternsOp
+   mlir.dialects.transform.vector.ApplyUnrollToElementsPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyVectorReductionToContractPatternsOp
+   mlir.dialects.transform.vector.ApplyVectorReductionToContractPatternsOpAdaptor
+   mlir.dialects.transform.vector.ApplyVectorToLLVMConversionPatternsOp
+   mlir.dialects.transform.vector.ApplyVectorToLLVMConversionPatternsOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.vector.register_attribute_builder
+   mlir.dialects.transform.vector.apply_patterns_vector_cast_away_vector_leading_one_dim
+   mlir.dialects.transform.vector.apply_patterns_vector_drop_inner_most_unit_dims_from_xfer_ops
+   mlir.dialects.transform.vector.apply_patterns_vector_drop_unit_dims_with_shape_cast
+   mlir.dialects.transform.vector.apply_patterns_vector_flatten_vector_transfer_ops
+   mlir.dialects.transform.vector.apply_patterns_vector_fold_arith_extension
+   mlir.dialects.transform.vector.apply_patterns_vector_elementwise_to_vector
+   mlir.dialects.transform.vector.apply_patterns_vector_interleave_and_deinterleave_to_shuffle
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_bitcast
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_broadcast
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_contraction
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_create_mask
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_gather
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_interleave
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_masked_transfers
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_masks
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_outerproduct
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_scan
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_shape_cast
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_step
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_transfer
+   mlir.dialects.transform.vector.apply_patterns_vector_lower_transpose
+   mlir.dialects.transform.vector.apply_patterns_vector_materialize_masks
+   mlir.dialects.transform.vector.apply_patterns_vector_multi_reduction_flattening
+   mlir.dialects.transform.vector.apply_patterns_vector_multi_reduction_unrolling
+   mlir.dialects.transform.vector.apply_patterns_vector_rank_reducing_subview_patterns
+   mlir.dialects.transform.vector.apply_patterns_vector_reorder_multi_reduction_dims
+   mlir.dialects.transform.vector.apply_patterns_vector_rewrite_narrow_types
+   mlir.dialects.transform.vector.apply_patterns_vector_sink_mem_ops
+   mlir.dialects.transform.vector.apply_patterns_vector_sink_ops
+   mlir.dialects.transform.vector.apply_patterns_vector_split_transfer_full_partial
+   mlir.dialects.transform.vector.apply_patterns_vector_transfer_permutation_patterns
+   mlir.dialects.transform.vector.apply_patterns_vector_transfer_to_scf
+   mlir.dialects.transform.vector.apply_patterns_vector_unroll_from_elements
+   mlir.dialects.transform.vector.apply_patterns_vector_unroll_to_elements
+   mlir.dialects.transform.vector.apply_patterns_vector_reduction_to_contract
+   mlir.dialects.transform.vector.apply_conversion_patterns_vector_vector_to_llvm
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False, allow_existing=False)
+
+.. py:class:: VectorContractLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.contract`` operations.
+
+
+   .. py:attribute:: Dot
+      :value: 0
+
+
+
+   .. py:attribute:: LLVMIntr
+      :value: 1
+
+
+
+   .. py:attribute:: OuterProduct
+      :value: 2
+
+
+
+   .. py:attribute:: ParallelArith
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: VectorMultiReductionLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.multi_reduction``.
+
+
+   .. py:attribute:: InnerParallel
+      :value: 0
+
+
+
+   .. py:attribute:: InnerReduction
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: VectorTransferSplit
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the splitting of ``vector.transfer`` operations into in-bounds and out-of-bounds variants.
+
+
+   .. py:attribute:: None_
+      :value: 0
+
+
+
+   .. py:attribute:: VectorTransfer
+      :value: 1
+
+
+
+   .. py:attribute:: LinalgCopy
+      :value: 2
+
+
+
+   .. py:attribute:: ForceInBounds
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: VectorTransposeLowering
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   control the lowering of ``vector.transpose`` operations.
+
+
+   .. py:attribute:: EltWise
+      :value: 0
+
+
+
+   .. py:attribute:: LLVMIntr
+      :value: 1
+
+
+
+   .. py:attribute:: Shuffle1D
+      :value: 2
+
+
+
+   .. py:attribute:: Shuffle16x16
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: ApplyCastAwayVectorLeadingOneDimPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect a set of leading one dimension removal patterns.
+
+   These patterns insert vector.shape_cast to remove leading one dimensions
+   to expose more canonical forms of read/write/insert/extract operations.
+   With them, there are more chances that we can cancel out extract-insert
+   pairs or forward write-read pairs.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.cast_away_vector_leading_one_dim'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyCastAwayVectorLeadingOneDimPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.cast_away_vector_leading_one_dim'
+
+
+
+.. py:function:: apply_patterns_vector_cast_away_vector_leading_one_dim(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyCastAwayVectorLeadingOneDimPatternsOp
+
+.. py:class:: ApplyDropInnerMostUnitDimsFromXferOpsPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply vector patterns to drop the inner most unit dims from
+   vector.transfer_read and vector.transfer_write Ops by taking a subview (via
+   memref.subview) of the original source/destination MemRef. Since it
+   requires the input/ouptu to be MemRefs, this Op is only helpful
+   past-bufferization.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.drop_inner_most_unit_dims_from_xfer_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyDropInnerMostUnitDimsFromXferOpsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.drop_inner_most_unit_dims_from_xfer_ops'
+
+
+
+.. py:function:: apply_patterns_vector_drop_inner_most_unit_dims_from_xfer_ops(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyDropInnerMostUnitDimsFromXferOpsPatternsOp
+
+.. py:class:: ApplyDropUnitDimWithShapeCastPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply vector patterns to fold unit dims with vector.shape_cast Ops:
+
+   * DropUnitDimFromElementwiseOps
+   * DropUnitDimsFromScfForOp
+   * DropUnitDimsFromTransposeOp
+
+   Excludes patterns for vector.transfer Ops. This is complemented by
+   shape_cast folding patterns.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.drop_unit_dims_with_shape_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyDropUnitDimWithShapeCastPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.drop_unit_dims_with_shape_cast'
+
+
+
+.. py:function:: apply_patterns_vector_drop_unit_dims_with_shape_cast(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyDropUnitDimWithShapeCastPatternsOp
+
+.. py:class:: ApplyFlattenVectorTransferOpsPatternsOp(*, target_vector_bitwidth: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect patterns to rewrite contiguous row-major vector.transfer_read or
+   vector.transfer_write operations to a 1D operation.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.flatten_vector_transfer_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target_vector_bitwidth() -> _ods_ir
+
+
+.. py:class:: ApplyFlattenVectorTransferOpsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.flatten_vector_transfer_ops'
+
+
+
+   .. py:method:: target_vector_bitwidth() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_flatten_vector_transfer_ops(*, target_vector_bitwidth: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyFlattenVectorTransferOpsPatternsOp
+
+.. py:class:: ApplyFoldArithExtensionPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect a set of patterns that fold arithmetic extension on floating point
+   into vector contract for the backends with native support.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.fold_arith_extension'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyFoldArithExtensionPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.fold_arith_extension'
+
+
+
+.. py:function:: apply_patterns_vector_fold_arith_extension(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyFoldArithExtensionPatternsOp
+
+.. py:class:: ApplyFoldElementwiseToVectorPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collect a set of patterns that fold elementwise op on vectors to the vector
+   dialect.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.elementwise_to_vector'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyFoldElementwiseToVectorPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.elementwise_to_vector'
+
+
+
+.. py:function:: apply_patterns_vector_elementwise_to_vector(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyFoldElementwiseToVectorPatternsOp
+
+.. py:class:: ApplyInterleaveAndDeinterleaveToShufflePatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that 1D vector interleave and deinterleave operations should be
+   rewritten as vector shuffle operations.
+
+   This is motivated by some current codegen backends not handling vector
+   interleave and deinterleave operations.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.interleave_and_deinterleave_to_shuffle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyInterleaveAndDeinterleaveToShufflePatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.interleave_and_deinterleave_to_shuffle'
+
+
+
+.. py:function:: apply_patterns_vector_interleave_and_deinterleave_to_shuffle(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyInterleaveAndDeinterleaveToShufflePatternsOp
+
+.. py:class:: ApplyLowerBitCastPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector bitcast operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usally a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_bitcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerBitCastPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_bitcast'
+
+
+
+.. py:function:: apply_patterns_vector_lower_bitcast(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerBitCastPatternsOp
+
+.. py:class:: ApplyLowerBroadcastPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector broadcast operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usally a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_broadcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerBroadcastPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_broadcast'
+
+
+
+.. py:function:: apply_patterns_vector_lower_broadcast(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerBroadcastPatternsOp
+
+.. py:class:: ApplyLowerContractionPatternsOp(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector contraction-like operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_contraction'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:class:: ApplyLowerContractionPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_contraction'
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_lower_contraction(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerContractionPatternsOp
+
+.. py:class:: ApplyLowerCreateMaskPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector create_mask-like operations should be lowered to
+   finer-grained vector primitives.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_create_mask'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerCreateMaskPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_create_mask'
+
+
+
+.. py:function:: apply_patterns_vector_lower_create_mask(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerCreateMaskPatternsOp
+
+.. py:class:: ApplyLowerGatherPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector.gather operations should be lowered to
+   finer-grained vector primitives.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_gather'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerGatherPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_gather'
+
+
+
+.. py:function:: apply_patterns_vector_lower_gather(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerGatherPatternsOp
+
+.. py:class:: ApplyLowerInterleavePatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector interleave operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usally a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_interleave'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerInterleavePatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_interleave'
+
+
+
+.. py:function:: apply_patterns_vector_lower_interleave(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerInterleavePatternsOp
+
+.. py:class:: ApplyLowerMaskedTransfersPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply opt-in patterns that lower vector.mask operations surrounding
+   side-effecting ops:
+
+   * MaskedTransferReadOpPattern
+   * MaskedTransferWriteOpPattern
+   * MaskedGatherOpPattern
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_masked_transfers'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerMaskedTransfersPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_masked_transfers'
+
+
+
+.. py:function:: apply_patterns_vector_lower_masked_transfers(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerMaskedTransfersPatternsOp
+
+.. py:class:: ApplyLowerMasksPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector.create_mask and vector.constant_mask operations
+   should be lowered to finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_masks'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerMasksPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_masks'
+
+
+
+.. py:function:: apply_patterns_vector_lower_masks(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerMasksPatternsOp
+
+.. py:class:: ApplyLowerOuterProductPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that the vector outerproduct operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_outerproduct'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerOuterProductPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_outerproduct'
+
+
+
+.. py:function:: apply_patterns_vector_lower_outerproduct(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerOuterProductPatternsOp
+
+.. py:class:: ApplyLowerScanPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector.scan operations should be lowered to
+   finer-grained vector primitives.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_scan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerScanPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_scan'
+
+
+
+.. py:function:: apply_patterns_vector_lower_scan(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerScanPatternsOp
+
+.. py:class:: ApplyLowerShapeCastPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector shape_cast operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_shape_cast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyLowerShapeCastPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_shape_cast'
+
+
+
+.. py:function:: apply_patterns_vector_lower_shape_cast(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerShapeCastPatternsOp
+
+.. py:class:: ApplyLowerStepPatternsOp(index_bitwidth: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector.step operations should be lowered to finer-grained
+   vector primitives.
+
+   ``index_bitwidth`` is the bitwidth used to materialize ``index``-typed steps; a
+   bitwidth of 0 leaves them untouched (e.g. to defer to a later, target-aware
+   lowering). It must not exceed the index storage bitwidth. Integer-typed
+   steps are unaffected by this option.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_step'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: index_bitwidth() -> _ods_ir
+
+
+.. py:class:: ApplyLowerStepPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_step'
+
+
+
+   .. py:method:: index_bitwidth() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_lower_step(index_bitwidth: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerStepPatternsOp
+
+.. py:class:: ApplyLowerTransferPatternsOp(*, max_transfer_rank: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector transfer operations should be lowered to finer-grained
+   vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_transfer'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: max_transfer_rank() -> _ods_ir
+
+
+.. py:class:: ApplyLowerTransferPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_transfer'
+
+
+
+   .. py:method:: max_transfer_rank() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_lower_transfer(*, max_transfer_rank: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerTransferPatternsOp
+
+.. py:class:: ApplyLowerTransposePatternsOp(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, avx2_lowering_strategy: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector transpose-like operations should be lowered to
+   finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_transpose'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+   .. py:method:: avx2_lowering_strategy() -> _ods_ir
+
+
+.. py:class:: ApplyLowerTransposePatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.lower_transpose'
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+   .. py:method:: avx2_lowering_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_lower_transpose(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, avx2_lowering_strategy: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyLowerTransposePatternsOp
+
+.. py:class:: ApplyMaterializeMasksPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that mask operations should be lowered to fine-grained arithemtic
+   operations.
+
+   This is usually the last step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.materialize_masks'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyMaterializeMasksPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.materialize_masks'
+
+
+
+.. py:function:: apply_patterns_vector_materialize_masks(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyMaterializeMasksPatternsOp
+
+.. py:class:: ApplyMultiReductionFlatteningPatternsOp(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector multi_reduction operations should be flattened from
+   more than 2-D to 2-D.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.multi_reduction_flattening'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:class:: ApplyMultiReductionFlatteningPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.multi_reduction_flattening'
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_multi_reduction_flattening(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyMultiReductionFlatteningPatternsOp
+
+.. py:class:: ApplyMultiReductionUnrollingPatternsOp(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector multi_reduction operations should be unrolled.
+   1-D multi_reductions are converted directly to vector.reduction.
+   2-D multi_reductions are unrolled into either a sequence of
+   vector.reduction ops (innerreduction) or element-wise arith ops
+   (innerparallel).
+
+   This populates the patterns from
+   ``populateVectorMultiReductionUnrollingPatterns``, i.e.:
+
+   * ``OneDimMultiReductionToReduction``
+   * ``TwoDimMultiReductionToReduction`` (innerreduction)
+   * ``TwoDimMultiReductionToElementWise`` (innerparallel)
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.multi_reduction_unrolling'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:class:: ApplyMultiReductionUnrollingPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.multi_reduction_unrolling'
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_multi_reduction_unrolling(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyMultiReductionUnrollingPatternsOp
+
+.. py:class:: ApplyRankReducingSubviewPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply opt-in vector transfer permutation patterns that include:
+
+   * TransferReadDropUnitDimsPattern
+   * TransferWriteDropUnitDimsPattern
+
+   These patterns have the effect of rewriting a vector.transfer with unit
+   dimensions into a rank-reduced version thanks to subview operations.
+   This is complemented by shape_cast folding patterns.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.rank_reducing_subview_patterns'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyRankReducingSubviewPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.rank_reducing_subview_patterns'
+
+
+
+.. py:function:: apply_patterns_vector_rank_reducing_subview_patterns(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyRankReducingSubviewPatternsOp
+
+.. py:class:: ApplyReorderMultiReductionPatternsOp(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector multi_reduction-like operations should be
+   transformed such that all reduction dimensions become innermost or
+   outermost, depending on ``lowering_strategy``.
+
+   This populates the patterns from
+   ``populateVectorMultiReductionReorderPatterns``, i.e.:
+
+   * ``InnerOuterDimReductionConversion``
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.reorder_multi_reduction_dims'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:class:: ApplyReorderMultiReductionPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.reorder_multi_reduction_dims'
+
+
+
+   .. py:method:: lowering_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_reorder_multi_reduction_dims(*, lowering_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyReorderMultiReductionPatternsOp
+
+.. py:class:: ApplyRewriteNarrowTypePatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector narrow rewrite operations should be applied.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+   Warning: these patterns currently only work for little endian targets.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.rewrite_narrow_types'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyRewriteNarrowTypePatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.rewrite_narrow_types'
+
+
+
+.. py:function:: apply_patterns_vector_rewrite_narrow_types(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyRewriteNarrowTypePatternsOp
+
+.. py:class:: ApplySinkVectorMemPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Patterns that replace redundant Vector Ops (followed by
+   ``vector.load``/``vector.store``) with either vector.load/vector.store or
+   ``memref.load``/``memref.store``. Currently limited to 1-element vectors.
+
+   Example:
+
+   .. code::
+
+       vector.load %arg0[%arg1] : memref<?xf32>, vector<4xf32>
+       vector.extract %0[1] : f32 from vector<4xf32>
+
+   Gets converted to:
+
+   .. code::
+
+       %c1 = arith.constant 1 : index
+       %0 = arith.addi %arg1, %c1 overflow<nsw> : index
+       %1 = memref.load %arg0[%0] : memref<?xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.sink_mem_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplySinkVectorMemPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.sink_mem_ops'
+
+
+
+.. py:function:: apply_patterns_vector_sink_mem_ops(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplySinkVectorMemPatternsOp
+
+.. py:class:: ApplySinkVectorPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Patterns that remove redundant Vector Ops by re-ordering them with
+   e.g. elementwise Ops.
+
+   Example:
+
+   .. code::
+
+       %at = vector.transpose %a, [1, 0]: vector<4x2xf32> to vector<2x4xf32>
+       %bt = vector.transpose %b, [1, 0]: vector<4x2xf32> to vector<2x4xf32>
+       %r = arith.addf %at, %bt : vector<2x4xf32>
+
+   gets converted to:
+
+   .. code::
+
+       %0 = arith.addf %a, %b : vector<4x2xf32>
+       %r = vector.transpose %0, [1, 0] : vector<2x4xf32>
+
+   At the moment, these patterns are limited to vector.broadcast,
+   vector.transpose and vector.extract.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.sink_ops'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplySinkVectorPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.sink_ops'
+
+
+
+.. py:function:: apply_patterns_vector_sink_ops(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplySinkVectorPatternsOp
+
+.. py:class:: ApplySplitTransferFullPartialPatternsOp(*, split_transfer_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector transfer operations should be split to full and
+   partial parts.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.split_transfer_full_partial'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: split_transfer_strategy() -> _ods_ir
+
+
+.. py:class:: ApplySplitTransferFullPartialPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.split_transfer_full_partial'
+
+
+
+   .. py:method:: split_transfer_strategy() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_split_transfer_full_partial(*, split_transfer_strategy: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplySplitTransferFullPartialPatternsOp
+
+.. py:class:: ApplyTransferPermutationPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply opt-in vector transfer permutation patterns that include:
+
+   * TransferReadPermutationLowering
+   * TransferWritePermutationLowering
+   * TransferOpReduceRank
+   * TransferWriteNonPermutationLowering
+
+   These patterns have the effect of rewriting a vector.transfer with an
+   arbitrary permutation_map to a vector.transfer with a permutation_map that
+   is a minor identity followed by a vector.transpose.
+
+   In other words, this makes the vector.transfer contiguous on the most minor
+   dimensions and materializes the permutation_map as a vector.transpose.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.transfer_permutation_patterns'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyTransferPermutationPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.transfer_permutation_patterns'
+
+
+
+.. py:function:: apply_patterns_vector_transfer_permutation_patterns(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyTransferPermutationPatternsOp
+
+.. py:class:: ApplyTransferToScfPatternsOp(*, max_transfer_rank: Optional[Union[int, _ods_ir]] = None, full_unroll: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector transfer operations should be rewritten with scf.for
+   loops over finer-grained vector primitives.
+
+   This is usually a late step that is run after bufferization as part of the
+   process of lowering to e.g. LLVM or NVVM.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.transfer_to_scf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: max_transfer_rank() -> _ods_ir
+
+
+   .. py:method:: full_unroll() -> _ods_ir
+
+
+.. py:class:: ApplyTransferToScfPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.transfer_to_scf'
+
+
+
+   .. py:method:: max_transfer_rank() -> _ods_ir
+
+
+   .. py:method:: full_unroll() -> _ods_ir
+
+
+.. py:function:: apply_patterns_vector_transfer_to_scf(*, max_transfer_rank: Optional[Union[int, _ods_ir]] = None, full_unroll: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyTransferToScfPatternsOp
+
+.. py:class:: ApplyUnrollFromElementsPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector from_elements operations should be unrolled
+   along the outermost dimension.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.unroll_from_elements'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyUnrollFromElementsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.unroll_from_elements'
+
+
+
+.. py:function:: apply_patterns_vector_unroll_from_elements(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyUnrollFromElementsPatternsOp
+
+.. py:class:: ApplyUnrollToElementsPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Indicates that vector to_elements operations should be unrolled
+   along the outermost dimension.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.unroll_to_elements'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyUnrollToElementsPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.unroll_to_elements'
+
+
+
+.. py:function:: apply_patterns_vector_unroll_to_elements(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyUnrollToElementsPatternsOp
+
+.. py:class:: ApplyVectorReductionToContractPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Apply opt-in patterns that convert reductions to contract:
+
+   * MultiReduceToContract
+   * CombineContractBroadcast
+   * CombineContractABTranspose
+   * CombineContractResultTranspose
+   * ReorderElementwiseOpsOnTranspose
+   * ReorderElementwiseOpsOnBroadcast
+   * ReorderCastOpsOnBroadcast
+
+   These patterns have the effect of rewriting a vector.multi_reduce into a
+   vector.contract.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.reduction_to_contract'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyVectorReductionToContractPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.vector.reduction_to_contract'
+
+
+
+.. py:function:: apply_patterns_vector_reduction_to_contract(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorReductionToContractPatternsOp
+
+.. py:class:: ApplyVectorToLLVMConversionPatternsOp(*, reassociate_fp_reductions: Optional[Union[bool, _ods_ir]] = None, force_32bit_vector_indices: Optional[Union[bool, _ods_ir]] = None, use_vector_alignment: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Collects patterns that convert vector dialect ops to LLVM dialect ops. These
+   patterns require an "LLVMTypeConverter".
+
+   The patterns can be customized as follows:
+
+   * ``reassociate_fp_reductions``: Allows LLVM to reassociate floating-point
+   reductions for speed.
+   * ``force_32bit_vector_indices``: Allows the compiler to assume that vector
+   indices fit in 32-bit if that yields faster code.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.vector.vector_to_llvm'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: reassociate_fp_reductions() -> _ods_ir
+
+
+   .. py:method:: force_32bit_vector_indices() -> _ods_ir
+
+
+   .. py:method:: use_vector_alignment() -> _ods_ir
+
+
+.. py:class:: ApplyVectorToLLVMConversionPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_conversion_patterns.vector.vector_to_llvm'
+
+
+
+   .. py:method:: reassociate_fp_reductions() -> _ods_ir
+
+
+   .. py:method:: force_32bit_vector_indices() -> _ods_ir
+
+
+   .. py:method:: use_vector_alignment() -> _ods_ir
+
+
+.. py:function:: apply_conversion_patterns_vector_vector_to_llvm(*, reassociate_fp_reductions: Optional[Union[bool, _ods_ir]] = None, force_32bit_vector_indices: Optional[Union[bool, _ods_ir]] = None, use_vector_alignment: Optional[Union[bool, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyVectorToLLVMConversionPatternsOp
+

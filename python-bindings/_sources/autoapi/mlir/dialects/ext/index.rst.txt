@@ -1,0 +1,307 @@
+mlir.dialects.ext
+=================
+
+.. py:module:: mlir.dialects.ext
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.ext.Operand
+   mlir.dialects.ext.Result
+   mlir.dialects.ext.Region
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.ext.Operation
+   mlir.dialects.ext.Type
+   mlir.dialects.ext.Attribute
+   mlir.dialects.ext.Dialect
+   mlir.dialects.ext.Pure
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.ext.result
+   mlir.dialects.ext.infer_result
+   mlir.dialects.ext.operand
+   mlir.dialects.ext.attribute
+
+
+Module Contents
+---------------
+
+.. py:data:: Operand
+
+.. py:data:: Result
+
+.. py:data:: Region
+
+.. py:function:: result(*, default_factory: Optional[Callable[[], Any]] = None, kw_only: bool = False) -> Result
+
+   
+   A field specifier for ``Result`` definitions.
+
+
+.. py:function:: infer_result() -> Result
+
+   
+   A field specifier for ``Result`` definitions with type inference enabled.
+
+
+.. py:function:: operand(*, kw_only: bool = False) -> Operand
+
+   
+   A field specifier for ``Operand`` definitions.
+
+
+.. py:function:: attribute(*, default_factory: Optional[Callable[[], Any]] = None, kw_only: bool = False) -> ir
+
+   
+   A field specifier for attribute definitions.
+
+
+.. py:class:: Operation(**kwargs)
+
+   Bases: :py:obj:`ir`
+
+
+   
+   Base class of Python-defined operations.
+
+   The following example shows two ways to define operations via this class:
+
+   .. code:: python
+
+       class MyOp(MyDialect.Operation, name=..):
+         ...
+       
+       class MyOp(Operation, dialect=MyDialect, name=..):
+         ...
+
+
+   .. py:method:: __init_subclass__(*, name: str | None = None, traits: list[type] | None = None, dialect: type | None = None, **kwargs)
+      :classmethod:
+
+
+      
+      This method is to perform all magic to make a ``Operation`` subclass works like a dataclass, like:
+
+      * generate the method to emit IRDL operations,
+      * generate ``__init__`` method as an operation builder function,
+      * generate operand, result and attribute accessors
+
+
+
+   .. py:method:: _variadicity_to_segment(variadicity: mlir.dialects.irdl.Variadicity) -> int
+      :staticmethod:
+
+
+
+   .. py:method:: _generate_segments(operands_or_results: List[Union[OperandDef, ResultDef]]) -> List[int] | None
+      :staticmethod:
+
+
+
+   .. py:method:: _generate_init_signature(fields: List[FieldDef]) -> inspect.Signature
+      :staticmethod:
+
+
+
+   .. py:method:: _generate_init_method(fields: List[FieldDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _generate_class_attributes(dialect_name: str, op_name: str, fields: List[FieldDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _generate_attr_properties(attrs: List[AttributeDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _generate_region_properties(regions: List[RegionDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _generate_operand_properties(operands: List[OperandDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _generate_result_properties(results: List[ResultDef]) -> None
+      :classmethod:
+
+
+
+   .. py:method:: _attach_traits() -> None
+      :classmethod:
+
+
+
+   .. py:method:: _emit_operation() -> None
+      :classmethod:
+
+
+
+.. py:class:: Type
+
+   Bases: :py:obj:`ir`
+
+
+   
+   Base class of Python-defined types.
+
+   The following example shows two ways to define types via this class:
+
+   .. code:: python
+
+       class MyType(MyDialect.Type, name=..):
+         ...
+       
+       class MyType(Type, dialect=MyDialect, name=..):
+         ...
+
+
+   .. py:method:: __init_subclass__(*, name: str | None = None, dialect: type | None = None, **kwargs)
+      :classmethod:
+
+
+
+   .. py:method:: get(*args, context=None)
+      :classmethod:
+
+
+
+   .. py:method:: _emit_type() -> None
+      :classmethod:
+
+
+
+.. py:class:: Attribute
+
+   Bases: :py:obj:`ir`
+
+
+   
+   Base class of Python-defined attributes.
+
+   The following example shows two ways to define attributes via this class:
+
+   .. code:: python
+
+       class MyAttr(MyDialect.Attribute, name=..):
+         ...
+       
+       class MyAttr(Attribute, dialect=MyDialect, name=..):
+         ...
+
+
+   .. py:method:: __init_subclass__(*, name: str | None = None, dialect: type | None = None, **kwargs)
+      :classmethod:
+
+
+
+   .. py:method:: get(*args, context=None)
+      :classmethod:
+
+
+
+   .. py:method:: _emit_attr() -> None
+      :classmethod:
+
+
+
+.. py:class:: Dialect
+
+   Bases: :py:obj:`ir`
+
+
+   
+   Base class of a Python-defined dialect.
+
+   It can be used like the following example:
+
+   .. code:: python
+
+       class MyInt(Dialect, name="myint"):
+           pass
+       
+       i32 = IntegerType[32]
+       
+       class ConstantOp(MyInt.Operation, name="constant"):
+           value: IntegerAttr
+           cst: Result[i32] = infer_result()
+       
+       class AddOp(MyInt.Operation, name="add"):
+           lhs: Operand[i32]
+           rhs: Operand[i32]
+           res: Result[i32] = infer_result()
+
+
+   .. py:method:: __init_subclass__(name: str, **kwargs)
+      :classmethod:
+
+
+
+   .. py:method:: _emit_dialect() -> None
+      :classmethod:
+
+
+
+   .. py:method:: _emit_module() -> ir
+      :classmethod:
+
+
+
+   .. py:method:: load(*, reload: bool = False) -> None
+      :classmethod:
+
+
+
+.. py:class:: Pure
+
+   
+   Always speculatable operation that does not touch memory.
+
+
+   .. py:class:: NoMemoryEffect
+
+      Bases: :py:obj:`ir`
+
+
+      .. py:method:: get_effects(op, effects)
+         :staticmethod:
+
+
+
+
+   .. py:class:: AlwaysSpeculatable
+
+      Bases: :py:obj:`ir`
+
+
+      .. py:method:: get_speculatability(op)
+         :staticmethod:
+
+
+
+
+   .. py:method:: attach(op_name)
+      :staticmethod:
+
+
+

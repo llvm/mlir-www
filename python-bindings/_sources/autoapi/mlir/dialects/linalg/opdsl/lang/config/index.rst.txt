@@ -1,0 +1,227 @@
+mlir.dialects.linalg.opdsl.lang.config
+======================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.config
+
+.. autoapi-nested-parse::
+
+   
+   Represents configured ops as emitted for code generation.
+
+   Classes in this module generally are directly serializable to YAML for use
+   by the code generator.
+
+   TODO: These should just be dumb containers or serialization code but they
+   currently encode too many details of how the language is interpreted. Move this
+   to helpers on the comprehension objects themselves.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.config.OperandDefConfig
+   mlir.dialects.linalg.opdsl.lang.config.LinalgStructuredOpConfig
+   mlir.dialects.linalg.opdsl.lang.config.LinalgOpConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: OperandDefConfig(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef, shape_map: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap] = None, index_attr_map: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Wrapper containing an operand definition with additional state.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgOperandDefConfig'
+
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:attribute:: shape_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:attribute:: index_attr_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:attribute:: indexing_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:property:: name
+      :type: str
+
+
+
+   .. py:property:: kind
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.OperandKind
+
+
+
+   .. py:property:: type_var
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.TypeVar
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: LinalgStructuredOpConfig(comprehension: mlir.dialects.linalg.opdsl.lang.comprehension.Comprehension, domain: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.DimDef], registered_operands: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef], context: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.Context] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Configuration for metadata sufficient to construct a linalg named op.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgStructuredOpConfig'
+
+
+
+   .. py:attribute:: context
+      :value: None
+
+
+
+   .. py:attribute:: affine_state
+
+
+   .. py:attribute:: writes
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.List[mlir.dialects.linalg.opdsl.lang.comprehension.Tuple[mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse, mlir.dialects.linalg.opdsl.lang.comprehension.TensorExpression]]
+      :value: []
+
+
+
+   .. py:attribute:: operands
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Dict[mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef, OperandDefConfig]
+
+
+   .. py:attribute:: uses
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Dict[mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse, TensorUseConfig]
+
+
+   .. py:attribute:: reduction_dims
+
+
+   .. py:attribute:: assignments
+
+
+   .. py:property:: ordered_operands
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[OperandDefConfig]
+
+
+
+   .. py:property:: ordered_dims
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.Tuple[str, int]]
+
+
+      
+      Gets the ordered list of dim bindings (symbolic name, position).
+
+      TODO: The original parser relies on parse ordering to arrive at the
+      iterator types, but that ordering is not defined on the Python side, so
+      this may be ambiguous.
+
+
+
+   .. py:property:: indexing_maps
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.ir.AffineMap]
+
+
+
+   .. py:property:: iterator_types
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[str]
+
+
+
+   .. py:method:: add_operand(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef)
+
+
+   .. py:method:: add_indexed_operand(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef)
+
+
+   .. py:method:: add_tensor_use(tensor_use: mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse)
+
+
+   .. py:method:: _get_scalar_map() -> mlir.ir.AffineMap
+
+      
+      Create an empty affine map used to index a scalar.
+
+
+
+   .. py:method:: _normalize_affine_map(affine_map: mlir.ir.AffineMap, with_dims: bool = True) -> mlir.ir.AffineMap
+
+      
+      Normalizes an indexing map to have the max known symbols and dims.
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: LinalgOpConfig(metadata: mlir.dialects.linalg.opdsl.lang.comprehension.OpMetadataDef, *, structured_op: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[LinalgStructuredOpConfig] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Container for any supported linalg op type.
+
+   This includes the concrete type by name for ease of parsing by systems
+   that ignore tags.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgOpConfig'
+
+
+
+   .. py:attribute:: metadata
+
+
+   .. py:attribute:: structured_op
+      :value: None
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: from_linalg_op_def(op_def: mlir.dialects.linalg.opdsl.lang.comprehension.LinalgOpDef, context: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.Context] = None) -> mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[LinalgOpConfig]
+      :staticmethod:
+
+
+      
+      Expands a LinalgOpDef into corresponding Linalg configured ops.
+
+
+
+   .. py:method:: __repr__()
+
+

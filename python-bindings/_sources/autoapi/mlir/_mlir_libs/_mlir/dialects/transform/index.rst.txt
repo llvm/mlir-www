@@ -1,0 +1,53 @@
+mlir._mlir_libs._mlir.dialects.transform
+========================================
+
+.. py:module:: mlir._mlir_libs._mlir.dialects.transform
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.dialects.transform.AnyOpType
+   mlir._mlir_libs._mlir.dialects.transform.OperationType
+
+
+Package Contents
+----------------
+
+.. py:class:: AnyOpType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> AnyOpType
+      :staticmethod:
+
+
+
+.. py:class:: OperationType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(operation_name: str, context: mlir.ir.Context | None = None) -> OperationType
+      :staticmethod:
+
+
+
+   .. py:property:: operation_name
+      :type: str
+
+
+
