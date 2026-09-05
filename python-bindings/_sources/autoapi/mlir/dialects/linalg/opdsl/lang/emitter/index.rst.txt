@@ -1,0 +1,32 @@
+mlir.dialects.linalg.opdsl.lang.emitter
+=======================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.emitter
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.emitter.ValueList
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.emitter.emit_generic_structured_op
+   mlir.dialects.linalg.opdsl.lang.emitter.emit_named_structured_op
+
+
+Module Contents
+---------------
+
+.. py:data:: ValueList
+
+.. py:function:: emit_generic_structured_op(op_config: mlir.dialects.linalg.opdsl.lang.config.LinalgStructuredOpConfig, *ins: Value, outs: ValueList, **attrs: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[int])
+
+.. py:function:: emit_named_structured_op(op_config: mlir.dialects.linalg.opdsl.lang.config.LinalgStructuredOpConfig, op_name: str, op_class_name: str, *ins: Value, outs: ValueList, **attrs: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[int])
+

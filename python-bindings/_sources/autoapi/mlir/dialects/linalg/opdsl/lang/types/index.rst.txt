@@ -1,0 +1,89 @@
+mlir.dialects.linalg.opdsl.lang.types
+=====================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.types
+
+.. autoapi-nested-parse::
+
+   
+   Facility for symbolically referencing type variables.
+
+   Type variables are instances of the TypeVar class, which is uniqued by name.
+   An "expando" accessor ``TV`` is provided that generates a named TypeVar for
+   any attribute access:
+
+               TV.T
+               TypeVar(T)
+               TV.T is TV.U
+               False
+               TV.T is TV.T
+               True
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.types.TV
+   mlir.dialects.linalg.opdsl.lang.types.I32
+   mlir.dialects.linalg.opdsl.lang.types.I64
+   mlir.dialects.linalg.opdsl.lang.types.F32
+   mlir.dialects.linalg.opdsl.lang.types.F64
+   mlir.dialects.linalg.opdsl.lang.types.T
+   mlir.dialects.linalg.opdsl.lang.types.U
+   mlir.dialects.linalg.opdsl.lang.types.V
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.types.TypeVar
+
+
+Module Contents
+---------------
+
+.. py:class:: TypeVar
+
+   
+   A replaceable type variable.
+
+   Type variables are uniqued by name.
+
+
+   .. py:attribute:: ALL_TYPEVARS
+      :type:  Dict[str, TypeVar]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique type vars on attr access.
+
+
+
+.. py:data:: TV
+
+.. py:data:: I32
+
+.. py:data:: I64
+
+.. py:data:: F32
+
+.. py:data:: F64
+
+.. py:data:: T
+
+.. py:data:: U
+
+.. py:data:: V
+

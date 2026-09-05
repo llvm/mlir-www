@@ -1,0 +1,163 @@
+mlir.dialects.transform.interpreter
+===================================
+
+.. py:module:: mlir.dialects.transform.interpreter
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.interpreter.TransformOptions
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.interpreter.Operation
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.interpreter._unpack_operation
+   mlir.dialects.transform.interpreter.apply_named_sequence
+   mlir.dialects.transform.interpreter.copy_symbols_and_merge_into
+
+
+Package Contents
+----------------
+
+.. py:class:: Operation
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:method:: create(name: str, results: collections.abc.Sequence[Type] | None = None, operands: collections.abc.Sequence[Value] | None = None, attributes: dict[str, Attribute] | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int = 0, loc: Location | None = None, ip: object | None = None, infer_type: bool = False) -> Operation
+      :staticmethod:
+
+
+      Creates a new operation.
+
+      :param name: Operation name (e.g. `dialect.operation`).
+      :param results: Optional sequence of Type representing op result types.
+      :param operands: Optional operands of the operation.
+      :param attributes: Optional Dict of {str: Attribute}.
+      :param successors: Optional List of Block for the operation's successors.
+      :param regions: Number of regions to create (default = 0).
+      :param location: Optional Location object (defaults to resolve from context manager).
+      :param ip: Optional InsertionPoint (defaults to resolve from context manager or set to False to disable insertion, even with an insertion point set in the context manager).
+      :param infer_type: Whether to infer result types (default = False).
+
+      :returns: A new detached Operation object. Detached operations can be added to blocks, which causes them to become attached.
+
+
+
+   .. py:method:: parse(source: str, *, source_name: str = '', context: Context | None = None) -> OpView
+      :staticmethod:
+
+
+      
+      Parses an operation. Supports both text assembly format and binary bytecode format.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirOperation.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates an Operation from a capsule wrapping MlirOperation.
+
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns self (the operation).
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView of this operation.
+
+      Note:
+      If the operation has a registered and loaded dialect then this OpView will
+      be concrete wrapper class.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block containing this operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: replace_uses_of_with(of: Value, with_: Value) -> None
+
+      
+      Replaces uses of the 'of' value with the 'with' value inside the operation.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+.. py:data:: TransformOptions
+
+.. py:function:: _unpack_operation(op)
+
+.. py:function:: apply_named_sequence(payload_root, transform_root, transform_module, transform_options=None)
+
+   
+   Applies the transformation script starting at the given transform root
+   operation to the given payload operation. The module containing the
+   transform root as well as the transform options should be provided.
+   The transform operation must implement TransformOpInterface and the module
+   must be a ModuleOp.
+
+
+.. py:function:: copy_symbols_and_merge_into(target, other)
+
+   
+   Copies symbols from other into target, renaming private symbols to avoid
+   duplicates. Raises an error if copying would lead to duplicate public
+   symbols.
+
+

@@ -1,0 +1,368 @@
+mlir._mlir_libs._mlir.dialects.transform
+========================================
+
+.. py:module:: mlir._mlir_libs._mlir.dialects.transform
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.dialects.transform.Type
+   mlir._mlir_libs._mlir.dialects.transform.Context
+   mlir._mlir_libs._mlir.dialects.transform.AnyOpType
+   mlir._mlir_libs._mlir.dialects.transform.OperationType
+
+
+Package Contents
+----------------
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: Context
+
+   .. py:method:: _get_live_count() -> int
+      :staticmethod:
+
+
+      
+      Gets the number of live Context objects.
+
+
+
+   .. py:method:: _get_context_again() -> Context
+
+      
+      Gets another reference to the same context.
+
+
+
+   .. py:method:: _get_live_module_count() -> int
+
+      
+      Gets the number of live modules owned by this context.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirContext.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates a Context from a capsule wrapping MlirContext.
+
+
+
+   .. py:method:: __enter__(/) -> Context
+
+      
+      Enters the context as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the context manager.
+
+
+
+   .. py:attribute:: current
+      :type:  Context | None
+      :value: Ellipsis
+
+
+      
+      Gets the Context bound to the current thread or returns None if no context is set.
+
+
+
+   .. py:property:: dialects
+      :type: Dialects
+
+
+      
+      Gets a container for accessing dialects by name.
+
+
+
+   .. py:property:: d
+      :type: Dialects
+
+
+      
+      Alias for ``dialects``.
+
+
+
+   .. py:method:: get_dialect_descriptor(dialect_name: str) -> DialectDescriptor
+
+      
+      Gets or loads a dialect by name, returning its descriptor object.
+
+
+
+   .. py:method:: is_dialect_loaded(dialect_name: str) -> bool
+
+      
+      Checks if a dialect is loaded in the context.
+
+
+
+   .. py:property:: allow_unregistered_dialects
+      :type: bool
+
+
+      
+      Controls whether unregistered dialects are allowed in this context.
+
+
+
+   .. py:method:: attach_diagnostic_handler(callback: object) -> object
+
+      
+      Attaches a diagnostic handler that will receive callbacks.
+
+
+
+   .. py:method:: enable_multithreading(enable: bool) -> None
+
+      Enables or disables multi-threading support in the context.
+
+      :param enable: Whether to enable (True) or disable (False) multi-threading.
+
+
+
+   .. py:method:: set_thread_pool(arg: ThreadPool, /) -> None
+
+      Sets a custom thread pool for the context to use.
+
+      :param pool: A ThreadPool object to use for parallel operations.
+
+      .. note:: Multi-threading is automatically disabled before setting the thread pool.
+
+
+
+   .. py:method:: get_num_threads() -> int
+
+      
+      Gets the number of threads in the context's thread pool.
+
+
+
+   .. py:method:: _mlir_thread_pool_ptr() -> str
+
+      
+      Gets the raw pointer to the LLVM thread pool as a string.
+
+
+
+   .. py:method:: is_registered_operation(operation_name: str) -> bool
+
+      Checks whether an operation with the given name is registered.
+
+      :param operation_name: The fully qualified name of the operation (e.g., `arith.addf`).
+
+      :returns: True if the operation is registered, False otherwise.
+
+
+
+   .. py:method:: append_dialect_registry(registry: DialectRegistry) -> None
+
+      Appends the contents of a dialect registry to the context.
+
+      :param registry: A DialectRegistry containing dialects to append.
+
+
+
+   .. py:property:: emit_error_diagnostics
+      :type: bool
+
+
+      
+      Controls whether error diagnostics are emitted to diagnostic handlers.
+
+      By default, error diagnostics are captured and reported through MLIRError exceptions.
+
+
+
+   .. py:method:: load_all_available_dialects() -> None
+
+      
+      Loads all dialects available in the registry into the context.
+
+      This eagerly loads all dialects that have been registered, making them
+      immediately available for use.
+
+
+
+   .. py:method:: begin_transient_scope() -> None
+
+      
+      Begins a transient scope on the context, freezing the base layer.
+
+      All subsequently allocated types, attributes, and unregistered operations
+      are treated as transient and will be deallocated with end_transient_scope().
+      Raises a ValueError if the context is already in a transient scope.
+
+
+
+   .. py:method:: end_transient_scope() -> None
+
+      
+      Ends the transient scope and resets the context to the base state.
+
+      Prunes all transient types, attributes, affine expressions, distinct
+      attributes, and unregistered operations added during the transient scope.
+
+      Note: Any Python objects referencing transient IR entities become invalid
+      after this call and must not be accessed.
+
+
+
+   .. py:property:: is_in_transient_scope
+      :type: bool
+
+
+      
+      Returns whether the context is currently in a transient scope.
+
+
+
+.. py:class:: AnyOpType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> AnyOpType
+      :staticmethod:
+
+
+
+.. py:class:: OperationType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(operation_name: str, context: mlir.ir.Context | None = None) -> OperationType
+      :staticmethod:
+
+
+
+   .. py:property:: operation_name
+      :type: str
+
+
+

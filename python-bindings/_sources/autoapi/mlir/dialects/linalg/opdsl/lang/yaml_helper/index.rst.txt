@@ -1,0 +1,63 @@
+mlir.dialects.linalg.opdsl.lang.yaml_helper
+===========================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.yaml_helper
+
+.. autoapi-nested-parse::
+
+   
+   YAML serialization is routed through here to centralize common logic.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.yaml_helper.yaml_dump
+   mlir.dialects.linalg.opdsl.lang.yaml_helper.yaml_dump_all
+
+
+Module Contents
+---------------
+
+.. py:class:: YAMLObject
+
+   Bases: :py:obj:`yaml.YAMLObject`
+
+
+   
+   An object that can dump itself to a YAML stream
+   and load itself from a YAML stream.
+
+
+   .. py:method:: to_yaml(dumper, self)
+      :classmethod:
+
+
+      
+      Default to a custom dictionary mapping.
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+      :abstractmethod:
+
+
+
+   .. py:method:: as_linalg_yaml()
+
+
+.. py:function:: yaml_dump(data, sort_keys=False, **kwargs)
+
+.. py:function:: yaml_dump_all(data, sort_keys=False, explicit_start=True, **kwargs)
+
