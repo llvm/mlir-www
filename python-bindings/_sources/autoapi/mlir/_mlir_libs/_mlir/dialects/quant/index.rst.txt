@@ -1,0 +1,177 @@
+mlir._mlir_libs._mlir.dialects.quant
+====================================
+
+.. py:module:: mlir._mlir_libs._mlir.dialects.quant
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.dialects.quant.QuantizedType
+   mlir._mlir_libs._mlir.dialects.quant.AnyQuantizedType
+   mlir._mlir_libs._mlir.dialects.quant.UniformQuantizedType
+   mlir._mlir_libs._mlir.dialects.quant.UniformQuantizedPerAxisType
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.dialects.quant.CalibratedQuantizedType
+
+
+Module Contents
+---------------
+
+.. py:class:: QuantizedType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: default_minimum_for_integer(is_signed: bool, integral_width: int) -> int
+      :staticmethod:
+
+
+
+   .. py:method:: default_maximum_for_integer(is_signed: bool, integral_width: int) -> int
+      :staticmethod:
+
+
+
+   .. py:property:: expressed_type
+      :type: mlir.ir.Type
+
+
+
+   .. py:property:: flags
+      :type: int
+
+
+
+   .. py:property:: is_signed
+      :type: bool
+
+
+
+   .. py:property:: storage_type
+      :type: mlir.ir.Type
+
+
+
+   .. py:property:: storage_type_min
+      :type: int
+
+
+
+   .. py:property:: storage_type_max
+      :type: int
+
+
+
+   .. py:property:: storage_type_integral_width
+      :type: int
+
+
+
+   .. py:method:: is_compatible_expressed_type(candidate: mlir.ir.Type) -> bool
+
+
+   .. py:property:: quantized_element_type
+      :type: mlir.ir.Type
+
+
+
+   .. py:method:: cast_from_storage_type(candidate: mlir.ir.Type) -> mlir.ir.Type
+
+
+   .. py:method:: cast_to_storage_type(type: mlir.ir.Type) -> mlir.ir.Type
+      :staticmethod:
+
+
+
+   .. py:method:: cast_from_expressed_type(candidate: mlir.ir.Type) -> mlir.ir.Type
+
+
+   .. py:method:: cast_to_expressed_type(type: mlir.ir.Type) -> mlir.ir.Type
+      :staticmethod:
+
+
+
+   .. py:method:: cast_expressed_to_storage_type(candidate: mlir.ir.Type) -> mlir.ir.Type
+
+
+.. py:class:: AnyQuantizedType
+
+   Bases: :py:obj:`QuantizedType`
+
+
+   .. py:method:: get(flags: int, storage_type: mlir.ir.Type, expressed_type: mlir.ir.Type, storage_type_min: int, storage_type_max: int) -> mlir.ir.Type
+      :classmethod:
+
+
+
+.. py:class:: UniformQuantizedType
+
+   Bases: :py:obj:`QuantizedType`
+
+
+   .. py:method:: get(flags: int, storage_type: mlir.ir.Type, expressed_type: mlir.ir.Type, scale: float, zero_point: int, storage_type_min: int, storage_type_max: int) -> mlir.ir.Type
+      :classmethod:
+
+
+
+   .. py:property:: scale
+      :type: float
+
+
+
+   .. py:property:: zero_point
+      :type: int
+
+
+
+   .. py:property:: is_fixed_point
+      :type: bool
+
+
+
+.. py:class:: UniformQuantizedPerAxisType
+
+   Bases: :py:obj:`QuantizedType`
+
+
+   .. py:method:: get(flags: int, storage_type: mlir.ir.Type, expressed_type: mlir.ir.Type, scales: list[float], zero_points: list[int], quantized_dimension: int, storage_type_min: int, storage_type_max: int)
+      :classmethod:
+
+
+
+   .. py:property:: scales
+      :type: list[float]
+
+
+
+   .. py:property:: zero_points
+      :type: list[int]
+
+
+
+   .. py:property:: quantized_dimension
+      :type: int
+
+
+
+   .. py:property:: is_fixed_point
+      :type: bool
+
+
+
+.. py:function:: CalibratedQuantizedType(QuantizedType)
+

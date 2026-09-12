@@ -1,0 +1,386 @@
+mlir._mlir_libs._mlir.rewrite
+=============================
+
+.. py:module:: mlir._mlir_libs._mlir.rewrite
+
+.. autoapi-nested-parse::
+
+   
+   MLIR Rewrite Bindings
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.rewrite.GreedyRewriteStrictness
+   mlir._mlir_libs._mlir.rewrite.GreedySimplifyRegionLevel
+   mlir._mlir_libs._mlir.rewrite.DialectConversionFoldingMode
+   mlir._mlir_libs._mlir.rewrite.PatternRewriter
+   mlir._mlir_libs._mlir.rewrite.RewritePatternSet
+   mlir._mlir_libs._mlir.rewrite.ConversionPatternRewriter
+   mlir._mlir_libs._mlir.rewrite.ConversionTarget
+   mlir._mlir_libs._mlir.rewrite.TypeConverter
+   mlir._mlir_libs._mlir.rewrite.PDLResultList
+   mlir._mlir_libs._mlir.rewrite.PDLModule
+   mlir._mlir_libs._mlir.rewrite.GreedyRewriteConfig
+   mlir._mlir_libs._mlir.rewrite.ConversionConfig
+   mlir._mlir_libs._mlir.rewrite.FrozenRewritePatternSet
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.rewrite.apply_patterns_and_fold_greedily
+   mlir._mlir_libs._mlir.rewrite.walk_and_apply_patterns
+   mlir._mlir_libs._mlir.rewrite.apply_partial_conversion
+   mlir._mlir_libs._mlir.rewrite.apply_full_conversion
+
+
+Module Contents
+---------------
+
+.. py:class:: GreedyRewriteStrictness
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: ANY_OP
+      :value: 0
+
+
+
+   .. py:attribute:: EXISTING_AND_NEW_OPS
+      :value: 1
+
+
+
+   .. py:attribute:: EXISTING_OPS
+      :value: 2
+
+
+
+.. py:class:: GreedySimplifyRegionLevel
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: DISABLED
+      :value: 0
+
+
+
+   .. py:attribute:: NORMAL
+      :value: 1
+
+
+
+   .. py:attribute:: AGGRESSIVE
+      :value: 2
+
+
+
+.. py:class:: DialectConversionFoldingMode
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: NEVER
+      :value: 0
+
+
+
+   .. py:attribute:: BEFORE_PATTERNS
+      :value: 1
+
+
+
+   .. py:attribute:: AFTER_PATTERNS
+      :value: 2
+
+
+
+.. py:class:: PatternRewriter
+
+   .. py:property:: ip
+      :type: _mlir.ir.InsertionPoint
+
+
+      
+      The current insertion point of the PatternRewriter.
+
+
+
+   .. py:method:: replace_op(op: _mlir.ir._OperationBase, new_op: _mlir.ir._OperationBase) -> None
+                  replace_op(op: _mlir.ir._OperationBase, values: collections.abc.Sequence[_mlir.ir.Value]) -> None
+
+      
+      Replace an operation with a list of values.
+
+
+
+   .. py:method:: erase_op(op: _mlir.ir._OperationBase) -> None
+
+      
+      Erase an operation.
+
+
+
+.. py:class:: RewritePatternSet(context: _mlir.ir.Context | None = None)
+
+   .. py:method:: add(root: object, fn: collections.abc.Callable, benefit: int = 1) -> None
+
+      Add a new rewrite pattern on the specified root operation, using
+                    the provided callable for matching and rewriting, and assign it
+                    the given benefit.
+
+                    Args:
+                      root: The root operation to which this pattern applies. This may
+                            be either an OpView subclass or an operation name.
+                      fn: The callable to use for matching and rewriting, which takes
+                          an operation and a pattern rewriter. The match is considered
+                          successful iff the callable returns a falsy value.
+                      benefit: The benefit of the pattern, defaulting to 1.
+
+
+
+   .. py:method:: add_conversion(root: object, fn: collections.abc.Callable, type_converter: TypeConverter, benefit: int = 1) -> None
+
+      Add a new conversion pattern on the specified root operation,
+      using the provided callable for matching and rewriting,
+      and assign it the given benefit.
+
+      :param root: The root operation to which this pattern applies.
+                   This may be either an OpView subclass or an operation name.
+      :param fn: The callable to use for matching and rewriting, which takes an
+                 operation, its adaptor, the type converter and a pattern
+                 rewriter. The match is considered successful iff the callable
+                 returns a falsy value.
+      :param type_converter: The type converter to convert types in the IR.
+      :param benefit: The benefit of the pattern, defaulting to 1.
+
+
+
+   .. py:method:: freeze() -> FrozenRewritePatternSet
+
+      
+      Freeze the pattern set into a frozen one.
+
+
+
+.. py:class:: ConversionPatternRewriter
+
+   Bases: :py:obj:`PatternRewriter`
+
+
+   .. py:method:: convert_region_types(arg0: _mlir.ir.Region, arg1: TypeConverter, /) -> None
+
+
+.. py:class:: ConversionTarget(context: _mlir.ir.Context | None = None)
+
+   .. py:method:: add_legal_op(*ops) -> None
+
+      
+      Mark the given operations as legal.
+
+
+
+   .. py:method:: add_illegal_op(*ops) -> None
+
+      
+      Mark the given operations as illegal.
+
+
+
+   .. py:method:: add_legal_dialect(*dialects) -> None
+
+      
+      Mark the given dialects as legal.
+
+
+
+   .. py:method:: add_illegal_dialect(*dialects) -> None
+
+      
+      Mark the given dialect as illegal.
+
+
+
+.. py:class:: TypeConverter
+
+   .. py:method:: add_conversion(convert: collections.abc.Callable) -> None
+
+      
+      Register a type conversion function.
+
+
+
+   .. py:method:: convert_type(type: _mlir.ir.Type) -> _mlir.ir.Type | None
+
+      
+      Convert the given type. Returns None if conversion fails.
+
+
+
+.. py:class:: PDLResultList
+
+   .. py:method:: append(arg: _mlir.ir.Value, /) -> None
+                  append(arg: _mlir.ir.Operation, /) -> None
+                  append(arg: _mlir.ir.Type, /) -> None
+                  append(arg: _mlir.ir.Attribute, /) -> None
+
+
+.. py:class:: PDLModule(module: _mlir.ir.Module)
+              PDLModule(module: _mlir.ir.Module)
+
+   .. py:method:: freeze() -> FrozenRewritePatternSet
+
+
+   .. py:method:: register_rewrite_function(arg0: str, arg1: collections.abc.Callable, /) -> None
+
+
+   .. py:method:: register_constraint_function(arg0: str, arg1: collections.abc.Callable, /) -> None
+
+
+.. py:class:: GreedyRewriteConfig
+
+   .. py:property:: max_iterations
+      :type: int
+
+
+      
+      Maximum number of iterations
+
+
+
+   .. py:property:: max_num_rewrites
+      :type: int
+
+
+      
+      Maximum number of rewrites per iteration
+
+
+
+   .. py:property:: use_top_down_traversal
+      :type: bool
+
+
+      
+      Whether to use top-down traversal
+
+
+
+   .. py:property:: enable_folding
+      :type: bool
+
+
+      
+      Enable or disable folding
+
+
+
+   .. py:property:: strictness
+      :type: GreedyRewriteStrictness
+
+
+      
+      Rewrite strictness level
+
+
+
+   .. py:property:: region_simplification_level
+      :type: GreedySimplifyRegionLevel
+
+
+      
+      Region simplification level
+
+
+
+   .. py:property:: enable_constant_cse
+      :type: bool
+
+
+      
+      Enable or disable constant CSE
+
+
+
+.. py:class:: ConversionConfig
+
+   .. py:property:: folding_mode
+      :type: DialectConversionFoldingMode
+
+
+      
+      folding behavior during dialect conversion
+
+
+
+   .. py:property:: build_materializations
+      :type: bool
+
+
+      
+      Whether the dialect conversion attempts to build source/target materializations
+
+
+
+.. py:class:: FrozenRewritePatternSet
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+
+   .. py:method:: _CAPICreate() -> object
+
+
+.. py:function:: apply_patterns_and_fold_greedily(module: _mlir.ir.Module, set: FrozenRewritePatternSet, config: GreedyRewriteConfig | None = None) -> None
+                 apply_patterns_and_fold_greedily(op: _mlir.ir._OperationBase, set: FrozenRewritePatternSet, config: GreedyRewriteConfig | None = None) -> None
+
+   
+   Applys the given patterns to the given op greedily while folding results.
+
+
+.. py:function:: walk_and_apply_patterns(op: _mlir.ir._OperationBase, set: FrozenRewritePatternSet) -> None
+
+   
+   Applies the given patterns to the given op by a fast walk-based driver.
+
+
+.. py:function:: apply_partial_conversion(op: _mlir.ir._OperationBase, target: ConversionTarget, set: FrozenRewritePatternSet, config: ConversionConfig | None = None) -> None
+
+   
+   Applies a partial conversion on the given operation.
+
+
+.. py:function:: apply_full_conversion(op: _mlir.ir._OperationBase, target: ConversionTarget, set: FrozenRewritePatternSet, config: ConversionConfig | None = None) -> None
+
+   
+   Applies a full conversion on the given operation.
+
+

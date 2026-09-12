@@ -1,0 +1,1400 @@
+mlir.dialects.transform.tune
+============================
+
+.. py:module:: mlir.dialects.transform.tune
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tune.Type
+   mlir.dialects.transform.tune.Value
+   mlir.dialects.transform.tune.Operation
+   mlir.dialects.transform.tune.OpView
+   mlir.dialects.transform.tune.Attribute
+   mlir.dialects.transform.tune.ArrayAttr
+   mlir.dialects.transform.tune.StringAttr
+   mlir.dialects.transform.tune.F64Type
+   mlir.dialects.transform.tune.IntegerType
+   mlir.dialects.transform.tune.IntegerAttr
+   mlir.dialects.transform.tune.FloatAttr
+   mlir.dialects.transform.tune.BoolAttr
+   mlir.dialects.transform.tune.AlternativesOp
+   mlir.dialects.transform.tune.AlternativesOpAdaptor
+   mlir.dialects.transform.tune.KnobOp
+   mlir.dialects.transform.tune.KnobOpAdaptor
+   mlir.dialects.transform.tune.KnobOp
+   mlir.dialects.transform.tune.AlternativesOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.tune.tune_alternatives
+   mlir.dialects.transform.tune.tune_knob
+   mlir.dialects.transform.tune.knob
+   mlir.dialects.transform.tune.alternatives
+
+
+Module Contents
+---------------
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: Value(value: Value)
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`_T`\ ]
+
+
+   
+   Abstract base class for generic types.
+
+   A generic type is typically declared by inheriting from
+   this class parameterized with one or more type variables.
+   For example, a generic mapping type might be defined as::
+
+   class Mapping(Generic[KT, VT]):
+   def **getitem**(self, key: KT) -> VT:
+   ...
+   # Etc.
+
+   This class can then be used as follows::
+
+   def lookup_name(mapping: Mapping[KT, VT], key: KT, default: VT) -> VT:
+   try:
+   return mapping[key]
+   except KeyError:
+   return default
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirValue``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Value
+      :staticmethod:
+
+
+      
+      Creates a ``Value`` from a capsule wrapping ``MlirValue``.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context in which the value lives.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:property:: owner
+      :type: OpView | Block
+
+
+      
+      Returns the owner of the value (``Operation`` for results, ``Block`` for arguments).
+
+
+
+   .. py:property:: uses
+      :type: OpOperandIterator
+
+
+      
+      Returns an iterator over uses of this value.
+
+
+
+   .. py:method:: __eq__(arg: Value, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares value with non-value object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the value.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the string form of the value.
+
+      If the value is a block argument, this is the assembly form of its type and the
+      position in the argument list. If the value is an operation result, this is
+      equivalent to printing the operation that produced it.
+
+
+
+   .. py:method:: get_name(use_local_scope: bool = False, use_name_loc_as_prefix: bool = False) -> str
+                  get_name(state: AsmState) -> str
+
+      
+      Returns the string form of value as an operand (i.e., the ValueID).
+
+
+
+   .. py:property:: type
+      :type: _T
+
+
+      
+      Returns the type of the value.
+
+
+
+   .. py:method:: set_type(type: _T)
+
+      
+      Sets the type of the value.
+
+
+
+   .. py:method:: replace_all_uses_with(arg: Value, /) -> None
+
+      
+      Replace all uses of value with the new value, updating anything in the IR that uses ``self`` to use the other value instead.
+
+
+
+   .. py:method:: replace_all_uses_except(with_: Value, exceptions: Operation) -> None
+                  replace_all_uses_except(with_: Value, exceptions: collections.abc.Sequence[Operation]) -> None
+
+
+   .. py:method:: maybe_downcast() -> BlockArgument | OpResult | Value
+
+      
+      Downcasts the ``Value`` to a more specific kind if possible.
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      Returns the source location of the value.
+
+
+
+.. py:class:: Operation
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:method:: create(name: str, results: collections.abc.Sequence[Type] | None = None, operands: collections.abc.Sequence[Value] | None = None, attributes: dict[str, Attribute] | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int = 0, loc: Location | None = None, ip: object | None = None, infer_type: bool = False) -> Operation
+      :staticmethod:
+
+
+      Creates a new operation.
+
+      :param name: Operation name (e.g. `dialect.operation`).
+      :param results: Optional sequence of Type representing op result types.
+      :param operands: Optional operands of the operation.
+      :param attributes: Optional Dict of {str: Attribute}.
+      :param successors: Optional List of Block for the operation's successors.
+      :param regions: Number of regions to create (default = 0).
+      :param location: Optional Location object (defaults to resolve from context manager).
+      :param ip: Optional InsertionPoint (defaults to resolve from context manager or set to False to disable insertion, even with an insertion point set in the context manager).
+      :param infer_type: Whether to infer result types (default = False).
+
+      :returns: A new detached Operation object. Detached operations can be added to blocks, which causes them to become attached.
+
+
+
+   .. py:method:: parse(source: str, *, source_name: str = '', context: Context | None = None) -> OpView
+      :staticmethod:
+
+
+      
+      Parses an operation. Supports both text assembly format and binary bytecode format.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirOperation.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates an Operation from a capsule wrapping MlirOperation.
+
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns self (the operation).
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView of this operation.
+
+      Note:
+      If the operation has a registered and loaded dialect then this OpView will
+      be concrete wrapper class.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block containing this operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: replace_uses_of_with(of: Value, with_: Value) -> None
+
+      
+      Replaces uses of the 'of' value with the 'with' value inside the operation.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+.. py:class:: OpView(operation: Operation)
+              OpView(name: str, opRegionSpec: tuple[int, bool], operandSegmentSpecObj: object | None = None, resultSegmentSpecObj: object | None = None, results: collections.abc.Sequence | None = None, operands: collections.abc.Sequence | None = None, attributes: dict[str, Attribute] | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int | None = None, loc: Location | None = None, ip: object | None = None)
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :type:  tuple
+      :value: (0, True)
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :type:  None
+      :value: None
+
+
+
+   .. py:attribute:: _ODS_RESULT_SEGMENTS
+      :type:  None
+      :value: None
+
+
+
+   .. py:method:: build_generic(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      build_generic(cls, results: Sequence[Type] | None = None, operands: Sequence[Value] | None = None, attributes: dict[str, Attribute] | None = None, successors: Sequence[Block] | None = None, regions: int | None = None, loc: Location | None = None, ip: InsertionPoint | None = None) -> typing.Self
+
+      Builds a specific, generated OpView based on class level attributes.
+
+
+
+   .. py:method:: parse(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      parse(cls, source: str, *, source_name: str = '', context: Context | None = None) -> typing.Self
+
+      Parses a specific, generated OpView based on class level attributes.
+
+
+
+   .. py:method:: has_trait(**kwargs) -> Any
+      :classmethod:
+
+
+      
+      (cls: object, trait_cls: type, context: _mlir.ir.Context | None = None) -> bool
+
+      Checks if the operation has a given trait.
+
+
+
+.. py:class:: Attribute(cast_from_type: Attribute)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirAttribute.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Attribute
+      :staticmethod:
+
+
+      
+      Creates an Attribute from a capsule wrapping ``MlirAttribute``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Attribute
+      :staticmethod:
+
+
+      
+      Parses an attribute from an assembly form. Raises an ``MLIRError`` on failure.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Attribute``.
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:method:: get_named(arg: str, /) -> NamedAttribute
+
+      Binds a name to the attribute, creating a `NamedAttribute`.
+
+      :param name: The name to bind to the `Attribute`.
+
+      :returns: A `NamedAttribute` with the given name and this attribute.
+
+
+
+   .. py:method:: __eq__(arg: Attribute, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares attribute with non-attribute object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the attribute.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the Attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: maybe_downcast() -> Attribute
+
+      
+      Downcasts the attribute to a more specific attribute if possible.
+
+
+
+.. py:class:: ArrayAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(attributes: collections.abc.Sequence[Attribute], context: Context | None = None) -> ArrayAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued Array attribute
+
+
+
+   .. py:method:: __getitem__(arg: int, /) -> Attribute
+
+
+   .. py:method:: __len__() -> int
+
+
+   .. py:method:: __iter__() -> ArrayAttributeIterator
+
+
+   .. py:method:: __add__(arg: collections.abc.Sequence[Attribute], /) -> ArrayAttr
+
+
+.. py:class:: StringAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(value: str, context: Context | None = None) -> StringAttr
+                  get(value: bytes, context: Context | None = None) -> StringAttr
+      :staticmethod:
+
+
+
+   .. py:method:: get_typed(type: Type, value: str) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued string attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: str
+
+
+      
+      Returns the value of the string attribute
+
+
+
+   .. py:property:: value_bytes
+      :type: bytes
+
+
+      
+      Returns the value of the string attribute as ``bytes``
+
+
+
+.. py:class:: F64Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F64Type
+      :staticmethod:
+
+
+      
+      Create a f64 type.
+
+
+
+.. py:class:: IntegerType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:class:: Signedness
+
+      Bases: :py:obj:`enum.Enum`
+
+
+      
+      Generic enumeration.
+
+      Derive from this class to define new enumerations.
+
+
+      .. py:attribute:: SIGNLESS
+         :value: 0
+
+
+
+      .. py:attribute:: SIGNED
+         :value: 1
+
+
+
+      .. py:attribute:: UNSIGNED
+         :value: 2
+
+
+
+
+   .. py:attribute:: SIGNLESS
+      :type:  IntegerType
+
+
+   .. py:attribute:: SIGNED
+      :type:  IntegerType
+
+
+   .. py:attribute:: UNSIGNED
+      :type:  IntegerType
+
+
+   .. py:method:: get_signless(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signless integer type
+
+
+
+   .. py:method:: get_signed(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signed integer type
+
+
+
+   .. py:method:: get_unsigned(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create an unsigned integer type
+
+
+
+   .. py:method:: get(width: int, signedness: IntegerType = IntegerType.Signedness.SIGNLESS, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create an integer type
+
+
+
+   .. py:property:: signedness
+      :type: IntegerType
+
+
+
+   .. py:property:: width
+      :type: int
+
+
+      
+      Returns the width of the integer type
+
+
+
+   .. py:property:: is_signless
+      :type: bool
+
+
+      
+      Returns whether this is a signless integer
+
+
+
+   .. py:property:: is_signed
+      :type: bool
+
+
+      
+      Returns whether this is a signed integer
+
+
+
+   .. py:property:: is_unsigned
+      :type: bool
+
+
+      
+      Returns whether this is an unsigned integer
+
+
+
+.. py:class:: IntegerAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(type: Type, value: object) -> IntegerAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued integer attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: int
+
+
+      
+      Returns the value of the integer attribute
+
+
+
+   .. py:method:: __int__() -> int
+
+      
+      Converts the value of the integer attribute to a Python int
+
+
+
+   .. py:method:: __index__() -> int
+
+      
+      Converts the value of the integer attribute to a Python int
+
+
+
+.. py:class:: FloatAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(type: Type, value: float, loc: Location | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a type
+
+
+
+   .. py:method:: get_unchecked(type: Type, value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a type
+
+
+
+   .. py:method:: get_f32(value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a f32 type
+
+
+
+   .. py:method:: get_f64(value: float, context: Context | None = None) -> FloatAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued float point attribute associated to a f64 type
+
+
+
+   .. py:property:: value
+      :type: float
+
+
+      
+      Returns the value of the float attribute
+
+
+
+   .. py:method:: __float__() -> float
+
+      
+      Converts the value of the float attribute to a Python float
+
+
+
+.. py:class:: BoolAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:method:: get(value: bool, context: Context | None = None) -> BoolAttr
+      :staticmethod:
+
+
+      
+      Gets an uniqued bool attribute
+
+
+
+   .. py:property:: value
+      :type: bool
+
+
+      
+      Returns the value of the bool attribute
+
+
+
+   .. py:method:: __bool__() -> bool
+
+      
+      Converts the value of the bool attribute to a Python bool
+
+
+
+.. py:class:: AlternativesOp(results_: Sequence[_ods_ir], name: Union[Any, _ods_ir], num_alternatives: int, *, selected_region_attr: Optional[Union[Any, _ods_ir]] = None, selected_region_param: Optional[_ods_ir] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op represents a choice over which of its regions is to be used.
+
+   When ``selected_region`` is provided, the semantics are that this op is to be
+   substituted for by the selected region, meaning the region's results become
+   the results of this op. Without a provided ``selected_region``, the semantics
+   are that this non-deterministic choice is yet to be resolved -- which in
+   terms of the op's interpreted semantics is a failure.
+
+   The ``selected_region`` argument is either an ``IntegerAttr`` or a param holding
+   an ``IntegerAttr``, which should provide a valid zero-based index with respect
+   to the number of alternatives, i.e. regions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.alternatives'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, False)
+
+
+
+   .. py:method:: selected_region_param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: selected_region_attr() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: alternatives() -> _ods_ir
+
+
+.. py:class:: AlternativesOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              AlternativesOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.alternatives'
+
+
+
+   .. py:method:: selected_region_param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: selected_region_attr() -> Optional[_ods_ir]
+
+
+.. py:function:: tune_alternatives(results_: Sequence[_ods_ir], name: Union[Any, _ods_ir], num_alternatives: int, *, selected_region_attr: Optional[Union[Any, _ods_ir]] = None, selected_region_param: Optional[_ods_ir] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, AlternativesOp]
+
+.. py:class:: KnobOp(result: _ods_ir, name: Union[Any, _ods_ir], options: Union[Any, _ods_ir], *, selected: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Provides a representation for "tunables" within schedules.
+
+   Each op represents a single tunable, which has a ``name`` and a set
+   of valid ``options`` described by an attribute. Without a specified
+   ``selected`` option, this op represents a non-deterministic choice
+   that has yet to be resolved -- as such, the interpreter runtime
+   semantics is to raise a failure.
+
+   The non-deterministic choice is resolved through providing a
+   ``selected`` attribute. When provided, the interpreter runtime
+   semantics are to return the ``selected`` attribute as a param through
+   the op's result.
+
+   In case the ``options`` attribute is an ``ArrayAttr``, the verifier
+   checks that the provided ``selected`` attribute occurs in ``options``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.knob'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+      
+      Returns the fully qualified name of the operation.
+
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: selected() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+      
+      Shortcut to get an op result if it has only one (throws an error otherwise).
+
+
+
+.. py:class:: KnobOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              KnobOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.knob'
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: selected() -> Optional[_ods_ir]
+
+
+.. py:function:: tune_knob(result: _ods_ir, name: Union[Any, _ods_ir], options: Union[Any, _ods_ir], *, selected: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: KnobOp(result: mlir.ir.Type, name: Union[mlir.ir.StringAttr, str], options: Union[mlir.ir.ArrayAttr, Sequence[Union[mlir.ir.Attribute, bool, int, float, str]], mlir.ir.Attribute], *, selected: Optional[Union[mlir.ir.Attribute, bool, int, float, str]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`KnobOp`
+
+
+   
+   Provides a representation for "tunables" within schedules.
+
+   Each op represents a single tunable, which has a ``name`` and a set
+   of valid ``options`` described by an attribute. Without a specified
+   ``selected`` option, this op represents a non-deterministic choice
+   that has yet to be resolved -- as such, the interpreter runtime
+   semantics is to raise a failure.
+
+   The non-deterministic choice is resolved through providing a
+   ``selected`` attribute. When provided, the interpreter runtime
+   semantics are to return the ``selected`` attribute as a param through
+   the op's result.
+
+   In case the ``options`` attribute is an ``ArrayAttr``, the verifier
+   checks that the provided ``selected`` attribute occurs in ``options``.
+
+
+.. py:function:: knob(result: mlir.ir.Type, name: Union[mlir.ir.StringAttr, str], options: Union[mlir.ir.ArrayAttr, Sequence[Union[mlir.ir.Attribute, bool, int, float, str]], mlir.ir.Attribute], *, selected: Optional[Union[mlir.ir.Attribute, bool, int, float, str]] = None, loc=None, ip=None)
+
+.. py:class:: AlternativesOp(results: Sequence[mlir.ir.Type], name: Union[mlir.ir.StringAttr, str], num_alternatives: int, *, selected_region: Optional[Union[int, mlir.ir.IntegerAttr, mlir.ir.Value, mlir.ir.Operation, mlir.ir.OpView]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`AlternativesOp`
+
+
+   
+   This op represents a choice over which of its regions is to be used.
+
+   When ``selected_region`` is provided, the semantics are that this op is to be
+   substituted for by the selected region, meaning the region's results become
+   the results of this op. Without a provided ``selected_region``, the semantics
+   are that this non-deterministic choice is yet to be resolved -- which in
+   terms of the op's interpreted semantics is a failure.
+
+   The ``selected_region`` argument is either an ``IntegerAttr`` or a param holding
+   an ``IntegerAttr``, which should provide a valid zero-based index with respect
+   to the number of alternatives, i.e. regions.
+
+
+.. py:function:: alternatives(results: Sequence[mlir.ir.Type], name: Union[mlir.ir.StringAttr, str], num_alternatives: int, *, selected_region: Optional[Union[int, mlir.ir.IntegerAttr, mlir.ir.Value, mlir.ir.Operation, mlir.ir.OpView]] = None, loc=None, ip=None)
+
