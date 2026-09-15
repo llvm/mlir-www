@@ -1,0 +1,124 @@
+mlir.dialects
+=============
+
+.. py:module:: mlir.dialects
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/dialects/_acc_ops_gen/index
+   /autoapi/mlir/dialects/_affine_enum_gen/index
+   /autoapi/mlir/dialects/_affine_ops_gen/index
+   /autoapi/mlir/dialects/_amdgpu_enum_gen/index
+   /autoapi/mlir/dialects/_amdgpu_ops_gen/index
+   /autoapi/mlir/dialects/_arith_enum_gen/index
+   /autoapi/mlir/dialects/_arith_ops_gen/index
+   /autoapi/mlir/dialects/_async_ops_gen/index
+   /autoapi/mlir/dialects/_bufferization_enum_gen/index
+   /autoapi/mlir/dialects/_bufferization_ops_gen/index
+   /autoapi/mlir/dialects/_bufferization_transform_ops_gen/index
+   /autoapi/mlir/dialects/_builtin_ops_gen/index
+   /autoapi/mlir/dialects/_cf_ops_gen/index
+   /autoapi/mlir/dialects/_complex_ops_gen/index
+   /autoapi/mlir/dialects/_emitc_ops_gen/index
+   /autoapi/mlir/dialects/_func_ops_gen/index
+   /autoapi/mlir/dialects/_gpu_enum_gen/index
+   /autoapi/mlir/dialects/_gpu_ops_gen/index
+   /autoapi/mlir/dialects/_gpu_transform_ops_gen/index
+   /autoapi/mlir/dialects/_index_enum_gen/index
+   /autoapi/mlir/dialects/_index_ops_gen/index
+   /autoapi/mlir/dialects/_irdl_enum_gen/index
+   /autoapi/mlir/dialects/_irdl_ops_gen/index
+   /autoapi/mlir/dialects/_linalg_enum_gen/index
+   /autoapi/mlir/dialects/_linalg_ops_gen/index
+   /autoapi/mlir/dialects/_llvm_enum_gen/index
+   /autoapi/mlir/dialects/_llvm_ops_gen/index
+   /autoapi/mlir/dialects/_loop_transform_ops_gen/index
+   /autoapi/mlir/dialects/_math_ops_gen/index
+   /autoapi/mlir/dialects/_memref_ops_gen/index
+   /autoapi/mlir/dialects/_memref_transform_ops_gen/index
+   /autoapi/mlir/dialects/_ml_program_ops_gen/index
+   /autoapi/mlir/dialects/_nvgpu_enum_gen/index
+   /autoapi/mlir/dialects/_nvgpu_ops_gen/index
+   /autoapi/mlir/dialects/_nvgpu_transform_ops_gen/index
+   /autoapi/mlir/dialects/_nvvm_enum_gen/index
+   /autoapi/mlir/dialects/_nvvm_ops_gen/index
+   /autoapi/mlir/dialects/_ods_common/index
+   /autoapi/mlir/dialects/_omp_ops_gen/index
+   /autoapi/mlir/dialects/_pdl_ops_gen/index
+   /autoapi/mlir/dialects/_python_test_ops_gen/index
+   /autoapi/mlir/dialects/_rocdl_ops_gen/index
+   /autoapi/mlir/dialects/_scf_ops_gen/index
+   /autoapi/mlir/dialects/_shape_ops_gen/index
+   /autoapi/mlir/dialects/_shard_enum_gen/index
+   /autoapi/mlir/dialects/_shard_ops_gen/index
+   /autoapi/mlir/dialects/_smt_enum_gen/index
+   /autoapi/mlir/dialects/_smt_ops_gen/index
+   /autoapi/mlir/dialects/_sparse_tensor_enum_gen/index
+   /autoapi/mlir/dialects/_sparse_tensor_ops_gen/index
+   /autoapi/mlir/dialects/_sparse_tensor_transform_ops_gen/index
+   /autoapi/mlir/dialects/_spirv_ops_gen/index
+   /autoapi/mlir/dialects/_structured_transform_enum_gen/index
+   /autoapi/mlir/dialects/_structured_transform_ops_gen/index
+   /autoapi/mlir/dialects/_tensor_ops_gen/index
+   /autoapi/mlir/dialects/_tensor_transform_ops_gen/index
+   /autoapi/mlir/dialects/_tosa_ops_gen/index
+   /autoapi/mlir/dialects/_transform_debug_extension_ops_gen/index
+   /autoapi/mlir/dialects/_transform_enum_gen/index
+   /autoapi/mlir/dialects/_transform_ops_gen/index
+   /autoapi/mlir/dialects/_transform_pdl_extension_ops_gen/index
+   /autoapi/mlir/dialects/_transform_smt_extension_ops_gen/index
+   /autoapi/mlir/dialects/_transform_tune_extension_ops_gen/index
+   /autoapi/mlir/dialects/_ub_ops_gen/index
+   /autoapi/mlir/dialects/_vector_enum_gen/index
+   /autoapi/mlir/dialects/_vector_ops_gen/index
+   /autoapi/mlir/dialects/_vector_transform_enum_gen/index
+   /autoapi/mlir/dialects/_vector_transform_ops_gen/index
+   /autoapi/mlir/dialects/_x86_ops_gen/index
+   /autoapi/mlir/dialects/_x86_transform_ops_gen/index
+   /autoapi/mlir/dialects/_xegpu_transform_ops_gen/index
+   /autoapi/mlir/dialects/affine/index
+   /autoapi/mlir/dialects/amdgpu/index
+   /autoapi/mlir/dialects/arith/index
+   /autoapi/mlir/dialects/async_dialect/index
+   /autoapi/mlir/dialects/bufferization/index
+   /autoapi/mlir/dialects/builtin/index
+   /autoapi/mlir/dialects/cf/index
+   /autoapi/mlir/dialects/complex/index
+   /autoapi/mlir/dialects/emitc/index
+   /autoapi/mlir/dialects/ext/index
+   /autoapi/mlir/dialects/func/index
+   /autoapi/mlir/dialects/gpu/index
+   /autoapi/mlir/dialects/index/index
+   /autoapi/mlir/dialects/irdl/index
+   /autoapi/mlir/dialects/linalg/index
+   /autoapi/mlir/dialects/llvm/index
+   /autoapi/mlir/dialects/math/index
+   /autoapi/mlir/dialects/memref/index
+   /autoapi/mlir/dialects/ml_program/index
+   /autoapi/mlir/dialects/nvgpu/index
+   /autoapi/mlir/dialects/nvvm/index
+   /autoapi/mlir/dialects/openacc/index
+   /autoapi/mlir/dialects/openmp/index
+   /autoapi/mlir/dialects/pdl/index
+   /autoapi/mlir/dialects/python_test/index
+   /autoapi/mlir/dialects/quant/index
+   /autoapi/mlir/dialects/rocdl/index
+   /autoapi/mlir/dialects/scf/index
+   /autoapi/mlir/dialects/shape/index
+   /autoapi/mlir/dialects/shard/index
+   /autoapi/mlir/dialects/smt/index
+   /autoapi/mlir/dialects/sparse_tensor/index
+   /autoapi/mlir/dialects/spirv/index
+   /autoapi/mlir/dialects/tensor/index
+   /autoapi/mlir/dialects/tosa/index
+   /autoapi/mlir/dialects/transform/index
+   /autoapi/mlir/dialects/ub/index
+   /autoapi/mlir/dialects/vector/index
+   /autoapi/mlir/dialects/x86/index
+
+

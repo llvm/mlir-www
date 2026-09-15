@@ -1,0 +1,61 @@
+<map id="mlir::Pass" name="mlir::Pass">
+<area shape="rect" id="Node000001" title="The abstract base pass class." alt="" coords="5,45,91,70"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1OperationPass_3_01void_01_4.html" title="Pass to transform an operation." alt="" coords="455,5,604,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,57,276,49,454,34,455,40,276,54,105,62"/>
+<area shape="poly" id="edge30_Node000001_Node000002" title=" " alt="" coords="104,45,276,31,454,21,455,26,276,36,105,50"/>
+<area shape="rect" id="Node000003" href="$classmlir_1_1ExternalPass.html" title="This pass class wraps external passes defined in other languages using the MLIR C&#45;interface." alt="" coords="145,75,284,101"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,65,146,73,145,78,104,70"/>
+<area shape="rect" id="Node000004" href="$classmlir_1_1OperationPass.html" title="Pass to transform an operation of a specific type." alt="" coords="140,761,289,801"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,83,211,761,206,762,53,84"/>
+<area shape="poly" id="edge29_Node000004_Node000002" title=" " alt="" coords="213,748,217,647,230,504,242,423,259,339,282,257,311,178,351,112,378,78,402,55,427,42,453,33,455,38,429,47,406,60,382,82,355,115,316,180,287,258,264,341,247,424,235,504,222,648,219,748"/>
+<area shape="rect" id="Node000005" href="$classmlir_1_1PassWrapper.html" title=" " alt="" coords="449,70,609,125"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="213,747,217,656,231,528,243,456,260,383,283,310,311,242,329,206,347,180,370,158,403,135,448,113,450,118,405,140,374,162,351,184,334,209,316,244,288,312,265,384,249,457,236,529,223,657,219,748"/>
+<area shape="rect" id="Node000007" href="$classmlir_1_1InterfacePass.html" title="Pass to transform an operation that implements the given interface." alt="" coords="458,149,601,189"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="214,748,221,666,236,554,265,428,285,365,311,306,329,270,347,244,370,222,403,199,429,186,457,177,458,182,431,191,405,204,373,226,351,247,334,273,316,308,290,367,270,429,241,555,226,667,220,748"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1impl_1_1BubbleDownMemorySpaceCastsBase.html" title=" " alt="" coords="415,213,644,253"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="216,747,224,676,241,580,269,473,288,420,311,369,330,334,347,308,370,286,403,263,426,251,429,256,405,268,373,290,352,311,334,337,316,372,293,422,274,475,246,581,230,676,221,748"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1impl_1_1CSEPassBase.html" title=" " alt="" coords="440,277,619,317"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="218,747,228,686,246,606,273,517,311,432,330,397,348,371,370,350,403,327,439,311,441,315,405,332,374,354,352,375,335,400,316,435,278,519,251,607,233,687,223,748"/>
+<area shape="rect" id="Node000010" href="$classmlir_1_1impl_1_1CanonicalizerPassBase.html" title=" " alt="" coords="439,341,620,381"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="220,747,251,631,277,560,311,492,349,434,371,413,403,391,437,375,439,380,405,396,374,417,353,437,316,495,282,562,256,633,225,749"/>
+<area shape="rect" id="Node000011" href="$classmlir_1_1impl_1_1CompositeFixedPointPassBase.html" title=" " alt="" coords="427,405,632,445"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="223,747,257,655,281,601,311,549,350,495,372,475,403,455,428,443,430,448,405,460,375,480,354,499,316,552,286,603,262,657,228,749"/>
+<area shape="rect" id="Node000012" href="$classmlir_1_1impl_1_1ControlFlowSinkPassBase.html" title=" " alt="" coords="430,469,629,509"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="226,747,251,694,288,631,339,568,369,541,403,519,430,507,432,512,405,524,373,545,343,572,293,634,256,697,231,750"/>
+<area shape="rect" id="Node000013" href="$classmlir_1_1impl_1_1GenerateRuntimeVerificationPassBase.html" title=" " alt="" coords="407,533,652,573"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="234,748,263,709,302,663,349,619,403,583,431,571,433,576,405,588,352,623,305,667,267,712,239,751"/>
+<area shape="rect" id="Node000014" href="$classmlir_1_1impl_1_1InlinerPassBase.html" title=" " alt="" coords="432,597,627,637"/>
+<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="247,750,316,698,359,670,403,647,434,635,436,640,405,652,361,675,319,702,251,755"/>
+<area shape="rect" id="Node000015" href="$classmlir_1_1impl_1_1LocationSnapshotBase.html" title=" " alt="" coords="425,661,633,701"/>
+<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="279,754,403,711,445,699,446,704,405,716,281,759"/>
+<area shape="rect" id="Node000016" href="$classmlir_1_1impl_1_1LoopInvariantCodeMotionPassBase.html" title=" " alt="" coords="404,725,655,765"/>
+<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="303,769,403,757,404,762,303,774"/>
+<area shape="rect" id="Node000017" href="$classmlir_1_1impl_1_1LoopInvariantSubsetHoistingPassBase.html" title=" " alt="" coords="438,790,621,845"/>
+<area shape="poly" id="edge16_Node000004_Node000017" title=" " alt="" coords="303,789,438,804,437,810,303,794"/>
+<area shape="rect" id="Node000018" href="$classmlir_1_1impl_1_1Mem2RegBase.html" title=" " alt="" coords="434,869,625,909"/>
+<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="274,804,405,855,445,867,443,872,403,860,272,809"/>
+<area shape="rect" id="Node000019" href="$classmlir_1_1impl_1_1PrintIRPassBase.html" title=" " alt="" coords="431,933,628,973"/>
+<area shape="poly" id="edge18_Node000004_Node000019" title=" " alt="" coords="249,809,318,865,360,894,405,919,435,931,433,936,403,924,358,899,315,869,246,813"/>
+<area shape="rect" id="Node000020" href="$classmlir_1_1impl_1_1PrintOpStatsPassBase.html" title=" " alt="" coords="442,997,617,1037"/>
+<area shape="poly" id="edge19_Node000004_Node000020" title=" " alt="" coords="237,811,265,852,303,900,350,946,405,983,442,998,441,1003,403,988,347,950,299,903,260,855,232,814"/>
+<area shape="rect" id="Node000021" href="$classmlir_1_1impl_1_1RemoveDeadValuesPassBase.html" title=" " alt="" coords="417,1061,641,1101"/>
+<area shape="poly" id="edge20_Node000004_Node000021" title=" " alt="" coords="230,813,264,889,287,933,315,973,355,1016,405,1047,433,1059,431,1064,403,1052,352,1020,311,976,283,935,259,892,225,815"/>
+<area shape="rect" id="Node000022" href="$classmlir_1_1impl_1_1SCCPPassBase.html" title=" " alt="" coords="435,1125,623,1165"/>
+<area shape="poly" id="edge21_Node000004_Node000022" title=" " alt="" coords="225,814,237,861,255,920,281,982,316,1040,336,1065,354,1082,405,1111,436,1123,434,1128,403,1116,351,1086,332,1069,311,1043,276,984,250,922,232,863,220,815"/>
+<area shape="rect" id="Node000023" href="$classmlir_1_1impl_1_1SROABase.html" title=" " alt="" coords="449,1189,610,1229"/>
+<area shape="poly" id="edge22_Node000004_Node000023" title=" " alt="" coords="222,814,231,873,248,948,276,1028,294,1067,316,1104,335,1130,354,1147,405,1175,449,1192,447,1196,403,1180,351,1151,331,1133,311,1107,289,1070,271,1030,243,949,226,874,217,815"/>
+<area shape="rect" id="Node000024" href="$classmlir_1_1impl_1_1StripDebugInfoPassBase.html" title=" " alt="" coords="434,1253,625,1293"/>
+<area shape="poly" id="edge23_Node000004_Node000024" title=" " alt="" coords="220,815,226,884,242,975,270,1075,290,1123,316,1168,335,1194,353,1211,405,1239,435,1251,433,1256,403,1244,350,1215,331,1197,311,1171,286,1125,265,1076,236,977,221,885,215,816"/>
+<area shape="rect" id="Node000025" href="$classmlir_1_1impl_1_1SymbolDCEPassBase.html" title=" " alt="" coords="430,1317,629,1357"/>
+<area shape="poly" id="edge24_Node000004_Node000025" title=" " alt="" coords="218,815,222,895,236,1002,248,1061,265,1120,287,1178,316,1232,334,1258,353,1275,405,1303,434,1315,432,1320,403,1308,350,1279,330,1262,311,1235,282,1180,260,1122,243,1062,230,1003,217,895,213,815"/>
+<area shape="rect" id="Node000026" href="$classmlir_1_1impl_1_1SymbolPrivatizePassBase.html" title=" " alt="" coords="430,1381,629,1421"/>
+<area shape="poly" id="edge25_Node000004_Node000026" title=" " alt="" coords="222,815,234,921,254,1063,282,1201,298,1256,316,1296,339,1325,368,1348,401,1365,436,1379,434,1384,399,1370,365,1352,335,1328,311,1299,293,1258,276,1202,249,1064,229,922,217,815"/>
+<area shape="rect" id="Node000027" href="$classmlir_1_1impl_1_1TopologicalSortPassBase.html" title=" " alt="" coords="433,1445,625,1485"/>
+<area shape="poly" id="edge26_Node000004_Node000027" title=" " alt="" coords="221,815,232,933,251,1094,279,1251,296,1314,316,1360,338,1389,368,1412,401,1430,435,1443,433,1448,398,1434,365,1416,335,1393,311,1363,291,1316,274,1252,246,1094,226,934,216,815"/>
+<area shape="rect" id="Node000028" href="$classmlir_1_1impl_1_1TrivialDeadCodeEliminationPassBase.html" title=" " alt="" coords="406,1509,653,1549"/>
+<area shape="poly" id="edge27_Node000004_Node000028" title=" " alt="" coords="221,815,230,945,248,1124,261,1216,276,1301,294,1373,316,1424,338,1453,367,1476,400,1494,434,1507,432,1512,398,1498,364,1480,334,1457,311,1427,289,1374,271,1302,255,1217,243,1125,224,946,215,816"/>
+<area shape="rect" id="Node000029" href="$classmlir_1_1impl_1_1ViewOpGraphPassBase.html" title=" " alt="" coords="424,1573,635,1613"/>
+<area shape="poly" id="edge28_Node000004_Node000029" title=" " alt="" coords="220,815,228,956,245,1154,258,1257,273,1351,293,1431,316,1488,338,1517,367,1540,399,1557,433,1571,431,1576,397,1562,364,1544,334,1520,311,1491,288,1432,268,1352,252,1257,240,1155,223,957,215,815"/>
+<area shape="rect" id="Node000006" href="$classmlir_1_1detail_1_1OpToOpPassAdaptor.html" title="An adaptor pass used to run operation passes over nested operations." alt="" coords="704,77,884,117"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="623,95,704,95,704,100,623,100"/>
+</map>

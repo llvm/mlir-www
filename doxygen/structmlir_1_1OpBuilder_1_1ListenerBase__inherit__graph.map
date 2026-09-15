@@ -1,0 +1,19 @@
+<map id="mlir::OpBuilder::ListenerBase" name="mlir::OpBuilder::ListenerBase">
+<area shape="rect" id="Node000001" title="Base class for listeners." alt="" coords="5,113,217,138"/>
+<area shape="rect" id="Node000002" href="$structmlir_1_1OpBuilder_1_1Listener.html" title="This class represents a listener that may be used to hook into various actions within an OpBuilder." alt="" coords="265,113,445,138"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,123,265,123,265,128,231,128"/>
+<area shape="rect" id="Node000003" href="$structmlir_1_1RewriterBase_1_1Listener.html" title=" " alt="" coords="493,105,636,145"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="459,123,493,123,493,128,459,128"/>
+<area shape="rect" id="Node000004" href="$structmlir_1_1RewriterBase_1_1ForwardingListener.html" title="A listener that forwards all notifications to another listener." alt="" coords="725,5,879,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="606,96,683,55,724,41,725,46,685,60,609,100"/>
+<area shape="rect" id="Node000006" href="$structmlir_1_1detail_1_1ConversionPatternRewriterImpl.html" title=" " alt="" coords="715,69,889,109"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="650,110,714,100,715,105,650,115"/>
+<area shape="rect" id="Node000007" href="$structmlir_1_1detail_1_1ConversionPatternRewriterImpl_1_1SingleEraseRewriter.html" title="A rewriter that keeps track of erased ops and blocks." alt="" coords="684,134,920,189"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="650,136,684,141,683,146,649,141"/>
+<area shape="rect" id="Node000008" href="$classmlir_1_1transform_1_1TrackingListener.html" title="A listener that updates a TransformState based on IR modifications." alt="" coords="711,213,893,253"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="605,151,643,176,685,199,716,211,715,216,683,204,640,181,602,156"/>
+<area shape="rect" id="Node000005" href="$structmlir_1_1RewriterBase_1_1PatternLoggingListener.html" title="A listener that logs notification events to llvm::dbgs() before forwarding to the base listener." alt="" coords="988,5,1167,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="893,23,988,23,988,28,893,28"/>
+<area shape="rect" id="Node000009" href="$classmlir_1_1transform_1_1ErrorCheckingTrackingListener.html" title="A specialized listener that keeps track of cases in which no replacement payload could be found." alt="" coords="968,213,1187,253"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="907,231,968,231,968,236,907,236"/>
+</map>
