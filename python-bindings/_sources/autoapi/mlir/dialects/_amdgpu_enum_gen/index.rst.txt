@@ -1,0 +1,897 @@
+mlir.dialects._amdgpu_enum_gen
+==============================
+
+.. py:module:: mlir.dialects._amdgpu_enum_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen._ods_ir
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen.AddressSpace
+   mlir.dialects._amdgpu_enum_gen.Scope
+   mlir.dialects._amdgpu_enum_gen.DPPPerm
+   mlir.dialects._amdgpu_enum_gen.LoadTemporalHint
+   mlir.dialects._amdgpu_enum_gen.BufferOOBMode
+   mlir.dialects._amdgpu_enum_gen.Gfx12AtomicCachePolicy
+   mlir.dialects._amdgpu_enum_gen.Gfx12CachePolicy
+   mlir.dialects._amdgpu_enum_gen.Gfx942CachePolicy
+   mlir.dialects._amdgpu_enum_gen.MFMANegModifier
+   mlir.dialects._amdgpu_enum_gen.MFMAPermB
+   mlir.dialects._amdgpu_enum_gen.MatrixFormat
+   mlir.dialects._amdgpu_enum_gen.PreGfx12CachePolicy
+   mlir.dialects._amdgpu_enum_gen.SchedGroupMask
+   mlir.dialects._amdgpu_enum_gen.WMMACModifier
+   mlir.dialects._amdgpu_enum_gen.WMMAMatrixScale
+   mlir.dialects._amdgpu_enum_gen.WMMAMatrixScaleFormat
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._amdgpu_enum_gen.register_attribute_builder
+   mlir.dialects._amdgpu_enum_gen._amdgpu_addressspaceattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_cachescopeattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_dpppermattr
+   mlir.dialects._amdgpu_enum_gen._amdgpu_loadtemporalhintattr
+
+
+Module Contents
+---------------
+
+.. py:function:: register_attribute_builder(kind, replace=False, allow_existing=False)
+
+.. py:data:: _ods_ir
+
+.. py:class:: AddressSpace
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   AMDGPU-specific address spaces
+
+
+   .. py:attribute:: FatRawBuffer
+      :value: 0
+
+
+
+   .. py:attribute:: BufferRsrc
+      :value: 1
+
+
+
+   .. py:attribute:: FatStructuredBuffer
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: Scope
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   AMDGPU-specific cache scopes. WGP - workgroup processor (CUs); SE - shader engine (GL2); DEV - device; SYS - system
+
+
+   .. py:attribute:: WGP
+      :value: 0
+
+
+
+   .. py:attribute:: SE
+      :value: 1
+
+
+
+   .. py:attribute:: DEV
+      :value: 2
+
+
+
+   .. py:attribute:: SYS
+      :value: 3
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: DPPPerm
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   The possible permutations for a DPP operation
+
+
+   .. py:attribute:: quad_perm
+      :value: 0
+
+
+
+   .. py:attribute:: row_shl
+      :value: 1
+
+
+
+   .. py:attribute:: row_shr
+      :value: 2
+
+
+
+   .. py:attribute:: row_ror
+      :value: 3
+
+
+
+   .. py:attribute:: wave_shl
+      :value: 4
+
+
+
+   .. py:attribute:: wave_shr
+      :value: 5
+
+
+
+   .. py:attribute:: wave_ror
+      :value: 6
+
+
+
+   .. py:attribute:: wave_rol
+      :value: 7
+
+
+
+   .. py:attribute:: row_mirror
+      :value: 8
+
+
+
+   .. py:attribute:: row_half_mirror
+      :value: 9
+
+
+
+   .. py:attribute:: row_bcast_15
+      :value: 10
+
+
+
+   .. py:attribute:: row_bcast_31
+      :value: 11
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: LoadTemporalHint
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   AMDGPU-specific prefetch temporal hints for load instructions. RT - regular temporal for both near and far caches; NT - non-temporal for both near and far caches; HT - high-priority temporal for both near and far caches; LU - last-use; NT_RT - non-temporal for near cache(s) and regular for far caches; RT_NT - regular for near cache(s) and non-temporal for far caches; NT_HT - non-temporal for near cache(s) and high-priority temporal for far caches
+
+
+   .. py:attribute:: RT
+      :value: 0
+
+
+
+   .. py:attribute:: NT
+      :value: 1
+
+
+
+   .. py:attribute:: HT
+      :value: 2
+
+
+
+   .. py:attribute:: LU
+      :value: 3
+
+
+
+   .. py:attribute:: NT_RT
+      :value: 4
+
+
+
+   .. py:attribute:: RT_NT
+      :value: 5
+
+
+
+   .. py:attribute:: NT_HT
+      :value: 6
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: BufferOOBMode
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   ROCDL buffer out-of-bounds mode
+
+
+   .. py:attribute:: Any
+      :value: 0
+
+
+
+   .. py:attribute:: Relaxed
+      :value: 1
+
+
+
+   .. py:attribute:: Strict
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: Gfx12AtomicCachePolicy
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   gfx12 atomic cache policy bits
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: keep_return
+      :value: 1
+
+
+
+   .. py:attribute:: nt
+      :value: 2
+
+
+
+   .. py:attribute:: cascade
+      :value: 4
+
+
+
+   .. py:attribute:: scope_se
+      :value: 8
+
+
+
+   .. py:attribute:: scope_dev
+      :value: 16
+
+
+
+   .. py:attribute:: scope_sys
+      :value: 24
+
+
+
+   .. py:attribute:: nv
+      :value: 32
+
+
+
+   .. py:attribute:: volatile_op
+      :value: 2147483648
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: Gfx12CachePolicy
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   gfx12 cache policy bits
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: nt
+      :value: 1
+
+
+
+   .. py:attribute:: ht
+      :value: 2
+
+
+
+   .. py:attribute:: lu
+      :value: 3
+
+
+
+   .. py:attribute:: nt_rt
+      :value: 4
+
+
+
+   .. py:attribute:: rt_nt
+      :value: 5
+
+
+
+   .. py:attribute:: nt_ht
+      :value: 6
+
+
+
+   .. py:attribute:: nt_wb
+      :value: 7
+
+
+
+   .. py:attribute:: scope_se
+      :value: 8
+
+
+
+   .. py:attribute:: scope_dev
+      :value: 16
+
+
+
+   .. py:attribute:: scope_sys
+      :value: 24
+
+
+
+   .. py:attribute:: nv
+      :value: 32
+
+
+
+   .. py:attribute:: swz
+      :value: 64
+
+
+
+   .. py:attribute:: scal
+      :value: 2048
+
+
+
+   .. py:attribute:: volatile_op
+      :value: 2147483648
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: Gfx942CachePolicy
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   gfx942 buffer cache policy bits
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: sc0
+      :value: 1
+
+
+
+   .. py:attribute:: nt
+      :value: 2
+
+
+
+   .. py:attribute:: swz
+      :value: 8
+
+
+
+   .. py:attribute:: sc1
+      :value: 16
+
+
+
+   .. py:attribute:: volatile_op
+      :value: 2147483648
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: MFMANegModifier
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   negation modifier bitfield for gfx94x double-precision MFMA
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: neg_a
+      :value: 1
+
+
+
+   .. py:attribute:: neg_b
+      :value: 2
+
+
+
+   .. py:attribute:: neg_c
+      :value: 4
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: MFMAPermB
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   permutations of the lanes storing B in an MFMA
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: bcast_first_32
+      :value: 1
+
+
+
+   .. py:attribute:: bcast_second_32
+      :value: 2
+
+
+
+   .. py:attribute:: rotate_16_right
+      :value: 3
+
+
+
+   .. py:attribute:: bcast_first_16
+      :value: 4
+
+
+
+   .. py:attribute:: bcast_second_16
+      :value: 5
+
+
+
+   .. py:attribute:: bcast_third_16
+      :value: 6
+
+
+
+   .. py:attribute:: bcast_fourth_16
+      :value: 7
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: MatrixFormat
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   matrix operand formats selected by scaled MFMA/WMMA format fields
+
+
+   .. py:attribute:: fp8_e4m3
+      :value: 0
+
+
+
+   .. py:attribute:: fp8_e5m2
+      :value: 1
+
+
+
+   .. py:attribute:: fp6_e2m3
+      :value: 2
+
+
+
+   .. py:attribute:: fp6_e3m2
+      :value: 3
+
+
+
+   .. py:attribute:: fp4_e2m1
+      :value: 4
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: PreGfx12CachePolicy
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   pre-gfx12 buffer cache policy bits
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: glc
+      :value: 1
+
+
+
+   .. py:attribute:: slc
+      :value: 2
+
+
+
+   .. py:attribute:: dlc
+      :value: 4
+
+
+
+   .. py:attribute:: swz
+      :value: 8
+
+
+
+   .. py:attribute:: scc
+      :value: 16
+
+
+
+   .. py:attribute:: all
+      :value: 23
+
+
+
+   .. py:attribute:: volatile_op
+      :value: 2147483648
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: SchedGroupMask
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   instruction type mask for scheduling barriers
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: non_mem_non_sideeffect
+      :value: 1
+
+
+
+   .. py:attribute:: valu
+      :value: 2
+
+
+
+   .. py:attribute:: salu
+      :value: 4
+
+
+
+   .. py:attribute:: mfma_wmma
+      :value: 8
+
+
+
+   .. py:attribute:: all_vmem
+      :value: 16
+
+
+
+   .. py:attribute:: vmem_read
+      :value: 32
+
+
+
+   .. py:attribute:: vmem_write
+      :value: 64
+
+
+
+   .. py:attribute:: all_ds
+      :value: 128
+
+
+
+   .. py:attribute:: ds_read
+      :value: 256
+
+
+
+   .. py:attribute:: ds_write
+      :value: 512
+
+
+
+   .. py:attribute:: transcendental
+      :value: 1024
+
+
+
+   .. py:attribute:: ldsdma
+      :value: 2048
+
+
+
+   .. py:attribute:: all
+      :value: 4095
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: WMMACModifier
+
+   Bases: :py:obj:`enum.IntFlag`
+
+
+   
+   WMMA C operand modifiers
+
+
+   .. py:attribute:: none
+      :value: 0
+
+
+
+   .. py:attribute:: neg
+      :value: 1
+
+
+
+   .. py:attribute:: abs
+      :value: 2
+
+
+
+   .. py:attribute:: neg_abs
+      :value: 3
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: WMMAMatrixScale
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   matrix scale row selector
+
+
+   .. py:attribute:: row0
+      :value: 0
+
+
+
+   .. py:attribute:: row1
+      :value: 1
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:class:: WMMAMatrixScaleFormat
+
+   Bases: :py:obj:`enum.IntEnum`
+
+
+   
+   matrix scale exponent formats
+
+
+   .. py:attribute:: e8
+      :value: 0
+
+
+
+   .. py:attribute:: e5m3
+      :value: 1
+
+
+
+   .. py:attribute:: e4m3
+      :value: 2
+
+
+
+   .. py:method:: __str__()
+
+      
+      Return str(self).
+
+
+
+.. py:function:: _amdgpu_addressspaceattr(x, context)
+
+.. py:function:: _amdgpu_cachescopeattr(x, context)
+
+.. py:function:: _amdgpu_dpppermattr(x, context)
+
+.. py:function:: _amdgpu_loadtemporalhintattr(x, context)
+

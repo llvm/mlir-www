@@ -1,0 +1,245 @@
+mlir.extras.meta
+================
+
+.. py:module:: mlir.extras.meta
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.extras.meta.Type
+   mlir.extras.meta.InsertionPoint
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.extras.meta.get_op_result_or_op_results
+   mlir.extras.meta.op_region_builder
+   mlir.extras.meta.region_op
+
+
+Module Contents
+---------------
+
+.. py:function:: get_op_result_or_op_results(op: Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation]) -> Union[mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.OpResult, Sequence[mlir._mlir_libs._mlir.ir.OpResult]]
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: InsertionPoint(block: Block)
+              InsertionPoint(beforeOperation: _OperationBase)
+
+   .. py:method:: __enter__(/) -> InsertionPoint
+
+      
+      Enters the insertion point as a context manager.
+
+
+
+   .. py:method:: __exit__(exc_type: object | None, exc_value: object | None, traceback: object | None) -> None
+
+      
+      Exits the insertion point context manager.
+
+
+
+   .. py:attribute:: current
+      :type:  InsertionPoint
+      :value: Ellipsis
+
+
+      
+      Gets the InsertionPoint bound to the current thread or raises ValueError if none has been set.
+
+
+
+   .. py:method:: at_block_begin(block: Block) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point at the beginning of a block.
+
+      :param block: The block at whose beginning operations should be inserted.
+
+      :returns: An InsertionPoint at the block's beginning.
+
+
+
+   .. py:method:: at_block_terminator(block: Block) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point before a block's terminator.
+
+      :param block: The block whose terminator to insert before.
+
+      :returns: An InsertionPoint before the terminator.
+
+      :raises ValueError: If the block has no terminator.
+
+
+
+   .. py:method:: after(operation: _OperationBase) -> InsertionPoint
+      :staticmethod:
+
+
+      Creates an insertion point immediately after an operation.
+
+      :param operation: The operation after which to insert.
+
+      :returns: An InsertionPoint after the operation.
+
+
+
+   .. py:method:: insert(operation: _OperationBase) -> None
+
+      Inserts an operation at this insertion point.
+
+      :param operation: The operation to insert.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block that this ``InsertionPoint`` points to.
+
+
+
+   .. py:property:: ref_operation
+      :type: Operation | None
+
+
+      
+      The reference operation before which new operations are inserted, or None if the insertion point is at the end of the block.
+
+
+
+.. py:function:: op_region_builder(op, op_region, terminator=None)
+
+.. py:function:: region_op(op_constructor, terminator=None)
+
+   
+   Decorator to define an MLIR Op specified as a python function.
+
+   Requires that an ``mlir.ir.InsertionPoint`` and ``mlir.ir.Location`` are
+   active for the current thread (i.e. established in a ``with`` block).
+
+   Supports "naked" usage i.e., no parens if no args need to be passed to the Op constructor.
+
+   When applied as a decorator to a Python function, an entry block will
+   be constructed for the Op with types as specified **as type hints on the args of the function**.
+   The block arguments will be passed positionally to the Python function.
+
+   If a terminator is specified then the return from the decorated function will be passed
+   to the terminator as the last statement in the entry block. Note, the API for the terminator
+   is a (possibly empty) list; terminator accepting single values should be wrapped in a
+   ``lambda args: term(args[0])``
+
+   The identifier (name) of the function will become:
+
+   #. A single value result if the Op returns a single value;
+   #. An OpResultList (as a list) if the Op returns multiple values;
+   #. The Operation if the Op returns no results.
+
+   See examples in tensor.py and transform.extras.
+
+
