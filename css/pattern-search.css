@@ -1,0 +1,367 @@
+.pattern-search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pattern-search-container .header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.pattern-search-container .header p,ul {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.search-container {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.search-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 2;
+    min-width: 250px;
+    position: relative;
+}
+
+.filter-select {
+    flex: 1;
+    min-width: 150px;
+}
+
+.pattern-search-container input, .pattern-search-container select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.pattern-search-container input:focus, .pattern-search-container select:focus {
+    outline: none;
+    border-color: #007acc;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #007acc;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.1s;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: #f0f7ff;
+}
+
+.autocomplete-item .operation-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.autocomplete-item .operation-count {
+    font-size: 12px;
+    color: #fff;
+    font-family: inherit;
+}
+
+.stats {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.results-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.detail-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.detail-nav {
+    margin-bottom: 15px;
+}
+
+.back-button {
+    background: #f1f3f4;
+    border: 1px solid #ddd;
+    color: #1a73e8;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-button:hover {
+    background: #e8f0fe;
+    border-color: #1a73e8;
+}
+
+.detail-header {
+    background: #1a73e8;
+    color: white;
+    padding: 15px 20px;
+}
+
+.detail-title {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    word-break: break-all;
+    margin-top: 10px;
+}
+
+.detail-body {
+    padding: 15px 20px;
+}
+
+.detail-stats {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-stat {
+    text-align: center;
+}
+
+.detail-stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a73e8;
+}
+
+.detail-stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.methods-list {
+    margin-top: 15px;
+}
+
+.method-item {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.method-header {
+    background: #f1f3f4;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.operation-count {
+    background: #1a73e8;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.operations-grid {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px;
+}
+
+.operation-tag {
+    background: #e8f0fe;
+    border: 1px solid #dadce0;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.operation-tag:hover {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.results-header {
+    background: #f1f3f4;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    font-weight: 600;
+}
+
+.no-results {
+    padding: 40px;
+    text-align: center;
+    color: #666;
+}
+
+.result-item {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.operation-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a73e8;
+    margin-bottom: 10px;
+}
+
+.class-entry {
+    background: #f8f9fa;
+    border-left: 4px solid #1a73e8;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 0 4px 4px 0;
+}
+
+.class-entry:last-child {
+    margin-bottom: 0;
+}
+
+.class-name {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+}
+
+.class-name a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.class-name a:hover {
+    text-decoration: underline;
+}
+
+.github-link {
+    color: #666;
+    font-size: 12px;
+    margin-left: 8px;
+    text-decoration: none;
+}
+
+.github-link:hover {
+    color: #1a73e8;
+}
+
+.class-details {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #666;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.label {
+    font-weight: 500;
+}
+
+.value {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    background: #e8f0fe;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.operations-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-input, .filter-select {
+        flex: none;
+    }
+
+    .class-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
