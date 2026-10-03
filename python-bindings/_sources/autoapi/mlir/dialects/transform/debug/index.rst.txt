@@ -1,0 +1,632 @@
+mlir.dialects.transform.debug
+=============================
+
+.. py:module:: mlir.dialects.transform.debug
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.debug.Attribute
+   mlir.dialects.transform.debug.Operation
+   mlir.dialects.transform.debug.Value
+   mlir.dialects.transform.debug.StringAttr
+   mlir.dialects.transform.debug.EmitParamAsRemarkOp
+   mlir.dialects.transform.debug.EmitParamAsRemarkOpAdaptor
+   mlir.dialects.transform.debug.EmitRemarkAtOp
+   mlir.dialects.transform.debug.EmitRemarkAtOpAdaptor
+   mlir.dialects.transform.debug.EmitParamAsRemarkOp
+   mlir.dialects.transform.debug.EmitRemarkAtOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.debug.debug_emit_param_as_remark
+   mlir.dialects.transform.debug.debug_emit_remark_at
+   mlir.dialects.transform.debug.emit_param_as_remark
+   mlir.dialects.transform.debug.emit_remark_at
+
+
+Module Contents
+---------------
+
+.. py:class:: Attribute(cast_from_type: Attribute)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirAttribute.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Attribute
+      :staticmethod:
+
+
+      
+      Creates an Attribute from a capsule wrapping ``MlirAttribute``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Attribute
+      :staticmethod:
+
+
+      
+      Parses an attribute from an assembly form. Raises an ``MLIRError`` on failure.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Attribute``.
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:method:: get_named(arg: str, /) -> NamedAttribute
+
+      Binds a name to the attribute, creating a `NamedAttribute`.
+
+      :param name: The name to bind to the `Attribute`.
+
+      :returns: A `NamedAttribute` with the given name and this attribute.
+
+
+
+   .. py:method:: __eq__(arg: Attribute, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares attribute with non-attribute object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the attribute.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the Attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: maybe_downcast() -> Attribute
+
+      
+      Downcasts the attribute to a more specific attribute if possible.
+
+
+
+.. py:class:: Operation
+
+   Bases: :py:obj:`_OperationBase`
+
+
+   .. py:method:: create(name: str, results: collections.abc.Sequence[Type] | None = None, operands: collections.abc.Sequence[Value] | None = None, attributes: dict[str, Attribute] | None = None, successors: collections.abc.Sequence[Block] | None = None, regions: int = 0, loc: Location | None = None, ip: object | None = None, infer_type: bool = False) -> Operation
+      :staticmethod:
+
+
+      Creates a new operation.
+
+      :param name: Operation name (e.g. `dialect.operation`).
+      :param results: Optional sequence of Type representing op result types.
+      :param operands: Optional operands of the operation.
+      :param attributes: Optional Dict of {str: Attribute}.
+      :param successors: Optional List of Block for the operation's successors.
+      :param regions: Number of regions to create (default = 0).
+      :param location: Optional Location object (defaults to resolve from context manager).
+      :param ip: Optional InsertionPoint (defaults to resolve from context manager or set to False to disable insertion, even with an insertion point set in the context manager).
+      :param infer_type: Whether to infer result types (default = False).
+
+      :returns: A new detached Operation object. Detached operations can be added to blocks, which causes them to become attached.
+
+
+
+   .. py:method:: parse(source: str, *, source_name: str = '', context: Context | None = None) -> OpView
+      :staticmethod:
+
+
+      
+      Parses an operation. Supports both text assembly format and binary bytecode format.
+
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirOperation.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> object
+      :staticmethod:
+
+
+      
+      Creates an Operation from a capsule wrapping MlirOperation.
+
+
+
+   .. py:property:: operation
+      :type: Operation
+
+
+      
+      Returns self (the operation).
+
+
+
+   .. py:property:: opview
+      :type: OpView
+
+
+      
+      Returns an OpView of this operation.
+
+      Note:
+      If the operation has a registered and loaded dialect then this OpView will
+      be concrete wrapper class.
+
+
+
+   .. py:property:: block
+      :type: Block
+
+
+      
+      Returns the block containing this operation.
+
+
+
+   .. py:property:: successors
+      :type: OpSuccessors
+
+
+      
+      Returns the list of Operation successors.
+
+
+
+   .. py:method:: replace_uses_of_with(of: Value, with_: Value) -> None
+
+      
+      Replaces uses of the 'of' value with the 'with' value inside the operation.
+
+
+
+   .. py:method:: _set_invalid() -> None
+
+      
+      Invalidate the operation.
+
+
+
+.. py:class:: Value(value: Value)
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`_T`\ ]
+
+
+   
+   Abstract base class for generic types.
+
+   A generic type is typically declared by inheriting from
+   this class parameterized with one or more type variables.
+   For example, a generic mapping type might be defined as::
+
+   class Mapping(Generic[KT, VT]):
+   def **getitem**(self, key: KT) -> VT:
+   ...
+   # Etc.
+
+   This class can then be used as follows::
+
+   def lookup_name(mapping: Mapping[KT, VT], key: KT, default: VT) -> VT:
+   try:
+   return mapping[key]
+   except KeyError:
+   return default
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirValue``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Value
+      :staticmethod:
+
+
+      
+      Creates a ``Value`` from a capsule wrapping ``MlirValue``.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context in which the value lives.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:property:: owner
+      :type: OpView | Block
+
+
+      
+      Returns the owner of the value (``Operation`` for results, ``Block`` for arguments).
+
+
+
+   .. py:property:: uses
+      :type: OpOperandIterator
+
+
+      
+      Returns an iterator over uses of this value.
+
+
+
+   .. py:method:: __eq__(arg: Value, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares value with non-value object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the value.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the string form of the value.
+
+      If the value is a block argument, this is the assembly form of its type and the
+      position in the argument list. If the value is an operation result, this is
+      equivalent to printing the operation that produced it.
+
+
+
+   .. py:method:: get_name(use_local_scope: bool = False, use_name_loc_as_prefix: bool = False) -> str
+                  get_name(state: AsmState) -> str
+
+      
+      Returns the string form of value as an operand (i.e., the ValueID).
+
+
+
+   .. py:property:: type
+      :type: _T
+
+
+      
+      Returns the type of the value.
+
+
+
+   .. py:method:: set_type(type: _T)
+
+      
+      Sets the type of the value.
+
+
+
+   .. py:method:: replace_all_uses_with(arg: Value, /) -> None
+
+      
+      Replace all uses of value with the new value, updating anything in the IR that uses ``self`` to use the other value instead.
+
+
+
+   .. py:method:: replace_all_uses_except(with_: Value, exceptions: Operation) -> None
+                  replace_all_uses_except(with_: Value, exceptions: collections.abc.Sequence[Operation]) -> None
+
+
+   .. py:method:: maybe_downcast() -> BlockArgument | OpResult | Value
+
+      
+      Downcasts the ``Value`` to a more specific kind if possible.
+
+
+
+   .. py:property:: location
+      :type: Location
+
+
+      
+      Returns the source location of the value.
+
+
+
+.. py:class:: StringAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(value: str, context: Context | None = None) -> StringAttr
+                  get(value: bytes, context: Context | None = None) -> StringAttr
+      :staticmethod:
+
+
+
+   .. py:method:: get_typed(type: Type, value: str) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued string attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: str
+
+
+      
+      Returns the value of the string attribute
+
+
+
+   .. py:property:: value_bytes
+      :type: bytes
+
+
+      
+      Returns the value of the string attribute as ``bytes``
+
+
+
+.. py:class:: EmitParamAsRemarkOp(param: _ods_ir, *, anchor: Optional[_ods_ir] = None, message: Optional[Union[str, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark containing the string form of the
+   attributes associated with the parameter provided as attribute. It takes
+   as optional arguments:
+
+   * an additional message text to prepend;
+   * a handle pointing to operations the location of which will be used to
+   emit the diagnostic; if multiple operations are associated, the
+   diagnostic is emitted for all of their respective locations.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_param_as_remark'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+   .. py:method:: anchor() -> Optional[_ods_ir]
+
+
+   .. py:method:: message() -> Optional[_ods_ir]
+
+
+.. py:class:: EmitParamAsRemarkOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              EmitParamAsRemarkOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_param_as_remark'
+
+
+
+   .. py:method:: param() -> _ods_ir
+
+
+   .. py:method:: anchor() -> Optional[_ods_ir]
+
+
+   .. py:method:: message() -> Optional[_ods_ir]
+
+
+.. py:function:: debug_emit_param_as_remark(param: _ods_ir, *, anchor: Optional[_ods_ir] = None, message: Optional[Union[str, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> EmitParamAsRemarkOp
+
+.. py:class:: EmitRemarkAtOp(at: _ods_ir, message: Union[str, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation emits a diagnostic remark with the given message at the
+   location of each payload object associated with the argument. The argument
+   may be an operation or a value handle.
+
+   This operation always succeeds.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_remark_at'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: at() -> _ods_ir
+
+
+   .. py:method:: message() -> _ods_ir
+
+
+.. py:class:: EmitRemarkAtOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              EmitRemarkAtOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.debug.emit_remark_at'
+
+
+
+   .. py:method:: at() -> _ods_ir
+
+
+   .. py:method:: message() -> _ods_ir
+
+
+.. py:function:: debug_emit_remark_at(at: _ods_ir, message: Union[str, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> EmitRemarkAtOp
+
+.. py:class:: EmitParamAsRemarkOp(param: mlir.ir.Attribute, *, anchor: Optional[mlir.ir.Operation] = None, message: Optional[Union[mlir.ir.StringAttr, str]] = None, loc=None, ip=None)
+
+   Bases: :py:obj:`EmitParamAsRemarkOp`
+
+
+   
+   This operation emits a diagnostic remark containing the string form of the
+   attributes associated with the parameter provided as attribute. It takes
+   as optional arguments:
+
+   * an additional message text to prepend;
+   * a handle pointing to operations the location of which will be used to
+   emit the diagnostic; if multiple operations are associated, the
+   diagnostic is emitted for all of their respective locations.
+
+   This operation always succeeds.
+
+
+.. py:function:: emit_param_as_remark(param: mlir.ir.Attribute, *, anchor: Optional[mlir.ir.Operation] = None, message: Optional[Union[mlir.ir.StringAttr, str]] = None, loc=None, ip=None)
+
+.. py:class:: EmitRemarkAtOp(at: Union[mlir.ir.Operation, mlir.ir.Value], message: Optional[Union[mlir.ir.StringAttr, str]] = None, *, loc=None, ip=None)
+
+   Bases: :py:obj:`EmitRemarkAtOp`
+
+
+   
+   This operation emits a diagnostic remark with the given message at the
+   location of each payload object associated with the argument. The argument
+   may be an operation or a value handle.
+
+   This operation always succeeds.
+
+
+.. py:function:: emit_remark_at(at: Union[mlir.ir.Operation, mlir.ir.Value], message: Optional[Union[mlir.ir.StringAttr, str]] = None, *, loc=None, ip=None)
+
