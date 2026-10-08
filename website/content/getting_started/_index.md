@@ -79,3 +79,10 @@ cd llvm-project\build
 cmake ..\llvm -G "Visual Studio 15 2017 Win64" -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="Native" -DCMAKE_BUILD_TYPE=Release -Thost=x64 -DLLVM_ENABLE_ASSERTIONS=ON
 cmake --build . --target tools/mlir/test/check-mlir
 ```
+
+### Using MLIR in CI:
+
+[`setup-mlir`](https://github.com/munich-quantum-software/setup-mlir) is a
+community-maintained action for GitHub Actions that sets up MLIR in CI. It
+installs pre-built LLVM/MLIR toolchains, allowing projects to build and test
+against MLIR without compiling the toolchain from source.
