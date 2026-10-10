@@ -1,0 +1,380 @@
+mlir.dialects.transform.smt
+===========================
+
+.. py:module:: mlir.dialects.transform.smt
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.smt.Type
+   mlir.dialects.transform.smt.Block
+   mlir.dialects.transform.smt.ConstrainParamsOp
+   mlir.dialects.transform.smt.ConstrainParamsOpAdaptor
+   mlir.dialects.transform.smt.ConstrainParamsOp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.smt.smt_constrain_params
+   mlir.dialects.transform.smt.constrain_params
+
+
+Module Contents
+---------------
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: Block
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirBlock.
+
+
+
+   .. py:property:: owner
+      :type: OpView
+
+
+      
+      Returns the owning operation of this block.
+
+
+
+   .. py:property:: region
+      :type: Region
+
+
+      
+      Returns the owning region of this block.
+
+
+
+   .. py:property:: arguments
+      :type: BlockArgumentList
+
+
+      
+      Returns a list of block arguments.
+
+
+
+   .. py:method:: add_argument(type: Type, loc: Location) -> BlockArgument
+
+      Appends an argument of the specified type to the block.
+
+      :param type: The type of the argument to add.
+      :param loc: The source location for the argument.
+
+      :returns: The newly added block argument.
+
+
+
+   .. py:method:: erase_argument(index: int) -> None
+
+      Erases the argument at the specified index.
+
+      :param index: The index of the argument to erase.
+
+
+
+   .. py:property:: operations
+      :type: OperationList
+
+
+      
+      Returns a forward-optimized sequence of operations.
+
+
+
+   .. py:method:: create_at_start(parent: Region, arg_types: collections.abc.Sequence[Type] = [], arg_locs: collections.abc.Sequence[Location] | None = None) -> Block
+      :staticmethod:
+
+
+      
+      Creates and returns a new Block at the beginning of the given region (with given argument types and locations).
+
+
+
+   .. py:method:: append_to(region: Region) -> None
+
+      Appends this block to a region.
+
+      Transfers ownership if the block is currently owned by another region.
+
+      :param region: The region to append the block to.
+
+
+
+   .. py:method:: create_before(*arg_types, arg_locs: collections.abc.Sequence[Location] | None = None) -> Block
+
+      
+      Creates and returns a new Block before this block (with given argument types and locations).
+
+
+
+   .. py:method:: create_after(*arg_types, arg_locs: collections.abc.Sequence[Location] | None = None) -> Block
+
+      
+      Creates and returns a new Block after this block (with given argument types and locations).
+
+
+
+   .. py:method:: __iter__() -> OperationIterator
+
+      
+      Iterates over operations in the block.
+
+
+
+   .. py:method:: __eq__(arg: Block, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares block with non-block object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the block.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the block.
+
+
+
+   .. py:method:: append(operation: _OperationBase) -> None
+
+      Appends an operation to this block.
+
+      If the operation is currently in another block, it will be moved.
+
+      :param operation: The operation to append to the block.
+
+
+
+   .. py:property:: successors
+      :type: BlockSuccessors
+
+
+      
+      Returns the list of Block successors.
+
+
+
+   .. py:property:: predecessors
+      :type: BlockPredecessors
+
+
+      
+      Returns the list of Block predecessors.
+
+
+
+.. py:class:: ConstrainParamsOp(results_: Sequence[_ods_ir], params: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Allows expressing constraints on params using the SMT dialect.
+
+   Each Transform-dialect param provided as an operand has a corresponding
+   argument of SMT-type in the region. The SMT-Dialect ops in the region use
+   these params-as-SMT-vars as operands, thereby expressing relevant
+   constraints on their allowed values.
+
+   Computations w.r.t. passed-in params can also be expressed through the
+   region's SMT-ops. Namely, the constraints express relationships to other
+   SMT-variables which can then be yielded from the region (with ``smt.yield``).
+
+   The semantics of this op is that all the ops in the region together express
+   a constraint on the params-interpreted-as-smt-vars. The op fails in case the
+   expressed constraint is not satisfiable per SMTLIB semantics. Otherwise the
+   op succeeds and any one satisfying assignment is used to map the
+   SMT-variables yielded in the region to ``transform.param``s.
+
+   TODO: currently the operational semantics per the Transform interpreter is
+   to always fail. The intention is build out support for hooking in your own
+   operational semantics so you can invoke your favourite solver to determine
+   satisfiability of the corresponding constraint problem.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.smt.constrain_params'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, True)
+
+
+
+   .. py:method:: params() -> _ods_ir
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: body() -> _ods_ir
+
+
+.. py:class:: ConstrainParamsOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              ConstrainParamsOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.smt.constrain_params'
+
+
+
+   .. py:method:: params() -> _ods_ir
+
+
+.. py:function:: smt_constrain_params(results_: Sequence[_ods_ir], params: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, ConstrainParamsOp]
+
+.. py:class:: ConstrainParamsOp(results: Sequence[mlir.ir.Type], params: Sequence[mlir.dialects.transform.AnyParamType], arg_types: Sequence[mlir.ir.Type], loc=None, ip=None)
+
+   Bases: :py:obj:`ConstrainParamsOp`
+
+
+   
+   Allows expressing constraints on params using the SMT dialect.
+
+   Each Transform-dialect param provided as an operand has a corresponding
+   argument of SMT-type in the region. The SMT-Dialect ops in the region use
+   these params-as-SMT-vars as operands, thereby expressing relevant
+   constraints on their allowed values.
+
+   Computations w.r.t. passed-in params can also be expressed through the
+   region's SMT-ops. Namely, the constraints express relationships to other
+   SMT-variables which can then be yielded from the region (with ``smt.yield``).
+
+   The semantics of this op is that all the ops in the region together express
+   a constraint on the params-interpreted-as-smt-vars. The op fails in case the
+   expressed constraint is not satisfiable per SMTLIB semantics. Otherwise the
+   op succeeds and any one satisfying assignment is used to map the
+   SMT-variables yielded in the region to ``transform.param``s.
+
+   TODO: currently the operational semantics per the Transform interpreter is
+   to always fail. The intention is build out support for hooking in your own
+   operational semantics so you can invoke your favourite solver to determine
+   satisfiability of the corresponding constraint problem.
+
+
+   .. py:property:: body
+      :type: mlir.ir.Block
+
+
+
+.. py:function:: constrain_params(results: Sequence[mlir.ir.Type], params: Sequence[mlir.dialects.transform.AnyParamType], arg_types: Sequence[mlir.ir.Type], loc=None, ip=None)
+
