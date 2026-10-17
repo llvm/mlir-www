@@ -1,0 +1,114 @@
+mlir.dialects._math_transform_ops_gen
+=====================================
+
+.. py:module:: mlir.dialects._math_transform_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._math_transform_ops_gen._ods_ir
+   mlir.dialects._math_transform_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._math_transform_ops_gen.ApplyF32ExpansionPatternsOp
+   mlir.dialects._math_transform_ops_gen.ApplyF32ExpansionPatternsOpAdaptor
+   mlir.dialects._math_transform_ops_gen.ApplyPolynomialApproximationPatternsOp
+   mlir.dialects._math_transform_ops_gen.ApplyPolynomialApproximationPatternsOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._math_transform_ops_gen.apply_patterns_math_f32_expansion
+   mlir.dialects._math_transform_ops_gen.apply_patterns_math_polynomial_approximation
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: ApplyF32ExpansionPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Converts math functions to f32: operands are extended and the result is
+   truncated back.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.f32_expansion'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyF32ExpansionPatternsOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              ApplyF32ExpansionPatternsOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.f32_expansion'
+
+
+
+.. py:function:: apply_patterns_math_f32_expansion(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyF32ExpansionPatternsOp
+
+.. py:class:: ApplyPolynomialApproximationPatternsOp(*, enable_avx2: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Enables polynomial approximations for math functions.
+   Optionally, allows usage of x86 AVX2 intrinsics.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.polynomial_approximation'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: enable_avx2() -> bool
+
+
+.. py:class:: ApplyPolynomialApproximationPatternsOpAdaptor(operands: list[Value], attributes: OpAttributeMap)
+              ApplyPolynomialApproximationPatternsOpAdaptor(operands: list[Value], opview: OpView)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.polynomial_approximation'
+
+
+
+   .. py:method:: enable_avx2() -> bool
+
+
+.. py:function:: apply_patterns_math_polynomial_approximation(*, enable_avx2: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyPolynomialApproximationPatternsOp
+
