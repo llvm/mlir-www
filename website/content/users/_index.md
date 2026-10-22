@@ -86,6 +86,12 @@ CUDA-Q is a heterogeneous quantum-classical programming platform. Its compiler
 uses MLIR dialects for quantum and classical computation before lowering to
 QIR, LLVM IR, or target-specific representations.
 
+## [CUDA Tile IR](https://github.com/NVIDIA/cuda-tile)
+
+CUDA Tile IR is an MLIR-based intermediate representation and compiler
+infrastructure for CUDA kernel optimization, focusing on tile-based
+computation patterns and optimizations targeting NVIDIA tensor core units.
+
 ## [DSP-MLIR](https://github.com/MPSLab-ASU/DSP_MLIR)
 
 DSP-MLIR is an experimental MLIR dialect and compiler for digital signal
