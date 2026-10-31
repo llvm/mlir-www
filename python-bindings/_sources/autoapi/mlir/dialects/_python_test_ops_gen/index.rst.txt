@@ -1,0 +1,1195 @@
+mlir.dialects._python_test_ops_gen
+==================================
+
+.. py:module:: mlir.dialects._python_test_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._python_test_ops_gen._ods_ir
+   mlir.dialects._python_test_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._python_test_ops_gen._Dialect
+   mlir.dialects._python_test_ops_gen.AttributedOp
+   mlir.dialects._python_test_ops_gen.AttributedOpAdaptor
+   mlir.dialects._python_test_ops_gen.AttributesOp
+   mlir.dialects._python_test_ops_gen.AttributesOpAdaptor
+   mlir.dialects._python_test_ops_gen.CustomAttributedOp
+   mlir.dialects._python_test_ops_gen.CustomAttributedOpAdaptor
+   mlir.dialects._python_test_ops_gen.DummyOp
+   mlir.dialects._python_test_ops_gen.DummyOpAdaptor
+   mlir.dialects._python_test_ops_gen.FirstAttrDeriveAttrOp
+   mlir.dialects._python_test_ops_gen.FirstAttrDeriveAttrOpAdaptor
+   mlir.dialects._python_test_ops_gen.FirstAttrDeriveTypeAttrOp
+   mlir.dialects._python_test_ops_gen.FirstAttrDeriveTypeAttrOpAdaptor
+   mlir.dialects._python_test_ops_gen.InferResultsImpliedOp
+   mlir.dialects._python_test_ops_gen.InferResultsImpliedOpAdaptor
+   mlir.dialects._python_test_ops_gen.InferResultsOp
+   mlir.dialects._python_test_ops_gen.InferResultsOpAdaptor
+   mlir.dialects._python_test_ops_gen.InferResultsVariadicInputsOp
+   mlir.dialects._python_test_ops_gen.InferResultsVariadicInputsOpAdaptor
+   mlir.dialects._python_test_ops_gen.InferShapedTypeComponentsOp
+   mlir.dialects._python_test_ops_gen.InferShapedTypeComponentsOpAdaptor
+   mlir.dialects._python_test_ops_gen.OptionalOperandOp
+   mlir.dialects._python_test_ops_gen.OptionalOperandOpAdaptor
+   mlir.dialects._python_test_ops_gen.PropertyOp
+   mlir.dialects._python_test_ops_gen.PropertyOpAdaptor
+   mlir.dialects._python_test_ops_gen.ResultsVariadicOp
+   mlir.dialects._python_test_ops_gen.ResultsVariadicOpAdaptor
+   mlir.dialects._python_test_ops_gen.SameOperandAndResultTypeOp
+   mlir.dialects._python_test_ops_gen.SameOperandAndResultTypeOpAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicOperandSizeOp
+   mlir.dialects._python_test_ops_gen.SameVariadicOperandSizeOpAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpFFV
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpFFVAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpFVFVF
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpFVFVFAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVFV
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVFVAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVVF
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVVFAdaptor
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVVV
+   mlir.dialects._python_test_ops_gen.SameVariadicResultSizeOpVVVAdaptor
+   mlir.dialects._python_test_ops_gen.VariadicAndNormalRegionOp
+   mlir.dialects._python_test_ops_gen.VariadicAndNormalRegionOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._python_test_ops_gen.attributed_op
+   mlir.dialects._python_test_ops_gen.attributes_op
+   mlir.dialects._python_test_ops_gen.custom_attributed_op
+   mlir.dialects._python_test_ops_gen.dummy_op
+   mlir.dialects._python_test_ops_gen.first_attr_derive_attr_op
+   mlir.dialects._python_test_ops_gen.first_attr_derive_type_attr_op
+   mlir.dialects._python_test_ops_gen.infer_results_implied_op
+   mlir.dialects._python_test_ops_gen.infer_results_op
+   mlir.dialects._python_test_ops_gen.infer_results_variadic_inputs_op
+   mlir.dialects._python_test_ops_gen.infer_shaped_type_components_op
+   mlir.dialects._python_test_ops_gen.optional_operand_op
+   mlir.dialects._python_test_ops_gen.property_op
+   mlir.dialects._python_test_ops_gen.results_variadic
+   mlir.dialects._python_test_ops_gen.same_operand_and_result_type_op
+   mlir.dialects._python_test_ops_gen.same_variadic_operand
+   mlir.dialects._python_test_ops_gen.same_variadic_result_ffv
+   mlir.dialects._python_test_ops_gen.same_variadic_result_fvfvf
+   mlir.dialects._python_test_ops_gen.same_variadic_result_vfv
+   mlir.dialects._python_test_ops_gen.same_variadic_result_vvf
+   mlir.dialects._python_test_ops_gen.same_variadic_result_vvv
+   mlir.dialects._python_test_ops_gen.variadic_and_normal_region
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: _Dialect
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'python_test'
+
+
+
+.. py:class:: AttributedOp(mandatory_i32: Union[int, _ods_ir], *, optional_i32: Optional[Union[int, _ods_ir]] = None, unit: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.attributed_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: mandatory_i32() -> _ods_ir
+
+
+   .. py:method:: optional_i32() -> Optional[_ods_ir]
+
+
+   .. py:method:: unit() -> bool
+
+
+.. py:class:: AttributedOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.attributed_op'
+
+
+
+   .. py:method:: mandatory_i32() -> _ods_ir
+
+
+   .. py:method:: optional_i32() -> Optional[_ods_ir]
+
+
+   .. py:method:: unit() -> bool
+
+
+.. py:function:: attributed_op(mandatory_i32: Union[int, _ods_ir], *, optional_i32: Optional[Union[int, _ods_ir]] = None, unit: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> AttributedOp
+
+.. py:class:: AttributesOp(x_affinemaparr: Union[Any, _ods_ir], x_affinemap: Union[_ods_ir, _ods_ir], x_arr: Union[Sequence[_ods_ir], _ods_ir], x_boolarr: Union[Sequence[bool], _ods_ir], x_bool: Union[bool, _ods_ir], x_dboolarr: Union[Sequence[bool], _ods_ir], x_df32arr: Union[Sequence[float], _ods_ir], x_df64arr: Union[Sequence[float], _ods_ir], x_df16arr: Union[Sequence[int], _ods_ir], x_di32arr: Union[Sequence[int], _ods_ir], x_di64arr: Union[Sequence[int], _ods_ir], x_di8arr: Union[Sequence[int], _ods_ir], x_dictarr: Union[Any, _ods_ir], x_dict: Union[dict, _ods_ir], x_f32arr: Union[Sequence[float], _ods_ir], x_f32: Union[float, _ods_ir], x_f64arr: Union[Sequence[float], _ods_ir], x_f64: Union[float, _ods_ir], x_f64elems: Union[Union[Sequence[float], collections.abc.Buffer], _ods_ir], x_flatsymrefarr: Union[Sequence[str], _ods_ir], x_flatsymref: Union[str, _ods_ir], x_i16: Union[int, _ods_ir], x_i1: Union[bool, _ods_ir], x_i32arr: Union[Sequence[int], _ods_ir], x_i32: Union[int, _ods_ir], x_i32elems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_i64arr: Union[Sequence[int], _ods_ir], x_i64: Union[int, _ods_ir], x_i64elems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_i64svecarr: Union[Sequence[int], _ods_ir], x_i8: Union[int, _ods_ir], x_idx: Union[int, _ods_ir], x_idxelems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_idxlistarr: Union[Any, _ods_ir], x_si16: Union[int, _ods_ir], x_si1: Union[int, _ods_ir], x_si32: Union[int, _ods_ir], x_si64: Union[int, _ods_ir], x_si8: Union[int, _ods_ir], x_strarr: Union[Sequence[str], _ods_ir], x_str: Union[str, _ods_ir], x_sym: Union[str, _ods_ir], x_symrefarr: Union[Any, _ods_ir], x_symref: Union[str, _ods_ir], x_typearr: Union[Any, _ods_ir], x_type: Union[_ods_ir, _ods_ir], x_ui16: Union[int, _ods_ir], x_ui1: Union[int, _ods_ir], x_ui32: Union[int, _ods_ir], x_ui64: Union[int, _ods_ir], x_ui8: Union[int, _ods_ir], *, x_unit: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.attributes_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: x_affinemaparr() -> _ods_ir
+
+
+   .. py:method:: x_affinemap() -> _ods_ir
+
+
+   .. py:method:: x_arr() -> _ods_ir
+
+
+   .. py:method:: x_boolarr() -> _ods_ir
+
+
+   .. py:method:: x_bool() -> _ods_ir
+
+
+   .. py:method:: x_dboolarr() -> _ods_ir
+
+
+   .. py:method:: x_df32arr() -> _ods_ir
+
+
+   .. py:method:: x_df64arr() -> _ods_ir
+
+
+   .. py:method:: x_df16arr() -> _ods_ir
+
+
+   .. py:method:: x_di32arr() -> _ods_ir
+
+
+   .. py:method:: x_di64arr() -> _ods_ir
+
+
+   .. py:method:: x_di8arr() -> _ods_ir
+
+
+   .. py:method:: x_dictarr() -> _ods_ir
+
+
+   .. py:method:: x_dict() -> _ods_ir
+
+
+   .. py:method:: x_f32arr() -> _ods_ir
+
+
+   .. py:method:: x_f32() -> _ods_ir
+
+
+   .. py:method:: x_f64arr() -> _ods_ir
+
+
+   .. py:method:: x_f64() -> _ods_ir
+
+
+   .. py:method:: x_f64elems() -> _ods_ir
+
+
+   .. py:method:: x_flatsymrefarr() -> _ods_ir
+
+
+   .. py:method:: x_flatsymref() -> _ods_ir
+
+
+   .. py:method:: x_i16() -> _ods_ir
+
+
+   .. py:method:: x_i1() -> _ods_ir
+
+
+   .. py:method:: x_i32arr() -> _ods_ir
+
+
+   .. py:method:: x_i32() -> _ods_ir
+
+
+   .. py:method:: x_i32elems() -> _ods_ir
+
+
+   .. py:method:: x_i64arr() -> _ods_ir
+
+
+   .. py:method:: x_i64() -> _ods_ir
+
+
+   .. py:method:: x_i64elems() -> _ods_ir
+
+
+   .. py:method:: x_i64svecarr() -> _ods_ir
+
+
+   .. py:method:: x_i8() -> _ods_ir
+
+
+   .. py:method:: x_idx() -> _ods_ir
+
+
+   .. py:method:: x_idxelems() -> _ods_ir
+
+
+   .. py:method:: x_idxlistarr() -> _ods_ir
+
+
+   .. py:method:: x_si16() -> _ods_ir
+
+
+   .. py:method:: x_si1() -> _ods_ir
+
+
+   .. py:method:: x_si32() -> _ods_ir
+
+
+   .. py:method:: x_si64() -> _ods_ir
+
+
+   .. py:method:: x_si8() -> _ods_ir
+
+
+   .. py:method:: x_strarr() -> _ods_ir
+
+
+   .. py:method:: x_str() -> _ods_ir
+
+
+   .. py:method:: x_sym() -> _ods_ir
+
+
+   .. py:method:: x_symrefarr() -> _ods_ir
+
+
+   .. py:method:: x_symref() -> _ods_ir
+
+
+   .. py:method:: x_typearr() -> _ods_ir
+
+
+   .. py:method:: x_type() -> _ods_ir
+
+
+   .. py:method:: x_ui16() -> _ods_ir
+
+
+   .. py:method:: x_ui1() -> _ods_ir
+
+
+   .. py:method:: x_ui32() -> _ods_ir
+
+
+   .. py:method:: x_ui64() -> _ods_ir
+
+
+   .. py:method:: x_ui8() -> _ods_ir
+
+
+   .. py:method:: x_unit() -> bool
+
+
+.. py:class:: AttributesOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.attributes_op'
+
+
+
+   .. py:method:: x_affinemaparr() -> _ods_ir
+
+
+   .. py:method:: x_affinemap() -> _ods_ir
+
+
+   .. py:method:: x_arr() -> _ods_ir
+
+
+   .. py:method:: x_boolarr() -> _ods_ir
+
+
+   .. py:method:: x_bool() -> _ods_ir
+
+
+   .. py:method:: x_dboolarr() -> _ods_ir
+
+
+   .. py:method:: x_df32arr() -> _ods_ir
+
+
+   .. py:method:: x_df64arr() -> _ods_ir
+
+
+   .. py:method:: x_df16arr() -> _ods_ir
+
+
+   .. py:method:: x_di32arr() -> _ods_ir
+
+
+   .. py:method:: x_di64arr() -> _ods_ir
+
+
+   .. py:method:: x_di8arr() -> _ods_ir
+
+
+   .. py:method:: x_dictarr() -> _ods_ir
+
+
+   .. py:method:: x_dict() -> _ods_ir
+
+
+   .. py:method:: x_f32arr() -> _ods_ir
+
+
+   .. py:method:: x_f32() -> _ods_ir
+
+
+   .. py:method:: x_f64arr() -> _ods_ir
+
+
+   .. py:method:: x_f64() -> _ods_ir
+
+
+   .. py:method:: x_f64elems() -> _ods_ir
+
+
+   .. py:method:: x_flatsymrefarr() -> _ods_ir
+
+
+   .. py:method:: x_flatsymref() -> _ods_ir
+
+
+   .. py:method:: x_i16() -> _ods_ir
+
+
+   .. py:method:: x_i1() -> _ods_ir
+
+
+   .. py:method:: x_i32arr() -> _ods_ir
+
+
+   .. py:method:: x_i32() -> _ods_ir
+
+
+   .. py:method:: x_i32elems() -> _ods_ir
+
+
+   .. py:method:: x_i64arr() -> _ods_ir
+
+
+   .. py:method:: x_i64() -> _ods_ir
+
+
+   .. py:method:: x_i64elems() -> _ods_ir
+
+
+   .. py:method:: x_i64svecarr() -> _ods_ir
+
+
+   .. py:method:: x_i8() -> _ods_ir
+
+
+   .. py:method:: x_idx() -> _ods_ir
+
+
+   .. py:method:: x_idxelems() -> _ods_ir
+
+
+   .. py:method:: x_idxlistarr() -> _ods_ir
+
+
+   .. py:method:: x_si16() -> _ods_ir
+
+
+   .. py:method:: x_si1() -> _ods_ir
+
+
+   .. py:method:: x_si32() -> _ods_ir
+
+
+   .. py:method:: x_si64() -> _ods_ir
+
+
+   .. py:method:: x_si8() -> _ods_ir
+
+
+   .. py:method:: x_strarr() -> _ods_ir
+
+
+   .. py:method:: x_str() -> _ods_ir
+
+
+   .. py:method:: x_sym() -> _ods_ir
+
+
+   .. py:method:: x_symrefarr() -> _ods_ir
+
+
+   .. py:method:: x_symref() -> _ods_ir
+
+
+   .. py:method:: x_typearr() -> _ods_ir
+
+
+   .. py:method:: x_type() -> _ods_ir
+
+
+   .. py:method:: x_ui16() -> _ods_ir
+
+
+   .. py:method:: x_ui1() -> _ods_ir
+
+
+   .. py:method:: x_ui32() -> _ods_ir
+
+
+   .. py:method:: x_ui64() -> _ods_ir
+
+
+   .. py:method:: x_ui8() -> _ods_ir
+
+
+   .. py:method:: x_unit() -> bool
+
+
+.. py:function:: attributes_op(x_affinemaparr: Union[Any, _ods_ir], x_affinemap: Union[_ods_ir, _ods_ir], x_arr: Union[Sequence[_ods_ir], _ods_ir], x_boolarr: Union[Sequence[bool], _ods_ir], x_bool: Union[bool, _ods_ir], x_dboolarr: Union[Sequence[bool], _ods_ir], x_df32arr: Union[Sequence[float], _ods_ir], x_df64arr: Union[Sequence[float], _ods_ir], x_df16arr: Union[Sequence[int], _ods_ir], x_di32arr: Union[Sequence[int], _ods_ir], x_di64arr: Union[Sequence[int], _ods_ir], x_di8arr: Union[Sequence[int], _ods_ir], x_dictarr: Union[Any, _ods_ir], x_dict: Union[dict, _ods_ir], x_f32arr: Union[Sequence[float], _ods_ir], x_f32: Union[float, _ods_ir], x_f64arr: Union[Sequence[float], _ods_ir], x_f64: Union[float, _ods_ir], x_f64elems: Union[Union[Sequence[float], collections.abc.Buffer], _ods_ir], x_flatsymrefarr: Union[Sequence[str], _ods_ir], x_flatsymref: Union[str, _ods_ir], x_i16: Union[int, _ods_ir], x_i1: Union[bool, _ods_ir], x_i32arr: Union[Sequence[int], _ods_ir], x_i32: Union[int, _ods_ir], x_i32elems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_i64arr: Union[Sequence[int], _ods_ir], x_i64: Union[int, _ods_ir], x_i64elems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_i64svecarr: Union[Sequence[int], _ods_ir], x_i8: Union[int, _ods_ir], x_idx: Union[int, _ods_ir], x_idxelems: Union[Union[Sequence[int], collections.abc.Buffer], _ods_ir], x_idxlistarr: Union[Any, _ods_ir], x_si16: Union[int, _ods_ir], x_si1: Union[int, _ods_ir], x_si32: Union[int, _ods_ir], x_si64: Union[int, _ods_ir], x_si8: Union[int, _ods_ir], x_strarr: Union[Sequence[str], _ods_ir], x_str: Union[str, _ods_ir], x_sym: Union[str, _ods_ir], x_symrefarr: Union[Any, _ods_ir], x_symref: Union[str, _ods_ir], x_typearr: Union[Any, _ods_ir], x_type: Union[_ods_ir, _ods_ir], x_ui16: Union[int, _ods_ir], x_ui1: Union[int, _ods_ir], x_ui32: Union[int, _ods_ir], x_ui64: Union[int, _ods_ir], x_ui8: Union[int, _ods_ir], *, x_unit: Optional[bool] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> AttributesOp
+
+.. py:class:: CustomAttributedOp(test_attr: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.custom_attributed_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: test_attr() -> _ods_ir
+
+
+.. py:class:: CustomAttributedOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.custom_attributed_op'
+
+
+
+   .. py:method:: test_attr() -> _ods_ir
+
+
+.. py:function:: custom_attributed_op(test_attr: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> CustomAttributedOp
+
+.. py:class:: DummyOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.dummy_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: DummyOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.dummy_op'
+
+
+
+.. py:function:: dummy_op(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> DummyOp
+
+.. py:class:: FirstAttrDeriveAttrOp(iattr: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.first_attr_derive_attr_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: iattr() -> _ods_ir
+
+
+   .. py:method:: one() -> _ods_ir
+
+
+   .. py:method:: two() -> _ods_ir
+
+
+   .. py:method:: three() -> _ods_ir
+
+
+.. py:class:: FirstAttrDeriveAttrOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.first_attr_derive_attr_op'
+
+
+
+   .. py:method:: iattr() -> _ods_ir
+
+
+.. py:function:: first_attr_derive_attr_op(iattr: Union[Any, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: FirstAttrDeriveTypeAttrOp(input: _ods_ir, type_: Union[_ods_ir, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.first_attr_derive_type_attr_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+   .. py:method:: one() -> _ods_ir
+
+
+   .. py:method:: two() -> _ods_ir
+
+
+.. py:class:: FirstAttrDeriveTypeAttrOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.first_attr_derive_type_attr_op'
+
+
+
+   .. py:method:: input() -> _ods_ir
+
+
+   .. py:method:: type_() -> _ods_ir
+
+
+.. py:function:: first_attr_derive_type_attr_op(input: _ods_ir, type_: Union[_ods_ir, _ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: InferResultsImpliedOp(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_implied_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: integer() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: flt() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: index() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: InferResultsImpliedOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_implied_op'
+
+
+
+.. py:function:: infer_results_implied_op(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: InferResultsOp(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: single() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: doubled() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: InferResultsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_op'
+
+
+
+.. py:function:: infer_results_op(*, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: InferResultsVariadicInputsOp(*, single: Optional[_ods_ir[_ods_ir]] = None, doubled: Optional[_ods_ir[_ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_variadic_inputs_op'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: single() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: doubled() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: InferResultsVariadicInputsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_results_variadic_inputs_op'
+
+
+
+   .. py:method:: single() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: doubled() -> Optional[_ods_ir[_ods_ir]]
+
+
+.. py:function:: infer_results_variadic_inputs_op(*, single: Optional[_ods_ir[_ods_ir]] = None, doubled: Optional[_ods_ir[_ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: InferShapedTypeComponentsOp(result: _ods_ir, operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_shaped_type_components_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: InferShapedTypeComponentsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.infer_shaped_type_components_op'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: infer_shaped_type_components_op(result: _ods_ir, operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: OptionalOperandOp(*, input: Optional[_ods_ir] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.optional_operand_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: input() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: OptionalOperandOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.optional_operand_op'
+
+
+
+   .. py:method:: input() -> Optional[_ods_ir]
+
+
+.. py:function:: optional_operand_op(*, input: Optional[_ods_ir] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: PropertyOp(property: Union[int, _ods_ir], idx: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.property_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: idx() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: property() -> _ods_ir
+
+
+.. py:class:: PropertyOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.property_op'
+
+
+
+   .. py:method:: idx() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: property() -> _ods_ir
+
+
+.. py:function:: property_op(property: Union[int, _ods_ir], idx: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> PropertyOp
+
+.. py:class:: ResultsVariadicOp(res: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.results_variadic'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: ResultsVariadicOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.results_variadic'
+
+
+
+.. py:function:: results_variadic(res: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, ResultsVariadicOp]
+
+.. py:class:: SameOperandAndResultTypeOp(_gen_arg_0: Sequence[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_operand_and_result_type_op'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: one() -> _ods_ir
+
+
+   .. py:method:: two() -> _ods_ir
+
+
+.. py:class:: SameOperandAndResultTypeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_operand_and_result_type_op'
+
+
+
+.. py:function:: same_operand_and_result_type_op(_gen_arg_0: Sequence[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: SameVariadicOperandSizeOp(variadic1: Sequence[_ods_ir], non_variadic: _ods_ir, variadic2: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_operand'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: non_variadic() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+.. py:class:: SameVariadicOperandSizeOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_operand'
+
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: non_variadic() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+.. py:function:: same_variadic_operand(variadic1: Sequence[_ods_ir], non_variadic: _ods_ir, variadic2: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> SameVariadicOperandSizeOp
+
+.. py:class:: SameVariadicResultSizeOpFFV(non_variadic1: _ods_ir, non_variadic2: _ods_ir, variadic: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_ffv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: non_variadic1() -> _ods_ir
+
+
+   .. py:method:: non_variadic2() -> _ods_ir
+
+
+   .. py:method:: variadic() -> _ods_ir
+
+
+.. py:class:: SameVariadicResultSizeOpFFVAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_ffv'
+
+
+
+.. py:function:: same_variadic_result_ffv(non_variadic1: _ods_ir, non_variadic2: _ods_ir, variadic: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, SameVariadicResultSizeOpFFV]
+
+.. py:class:: SameVariadicResultSizeOpFVFVF(non_variadic1: _ods_ir, variadic1: Sequence[_ods_ir], non_variadic2: _ods_ir, variadic2: Sequence[_ods_ir], non_variadic3: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_fvfvf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: non_variadic1() -> _ods_ir
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: non_variadic2() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+   .. py:method:: non_variadic3() -> _ods_ir
+
+
+.. py:class:: SameVariadicResultSizeOpFVFVFAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_fvfvf'
+
+
+
+.. py:function:: same_variadic_result_fvfvf(non_variadic1: _ods_ir, variadic1: Sequence[_ods_ir], non_variadic2: _ods_ir, variadic2: Sequence[_ods_ir], non_variadic3: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, SameVariadicResultSizeOpFVFVF]
+
+.. py:class:: SameVariadicResultSizeOpVFV(variadic1: Sequence[_ods_ir], non_variadic: _ods_ir, variadic2: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vfv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: non_variadic() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+.. py:class:: SameVariadicResultSizeOpVFVAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vfv'
+
+
+
+.. py:function:: same_variadic_result_vfv(variadic1: Sequence[_ods_ir], non_variadic: _ods_ir, variadic2: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, SameVariadicResultSizeOpVFV]
+
+.. py:class:: SameVariadicResultSizeOpVVF(variadic1: Sequence[_ods_ir], variadic2: Sequence[_ods_ir], non_variadic: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vvf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+   .. py:method:: non_variadic() -> _ods_ir
+
+
+.. py:class:: SameVariadicResultSizeOpVVFAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vvf'
+
+
+
+.. py:function:: same_variadic_result_vvf(variadic1: Sequence[_ods_ir], variadic2: Sequence[_ods_ir], non_variadic: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, SameVariadicResultSizeOpVVF]
+
+.. py:class:: SameVariadicResultSizeOpVVV(variadic1: Sequence[_ods_ir], variadic2: Sequence[_ods_ir], variadic3: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vvv'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: variadic1() -> _ods_ir
+
+
+   .. py:method:: variadic2() -> _ods_ir
+
+
+   .. py:method:: variadic3() -> _ods_ir
+
+
+.. py:class:: SameVariadicResultSizeOpVVVAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.same_variadic_result_vvv'
+
+
+
+.. py:function:: same_variadic_result_vvv(variadic1: Sequence[_ods_ir], variadic2: Sequence[_ods_ir], variadic3: Sequence[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, SameVariadicResultSizeOpVVV]
+
+.. py:class:: VariadicAndNormalRegionOp(num_variadic: int, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.variadic_and_normal_region'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (1, False)
+
+
+
+   .. py:method:: region() -> _ods_ir
+
+
+   .. py:method:: variadic() -> _ods_ir
+
+
+.. py:class:: VariadicAndNormalRegionOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'python_test.variadic_and_normal_region'
+
+
+
+.. py:function:: variadic_and_normal_region(num_variadic: int, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> VariadicAndNormalRegionOp
+

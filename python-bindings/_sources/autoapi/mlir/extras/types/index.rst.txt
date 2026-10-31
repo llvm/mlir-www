@@ -1,0 +1,2167 @@
+mlir.extras.types
+=================
+
+.. py:module:: mlir.extras.types
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.extras.types.index
+   mlir.extras.types.bool
+   mlir.extras.types.i8
+   mlir.extras.types.i16
+   mlir.extras.types.i32
+   mlir.extras.types.i64
+   mlir.extras.types.si8
+   mlir.extras.types.si16
+   mlir.extras.types.si32
+   mlir.extras.types.si64
+   mlir.extras.types.ui8
+   mlir.extras.types.ui16
+   mlir.extras.types.ui32
+   mlir.extras.types.ui64
+   mlir.extras.types.f16
+   mlir.extras.types.f32
+   mlir.extras.types.tf32
+   mlir.extras.types.f64
+   mlir.extras.types.bf16
+   mlir.extras.types.f8E5M2
+   mlir.extras.types.f8E4M3
+   mlir.extras.types.f8E4M3FN
+   mlir.extras.types.f8E4M3B11FNUZ
+   mlir.extras.types.f8E3M4
+   mlir.extras.types.f4E2M1FN
+   mlir.extras.types.f6E2M3FN
+   mlir.extras.types.f6E3M2FN
+   mlir.extras.types.f8E8M0FNU
+   mlir.extras.types.f8E5M3FNU
+   mlir.extras.types.none
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.extras.types.Attribute
+   mlir.extras.types.BF16Type
+   mlir.extras.types.ComplexType
+   mlir.extras.types.F16Type
+   mlir.extras.types.F32Type
+   mlir.extras.types.F64Type
+   mlir.extras.types.Float4E2M1FNType
+   mlir.extras.types.Float6E2M3FNType
+   mlir.extras.types.Float6E3M2FNType
+   mlir.extras.types.Float8E3M4Type
+   mlir.extras.types.Float8E4M3B11FNUZType
+   mlir.extras.types.Float8E4M3FNType
+   mlir.extras.types.Float8E4M3Type
+   mlir.extras.types.Float8E5M2Type
+   mlir.extras.types.Float8E8M0FNUType
+   mlir.extras.types.Float8E5M3FNUType
+   mlir.extras.types.FloatTF32Type
+   mlir.extras.types.FunctionType
+   mlir.extras.types.IndexType
+   mlir.extras.types.IntegerType
+   mlir.extras.types.MemRefType
+   mlir.extras.types.NoneType
+   mlir.extras.types.OpaqueType
+   mlir.extras.types.RankedTensorType
+   mlir.extras.types.StridedLayoutAttr
+   mlir.extras.types.StringAttr
+   mlir.extras.types.TupleType
+   mlir.extras.types.Type
+   mlir.extras.types.UnrankedMemRefType
+   mlir.extras.types.UnrankedTensorType
+   mlir.extras.types.VectorType
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.extras.types.i
+   mlir.extras.types.si
+   mlir.extras.types.ui
+   mlir.extras.types.complex
+   mlir.extras.types.opaque
+   mlir.extras.types._shaped
+   mlir.extras.types.vector
+   mlir.extras.types.tensor
+   mlir.extras.types.memref
+   mlir.extras.types.tuple
+   mlir.extras.types.function
+
+
+Module Contents
+---------------
+
+.. py:class:: Attribute(cast_from_type: Attribute)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the MlirAttribute.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Attribute
+      :staticmethod:
+
+
+      
+      Creates an Attribute from a capsule wrapping ``MlirAttribute``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Attribute
+      :staticmethod:
+
+
+      
+      Parses an attribute from an assembly form. Raises an ``MLIRError`` on failure.
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Attribute``.
+
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:method:: get_named(arg: str, /) -> NamedAttribute
+
+      Binds a name to the attribute, creating a `NamedAttribute`.
+
+      :param name: The name to bind to the `Attribute`.
+
+      :returns: A `NamedAttribute` with the given name and this attribute.
+
+
+
+   .. py:method:: __eq__(arg: Attribute, /) -> bool
+                  __eq__(arg: object, /) -> bool
+
+      
+      Compares attribute with non-attribute object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the attribute.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the Attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: maybe_downcast() -> Attribute
+
+      
+      Downcasts the attribute to a more specific attribute if possible.
+
+
+
+.. py:class:: BF16Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> BF16Type
+      :staticmethod:
+
+
+      
+      Create a bf16 type.
+
+
+
+.. py:class:: ComplexType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(arg: Type, /) -> ComplexType
+      :staticmethod:
+
+
+      
+      Create a complex type
+
+
+
+   .. py:property:: element_type
+      :type: Type
+
+
+      
+      Returns element type.
+
+
+
+.. py:class:: F16Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F16Type
+      :staticmethod:
+
+
+      
+      Create a f16 type.
+
+
+
+.. py:class:: F32Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F32Type
+      :staticmethod:
+
+
+      
+      Create a f32 type.
+
+
+
+.. py:class:: F64Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> F64Type
+      :staticmethod:
+
+
+      
+      Create a f64 type.
+
+
+
+.. py:class:: Float4E2M1FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float4E2M1FNType
+      :staticmethod:
+
+
+      
+      Create a float4_e2m1fn type.
+
+
+
+.. py:class:: Float6E2M3FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float6E2M3FNType
+      :staticmethod:
+
+
+      
+      Create a float6_e2m3fn type.
+
+
+
+.. py:class:: Float6E3M2FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float6E3M2FNType
+      :staticmethod:
+
+
+      
+      Create a float6_e3m2fn type.
+
+
+
+.. py:class:: Float8E3M4Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E3M4Type
+      :staticmethod:
+
+
+      
+      Create a float8_e3m4 type.
+
+
+
+.. py:class:: Float8E4M3B11FNUZType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3B11FNUZType
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3b11fnuz type.
+
+
+
+.. py:class:: Float8E4M3FNType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3FNType
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3fn type.
+
+
+
+.. py:class:: Float8E4M3Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E4M3Type
+      :staticmethod:
+
+
+      
+      Create a float8_e4m3 type.
+
+
+
+.. py:class:: Float8E5M2Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E5M2Type
+      :staticmethod:
+
+
+      
+      Create a float8_e5m2 type.
+
+
+
+.. py:class:: Float8E8M0FNUType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E8M0FNUType
+      :staticmethod:
+
+
+      
+      Create a float8_e8m0fnu type.
+
+
+
+.. py:class:: Float8E5M3FNUType(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: get(context: Context | None = None) -> Float8E5M3FNUType
+      :staticmethod:
+
+
+      
+      Create a float8_e5m3fnu type.
+
+
+
+.. py:class:: FloatTF32Type(cast_from_type: Type)
+
+   Bases: :py:obj:`FloatType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> FloatTF32Type
+      :staticmethod:
+
+
+      
+      Create a tf32 type.
+
+
+
+.. py:class:: FunctionType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(inputs: collections.abc.Sequence[Type], results: collections.abc.Sequence[Type], context: Context | None = None) -> FunctionType
+      :staticmethod:
+
+
+      
+      Gets a FunctionType from a list of input and result types
+
+
+
+   .. py:property:: inputs
+      :type: list[Type]
+
+
+      
+      Returns the list of input types in the FunctionType.
+
+
+
+   .. py:property:: results
+      :type: list[Type]
+
+
+      
+      Returns the list of result types in the FunctionType.
+
+
+
+.. py:class:: IndexType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> IndexType
+      :staticmethod:
+
+
+      
+      Create a index type.
+
+
+
+.. py:class:: IntegerType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:class:: Signedness
+
+      Bases: :py:obj:`enum.Enum`
+
+
+      
+      Generic enumeration.
+
+      Derive from this class to define new enumerations.
+
+
+      .. py:attribute:: SIGNLESS
+         :value: 0
+
+
+
+      .. py:attribute:: SIGNED
+         :value: 1
+
+
+
+      .. py:attribute:: UNSIGNED
+         :value: 2
+
+
+
+
+   .. py:attribute:: SIGNLESS
+      :type:  IntegerType
+
+
+   .. py:attribute:: SIGNED
+      :type:  IntegerType
+
+
+   .. py:attribute:: UNSIGNED
+      :type:  IntegerType
+
+
+   .. py:method:: get_signless(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signless integer type
+
+
+
+   .. py:method:: get_signed(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create a signed integer type
+
+
+
+   .. py:method:: get_unsigned(width: int, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create an unsigned integer type
+
+
+
+   .. py:method:: get(width: int, signedness: IntegerType = IntegerType.Signedness.SIGNLESS, context: Context | None = None) -> IntegerType
+      :staticmethod:
+
+
+      
+      Create an integer type
+
+
+
+   .. py:property:: signedness
+      :type: IntegerType
+
+
+
+   .. py:property:: width
+      :type: int
+
+
+      
+      Returns the width of the integer type
+
+
+
+   .. py:property:: is_signless
+      :type: bool
+
+
+      
+      Returns whether this is a signless integer
+
+
+
+   .. py:property:: is_signed
+      :type: bool
+
+
+      
+      Returns whether this is a signed integer
+
+
+
+   .. py:property:: is_unsigned
+      :type: bool
+
+
+      
+      Returns whether this is an unsigned integer
+
+
+
+.. py:class:: MemRefType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, layout: Attribute | None = None, memory_space: Attribute | None = None, loc: Location | None = None) -> MemRefType
+      :staticmethod:
+
+
+      
+      Create a memref type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, layout: Attribute | None = None, memory_space: Attribute | None = None, context: Context | None = None) -> MemRefType
+      :staticmethod:
+
+
+      
+      Create a memref type
+
+
+
+   .. py:property:: layout
+      :type: Attribute
+
+
+      
+      The layout of the MemRef type.
+
+
+
+   .. py:method:: get_strides_and_offset() -> tuple[list[int], int]
+
+      
+      The strides and offset of the MemRef type.
+
+
+
+   .. py:property:: affine_map
+      :type: AffineMap
+
+
+      
+      The layout of the MemRef type as an affine map.
+
+
+
+   .. py:property:: memory_space
+      :type: Attribute | None
+
+
+      
+      Returns the memory space of the given MemRef type.
+
+
+
+.. py:class:: NoneType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(context: Context | None = None) -> NoneType
+      :staticmethod:
+
+
+      
+      Create a none type.
+
+
+
+.. py:class:: OpaqueType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(dialect_namespace: str, buffer: str, context: Context | None = None) -> OpaqueType
+      :staticmethod:
+
+
+      
+      Create an unregistered (opaque) dialect type.
+
+
+
+   .. py:property:: dialect_namespace
+      :type: str
+
+
+      
+      Returns the dialect namespace for the Opaque type as a string.
+
+
+
+   .. py:property:: data
+      :type: str
+
+
+      
+      Returns the data for the Opaque type as a string.
+
+
+
+.. py:class:: RankedTensorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, encoding: Attribute | None = None, loc: Location | None = None) -> RankedTensorType
+      :staticmethod:
+
+
+      
+      Create a ranked tensor type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, encoding: Attribute | None = None, context: Context | None = None) -> RankedTensorType
+      :staticmethod:
+
+
+      
+      Create a ranked tensor type
+
+
+
+   .. py:property:: encoding
+      :type: Attribute | None
+
+
+
+.. py:class:: StridedLayoutAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(offset: int, strides: collections.abc.Sequence[int], context: Context | None = None) -> StridedLayoutAttr
+      :staticmethod:
+
+
+      
+      Gets a strided layout attribute.
+
+
+
+   .. py:method:: get_fully_dynamic(rank: int, context: Context | None = None) -> StridedLayoutAttr
+      :staticmethod:
+
+
+      
+      Gets a strided layout attribute with dynamic offset and strides of a given rank.
+
+
+
+   .. py:property:: offset
+      :type: int
+
+
+      
+      Returns the value of the float point attribute
+
+
+
+   .. py:property:: strides
+      :type: list[int]
+
+
+      
+      Returns the value of the float point attribute
+
+
+
+.. py:class:: StringAttr(cast_from_attr: Attribute)
+
+   Bases: :py:obj:`Attribute`
+
+
+   .. py:property:: type
+      :type: Type
+
+
+      
+      Returns the type of the ``Attribute``.
+
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the attribute.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the attribute.
+
+
+
+   .. py:attribute:: attr_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(value: str, context: Context | None = None) -> StringAttr
+                  get(value: bytes, context: Context | None = None) -> StringAttr
+      :staticmethod:
+
+
+
+   .. py:method:: get_typed(type: Type, value: str) -> StringAttr
+      :staticmethod:
+
+
+      
+      Gets a uniqued string attribute associated to a type
+
+
+
+   .. py:property:: value
+      :type: str
+
+
+      
+      Returns the value of the string attribute
+
+
+
+   .. py:property:: value_bytes
+      :type: bytes
+
+
+      
+      Returns the value of the string attribute as ``bytes``
+
+
+
+.. py:class:: TupleType(cast_from_type: Type)
+
+   Bases: :py:obj:`Type`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get_tuple(elements: collections.abc.Sequence[Type], context: Context | None = None) -> TupleType
+      :staticmethod:
+
+
+      
+      Create a tuple type
+
+
+
+   .. py:method:: get_type(pos: int) -> Type
+
+      
+      Returns the pos-th type in the tuple type.
+
+
+
+   .. py:property:: num_types
+      :type: int
+
+
+      
+      Returns the number of types contained in a tuple.
+
+
+
+.. py:class:: Type(cast_from_type: Type)
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+      
+      Gets a capsule wrapping the ``MlirType``.
+
+
+
+   .. py:method:: _CAPICreate(arg: object, /) -> Type
+      :staticmethod:
+
+
+      
+      Creates a Type from a capsule wrapping ``MlirType``.
+
+
+
+   .. py:method:: parse(asm: str, context: Context | None = None) -> Type
+      :staticmethod:
+
+
+      
+      Parses the assembly form of a type.
+
+      Returns a Type object or raises an ``MLIRError`` if the type cannot be parsed.
+
+      See also: https://mlir.llvm.org/docs/LangRef/#type-system
+
+
+
+   .. py:property:: context
+      :type: Context
+
+
+      
+      Context that owns the ``Type``.
+
+
+
+   .. py:method:: __eq__(arg: Type, /) -> bool
+                  __eq__(other: object | None) -> bool
+
+      
+      Compares type with non-type object (always returns False).
+
+
+
+   .. py:method:: __hash__() -> int
+
+      
+      Returns the hash value of the ``Type``.
+
+
+
+   .. py:method:: dump() -> None
+
+      
+      Dumps a debug representation of the object to stderr.
+
+
+
+   .. py:method:: __str__() -> str
+
+      
+      Returns the assembly form of the ``Type``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:method:: maybe_downcast() -> Type
+
+      
+      Downcasts the Type to a more specific ``Type`` if possible.
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+.. py:class:: UnrankedMemRefType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(element_type: Type, memory_space: Attribute | None, loc: Location | None = None) -> UnrankedMemRefType
+      :staticmethod:
+
+
+      
+      Create a unranked memref type
+
+
+
+   .. py:method:: get_unchecked(element_type: Type, memory_space: Attribute | None, context: Context | None = None) -> UnrankedMemRefType
+      :staticmethod:
+
+
+      
+      Create a unranked memref type
+
+
+
+   .. py:property:: memory_space
+      :type: Attribute | None
+
+
+      
+      Returns the memory space of the given Unranked MemRef type.
+
+
+
+.. py:class:: UnrankedTensorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(element_type: Type, loc: Location | None = None) -> UnrankedTensorType
+      :staticmethod:
+
+
+      
+      Create a unranked tensor type
+
+
+
+   .. py:method:: get_unchecked(element_type: Type, context: Context | None = None) -> UnrankedTensorType
+      :staticmethod:
+
+
+      
+      Create a unranked tensor type
+
+
+
+.. py:class:: VectorType(cast_from_type: Type)
+
+   Bases: :py:obj:`ShapedType`
+
+
+   .. py:attribute:: static_typeid
+      :type:  _mlir.ir.TypeID
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> _mlir.ir.TypeID
+
+
+
+   .. py:property:: typeid
+      :type: TypeID
+
+
+      
+      Returns the ``TypeID`` of the ``Type``, or raises ``ValueError`` if ``Type`` has no ``TypeID``.
+
+
+
+   .. py:method:: __repr__() -> str
+
+      
+      Returns a string representation of the ``Type``.
+
+
+
+   .. py:attribute:: type_name
+      :type:  str
+      :value: Ellipsis
+
+
+      
+      (arg: object, /) -> str
+
+
+
+   .. py:method:: get(shape: collections.abc.Sequence[int], element_type: Type, *, scalable: collections.abc.Sequence | None = None, scalable_dims: collections.abc.Sequence[int] | None = None, loc: Location | None = None) -> VectorType
+      :staticmethod:
+
+
+      
+      Create a vector type
+
+
+
+   .. py:method:: get_unchecked(shape: collections.abc.Sequence[int], element_type: Type, *, scalable: collections.abc.Sequence | None = None, scalable_dims: collections.abc.Sequence[int] | None = None, context: Context | None = None) -> VectorType
+      :staticmethod:
+
+
+      
+      Create a vector type
+
+
+
+   .. py:property:: scalable
+      :type: bool
+
+
+
+   .. py:property:: scalable_dims
+      :type: list[bool]
+
+
+
+.. py:data:: index
+
+.. py:function:: i(width)
+
+.. py:function:: si(width)
+
+.. py:function:: ui(width)
+
+.. py:data:: bool
+
+.. py:data:: i8
+
+.. py:data:: i16
+
+.. py:data:: i32
+
+.. py:data:: i64
+
+.. py:data:: si8
+
+.. py:data:: si16
+
+.. py:data:: si32
+
+.. py:data:: si64
+
+.. py:data:: ui8
+
+.. py:data:: ui16
+
+.. py:data:: ui32
+
+.. py:data:: ui64
+
+.. py:data:: f16
+
+.. py:data:: f32
+
+.. py:data:: tf32
+
+.. py:data:: f64
+
+.. py:data:: bf16
+
+.. py:data:: f8E5M2
+
+.. py:data:: f8E4M3
+
+.. py:data:: f8E4M3FN
+
+.. py:data:: f8E4M3B11FNUZ
+
+.. py:data:: f8E3M4
+
+.. py:data:: f4E2M1FN
+
+.. py:data:: f6E2M3FN
+
+.. py:data:: f6E3M2FN
+
+.. py:data:: f8E8M0FNU
+
+.. py:data:: f8E5M3FNU
+
+.. py:data:: none
+
+.. py:function:: complex(type)
+
+.. py:function:: opaque(dialect_namespace, type_data)
+
+.. py:function:: _shaped(*shape, element_type: mlir.ir.Type = None, type_constructor=None)
+
+.. py:function:: vector(*shape, element_type: mlir.ir.Type = None, scalable: Optional[List[bool]] = None, scalable_dims: Optional[List[int]] = None)
+
+.. py:function:: tensor(*shape, element_type: mlir.ir.Type = None, encoding: Optional[str] = None)
+
+.. py:function:: memref(*shape, element_type: mlir.ir.Type = None, memory_space: Optional[int] = None, layout: Optional[mlir.ir.StridedLayoutAttr] = None)
+
+.. py:function:: tuple(*elements)
+
+.. py:function:: function(*, inputs, results)
+

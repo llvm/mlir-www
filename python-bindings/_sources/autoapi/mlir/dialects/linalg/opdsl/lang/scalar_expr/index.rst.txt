@@ -1,0 +1,179 @@
+mlir.dialects.linalg.opdsl.lang.scalar_expr
+===========================================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang.scalar_expr
+
+.. autoapi-nested-parse::
+
+   
+   Models DAGs of scalar math expressions.
+
+   Used for generating region bodies at the "math" level where they are still type
+   polymorphic. This is modeled to be polymorphic by attribute name for interop
+   with serialization schemes that are just plain-old-dicts.
+
+   These classes are typically not user accessed and are created as a by-product
+   of interpreting a comprehension DSL and model the operations to perform in the
+   op body. The class hierarchy is laid out to map well to a form of YAML that
+   can be easily consumed from the C++ side, not necessarily for ergonomics.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarFn
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarArg
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarConst
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarIndex
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+   mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarAssign
+
+
+Module Contents
+---------------
+
+.. py:class:: ScalarFn(kind: mlir.dialects.linalg.opdsl.lang.comprehension.FunctionKind, fn_name: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[str], attr_name: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[str], type_var: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.dialects.linalg.opdsl.lang.types.TypeVar], operands: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[ScalarExpression])
+
+   
+   A type of ScalarExpression that applies a function.
+
+
+   .. py:attribute:: kind
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:attribute:: attr_name
+
+
+   .. py:attribute:: type_var
+
+
+   .. py:attribute:: operands
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarArg(arg: str)
+
+   
+   A type of ScalarExpression that references a named argument.
+
+
+   .. py:attribute:: arg
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarConst(value: str)
+
+   
+   A type of ScalarExpression representing a constant.
+
+
+   .. py:attribute:: value
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarIndex(dim: int)
+
+   
+   A type of ScalarExpression accessing an iteration index.
+
+
+   .. py:attribute:: dim
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarExpression(scalar_fn: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarFn] = None, scalar_arg: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarArg] = None, scalar_const: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarConst] = None, scalar_index: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarIndex] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   An expression on scalar values.
+
+   Can be one of:
+
+   * ScalarFn
+   * ScalarArg
+   * ScalarConst
+   * ScalarIndex
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!ScalarExpression'
+
+
+
+   .. py:attribute:: scalar_fn
+      :value: None
+
+
+
+   .. py:attribute:: scalar_arg
+      :value: None
+
+
+
+   .. py:attribute:: scalar_const
+      :value: None
+
+
+
+   .. py:attribute:: scalar_index
+      :value: None
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+.. py:class:: ScalarAssign(arg: str, value: ScalarExpression)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   An assignment to a named argument (LHS of a comprehension).
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!ScalarAssign'
+
+
+
+   .. py:attribute:: arg
+
+
+   .. py:attribute:: value
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+

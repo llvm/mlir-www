@@ -1,0 +1,42 @@
+mlir._mlir_libs._mlirExecutionEngine
+====================================
+
+.. py:module:: mlir._mlir_libs._mlirExecutionEngine
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlirExecutionEngine.ExecutionEngine
+
+
+Module Contents
+---------------
+
+.. py:class:: ExecutionEngine(module: mlir._mlir_libs._mlir.ir.Module, opt_level: int = 2, shared_libs: collections.abc.Sequence[str] = ...)
+
+   .. py:method:: _CAPICreate() -> object
+
+
+   .. py:method:: _testing_release() -> None
+
+
+   .. py:method:: dump_to_object_file(file_name: str) -> None
+
+
+   .. py:method:: raw_lookup(func_name: str) -> int
+
+
+   .. py:method:: raw_register_runtime(name: str, callback: object) -> None
+
+
+   .. py:method:: init() -> None
+
+
+   .. py:property:: _CAPIPtr
+      :type: object
+
+
+

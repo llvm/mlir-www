@@ -1,0 +1,7199 @@
+{
+  "operations": {
+    "affine.max": [
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMaxOp>",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "affine.max"
+        ]
+      },
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMaxOp>",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "affine.max"
+        ]
+      },
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMaxOp>",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "affine.max"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMaxOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "affine.max"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMaxOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.max"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMaxOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "affine.max"
+        ]
+      }
+    ],
+    "scf.for": [
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMaxOp>",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMinOp>",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertForOpTypes",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMaxOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMinOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "scf.for"
+        ]
+      }
+    ],
+    "affine.min": [
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMinOp>",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "affine.min"
+        ]
+      },
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMinOp>",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "affine.min"
+        ]
+      },
+      {
+        "className": "CanonicalizeAffineMinMaxOpExprAndTermOrder<mlir::affine::AffineMinOp>",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "affine.min"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMinOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "affine.min"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMinOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.min"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineMinOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "affine.min"
+        ]
+      }
+    ],
+    "tosa.clamp": [
+      {
+        "className": "ClampClampOptimization",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "tosa.clamp"
+        ]
+      },
+      {
+        "className": "ClampClampOptimization",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "tosa.clamp"
+        ]
+      },
+      {
+        "className": "ClampClampOptimization",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.clamp"
+        ]
+      },
+      {
+        "className": "ClampIsNoOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "tosa.clamp"
+        ]
+      },
+      {
+        "className": "ClampIsNoOp",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.clamp"
+        ]
+      }
+    ],
+    "func.return": [
+      {
+        "className": "ClampClampOptimization",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "ClampIsNoOp",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "ConcatOptimization",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "MaxPool2dIsNoOp",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "RowGatherToGather",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::tensor::ExtractSliceOp, SliceReturnTypeCanonicalizer, SliceCanonicalizer>",
+        "namespace": "mlir",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOneOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllToCstrEqCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::BroadcastFoldConstantOperandsPattern",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorBitcast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorCast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::CreateMaskFolder",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::EraseIdentityLinalgOp<mlir::linalg::GenericOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorCast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromConstantMask",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromCreateMask",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::Conv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::Conv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::DepthwiseConv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::DepthwiseConv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::MaxPool2dOp, {anonymous}::PoolPadFoldAdaptor<mlir::tosa::MaxPool2dOp> >",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeCreateMask",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::IndexToSizeToIndexCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatResultType",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDuplicateOperandsPattern<mlir::shape::AssumingAllOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveEmptyShapeOperandsPattern<mlir::shape::BroadcastOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ShapeOfOpToConstShapeOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::SingleInputConcatOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::StaticTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ToFromElementsToShuffleTreeRewrite",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpForwardOperand",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.return"
+        ]
+      }
+    ],
+    "tosa.concat": [
+      {
+        "className": "ConcatOptimization",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "tosa.concat"
+        ]
+      },
+      {
+        "className": "ConcatOptimization",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.concat"
+        ]
+      }
+    ],
+    "tensor.cast": [
+      {
+        "className": "ConcatOptimization",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "modify op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::tensor::ExtractSliceOp, SliceReturnTypeCanonicalizer, SliceCanonicalizer>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorCast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorCast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorCast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatOperandTypes",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatResultType",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::SingleInputConcatOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::StaticTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.cast"
+        ]
+      }
+    ],
+    "arith.addf": [
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorizable",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addf"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.addf"
+        ]
+      }
+    ],
+    "arith.mulf": [
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferReadPermutationLowering",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.mulf"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.mulf"
+        ]
+      }
+    ],
+    "linalg.matmul": [
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "linalg.matmul"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "linalg.matmul"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.matmul"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "linalg.matmul"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.matmul"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.matmul"
+        ]
+      }
+    ],
+    "linalg.yield": [
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "FoldTensorCastProducerOp",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::EraseIdentityLinalgOp<mlir::linalg::GenericOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::EraseSelfCopy",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.yield"
+        ]
+      }
+    ],
+    "tosa.max_pool2d": [
+      {
+        "className": "MaxPool2dIsNoOp",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "tosa.max_pool2d"
+        ]
+      },
+      {
+        "className": "MaxPool2dIsNoOp",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.max_pool2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::MaxPool2dOp, {anonymous}::PoolPadFoldAdaptor<mlir::tosa::MaxPool2dOp> >",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tosa.max_pool2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::MaxPool2dOp, {anonymous}::PoolPadFoldAdaptor<mlir::tosa::MaxPool2dOp> >",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tosa.max_pool2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::MaxPool2dOp, {anonymous}::PoolPadFoldAdaptor<mlir::tosa::MaxPool2dOp> >",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.max_pool2d"
+        ]
+      }
+    ],
+    "scf.execute_region": [
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "scf.execute_region"
+        ]
+      },
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "scf.execute_region"
+        ]
+      },
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "scf.execute_region"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.execute_region"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.execute_region"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "scf.execute_region"
+        ]
+      }
+    ],
+    "scf.yield": [
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertYieldOpTypes",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDeadRegionBranchOpSuccessorInputs",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "scf.yield"
+        ]
+      }
+    ],
+    "cf.br": [
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "cf.br"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "cf.br"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "cf.br"
+        ]
+      }
+    ],
+    "memref.load": [
+      {
+        "className": "MultiBlockExecuteInliner",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "memref.load"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.load"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.load"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "memref.load"
+        ]
+      }
+    ],
+    "tosa.row_gather": [
+      {
+        "className": "RowGatherToGather",
+        "namespace": "",
+        "method": "erase op",
+        "operations": [
+          "tosa.row_gather"
+        ]
+      },
+      {
+        "className": "RowGatherToGather",
+        "namespace": "",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.row_gather"
+        ]
+      }
+    ],
+    "tosa.gather": [
+      {
+        "className": "RowGatherToGather",
+        "namespace": "",
+        "method": "insert op",
+        "operations": [
+          "tosa.gather"
+        ]
+      }
+    ],
+    "llvm.func": [
+      {
+        "className": "mlir::GPUFuncOpLowering",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.func"
+        ]
+      },
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.func"
+        ]
+      },
+      {
+        "className": "{anonymous}::FuncOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.func"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::BlockDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.func"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::GridDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.func"
+        ]
+      }
+    ],
+    "memref.subview": [
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::memref::SubViewOp, SubViewReturnTypeCanonicalizer, SubViewCanonicalizer>",
+        "namespace": "mlir",
+        "method": "erase op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::memref::SubViewOp, SubViewReturnTypeCanonicalizer, SubViewCanonicalizer>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::memref::SubViewOp, SubViewReturnTypeCanonicalizer, SubViewCanonicalizer>",
+        "namespace": "mlir",
+        "method": "replace op with values",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::SubViewOpMemRefCastFolder",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::SubViewOpMemRefCastFolder",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::SubViewOpMemRefCastFolder",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::TrivialSubViewOpFolder",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::TrivialSubViewOpFolder",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.subview"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.subview"
+        ]
+      }
+    ],
+    "memref.cast": [
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::memref::SubViewOp, SubViewReturnTypeCanonicalizer, SubViewCanonicalizer>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "memref.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::SubViewOpMemRefCastFolder",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::TrivialSubViewOpFolder",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::TrivialSubViewOpFolder",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.cast"
+        ]
+      }
+    ],
+    "test.some_use": [
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::memref::SubViewOp, SubViewReturnTypeCanonicalizer, SubViewCanonicalizer>",
+        "namespace": "mlir",
+        "method": "modify op",
+        "operations": [
+          "test.some_use"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.some_use"
+        ]
+      }
+    ],
+    "tensor.extract_slice": [
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::tensor::ExtractSliceOp, SliceReturnTypeCanonicalizer, SliceCanonicalizer>",
+        "namespace": "mlir",
+        "method": "erase op",
+        "operations": [
+          "tensor.extract_slice"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::tensor::ExtractSliceOp, SliceReturnTypeCanonicalizer, SliceCanonicalizer>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "tensor.extract_slice"
+        ]
+      },
+      {
+        "className": "mlir::OpWithOffsetSizesAndStridesConstantArgumentFolder<mlir::tensor::ExtractSliceOp, SliceReturnTypeCanonicalizer, SliceCanonicalizer>",
+        "namespace": "mlir",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.extract_slice"
+        ]
+      }
+    ],
+    "llvm.add": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::AddIOp, mlir::LLVM::AddOp, mlir::arith::AttrConvertOverflowToLLVM>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.add"
+        ]
+      }
+    ],
+    "llvm.and": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::AndIOp, mlir::LLVM::AndOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.and"
+        ]
+      }
+    ],
+    "llvm.sdiv": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::DivSIOp, mlir::LLVM::SDivOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.sdiv"
+        ]
+      }
+    ],
+    "llvm.udiv": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::DivUIOp, mlir::LLVM::UDivOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.udiv"
+        ]
+      }
+    ],
+    "llvm.or": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::OrIOp, mlir::LLVM::OrOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.or"
+        ]
+      }
+    ],
+    "llvm.frem": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::RemFOp, mlir::LLVM::FRemOp, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.frem"
+        ]
+      }
+    ],
+    "llvm.srem": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::RemSIOp, mlir::LLVM::SRemOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.srem"
+        ]
+      }
+    ],
+    "llvm.urem": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::RemUIOp, mlir::LLVM::URemOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.urem"
+        ]
+      }
+    ],
+    "llvm.sitofp": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::SIToFPOp, mlir::LLVM::SIToFPOp, mlir::AttrConvertPassThrough, true>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.sitofp"
+        ]
+      }
+    ],
+    "llvm.shl": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::ShLIOp, mlir::LLVM::ShlOp, mlir::arith::AttrConvertOverflowToLLVM>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.shl"
+        ]
+      }
+    ],
+    "llvm.ashr": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::ShRSIOp, mlir::LLVM::AShrOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.ashr"
+        ]
+      }
+    ],
+    "llvm.lshr": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::ShRUIOp, mlir::LLVM::LShrOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.lshr"
+        ]
+      }
+    ],
+    "llvm.sub": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::SubIOp, mlir::LLVM::SubOp, mlir::arith::AttrConvertOverflowToLLVM>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.sub"
+        ]
+      }
+    ],
+    "llvm.xor": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::arith::XOrIOp, mlir::LLVM::XOrOp>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.xor"
+        ]
+      }
+    ],
+    "llvm.intr.exp2": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::math::Exp2Op, mlir::LLVM::Exp2Op, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.intr.exp2"
+        ]
+      }
+    ],
+    "llvm.intr.exp": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::math::ExpOp, mlir::LLVM::ExpOp, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.intr.exp"
+        ]
+      }
+    ],
+    "llvm.intr.sqrt": [
+      {
+        "className": "mlir::VectorConvertToLLVMPattern<mlir::math::SqrtOp, mlir::LLVM::SqrtOp, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "mlir",
+        "method": "insert op",
+        "operations": [
+          "llvm.intr.sqrt"
+        ]
+      }
+    ],
+    "llvm.sext": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockDimOp, mlir::NVVM::BlockDimXOp, mlir::NVVM::BlockDimYOp, mlir::NVVM::BlockDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::NVVM::BlockIdXOp, mlir::NVVM::BlockIdYOp, mlir::NVVM::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::ROCDL::BlockIdXOp, mlir::ROCDL::BlockIdYOp, mlir::ROCDL::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::GridDimOp, mlir::NVVM::GridDimXOp, mlir::NVVM::GridDimYOp, mlir::NVVM::GridDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::NVVM::ThreadIdXOp, mlir::NVVM::ThreadIdYOp, mlir::NVVM::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::ROCDL::ThreadIdXOp, mlir::ROCDL::ThreadIdYOp, mlir::ROCDL::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPULaneIdOpToNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPULaneIdOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUSubgroupSizeOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      },
+      {
+        "className": "{anonymous}::IndexCastOpLowering<mlir::arith::IndexCastOp, mlir::LLVM::SExtOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.sext"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ntid.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockDimOp, mlir::NVVM::BlockDimXOp, mlir::NVVM::BlockDimYOp, mlir::NVVM::BlockDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ntid.x"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ntid.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockDimOp, mlir::NVVM::BlockDimXOp, mlir::NVVM::BlockDimYOp, mlir::NVVM::BlockDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ntid.y"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ntid.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockDimOp, mlir::NVVM::BlockDimXOp, mlir::NVVM::BlockDimYOp, mlir::NVVM::BlockDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ntid.z"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ctaid.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::NVVM::BlockIdXOp, mlir::NVVM::BlockIdYOp, mlir::NVVM::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ctaid.x"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ctaid.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::NVVM::BlockIdXOp, mlir::NVVM::BlockIdYOp, mlir::NVVM::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ctaid.y"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.ctaid.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::NVVM::BlockIdXOp, mlir::NVVM::BlockIdYOp, mlir::NVVM::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.ctaid.z"
+        ]
+      }
+    ],
+    "rocdl.workgroup.id.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::ROCDL::BlockIdXOp, mlir::ROCDL::BlockIdYOp, mlir::ROCDL::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workgroup.id.x"
+        ]
+      }
+    ],
+    "rocdl.workgroup.id.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::ROCDL::BlockIdXOp, mlir::ROCDL::BlockIdYOp, mlir::ROCDL::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workgroup.id.y"
+        ]
+      }
+    ],
+    "rocdl.workgroup.id.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::BlockIdOp, mlir::ROCDL::BlockIdXOp, mlir::ROCDL::BlockIdYOp, mlir::ROCDL::BlockIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workgroup.id.z"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.nctaid.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::GridDimOp, mlir::NVVM::GridDimXOp, mlir::NVVM::GridDimYOp, mlir::NVVM::GridDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.nctaid.x"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.nctaid.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::GridDimOp, mlir::NVVM::GridDimXOp, mlir::NVVM::GridDimYOp, mlir::NVVM::GridDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.nctaid.y"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.nctaid.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::GridDimOp, mlir::NVVM::GridDimXOp, mlir::NVVM::GridDimYOp, mlir::NVVM::GridDimZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.nctaid.z"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.tid.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::NVVM::ThreadIdXOp, mlir::NVVM::ThreadIdYOp, mlir::NVVM::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.tid.x"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.tid.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::NVVM::ThreadIdXOp, mlir::NVVM::ThreadIdYOp, mlir::NVVM::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.tid.y"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.tid.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::NVVM::ThreadIdXOp, mlir::NVVM::ThreadIdYOp, mlir::NVVM::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.tid.z"
+        ]
+      }
+    ],
+    "rocdl.workitem.id.x": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::ROCDL::ThreadIdXOp, mlir::ROCDL::ThreadIdYOp, mlir::ROCDL::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workitem.id.x"
+        ]
+      }
+    ],
+    "rocdl.workitem.id.y": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::ROCDL::ThreadIdXOp, mlir::ROCDL::ThreadIdYOp, mlir::ROCDL::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workitem.id.y"
+        ]
+      }
+    ],
+    "rocdl.workitem.id.z": [
+      {
+        "className": "mlir::gpu::index_lowering::OpLowering<mlir::gpu::ThreadIdOp, mlir::ROCDL::ThreadIdXOp, mlir::ROCDL::ThreadIdYOp, mlir::ROCDL::ThreadIdZOp>",
+        "namespace": "mlir::gpu::index_lowering",
+        "method": "insert op",
+        "operations": [
+          "rocdl.workitem.id.z"
+        ]
+      }
+    ],
+    "linalg.conv_1d_nwc_wcf": [
+      {
+        "className": "mlir::linalg::LinalgGeneralizationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "linalg.conv_1d_nwc_wcf"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgGeneralizationPattern",
+        "namespace": "mlir::linalg",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.conv_1d_nwc_wcf"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.conv_1d_nwc_wcf"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.conv_1d_nwc_wcf"
+        ]
+      }
+    ],
+    "linalg.generic": [
+      {
+        "className": "mlir::linalg::LinalgGeneralizationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::EraseIdentityLinalgOp<mlir::linalg::GenericOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::EraseIdentityLinalgOp<mlir::linalg::GenericOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferStaticShapeOfOperands",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.generic"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.generic"
+        ]
+      }
+    ],
+    "mat": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "mat"
+        ]
+      }
+    ],
+    "math.acosh": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.acosh"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.acosh"
+        ]
+      }
+    ],
+    "math.asin": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.asin"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.asin"
+        ]
+      }
+    ],
+    "math.asinh": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.asinh"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.asinh"
+        ]
+      }
+    ],
+    "math.atan": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.atan"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.atan"
+        ]
+      }
+    ],
+    "math.atanh": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.atanh"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.atanh"
+        ]
+      }
+    ],
+    "math.log10": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.log10"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.log10"
+        ]
+      }
+    ],
+    "math.log1p": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.log1p"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.log1p"
+        ]
+      }
+    ],
+    "math.log2": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "erase op",
+        "operations": [
+          "math.log2"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.log2"
+        ]
+      }
+    ],
+    "linalg.elementwise": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "linalg.elementwise"
+        ]
+      },
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "modify op",
+        "operations": [
+          "linalg.elementwise"
+        ]
+      }
+    ],
+    "math.acos": [
+      {
+        "className": "mlir::linalg::LinalgSpecializationPattern",
+        "namespace": "mlir::linalg",
+        "method": "insert op",
+        "operations": [
+          "math.acos"
+        ]
+      }
+    ],
+    "spirv.ARM.Graph": [
+      {
+        "className": "mlir::tosa::{anonymous}::FuncGraphConvert",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.ARM.Graph"
+        ]
+      }
+    ],
+    "spirv.module": [
+      {
+        "className": "mlir::tosa::{anonymous}::FuncGraphConvert",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.module"
+        ]
+      }
+    ],
+    "spirv.ARM.GraphOutputs": [
+      {
+        "className": "mlir::tosa::{anonymous}::ReturnGraphOutputConvert",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.ARM.GraphOutputs"
+        ]
+      }
+    ],
+    "spirv.CompositeExtract": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaMultiResultOpConvert<mlir::tosa::FFT2dOp, mlir::tosa::{anonymous}::replaceFFT2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.CompositeExtract"
+        ]
+      },
+      {
+        "className": "mlir::tosa::{anonymous}::TosaMultiResultOpConvert<mlir::tosa::RFFT2dOp, mlir::tosa::{anonymous}::replaceRFFT2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.CompositeExtract"
+        ]
+      }
+    ],
+    "spirv.Tosa.FFT2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaMultiResultOpConvert<mlir::tosa::FFT2dOp, mlir::tosa::{anonymous}::replaceFFT2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.FFT2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.RFFT2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaMultiResultOpConvert<mlir::tosa::RFFT2dOp, mlir::tosa::{anonymous}::replaceRFFT2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.RFFT2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.ArgMax": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::ArgMaxOp, mlir::tosa::{anonymous}::replaceNanModeReduction<mlir::tosa::ArgMaxOp, mlir::spirv::TosaArgMaxOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.ArgMax"
+        ]
+      }
+    ],
+    "spirv.Tosa.AvgPool2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::AvgPool2dOp, mlir::tosa::{anonymous}::replaceAvgPool2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.AvgPool2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.Clamp": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::ClampOp, mlir::tosa::{anonymous}::replaceClamp>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.Clamp"
+        ]
+      }
+    ],
+    "spirv.Tosa.Conv2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::Conv2DOp, mlir::tosa::{anonymous}::replaceConvolution<mlir::tosa::Conv2DOp, mlir::spirv::TosaConv2DOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.Conv2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.Conv3D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::Conv3DOp, mlir::tosa::{anonymous}::replaceConvolution<mlir::tosa::Conv3DOp, mlir::spirv::TosaConv3DOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.Conv3D"
+        ]
+      }
+    ],
+    "spirv.Tosa.DepthwiseConv2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::DepthwiseConv2DOp, mlir::tosa::{anonymous}::replaceConvolution<mlir::tosa::DepthwiseConv2DOp, mlir::spirv::TosaDepthwiseConv2DOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.DepthwiseConv2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.Erf": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::ErfOp, mlir::tosa::{anonymous}::replaceUnaryInput<mlir::tosa::ErfOp, mlir::spirv::TosaErfOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.Erf"
+        ]
+      }
+    ],
+    "spirv.Tosa.MatMul": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::MatMulOp, mlir::tosa::{anonymous}::replaceMatMul>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.MatMul"
+        ]
+      }
+    ],
+    "spirv.Tosa.MaxPool2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::MaxPool2dOp, mlir::tosa::{anonymous}::replaceMaxPool2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.MaxPool2D"
+        ]
+      }
+    ],
+    "spirv.Tosa.Sigmoid": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::SigmoidOp, mlir::tosa::{anonymous}::replaceUnaryInput<mlir::tosa::SigmoidOp, mlir::spirv::TosaSigmoidOp> >",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.Sigmoid"
+        ]
+      }
+    ],
+    "spirv.Tosa.TransposeConv2D": [
+      {
+        "className": "mlir::tosa::{anonymous}::TosaOpConvert<mlir::tosa::TransposeConv2DOp, mlir::tosa::{anonymous}::replaceTransposeConv2d>",
+        "namespace": "mlir::tosa::{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "spirv.Tosa.TransposeConv2D"
+        ]
+      }
+    ],
+    "llvm.addrspacecast": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.addrspacecast"
+        ]
+      }
+    ],
+    "llvm.call": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.call"
+        ]
+      },
+      {
+        "className": "{anonymous}::FuncOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.call"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::BlockDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.call"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::GridDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.call"
+        ]
+      }
+    ],
+    "llvm.getelementptr": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.getelementptr"
+        ]
+      },
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.getelementptr"
+        ]
+      },
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.getelementptr"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.getelementptr"
+        ]
+      }
+    ],
+    "llvm.insertvalue": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::IntOpWithFlagLowering<mlir::math::AbsIOp, mlir::LLVM::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReturnOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToNdLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorInsertOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertvalue"
+        ]
+      }
+    ],
+    "llvm.mlir.constant": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConstantOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::BlockDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::GridDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::PtxLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToLowRankLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToNdLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorExtractOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.constant"
+        ]
+      }
+    ],
+    "llvm.mlir.poison": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::IntOpWithFlagLowering<mlir::math::AbsIOp, mlir::LLVM::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReturnOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToLowRankLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToNdLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.poison"
+        ]
+      }
+    ],
+    "llvm.mlir.zero": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.zero"
+        ]
+      }
+    ],
+    "llvm.ptrtoint": [
+      {
+        "className": "{anonymous}::AllocOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.ptrtoint"
+        ]
+      }
+    ],
+    "func.call": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.call"
+        ]
+      },
+      {
+        "className": "{anonymous}::CallOpSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.call"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "func.call"
+        ]
+      }
+    ],
+    "test.invalid": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.invalid"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestDropOpSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.invalid"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestPostOrderLegalization",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.invalid"
+        ]
+      }
+    ],
+    "test.op_with_region_fold": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.op_with_region_fold"
+        ]
+      }
+    ],
+    "test.return": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestDetachedSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestSplitReturnType",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.return"
+        ]
+      }
+    ],
+    "test.type_consumer": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.type_consumer"
+        ]
+      }
+    ],
+    "work": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "work"
+        ]
+      }
+    ],
+    "func.func": [
+      {
+        "className": "{anonymous}::AnyFunctionOpInterfaceSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "func.func"
+        ]
+      }
+    ],
+    "shape.assuming_all": [
+      {
+        "className": "{anonymous}::AssumingAllOfCstrBroadcastable",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOfCstrBroadcastable",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOfCstrBroadcastable",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOneOp",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOneOp",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllToCstrEqCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllToCstrEqCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::MergeAssumingAllOps",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::MergeAssumingAllOps",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::MergeAssumingAllOps",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDuplicateOperandsPattern<mlir::shape::AssumingAllOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDuplicateOperandsPattern<mlir::shape::AssumingAllOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveDuplicateOperandsPattern<mlir::shape::AssumingAllOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming_all"
+        ]
+      }
+    ],
+    "shape.cstr_broadcastable": [
+      {
+        "className": "{anonymous}::AssumingAllOfCstrBroadcastable",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.cstr_broadcastable"
+        ]
+      }
+    ],
+    "consume.witness": [
+      {
+        "className": "{anonymous}::AssumingAllOfCstrBroadcastable",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "consume.witness"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingAllOneOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "consume.witness"
+        ]
+      },
+      {
+        "className": "{anonymous}::CstrEqEqOps",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "consume.witness"
+        ]
+      },
+      {
+        "className": "{anonymous}::MergeAssumingAllOps",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "consume.witness"
+        ]
+      }
+    ],
+    "shape.cstr_eq": [
+      {
+        "className": "{anonymous}::AssumingAllToCstrEqCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.cstr_eq"
+        ]
+      },
+      {
+        "className": "{anonymous}::CstrEqEqOps",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.cstr_eq"
+        ]
+      },
+      {
+        "className": "{anonymous}::CstrEqEqOps",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.cstr_eq"
+        ]
+      }
+    ],
+    "shape.assuming": [
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.assuming"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.assuming"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.assuming"
+        ]
+      }
+    ],
+    "test.sink": [
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.sink"
+        ]
+      },
+      {
+        "className": "{anonymous}::AssumingWithTrue",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.sink"
+        ]
+      }
+    ],
+    "shape.broadcast": [
+      {
+        "className": "{anonymous}::BroadcastFoldConstantOperandsPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::BroadcastFoldConstantOperandsPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::BroadcastFoldConstantOperandsPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveEmptyShapeOperandsPattern<mlir::shape::BroadcastOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveEmptyShapeOperandsPattern<mlir::shape::BroadcastOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveEmptyShapeOperandsPattern<mlir::shape::BroadcastOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ShapeOfOpToConstShapeOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "shape.broadcast"
+        ]
+      }
+    ],
+    "shape.const_shape": [
+      {
+        "className": "{anonymous}::BroadcastFoldConstantOperandsPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.const_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::RemoveEmptyShapeOperandsPattern<mlir::shape::BroadcastOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.const_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::ShapeOfOpToConstShapeOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.const_shape"
+        ]
+      }
+    ],
+    "vector.broadcast": [
+      {
+        "className": "{anonymous}::BroadcastToShapeCast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::BroadcastToShapeCast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "vector.broadcast"
+        ]
+      }
+    ],
+    "vector.shape_cast": [
+      {
+        "className": "{anonymous}::BroadcastToShapeCast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferWritePattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeShapeCast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorToElements",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shape_cast"
+        ]
+      }
+    ],
+    "vector.transpose": [
+      {
+        "className": "{anonymous}::BroadcastToShapeCast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeCreateMask",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeCreateMask",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeShapeCast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeShapeCast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transpose"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferReadPermutationLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transpose"
+        ]
+      }
+    ],
+    "linalg.pack": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.pack"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.pack"
+        ]
+      },
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.pack"
+        ]
+      }
+    ],
+    "affine.apply": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpForwardOperand",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "affine.apply"
+        ]
+      }
+    ],
+    "arith.addi": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorizable",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.addi"
+        ]
+      }
+    ],
+    "arith.constant": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromConstantMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPULaneIdOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeConstantLike",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollContractionPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "arith.constant"
+        ]
+      }
+    ],
+    "tensor.dim": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::DimOfCastOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.dim"
+        ]
+      }
+    ],
+    "tensor.empty": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.empty"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.empty"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.empty"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.empty"
+        ]
+      }
+    ],
+    "ub.poison": [
+      {
+        "className": "{anonymous}::BubbleUpPackOpThroughGenericOpPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeConstantLike",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ub.poison"
+        ]
+      }
+    ],
+    "tensor.bitcast": [
+      {
+        "className": "{anonymous}::ChainedTensorBitcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorBitcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::ChainedTensorBitcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.bitcast"
+        ]
+      }
+    ],
+    "llvm.icmp": [
+      {
+        "className": "{anonymous}::CmpIOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.icmp"
+        ]
+      }
+    ],
+    "llvm.fadd": [
+      {
+        "className": "{anonymous}::ConstrainedVectorConvertToLLVMPattern<mlir::arith::AddFOp, mlir::LLVM::FAddOp, false, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.fadd"
+        ]
+      },
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.fadd"
+        ]
+      }
+    ],
+    "llvm.fdiv": [
+      {
+        "className": "{anonymous}::ConstrainedVectorConvertToLLVMPattern<mlir::arith::DivFOp, mlir::LLVM::FDivOp, false, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.fdiv"
+        ]
+      }
+    ],
+    "llvm.fsub": [
+      {
+        "className": "{anonymous}::ConstrainedVectorConvertToLLVMPattern<mlir::arith::SubFOp, mlir::LLVM::FSubOp, false, mlir::arith::AttrConvertFastMathToLLVM, true>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.fsub"
+        ]
+      }
+    ],
+    "scf.if": [
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "scf.if"
+        ]
+      }
+    ],
+    "bufferization.to_tensor": [
+      {
+        "className": "{anonymous}::ConvertTrivialIfToSelect",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "bufferization.to_tensor"
+        ]
+      }
+    ],
+    "vector.create_mask": [
+      {
+        "className": "{anonymous}::CreateMaskFolder",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.create_mask"
+        ]
+      },
+      {
+        "className": "{anonymous}::CreateMaskFolder",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.create_mask"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.create_mask"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.create_mask"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.create_mask"
+        ]
+      }
+    ],
+    "vector.constant_mask": [
+      {
+        "className": "{anonymous}::CreateMaskFolder",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.constant_mask"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromConstantMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.constant_mask"
+        ]
+      }
+    ],
+    "shape.const_witness": [
+      {
+        "className": "{anonymous}::CstrEqEqOps",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "shape.const_witness"
+        ]
+      }
+    ],
+    "memref.dim": [
+      {
+        "className": "{anonymous}::DimOfCastOp",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "memref.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::DimOfCastOp",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "memref.dim"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.dim"
+        ]
+      }
+    ],
+    "memref.alloc": [
+      {
+        "className": "{anonymous}::DimOfCastOp",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.alloc"
+        ]
+      }
+    ],
+    "linalg.copy": [
+      {
+        "className": "{anonymous}::EraseSelfCopy",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.copy"
+        ]
+      }
+    ],
+    "tensor.extract": [
+      {
+        "className": "{anonymous}::ExtractFromTensorCast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorCast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorCast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractFromTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.extract"
+        ]
+      }
+    ],
+    "vector.extract": [
+      {
+        "className": "{anonymous}::ExtractOpFromConstantMask",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromConstantMask",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromCreateMask",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::ExtractOpFromCreateMask",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorExtract",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "vector.extract"
+        ]
+      }
+    ],
+    "llvm.extractvalue": [
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::IntOpWithFlagLowering<mlir::math::AbsIOp, mlir::LLVM::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::PtxLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorExtractOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractvalue"
+        ]
+      }
+    ],
+    "llvm.mlir.con": [
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mlir.con"
+        ]
+      }
+    ],
+    "llvm.mul": [
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mul"
+        ]
+      },
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mul"
+        ]
+      },
+      {
+        "className": "{anonymous}::ViewOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.mul"
+        ]
+      }
+    ],
+    "llvm.trunc": [
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.trunc"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::BlockDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.trunc"
+        ]
+      },
+      {
+        "className": "{anonymous}::GPUDimOpToOcklCall<mlir::gpu::GridDimOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.trunc"
+        ]
+      },
+      {
+        "className": "{anonymous}::IndexCastOpLowering<mlir::arith::IndexCastOp, mlir::LLVM::SExtOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.trunc"
+        ]
+      },
+      {
+        "className": "{anonymous}::IndexCastOpLowering<mlir::arith::IndexCastUIOp, mlir::LLVM::ZExtOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.trunc"
+        ]
+      }
+    ],
+    "rocdl.make.buffer.rsrc": [
+      {
+        "className": "{anonymous}::FatRawBufferCastLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "rocdl.make.buffer.rsrc"
+        ]
+      }
+    ],
+    "vector.transfer_read": [
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferOpReduceRank",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferReadPermutationLowering",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferReadPermutationLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::TransferReadPermutationLowering",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "replace op with values",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_read"
+        ]
+      }
+    ],
+    "memref.collapse_shape": [
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.collapse_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferWritePattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.collapse_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.collapse_shape"
+        ]
+      }
+    ],
+    "v": [
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferReadPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "v"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "replace op with values",
+        "operations": [
+          "v"
+        ]
+      }
+    ],
+    "vector.transfer_write": [
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferWritePattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::FlattenContiguousRowMajorTransferWritePattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldTransposeShapeCast",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.transfer_write"
+        ]
+      }
+    ],
+    "memref.copy": [
+      {
+        "className": "{anonymous}::FoldEmptyCopy",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "memref.copy"
+        ]
+      },
+      {
+        "className": "{anonymous}::MakeRegionBranchOpSuccessorInputsDead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.copy"
+        ]
+      },
+      {
+        "className": "{anonymous}::SubViewOpMemRefCastFolder",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.copy"
+        ]
+      }
+    ],
+    "tosa.conv2d": [
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::Conv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::Conv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tosa.conv2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::Conv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::Conv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tosa.conv2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::Conv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::Conv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.conv2d"
+        ]
+      }
+    ],
+    "tosa.depthwise_conv2d": [
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::DepthwiseConv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::DepthwiseConv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tosa.depthwise_conv2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::DepthwiseConv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::DepthwiseConv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tosa.depthwise_conv2d"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldPadToTensorOp<mlir::tosa::DepthwiseConv2DOp, {anonymous}::ConvPadFoldAdaptor<mlir::tosa::DepthwiseConv2DOp> >",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tosa.depthwise_conv2d"
+        ]
+      }
+    ],
+    "arith.andi": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.andi"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.andi"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.andi"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.andi"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "arith.andi"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "arith.andi"
+        ]
+      }
+    ],
+    "arith.maximumf": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.maximumf"
+        ]
+      }
+    ],
+    "arith.maxsi": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.maxsi"
+        ]
+      }
+    ],
+    "arith.minimumf": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.minimumf"
+        ]
+      }
+    ],
+    "arith.minui": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.minui"
+        ]
+      }
+    ],
+    "arith.ori": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.ori"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.ori"
+        ]
+      }
+    ],
+    "linalg.reduce": [
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.reduce"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReduceBroadcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.reduce"
+        ]
+      }
+    ],
+    "tensor.expand_shape": [
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.expand_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.expand_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.expand_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.expand_shape"
+        ]
+      }
+    ],
+    "": [
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          ""
+        ]
+      }
+    ],
+    "tensor.collapse_shape": [
+      {
+        "className": "{anonymous}::FoldReshapeWithGenericOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.collapse_shape"
+        ]
+      },
+      {
+        "className": "{anonymous}::FoldWithProducerReshapeOpByExpansion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.collapse_shape"
+        ]
+      }
+    ],
+    "arith.cmpi": [
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpi"
+        ]
+      }
+    ],
+    "cf.cond_br": [
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "cf.cond_br"
+        ]
+      },
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "cf.cond_br"
+        ]
+      }
+    ],
+    "memref.dealloc": [
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.dealloc"
+        ]
+      }
+    ],
+    "memref.store": [
+      {
+        "className": "{anonymous}::ForLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.store"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.store"
+        ]
+      },
+      {
+        "className": "{anonymous}::SimplifyAffineOp<mlir::affine::AffineApplyOp>",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "memref.store"
+        ]
+      }
+    ],
+    "llvm.return": [
+      {
+        "className": "{anonymous}::FuncOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.return"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReturnOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.return"
+        ]
+      }
+    ],
+    "llvm.store": [
+      {
+        "className": "{anonymous}::FuncOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.store"
+        ]
+      }
+    ],
+    "nvvm.read.ptx.sreg.laneid": [
+      {
+        "className": "{anonymous}::GPULaneIdOpToNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "nvvm.read.ptx.sreg.laneid"
+        ]
+      }
+    ],
+    "rocdl.mbcnt.hi": [
+      {
+        "className": "{anonymous}::GPULaneIdOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "rocdl.mbcnt.hi"
+        ]
+      }
+    ],
+    "rocdl.mbcnt.lo": [
+      {
+        "className": "{anonymous}::GPULaneIdOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "rocdl.mbcnt.lo"
+        ]
+      }
+    ],
+    "rocdl.wavefrontsize": [
+      {
+        "className": "{anonymous}::GPUSubgroupSizeOpToROCDL",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "rocdl.wavefrontsize"
+        ]
+      }
+    ],
+    "test.legal_op_a": [
+      {
+        "className": "{anonymous}::GeneratedConvert58",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.legal_op_a"
+        ]
+      },
+      {
+        "className": "{anonymous}::GeneratedConvert64",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.legal_op_a"
+        ]
+      }
+    ],
+    "test.illegal_op_e": [
+      {
+        "className": "{anonymous}::GeneratedConvert63",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.illegal_op_e"
+        ]
+      }
+    ],
+    "arith.index_cast": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.index_cast"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorCreateMask",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.index_cast"
+        ]
+      }
+    ],
+    "arith.muli": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.muli"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.muli"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.muli"
+        ]
+      }
+    ],
+    "arith.subi": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.subi"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.subi"
+        ]
+      }
+    ],
+    "gpu.all_reduce": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.all_reduce"
+        ]
+      }
+    ],
+    "gpu.block_dim": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.block_dim"
+        ]
+      }
+    ],
+    "gpu.return": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.return"
+        ]
+      }
+    ],
+    "gpu.shuffle": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.shuffle"
+        ]
+      }
+    ],
+    "gpu.thread_id": [
+      {
+        "className": "{anonymous}::GpuAllReduceRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.thread_id"
+        ]
+      }
+    ],
+    "llvm.zext": [
+      {
+        "className": "{anonymous}::IndexCastOpLowering<mlir::arith::IndexCastUIOp, mlir::LLVM::ZExtOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.zext"
+        ]
+      }
+    ],
+    "shape.size_to_index": [
+      {
+        "className": "{anonymous}::IndexToSizeToIndexCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.size_to_index"
+        ]
+      },
+      {
+        "className": "{anonymous}::IndexToSizeToIndexCanonicalization",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.size_to_index"
+        ]
+      }
+    ],
+    "tensor.concat": [
+      {
+        "className": "{anonymous}::InferConcatOperandTypes",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "tensor.concat"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatResultType",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.concat"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatResultType",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.concat"
+        ]
+      },
+      {
+        "className": "{anonymous}::InferConcatResultType",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.concat"
+        ]
+      },
+      {
+        "className": "{anonymous}::SingleInputConcatOp",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.concat"
+        ]
+      },
+      {
+        "className": "{anonymous}::SingleInputConcatOp",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.concat"
+        ]
+      }
+    ],
+    "llvm.intr.abs": [
+      {
+        "className": "{anonymous}::IntOpWithFlagLowering<mlir::math::AbsIOp, mlir::LLVM::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.intr.abs"
+        ]
+      }
+    ],
+    "linalg.fill": [
+      {
+        "className": "{anonymous}::LinalgRewritePattern<mlir::scf::ForOp>",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.fill"
+        ]
+      },
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.fill"
+        ]
+      }
+    ],
+    "vector.bitcast": [
+      {
+        "className": "{anonymous}::LinearizeVectorBitCast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.bitcast"
+        ]
+      }
+    ],
+    "vector.deinterleave": [
+      {
+        "className": "{anonymous}::LinearizeVectorDeinterleave",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.deinterleave"
+        ]
+      }
+    ],
+    "vector.shuffle": [
+      {
+        "className": "{anonymous}::LinearizeVectorExtract",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorExtractStridedSlice",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorInsert",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorInsertStridedSlice",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      },
+      {
+        "className": "{anonymous}::LinearizeVectorShuffle",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      },
+      {
+        "className": "{anonymous}::ToFromElementsToShuffleTreeRewrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.shuffle"
+        ]
+      }
+    ],
+    "vector.from_elements": [
+      {
+        "className": "{anonymous}::LinearizeVectorFromElements",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.from_elements"
+        ]
+      },
+      {
+        "className": "{anonymous}::ToFromElementsToShuffleTreeRewrite",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.from_elements"
+        ]
+      },
+      {
+        "className": "{anonymous}::ToFromElementsToShuffleTreeRewrite",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.from_elements"
+        ]
+      }
+    ],
+    "vector.insert": [
+      {
+        "className": "{anonymous}::LinearizeVectorInsert",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.insert"
+        ]
+      },
+      {
+        "className": "{anonymous}::UnrollBitCastOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.insert"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "insert op",
+        "operations": [
+          "vector.insert"
+        ]
+      },
+      {
+        "className": "{anonymous}::lowering_n_d_unrolled::UnrollTransferReadConversion",
+        "namespace": "{anonymous}::lowering_n_d_unrolled",
+        "method": "insert op",
+        "operations": [
+          "vector.insert"
+        ]
+      }
+    ],
+    "vector.interleave": [
+      {
+        "className": "{anonymous}::LinearizeVectorInterleave",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.interleave"
+        ]
+      }
+    ],
+    "vector.load": [
+      {
+        "className": "{anonymous}::LinearizeVectorLoad",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.load"
+        ]
+      }
+    ],
+    "vector.store": [
+      {
+        "className": "{anonymous}::LinearizeVectorStore",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.store"
+        ]
+      }
+    ],
+    "vector.to_elements": [
+      {
+        "className": "{anonymous}::LinearizeVectorToElements",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.to_elements"
+        ]
+      }
+    ],
+    "math.sin": [
+      {
+        "className": "{anonymous}::LinearizeVectorizable",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "math.sin"
+        ]
+      }
+    ],
+    "arith.index_castui": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.index_castui"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1b.horiz": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1b.horiz"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1b.vert": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1b.vert"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1d.horiz": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1d.horiz"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1h.horiz": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1h.horiz"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1h.vert": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1h.vert"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1q.horiz": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1q.horiz"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1w.horiz": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1w.horiz"
+        ]
+      }
+    ],
+    "arm_sme.intr.ld1w.vert": [
+      {
+        "className": "{anonymous}::LoadTileSliceConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arm_sme.intr.ld1w.vert"
+        ]
+      }
+    ],
+    "llvm.intr.log": [
+      {
+        "className": "{anonymous}::Log1pOpLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.intr.log"
+        ]
+      }
+    ],
+    "arith.extsi": [
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.extsi"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.extsi"
+        ]
+      }
+    ],
+    "arith.maxui": [
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.maxui"
+        ]
+      },
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AddOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.maxui"
+        ]
+      }
+    ],
+    "linalg.batch_matmul": [
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.batch_matmul"
+        ]
+      }
+    ],
+    "linalg.quantized_batch_matmul": [
+      {
+        "className": "{anonymous}::MatMulConverter",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "linalg.quantized_batch_matmul"
+        ]
+      }
+    ],
+    "llvm.bitcast": [
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.bitcast"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBitCastOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.bitcast"
+        ]
+      }
+    ],
+    "llvm.extractelement": [
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractelement"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorExtractOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractelement"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.extractelement"
+        ]
+      }
+    ],
+    "llvm.insertelement": [
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertelement"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToLowRankLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertelement"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToNdLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertelement"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.insertelement"
+        ]
+      }
+    ],
+    "nvvm.mma.sync": [
+      {
+        "className": "{anonymous}::MmaSyncOptoNVVM",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "nvvm.mma.sync"
+        ]
+      }
+    ],
+    "math.absf": [
+      {
+        "className": "{anonymous}::PointwiseConverter<mlir::tosa::AbsOp>",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "math.absf"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "math.absf"
+        ]
+      }
+    ],
+    "llvm.inline_asm": [
+      {
+        "className": "{anonymous}::PtxLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.inline_asm"
+        ]
+      }
+    ],
+    "arith.cmpf": [
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.cmpf"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpf"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "arith.cmpf"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.cmpf"
+        ]
+      }
+    ],
+    "vector.fma": [
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.fma"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.fma"
+        ]
+      },
+      {
+        "className": "{anonymous}::ReorderElementwiseOpsOnBroadcast",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "vector.fma"
+        ]
+      }
+    ],
+    "shape.shape_of": [
+      {
+        "className": "{anonymous}::ShapeOfOpToConstShapeOp",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "shape.shape_of"
+        ]
+      },
+      {
+        "className": "{anonymous}::ShapeOfOpToConstShapeOp",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "shape.shape_of"
+        ]
+      }
+    ],
+    "tensor.generate": [
+      {
+        "className": "{anonymous}::StaticTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "tensor.generate"
+        ]
+      },
+      {
+        "className": "{anonymous}::StaticTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "tensor.generate"
+        ]
+      },
+      {
+        "className": "{anonymous}::StaticTensorGenerate",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "tensor.generate"
+        ]
+      }
+    ],
+    "math.tanh": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "math.tanh"
+        ]
+      },
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "math.tanh"
+        ]
+      }
+    ],
+    "ari": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "ari"
+        ]
+      }
+    ],
+    "arith.divf": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.divf"
+        ]
+      }
+    ],
+    "arith.select": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.select"
+        ]
+      }
+    ],
+    "math.fma": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "math.fma"
+        ]
+      }
+    ],
+    "vector.print": [
+      {
+        "className": "{anonymous}::TanhApproximation",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.print"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "vector.print"
+        ]
+      }
+    ],
+    "test.recursive_rewrite": [
+      {
+        "className": "{anonymous}::TestBoundedRecursiveRewrite",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.recursive_rewrite"
+        ]
+      }
+    ],
+    "test.repetitive_1_to_n_consumer": [
+      {
+        "className": "{anonymous}::TestConvertBlockArgs",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.repetitive_1_to_n_consumer"
+        ]
+      }
+    ],
+    "test.convert_block_args": [
+      {
+        "className": "{anonymous}::TestConvertBlockArgs",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.convert_block_args"
+        ]
+      }
+    ],
+    "test.finish": [
+      {
+        "className": "{anonymous}::TestCreateBlock",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.finish"
+        ]
+      }
+    ],
+    "test.legal_op": [
+      {
+        "className": "{anonymous}::TestDetachedSignatureConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.legal_op"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestMultiple1ToNReplacement",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.legal_op"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestPostOrderLegalization",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.legal_op"
+        ]
+      }
+    ],
+    "test.valid": [
+      {
+        "className": "{anonymous}::TestDropAndReplaceInvalidOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestPassthroughInvalidOp",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestPostOrderLegalization",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid"
+        ]
+      },
+      {
+        "className": "{anonymous}::TestRepetitive1ToNConsumer",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid"
+        ]
+      }
+    ],
+    "test.step_1": [
+      {
+        "className": "{anonymous}::TestMultiple1ToNReplacement",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.step_1"
+        ]
+      }
+    ],
+    "test.remaining_consumer": [
+      {
+        "className": "{anonymous}::TestPostOrderLegalization",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.remaining_consumer"
+        ]
+      }
+    ],
+    "test.post_order_legalization": [
+      {
+        "className": "{anonymous}::TestPostOrderLegalization",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.post_order_legalization"
+        ]
+      }
+    ],
+    "test.valid_consumer": [
+      {
+        "className": "{anonymous}::TestReplaceWithValidConsumer",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid_consumer"
+        ]
+      }
+    ],
+    "test.valid_producer": [
+      {
+        "className": "{anonymous}::TestReplaceWithValidProducer",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.valid_producer"
+        ]
+      }
+    ],
+    "test.value_replace": [
+      {
+        "className": "{anonymous}::TestValueReplace",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.value_replace"
+        ]
+      }
+    ],
+    "vector.contract": [
+      {
+        "className": "{anonymous}::UnrollContractionPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.contract"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "vector.contract"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.contract"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.contract"
+        ]
+      }
+    ],
+    "vector.extract_strided_slice": [
+      {
+        "className": "{anonymous}::UnrollContractionPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract_strided_slice"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract_strided_slice"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.extract_strided_slice"
+        ]
+      }
+    ],
+    "vector.insert_strided_slice": [
+      {
+        "className": "{anonymous}::UnrollContractionPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.insert_strided_slice"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorContractMultiLevelUnroll",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.insert_strided_slice"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.insert_strided_slice"
+        ]
+      }
+    ],
+    "llvm.shufflevector": [
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToLowRankLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.shufflevector"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorBroadcastScalarToNdLowering",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.shufflevector"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorShuffleOpConversion",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "llvm.shufflevector"
+        ]
+      }
+    ],
+    "memref.alloca": [
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.alloca"
+        ]
+      }
+    ],
+    "x86.amx.tile_load": [
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "x86.amx.tile_load"
+        ]
+      }
+    ],
+    "x86.amx.tile_mulf": [
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "x86.amx.tile_mulf"
+        ]
+      }
+    ],
+    "x86.amx.tile_muli": [
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "x86.amx.tile_muli"
+        ]
+      }
+    ],
+    "x86.amx.tile_store": [
+      {
+        "className": "{anonymous}::VectorContractToAMXDotProduct",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "x86.amx.tile_store"
+        ]
+      }
+    ],
+    "linalg.matvec": [
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "linalg.matvec"
+        ]
+      },
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "linalg.matvec"
+        ]
+      }
+    ],
+    "arith.extf": [
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.extf"
+        ]
+      }
+    ],
+    "vector.multi_reduction": [
+      {
+        "className": "{anonymous}::VectorizationPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "vector.multi_reduction"
+        ]
+      }
+    ],
+    "arith.sitofp": [
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "arith.sitofp"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.sitofp"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "arith.sitofp"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpForwardOperand",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "arith.sitofp"
+        ]
+      }
+    ],
+    "gpu.warp_execute_on_lane_0": [
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpForwardOperand",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "replace op with values",
+        "operations": [
+          "gpu.warp_execute_on_lane_0"
+        ]
+      }
+    ],
+    "gpu.yield": [
+      {
+        "className": "{anonymous}::WarpOpDeadResult",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpElementwise",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "erase op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferRead",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.yield"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpTransferWrite",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "gpu.yield"
+        ]
+      }
+    ],
+    "gpu.barrier": [
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "gpu.barrier"
+        ]
+      }
+    ],
+    "memref.get_global": [
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "memref.get_global"
+        ]
+      }
+    ],
+    "scf.yi": [
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "scf.yi"
+        ]
+      }
+    ],
+    "test.dummy_op": [
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.dummy_op"
+        ]
+      }
+    ],
+    "test.some_def": [
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "insert op",
+        "operations": [
+          "test.some_def"
+        ]
+      },
+      {
+        "className": "{anonymous}::WarpOpToScfIfPattern",
+        "namespace": "{anonymous}",
+        "method": "modify op",
+        "operations": [
+          "test.some_def"
+        ]
+      }
+    ],
+    "dummy_use": [
+      {
+        "className": "{anonymous}::lowering_1_d::TransferOp1dConversion<mlir::vector::TransferReadOp>",
+        "namespace": "{anonymous}::lowering_1_d",
+        "method": "modify op",
+        "operations": [
+          "dummy_use"
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "namespaces": [
+      "mlir",
+      "mlir::gpu::index_lowering",
+      "mlir::linalg",
+      "mlir::tosa::{anonymous}",
+      "{anonymous}",
+      "{anonymous}::lowering_1_d",
+      "{anonymous}::lowering_n_d_unrolled"
+    ],
+    "methods": [
+      "erase op",
+      "insert op",
+      "modify op",
+      "replace op with values"
+    ]
+  }
+}
