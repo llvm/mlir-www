@@ -1,0 +1,1663 @@
+mlir.dialects.complex
+=====================
+
+.. py:module:: mlir.dialects.complex
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.complex.AbsOp
+   mlir.dialects.complex.AbsOpAdaptor
+   mlir.dialects.complex.AddOp
+   mlir.dialects.complex.AddOpAdaptor
+   mlir.dialects.complex.AngleOp
+   mlir.dialects.complex.AngleOpAdaptor
+   mlir.dialects.complex.Atan2Op
+   mlir.dialects.complex.Atan2OpAdaptor
+   mlir.dialects.complex.BitcastOp
+   mlir.dialects.complex.BitcastOpAdaptor
+   mlir.dialects.complex.ConjOp
+   mlir.dialects.complex.ConjOpAdaptor
+   mlir.dialects.complex.ConstantOp
+   mlir.dialects.complex.ConstantOpAdaptor
+   mlir.dialects.complex.CosOp
+   mlir.dialects.complex.CosOpAdaptor
+   mlir.dialects.complex.CreateOp
+   mlir.dialects.complex.CreateOpAdaptor
+   mlir.dialects.complex.DivOp
+   mlir.dialects.complex.DivOpAdaptor
+   mlir.dialects.complex.EqualOp
+   mlir.dialects.complex.EqualOpAdaptor
+   mlir.dialects.complex.ExpOp
+   mlir.dialects.complex.ExpOpAdaptor
+   mlir.dialects.complex.Expm1Op
+   mlir.dialects.complex.Expm1OpAdaptor
+   mlir.dialects.complex.ImOp
+   mlir.dialects.complex.ImOpAdaptor
+   mlir.dialects.complex.Log1pOp
+   mlir.dialects.complex.Log1pOpAdaptor
+   mlir.dialects.complex.LogOp
+   mlir.dialects.complex.LogOpAdaptor
+   mlir.dialects.complex.MulOp
+   mlir.dialects.complex.MulOpAdaptor
+   mlir.dialects.complex.NegOp
+   mlir.dialects.complex.NegOpAdaptor
+   mlir.dialects.complex.NotEqualOp
+   mlir.dialects.complex.NotEqualOpAdaptor
+   mlir.dialects.complex.PowOp
+   mlir.dialects.complex.PowOpAdaptor
+   mlir.dialects.complex.PowiOp
+   mlir.dialects.complex.PowiOpAdaptor
+   mlir.dialects.complex.ReOp
+   mlir.dialects.complex.ReOpAdaptor
+   mlir.dialects.complex.RsqrtOp
+   mlir.dialects.complex.RsqrtOpAdaptor
+   mlir.dialects.complex.SignOp
+   mlir.dialects.complex.SignOpAdaptor
+   mlir.dialects.complex.SinOp
+   mlir.dialects.complex.SinOpAdaptor
+   mlir.dialects.complex.SqrtOp
+   mlir.dialects.complex.SqrtOpAdaptor
+   mlir.dialects.complex.SubOp
+   mlir.dialects.complex.SubOpAdaptor
+   mlir.dialects.complex.TanOp
+   mlir.dialects.complex.TanOpAdaptor
+   mlir.dialects.complex.TanhOp
+   mlir.dialects.complex.TanhOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.complex.abs
+   mlir.dialects.complex.add
+   mlir.dialects.complex.angle
+   mlir.dialects.complex.atan2
+   mlir.dialects.complex.bitcast
+   mlir.dialects.complex.conj
+   mlir.dialects.complex.constant
+   mlir.dialects.complex.cos
+   mlir.dialects.complex.create_
+   mlir.dialects.complex.div
+   mlir.dialects.complex.eq
+   mlir.dialects.complex.exp
+   mlir.dialects.complex.expm1
+   mlir.dialects.complex.im
+   mlir.dialects.complex.log1p
+   mlir.dialects.complex.log
+   mlir.dialects.complex.mul
+   mlir.dialects.complex.neg
+   mlir.dialects.complex.neq
+   mlir.dialects.complex.pow
+   mlir.dialects.complex.powi
+   mlir.dialects.complex.re
+   mlir.dialects.complex.rsqrt
+   mlir.dialects.complex.sign
+   mlir.dialects.complex.sin
+   mlir.dialects.complex.sqrt
+   mlir.dialects.complex.sub
+   mlir.dialects.complex.tan
+   mlir.dialects.complex.tanh
+
+
+Module Contents
+---------------
+
+.. py:class:: AbsOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``abs`` op takes a single complex number and computes its absolute value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.abs %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.abs'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AbsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.abs'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: abs(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: AddOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``add`` operation takes two complex numbers and returns their sum.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.add %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.add'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AddOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.add'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: add(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: AngleOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``angle`` op takes a single complex number and computes its argument value with a branch cut along the negative real axis.
+
+   Example:
+
+   .. code:: mlir
+
+            %a = complex.angle %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.angle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AngleOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.angle'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: angle(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: Atan2Op(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   For complex numbers it is expressed using complex logarithm
+   atan2(y, x) = -i * log((x + i * y) / sqrt(x**2 + y**2))
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.atan2 %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.atan2'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: Atan2OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.atan2'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: atan2(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: BitcastOp(result: _ods_ir, operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Example:
+
+   .. code:: mlir
+
+            %a = complex.bitcast %b : complex<f32> -> i64
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.bitcast'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: BitcastOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.bitcast'
+
+
+
+   .. py:method:: operand() -> _ods_ir
+
+
+.. py:function:: bitcast(result: _ods_ir, operand: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: ConjOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``conj`` op takes a single complex number and computes the
+   complex conjugate.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.conj %b: complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.conj'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: ConjOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.conj'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: conj(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: ConstantOp(complex: _ods_ir, value: Union[Sequence[_ods_ir], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``complex.constant`` operation creates a constant complex number from an
+   attribute containing the real and imaginary parts.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.constant [0.1, -1.0] : complex<f64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.constant'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: ConstantOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.constant'
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:function:: constant(complex: _ods_ir, value: Union[Sequence[_ods_ir], _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: CosOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``cos`` op takes a single complex number and computes the cosine of
+   it, i.e. ``cos(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.cos %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.cos'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: CosOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.cos'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: cos(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: CreateOp(complex: _ods_ir, real: _ods_ir[_ods_ir], imaginary: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``complex.create`` operation creates a complex number from two
+   floating-point operands, the real and the imaginary part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.create %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.create'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: real() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: imaginary() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: CreateOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.create'
+
+
+
+   .. py:method:: real() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: imaginary() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: create_(complex: _ods_ir, real: _ods_ir[_ods_ir], imaginary: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: DivOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``div`` operation takes two complex numbers and returns result of their
+   division:
+
+   .. code:: mlir
+
+       %a = complex.div %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.div'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DivOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.div'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: div(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: EqualOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``eq`` op takes two complex numbers and returns whether they are equal.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.eq %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.eq'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: EqualOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.eq'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: eq(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: ExpOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``exp`` op takes a single complex number and computes the exponential of
+   it, i.e. ``exp(x)`` or ``e^(x)``, where ``x`` is the input value.
+   ``e`` denotes Euler's number and is approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.exp %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.exp'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: ExpOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.exp'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: exp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: Expm1Op(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   complex.expm1(x) := complex.exp(x) - 1
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.expm1 %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.expm1'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: Expm1OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.expm1'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: expm1(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: ImOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``im`` op takes a single complex number and extracts the imaginary part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.im %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.im'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: imaginary() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: ImOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.im'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: im(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: Log1pOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``log`` op takes a single complex number and computes the natural
+   logarithm of one plus the given value, i.e. ``log(1 + x)`` or ``log_e(1 + x)``,
+   where ``x`` is the input value. ``e`` denotes Euler's number and is
+   approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.log1p %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log1p'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: Log1pOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log1p'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: log1p(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: LogOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``log`` op takes a single complex number and computes the natural
+   logarithm of it, i.e. ``log(x)`` or ``log_e(x)``, where ``x`` is the input value.
+   ``e`` denotes Euler's number and is approximately equal to 2.718281.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.log %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: LogOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.log'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: log(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: MulOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``mul`` operation takes two complex numbers and returns their product:
+
+   .. code:: mlir
+
+       %a = complex.mul %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.mul'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: MulOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.mul'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: mul(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: NegOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``neg`` op takes a single complex number ``complex`` and returns ``-complex``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.neg %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neg'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: NegOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neg'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: neg(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: NotEqualOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``neq`` op takes two complex numbers and returns whether they are not
+   equal.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.neq %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neq'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: NotEqualOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.neq'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: neq(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: PowOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``pow`` operation takes a complex number raises it to the given complex
+   exponent.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.pow %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.pow'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: PowOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.pow'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: pow(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: PowiOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``powi`` operation takes a ``base`` operand of complex type and a ``power``
+   operand of signed integer type and returns one result of the same type
+   as ``base``. The result is ``base`` raised to the power of ``power``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.powi %b, %c : complex<f32>, i32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.powi'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: PowiOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.powi'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> Optional[_ods_ir]
+
+
+.. py:function:: powi(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: ReOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``re`` op takes a single complex number and extracts the real part.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.re %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.re'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: real() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: ReOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.re'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: re(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: RsqrtOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``rsqrt`` operation computes reciprocal of square root.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.rsqrt %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: RsqrtOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.rsqrt'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: rsqrt(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: SignOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sign`` op takes a single complex number and computes the sign of
+   it, i.e. ``y = sign(x) = x / |x|`` if ``x != 0``, otherwise ``y = 0``.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sign %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sign'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: SignOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sign'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: sign(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: SinOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sin`` op takes a single complex number and computes the sine of
+   it, i.e. ``sin(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sin %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sin'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: SinOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sin'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: sin(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: SqrtOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sqrt`` operation takes a complex number and returns its square root.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sqrt %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: SqrtOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sqrt'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: sqrt(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: SubOp(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``sub`` operation takes two complex numbers and returns their difference.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.sub %b, %c : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sub'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: SubOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.sub'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: sub(lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: TanOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tan`` op takes a single complex number and computes the tangent of
+   it, i.e. ``tan(x)``, where ``x`` is the input value.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.tan %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tan'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: TanOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tan'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: tan(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: TanhOp(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``tanh`` operation takes a complex number and returns its hyperbolic
+   tangent.
+
+   Example:
+
+   .. code:: mlir
+
+       %a = complex.tanh %b : complex<f32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tanh'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: TanhOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'complex.tanh'
+
+
+
+   .. py:method:: complex() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: fastmath() -> _ods_ir
+
+
+.. py:function:: tanh(complex: _ods_ir[_ods_ir], *, fastmath: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+

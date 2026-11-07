@@ -1,0 +1,120 @@
+mlir.dialects.ub
+================
+
+.. py:module:: mlir.dialects.ub
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.ub.PoisonOp
+   mlir.dialects.ub.PoisonOpAdaptor
+   mlir.dialects.ub.UnreachableOp
+   mlir.dialects.ub.UnreachableOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.ub.poison
+   mlir.dialects.ub.unreachable
+
+
+Module Contents
+---------------
+
+.. py:class:: PoisonOp(result: _ods_ir, *, value: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``poison`` operation materializes a compile-time poisoned constant value
+   to indicate deferred undefined behavior.
+   ``value`` attribute is needed to indicate an optional additional poison
+   semantics (e.g. partially poisoned vectors), default value indicates results
+   is fully poisoned.
+
+   Examples:
+
+   .. code::
+
+       // Short form
+       %0 = ub.poison : i32
+       // Long form
+       %1 = ub.poison <#custom_poison_elements_attr> : vector<4xi64>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.poison'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: PoisonOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.poison'
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:function:: poison(result: _ods_ir, *, value: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: UnreachableOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``unreachable`` operation triggers immediate undefined behavior if
+   executed.
+
+   Example:
+
+   .. code::
+
+       ub.unreachable
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.unreachable'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: UnreachableOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'ub.unreachable'
+
+
+
+.. py:function:: unreachable(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> UnreachableOp
+
