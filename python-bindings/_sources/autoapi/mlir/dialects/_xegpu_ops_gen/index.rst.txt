@@ -1,0 +1,2138 @@
+mlir.dialects._xegpu_ops_gen
+============================
+
+.. py:module:: mlir.dialects._xegpu_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_ops_gen._ods_ir
+   mlir.dialects._xegpu_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_ops_gen._Dialect
+   mlir.dialects._xegpu_ops_gen.AllocNbarrierOp
+   mlir.dialects._xegpu_ops_gen.AllocNbarrierOpAdaptor
+   mlir.dialects._xegpu_ops_gen.AtomicRMWOp
+   mlir.dialects._xegpu_ops_gen.AtomicRMWOpAdaptor
+   mlir.dialects._xegpu_ops_gen.ConvertLayoutOp
+   mlir.dialects._xegpu_ops_gen.ConvertLayoutOpAdaptor
+   mlir.dialects._xegpu_ops_gen.CreateMemDescOp
+   mlir.dialects._xegpu_ops_gen.CreateMemDescOpAdaptor
+   mlir.dialects._xegpu_ops_gen.CreateNdDescOp
+   mlir.dialects._xegpu_ops_gen.CreateNdDescOpAdaptor
+   mlir.dialects._xegpu_ops_gen.DpasMxOp
+   mlir.dialects._xegpu_ops_gen.DpasMxOpAdaptor
+   mlir.dialects._xegpu_ops_gen.DpasOp
+   mlir.dialects._xegpu_ops_gen.DpasOpAdaptor
+   mlir.dialects._xegpu_ops_gen.FenceOp
+   mlir.dialects._xegpu_ops_gen.FenceOpAdaptor
+   mlir.dialects._xegpu_ops_gen.InitNbarrierOp
+   mlir.dialects._xegpu_ops_gen.InitNbarrierOpAdaptor
+   mlir.dialects._xegpu_ops_gen.LaneShuffleOp
+   mlir.dialects._xegpu_ops_gen.LaneShuffleOpAdaptor
+   mlir.dialects._xegpu_ops_gen.LoadGatherOp
+   mlir.dialects._xegpu_ops_gen.LoadGatherOpAdaptor
+   mlir.dialects._xegpu_ops_gen.LoadMatrixOp
+   mlir.dialects._xegpu_ops_gen.LoadMatrixOpAdaptor
+   mlir.dialects._xegpu_ops_gen.LoadNdOp
+   mlir.dialects._xegpu_ops_gen.LoadNdOpAdaptor
+   mlir.dialects._xegpu_ops_gen.NbarrierArriveOp
+   mlir.dialects._xegpu_ops_gen.NbarrierArriveOpAdaptor
+   mlir.dialects._xegpu_ops_gen.NbarrierWaitOp
+   mlir.dialects._xegpu_ops_gen.NbarrierWaitOpAdaptor
+   mlir.dialects._xegpu_ops_gen.PrefetchNdOp
+   mlir.dialects._xegpu_ops_gen.PrefetchNdOpAdaptor
+   mlir.dialects._xegpu_ops_gen.PrefetchOp
+   mlir.dialects._xegpu_ops_gen.PrefetchOpAdaptor
+   mlir.dialects._xegpu_ops_gen.StoreMatrixOp
+   mlir.dialects._xegpu_ops_gen.StoreMatrixOpAdaptor
+   mlir.dialects._xegpu_ops_gen.StoreNdOp
+   mlir.dialects._xegpu_ops_gen.StoreNdOpAdaptor
+   mlir.dialects._xegpu_ops_gen.StoreScatterOp
+   mlir.dialects._xegpu_ops_gen.StoreScatterOpAdaptor
+   mlir.dialects._xegpu_ops_gen.TruncfOp
+   mlir.dialects._xegpu_ops_gen.TruncfOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._xegpu_ops_gen.alloc_nbarrier
+   mlir.dialects._xegpu_ops_gen.atomic_rmw
+   mlir.dialects._xegpu_ops_gen.convert_layout
+   mlir.dialects._xegpu_ops_gen.create_mem_desc
+   mlir.dialects._xegpu_ops_gen.create_nd_tdesc
+   mlir.dialects._xegpu_ops_gen.dpas_mx
+   mlir.dialects._xegpu_ops_gen.dpas
+   mlir.dialects._xegpu_ops_gen.fence
+   mlir.dialects._xegpu_ops_gen.init_nbarrier
+   mlir.dialects._xegpu_ops_gen.lane_shuffle
+   mlir.dialects._xegpu_ops_gen.load
+   mlir.dialects._xegpu_ops_gen.load_matrix
+   mlir.dialects._xegpu_ops_gen.load_nd
+   mlir.dialects._xegpu_ops_gen.nbarrier_arrive
+   mlir.dialects._xegpu_ops_gen.nbarrier_wait
+   mlir.dialects._xegpu_ops_gen.prefetch_nd
+   mlir.dialects._xegpu_ops_gen.prefetch
+   mlir.dialects._xegpu_ops_gen.store_matrix
+   mlir.dialects._xegpu_ops_gen.store_nd
+   mlir.dialects._xegpu_ops_gen.store
+   mlir.dialects._xegpu_ops_gen.truncf
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: _Dialect
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'xegpu'
+
+
+
+.. py:class:: AllocNbarrierOp(nbarrier_num: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   AllocNbarrier is to create a set of named barriers as
+   specified by ``nbarrier_num``. Named barriers are workgroup level resources,
+   and are shared by all threads in the workgroup. For example, there are
+   up to 32 barriers (range 0-31) for each XeCore on PVC. A typical use case
+   is that a workgroup is partitioned into N subgroups of threads (N <= 32),
+   and each subgroup coordinating their work with a separate barrier with id
+   range from 0 to N respectively.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.alloc_nbarrier'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: nbarrier_num() -> _ods_ir
+
+
+.. py:class:: AllocNbarrierOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.alloc_nbarrier'
+
+
+
+   .. py:method:: nbarrier_num() -> _ods_ir
+
+
+.. py:function:: alloc_nbarrier(nbarrier_num: Union[int, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> AllocNbarrierOp
+
+.. py:class:: AtomicRMWOp(result: _ods_ir, kind: Union[Any, _ods_ir], tensorDesc: _ods_ir, mask: _ods_ir[_ods_ir], value: _ods_ir[_ods_ir], *, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``xegpu.atomic_rmw`` operation provides a way to perform a read-modify-write
+   operation on the region described by the ``TensorDesc`` free from data races. The
+   ``kind`` enumeration specifies the modification to be performed, The ``mask`` operand
+   has the same shape with ``TensorDesc``, and is used to enable or disable specific
+   data points of the ``TensorDesc``. The ``value`` operand represents the new value to
+   be applied during the modification.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``kind``: An attribute that specifies the atomic operation to be performed
+   (e.g., add, min, max, exchange, etc.).
+   * ``tensorDesc``: A ``TensorDesc`` describing the memory region on which the atomic
+   read-modify-write is performed.
+   * ``mask``: A predicate mask with the same shape as ``tensorDesc``. Only elements
+   with a true (non-zero) mask value participate in the atomic operation;
+   masked-out elements are not modified.
+   * ``value``: The input values used by the atomic operation. It must have the same
+   shape and element type as ``tensorDesc`` and ``result``.
+   * ``layout``: [optional] An attribute that identifies the operation as an anchor,
+   enabling users to assign a layout that governs distribution at the subgroup
+   and/or lane level. Only valid at workgroup and subgroup levels.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.atomic_rmw'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: tensorDesc() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AtomicRMWOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.atomic_rmw'
+
+
+
+   .. py:method:: tensorDesc() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: kind() -> _ods_ir
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: atomic_rmw(result: _ods_ir, kind: Union[Any, _ods_ir], tensor_desc: _ods_ir, mask: _ods_ir[_ods_ir], value: _ods_ir[_ods_ir], *, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: ConvertLayoutOp(result: _ods_ir, source: _ods_ir, target_layout: Union[Any, _ods_ir], *, input_layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``convert_layout`` redistribute data across subgroups and/or lanes from the ``input_layout`` to
+   the ``target_layout``. Both ``input_layout`` and ``target_layout`` must correspond to the same programming
+   scope, such as workgroup level (wg) or subgroup level (sg) code. This operation is not valid once
+   the IR is lowered to WI level because that is the end result of all distributions.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``source``: The input vector whose data is to be redistributed. The source and
+   result types must match.
+   * ``input_layout``: [optional] The layout attribute describing the current distribution
+   of ``source`` across subgroups and/or lanes. When omitted, it defaults to ``target_layout``,
+   i.e. the source is assumed to already be in the target distribution.
+   * ``target_layout``: The layout attribute describing the desired distribution of the result
+   across subgroups and/or lanes.
+
+   Example (Subgroup level):
+
+   .. code:: mlir
+
+         %coop_a = xegpu.convert_layout %a <{
+               input_layout = #xegpu.layout<sg_layout = [8, 8], sg_data = [16, 128]>,
+               target_layout = #xegpu.layout<sg_layout = [8, 8], sg_data = [16, 16]>}>
+           : vector<128x128xf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.convert_layout'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: input_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: target_layout() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: ConvertLayoutOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.convert_layout'
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: input_layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: target_layout() -> _ods_ir
+
+
+.. py:function:: convert_layout(result: _ods_ir, source: _ods_ir, target_layout: Union[Any, _ods_ir], *, input_layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CreateMemDescOp(mem_desc: _ods_ir, source: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Creates a memory descriptor from a shared local memory (SLM) buffer, and xegpu
+   specific memory layout. The resulting memory descriptor has to have the same size
+   as the underlying shared local memory.
+
+   Arguments:
+
+   * ``source`` : a statically shaped memref of any rank, representing the raw SLM buffer. The provided memref must be contiguous.
+
+   Results:
+
+   * ``mem_desc`` : the memory descriptor (1D or higher).
+
+   Example (1D):
+
+   .. code:: mlir
+
+         %mdesc = xegpu.create_mem_desc %mref
+           : memref<128xi8, 3> -> !xegpu.mem_desc<64xf16>
+
+   Example (2D with layout):
+
+   .. code:: mlir
+
+         %mdesc = xegpu.create_mem_desc %mref
+           : memref<4096xi8, 3>
+             -> !xegpu.mem_desc<32x64xf16, #xegpu.mem_layout<stride = [1, 32], block = [16, 16]>>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.create_mem_desc'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: mem_desc() -> _ods_ir
+
+
+.. py:class:: CreateMemDescOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.create_mem_desc'
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+.. py:function:: create_mem_desc(mem_desc: _ods_ir, source: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: CreateNdDescOp(TensorDesc: _ods_ir, source: _ods_ir, shape: Sequence[_ods_ir[_ods_ir]], strides: Sequence[_ods_ir[_ods_ir]], *, const_shape: Optional[Union[Sequence[int], _ods_ir]] = None, const_strides: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The "create_nd_tdesc" operation creates a TensorDescType which represents
+   a sub-view of a 1D/2D memory region inside the one or two innermost dimensions
+   of the source. (It can be extended to support n-D memory region if needed in
+   future). Elements in the subview continuous in each dimension. It encodes the
+   following important information for supporting Intel hardware features:
+
+   Arguments:
+
+   * ``source``: an object representing (starting address/pointer of) a memory region.
+   It can be either a memref object, or simply a pointer represented by uint64_t type.
+   For a memref source (static or dynamic shape) the shape and strides are taken from
+   the memref itself and must not be passed explicitly; only a pointer source requires
+   the ``shape`` and ``strides`` parameters.
+   * ``shape``: the shape information of the memory region pointed by the "source". For a
+   memref source it is encoded via the MemRefType, e.g., memref<4096x4096xf16> or a
+   dynamic memref<?x?xf16> (whose dynamic dims are recovered at lowering time). Only
+   when "source" is a pointer represented as uint64_t type must the shape be passed
+   explicitly via the "shape" and "const_shape" arguments.
+   * ``strides``: the strides of the memory region pointed by the "source". Similar to shape,
+   for a memref source it is encoded via the MemRefType, including a dynamic
+   memref<?x?xf16>. Only when "source" is a pointer represented as uint64_t type must
+   the strides be passed explicitly via the "strides" and "const_strides" arguments.
+
+   Results:
+
+   * ``res``: nd tensor descriptor
+
+   Example 1 (suppose the tensor shape inferred by the compiler is 8x16):
+
+   .. code:: mlir
+
+       %0 = memref.alloc() : memref<1024x1024xf32>
+       %1 = xegpu.create_nd_tdesc %0 : memref<1024x1024xf32> -> TensorDesc<8x16xf32>
+
+   Example 2 (dynamic memref; shape/strides are inferred from the memref, not
+   passed explicitly):
+
+   .. code:: mlir
+
+       %0 = memref.alloc(%h, %w) : memref<?x?xf32>
+       %1 = xegpu.create_nd_tdesc %0 : memref<?x?xf32> -> TensorDesc<8x16xf32>
+
+   Example 3 (a pointer source must supply shape/strides explicitly):
+
+   .. code:: mlir
+
+       %0 = ... : ui64
+       %c1 = arith.constant 1 : index
+       %1 = xegpu.create_nd_tdesc %0, shape:[%h, %w], strides:[%w, %c1]: ui64 -> TensorDesc<8x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.create_nd_tdesc'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: shape() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: strides() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_shape() -> Optional[_ods_ir]
+
+
+   .. py:method:: const_strides() -> Optional[_ods_ir]
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+.. py:class:: CreateNdDescOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.create_nd_tdesc'
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: shape() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: strides() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_shape() -> Optional[_ods_ir]
+
+
+   .. py:method:: const_strides() -> Optional[_ods_ir]
+
+
+.. py:function:: create_nd_tdesc(tensor_desc: _ods_ir, source: _ods_ir, shape: Sequence[_ods_ir[_ods_ir]], strides: Sequence[_ods_ir[_ods_ir]], *, const_shape: Optional[Union[Sequence[int], _ods_ir]] = None, const_strides: Optional[Union[Sequence[int], _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: DpasMxOp(result: _ods_ir, a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, acc: Optional[_ods_ir[_ods_ir]] = None, scale_a: Optional[_ods_ir] = None, scale_b: Optional[_ods_ir] = None, layout_a: Optional[Union[Any, _ods_ir]] = None, layout_b: Optional[Union[Any, _ods_ir]] = None, layout_cd: Optional[Union[Any, _ods_ir]] = None, layout_a_scale: Optional[Union[Any, _ods_ir]] = None, layout_b_scale: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   DPAS MX performs matrix multiplication on matrix A and Matrix B
+   of low precision data type. A is of size``mxk``
+   size, B is of size ``kxn``, and accumulate on matrix C of size ``mxn`` to the same size
+   matrix.
+
+   .. code::
+
+       The operands can be 2D, 3D, or 4D vectors. When the vectors have more than 2
+       dimensions, the leading dimensions are treated as **batch dimensions** that
+       must match across all operands (a, b, acc, result, scale_a, scale_b). The batch
+       dimensions represent independent matrix multiplications that are executed in
+       parallel. For example:
+       - 2D: `A: vector<8x32xf8E5M2>`, `B: vector<32x16xf8E5M2>` -> `C: vector<8x16xbf16>`
+       - 3D: `A: vector<4x8x32xf8E5M2>`, `B: vector<4x32x16xf8E5M2>` -> `C: vector<4x8x16xbf16>`
+         (4 independent 8x16 scaled matrix multiplications)
+       - 4D: `A: vector<2x4x8x32xf8E5M2>`, `B: vector<2x4x32x16xf8E5M2>` -> `C: vector<2x4x8x16xbf16>`
+         (2x4=8 independent 8x16 scaled matrix multiplications)
+       
+       The last 2 dimensions are always the core matrix multiplication dimensions
+       (M, K for a; K, N for b; M, N for result). The scale vectors also follow the
+       same batch dimension structure.
+       
+       In lane level code, each lane from a subgroup holds a data fragment for A, B, Acc and the result,
+       which are represented as 1D vectors.
+       
+       This operation serves as an anchor through which users assign a layout attribute
+       to govern computation distribution.
+       
+       Arguments:
+       
+       - `a`: A vector value representing the left-hand-side matrix tile (A) participating in the
+         matrix multiply. Can be 1D, 2D, 3D, or 4D where leading dimensions are batch dimensions.
+       
+       - `b`: A vector value representing the right-hand-side matrix tile (B). Can be 1D, 2D, 3D, or 4D
+         where leading dimensions are batch dimensions.
+       
+       - `acc`: A vector value representing the accumulator matrix tile (C). The
+         result is computed as `a * b + acc`. Must have the same batch dimensions as a and b.
+       
+       - `scale_a`: A floating point vector/scalar value used to scale `a` for
+         matrix multiplication. When a vector, must have matching batch dimensions.
+       
+       - `scale_b`: A floating point vector/scalar value used to scale `b` for
+         matrix multiplication. When a vector, must have matching batch dimensions.
+       
+       - `layout_a`, `layout_b`, `layout_cd`: [optional] Attributes that identify this
+         operation as anchor for operands A, B, and the accumulator/result, enabling users to assign layouts
+         that govern distribution at the subgroup and/or lane level. Only valid at workgroup and subgroup
+         level.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.dpas_mx'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+      :value: [1, 1, 0, 0, 0]
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: scale_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: scale_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_cd() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_a_scale() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b_scale() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DpasMxOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.dpas_mx'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: scale_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: scale_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_cd() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_a_scale() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b_scale() -> Optional[_ods_ir]
+
+
+.. py:function:: dpas_mx(result: _ods_ir, a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, acc: Optional[_ods_ir[_ods_ir]] = None, scale_a: Optional[_ods_ir] = None, scale_b: Optional[_ods_ir] = None, layout_a: Optional[Union[Any, _ods_ir]] = None, layout_b: Optional[Union[Any, _ods_ir]] = None, layout_cd: Optional[Union[Any, _ods_ir]] = None, layout_a_scale: Optional[Union[Any, _ods_ir]] = None, layout_b_scale: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: DpasOp(result: _ods_ir, lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, acc: Optional[_ods_ir[_ods_ir]] = None, layout_a: Optional[Union[Any, _ods_ir]] = None, layout_b: Optional[Union[Any, _ods_ir]] = None, layout_cd: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   DPAS performs matrix multiplication on matrix A of ``mxk``
+   size, B of ``kxn`` size, and accumulate on matrix C of ``mxn`` to the same size
+   matrix.
+
+   .. code::
+
+       The operands can be 2D, 3D, or 4D vectors. When the vectors have more than 2
+       dimensions, the leading dimensions are treated as **batch dimensions** that
+       must match across all operands (lhs, rhs, acc, and result). The batch
+       dimensions represent independent matrix multiplications that are executed in
+       parallel. For example:
+       - 2D: `A: vector<8x16xf16>`, `B: vector<16x16xf16>` -> `C: vector<8x16xf32>`
+       - 3D: `A: vector<4x8x16xf16>`, `B: vector<4x16x16xf16>` -> `C: vector<4x8x16xf32>`
+         (4 independent 8x16 matrix multiplications)
+       - 4D: `A: vector<2x4x8x16xf16>`, `B: vector<2x4x16x16xf16>` -> `C: vector<2x4x8x16xf32>`
+         (2x4=8 independent 8x16 matrix multiplications)
+       
+       The last 2 dimensions are always the core matrix multiplication dimensions
+       (M, K for lhs; K, N for rhs; M, N for result).
+       
+       In lane level code, each lane from a subgroup holds a data fragment for A, B, C and the result,
+       which are represented as 1D vectors. Please refer to [OpenCL Intel extensions]
+       (https://registry.khronos.org/OpenCL/extensions/intel/cl_intel_subgroup_matrix_multiply_accumulate.html)
+       for more details about the fragment distribution.
+       
+       This operation serves as an anchor through which users assign a layout attribute
+       to govern computation distribution.
+       
+       Arguments:
+       
+       - `lhs`: A vector value representing the left-hand-side matrix tile (A) participating in the
+         matrix multiply. Can be 1D, 2D, 3D, or 4D where leading dimensions are batch dimensions.
+       
+       - `rhs`: A vector value representing the right-hand-side matrix tile (B). Can be 1D, 2D, 3D, or 4D
+         where leading dimensions are batch dimensions.
+       
+       - `acc`: [optional] A vector value representing the accumulator matrix tile (C). When present, the
+         result is computed as `lhs * rhs + acc`; otherwise, the accumulator is implicitly assumed to be zero.
+         Must have the same batch dimensions as lhs and rhs.
+       
+       - `layout_a`, `layout_b`, `layout_cd`: [optional] Attributes that identify this
+         operation as anchor for operands A, B, and the accumulator/result, enabling users to assign layouts
+         that govern distribution at the subgroup and/or lane level. Only valid at workgroup and subgroup
+         level.
+       
+       Example 1 (Workgroup level, 2D):
+       
+       ```mlir
+         %d = xegpu.dpas %a, %b, %c <{
+             layout_a = #xegpu.layout<sg_layout = [4, 8], sg_data = [16, 128]>,
+             layout_b = #xegpu.layout<sg_layout = [4, 8], sg_data = [128, 16]>,
+             layout_cd = #xegpu.layout<sg_layout = [4, 8], sg_data = [16, 16]>}>
+             : vector<64x128xf16>, vector<128x128xf16>, vector<64x128xf32>
+               -> vector<64x128xf32>
+       ```
+       
+       Example 2 (Lane level, 1D):
+       
+       ```mlir
+         %d = xegpu.dpas %a, %b, %c
+               :  vector<8xf16>, vector<16xf16>, vector<8xf32> -> vector<8xf32>
+       ```
+       
+       Example 3 (Workgroup level, 3D with batch):
+       
+       ```mlir
+         // 4 independent 8x16 matrix multiplications
+         %d = xegpu.dpas %a, %b, %c
+             : vector<4x8x16xf16>, vector<4x16x16xf16>, vector<4x8x16xf32> -> vector<4x8x16xf32>
+       ```
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.dpas'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: layout_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_cd() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DpasOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.dpas'
+
+
+
+   .. py:method:: lhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: rhs() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: acc() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: layout_a() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_b() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout_cd() -> Optional[_ods_ir]
+
+
+.. py:function:: dpas(result: _ods_ir, lhs: _ods_ir[_ods_ir], rhs: _ods_ir[_ods_ir], *, acc: Optional[_ods_ir[_ods_ir]] = None, layout_a: Optional[Union[Any, _ods_ir]] = None, layout_b: Optional[Union[Any, _ods_ir]] = None, layout_cd: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: FenceOp(memory_kind: Union[Any, _ods_ir], fence_scope: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   It synchronizes the memory access between
+   write and following read or write.
+   1. ``Memory_kind`` describes the memory kind. "global" means the global memory,
+   "slm" means the share local memory.
+   2. ``Fence_scope`` describes the scope of fence. "Workgroup" means that the scope would be
+   within each workgroup. "GPU" means the scope would be across workgroups within the GPU.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.fence'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: memory_kind() -> _ods_ir
+
+
+   .. py:method:: fence_scope() -> _ods_ir
+
+
+.. py:class:: FenceOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.fence'
+
+
+
+   .. py:method:: memory_kind() -> _ods_ir
+
+
+   .. py:method:: fence_scope() -> _ods_ir
+
+
+.. py:function:: fence(memory_kind: Union[Any, _ods_ir], fence_scope: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> FenceOp
+
+.. py:class:: InitNbarrierOp(result: _ods_ir, nbarrier_id: _ods_ir[_ods_ir], participant_thread_num: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   InitNbarrierOp assigns the named barrier with the specified
+   barrier ID (0~31) to the current thread. Multiple threads may bind to the
+   same named barrier, and the ``participant_thread_num`` specifies the total
+   number of threads associated with the nbarrier. It returns an object of
+   NbarrierType representing the barrier
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.init_nbarrier'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: nbarrier_id() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: participant_thread_num() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: InitNbarrierOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.init_nbarrier'
+
+
+
+   .. py:method:: nbarrier_id() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: participant_thread_num() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: init_nbarrier(result: _ods_ir, nbarrier_id: _ods_ir[_ods_ir], participant_thread_num: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LaneShuffleOp(result: _ods_ir, source: _ods_ir[_ods_ir], mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   ``xegpu.lane_shuffle`` is a lane-level operation. The ``source`` operand is the
+   fragment (a 1D vector) held by one lane, and the ``result`` is the fragment
+   that lane holds afterwards. It re-distributes the elements across the lanes
+   of the subgroup without changing their type, so ``source`` and ``result`` have
+   the same type.
+
+   Let ``S`` be the subgroup size and ``N`` the number of elements per lane, so the
+   subgroup collectively holds ``S * N`` elements. Number these elements by their
+   logical position ``0 .. S*N-1``. The ``mode`` selects which of the two
+   orientations of the ``S x N`` (lane, element) index grid the operation maps
+   between:
+
+   * ``pack``: element ``j`` of lane ``i`` holds logical position ``j * S + i`` before
+   the operation and ``i * N + j`` after it. A lane's elements end up at
+   consecutive logical positions.
+   * ``unpack``: the reverse mapping. A lane's elements end up strided by ``S``.
+
+   The two modes are exact inverses, so shuffling one way and then the other
+   yields the original fragments.
+
+   For example, consider ``vector<2xi16>`` with a subgroup size of 8, denoting a
+   lane's fragment as ``<a,b>``. In ``pack`` mode:
+
+   .. code::
+
+       lane:       0      1      2      3      4      5      6      7
+       source:   <0,8>  <1,9>  <2,10> <3,11> <4,12> <5,13> <6,14> <7,15>
+       result:   <0,1>  <2,3>  <4,5>  <6,7>  <8,9> <10,11> <12,13> <14,15>
+
+   In general each lane's result elements come from ``N`` different lanes'
+   ``source`` fragments -- that is the cross-lane shuffle.
+
+   This operation implements the ``xegpu.convert_layout`` semantics at the lane
+   level, for the case where the ``lane_layout`` is the same but the ``lane_data``
+   is different.
+
+   The operation assumes a full subgroup (the subgroup size equals the maximum
+   subgroup size) and that all lanes execute the same dynamic instance of the
+   operation; otherwise the behavior is undefined.
+
+   Arguments:
+
+   * ``source``: The 1D vector fragment held by one lane.
+   * ``mode``: The direction of the shuffle, either ``pack`` or ``unpack``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.lane_shuffle'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: mode() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: LaneShuffleOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.lane_shuffle'
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: mode() -> _ods_ir
+
+
+.. py:function:: lane_shuffle(result: _ods_ir, source: _ods_ir[_ods_ir], mode: Union[Any, _ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: LoadGatherOp(value: _ods_ir, source: _ods_ir, offsets: _ods_ir, mask: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, contiguity: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   It (aka. load) load data per each lane.
+   The mask operand masks out memory access so that it is safe to pass out-of-boundary
+   addresses/offsets as long as they are masked. Each mask element applies to one lane.
+
+   At every level the mask, offsets, and result may be nD vectors, and all three
+   must have the same shape.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``source``: represents the memory region to be loaded from, which can be either a
+   1D memref or pointer (ui64, ui32, i64 or i32).
+   * ``offsets``: represents offsets from source.
+   offsets is a vector of ``index`` type with the same shape as the result.
+   A scalar offset is also valid: one lane then reads only one element.
+   * ``mask``: is a vector of ``i1`` type, which is used to mask out the memory access.
+   mask has the same shape as the offsets and the result. Each element applies
+   to one lane. A scalar mask is also valid, and gates that one element.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] cache hints for each level of cache.
+   * ``contiguity``: [optional] the number of neighbouring elements in the
+   innermost dimension that are contiguous in memory. It is an upper bound,
+   not the final access width: ``xegpu-propagate-layout`` turns it into
+   ``lane_data``, capped by what one lane can access in one instruction. It
+   must be at least 2 and must divide the innermost offsets dimension.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` operand or the result
+   of load. Only valid at workgroup and subgroup levels.
+
+   Results:
+
+   * ``res``: represents loaded data
+
+   Example 1 (Subgroup level):
+   A variant accepts memref as base pointer or the source operand
+   could be a raw pointer (ui64, ui32, i64, i32).
+
+   .. code:: mlir
+
+         %a = memref.alloc() : memref<1024xf32>
+         %offsets = vector.step : vector<16xindex>
+         %mask = vector.constant_mask [16]: vector<16xi1>
+         %val = xegpu.load %a[%offsets], %mask <{l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>,
+                                layout = #xegpu.layout<lane_layout = [16], lane_data = [1]>}>
+           : memref<1024xf32>, vector<16xindex>, vector<16xi1> -> vector<16xf32>
+
+   Example 2 (lane level):
+   lane level only accepts the offsets variant. The mask, offsets, and result all
+   have the same shape; here each lane reads 8 elements.
+
+   .. code:: mlir
+
+         %val = xegpu.load %src[%offsets], %mask <{l1_hint = #xegpu.cache_hint<cached>,
+                                  l2_hint = #xegpu.cache_hint<uncached>,
+                                  l3_hint = #xegpu.cache_hint<uncached>}>
+               : memref<128xf32>, vector<8xindex>, vector<8xi1> -> vector<8xf32>
+
+   Example 3 (subgroup level, contiguous runs):
+   ``contiguity = 4`` says 4 neighbouring elements in the innermost dimension are
+   contiguous. The shapes stay the same.
+
+   .. code:: mlir
+
+         %val = xegpu.load %src[%offsets], %mask <{contiguity = 4 : i64}>
+               : i64, vector<16xindex>, vector<16xi1> -> vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: contiguity() -> Optional[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+.. py:class:: LoadGatherOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load'
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: contiguity() -> Optional[_ods_ir]
+
+
+.. py:function:: load(value: _ods_ir, source: _ods_ir, offsets: _ods_ir, mask: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, contiguity: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LoadMatrixOp(res: _ods_ir, mem_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, subgroup_block_io: Optional[bool] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation loads a block of data from shared local memory (SLM) as specified
+   by the provided ``mem_desc``. Memory descriptors of any rank (1D or higher) are supported.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``mem_desc``: the memory descriptor identifying the SLM region.
+   * ``offsets``: the coordinates within the memory descriptor to read from.
+   * ``subgroup_block_io``: [optional] An attribute indicating that the operation can be lowered
+   to a subgroup block load. When this attribute is present, the offsets are subgroup-uniform
+   across all lanes. Only used on subgroup and lane level.
+   * ``layout``: [optional] Describes the expected layout of the ``mem_desc`` operand as well as
+   the result of load (they are identical).
+   Only valid at workgroup and subgroup levels.
+
+   Results:
+
+   * ``res``: the elements loaded from SLM.
+
+   Example (1D):
+
+   .. code:: mlir
+
+           %1 = xegpu.load_matrix %0[%c0] : !xegpu.mem_desc<64xf16>, index -> vector<16xf16>
+
+   Example (Workgroup level, 2D):
+
+   .. code:: mlir
+
+           %c0 = arith.constant 0 : index
+           %1 = xegpu.load_matrix %0[%c0, %c0] <{
+                   layout = #xegpu.layout<sg_layout = [4, 8], sg_data = [32, 16]> }>
+             : !xegpu.mem_desc<128x128xf16, #xegpu.mem_layout<stride = [1, 128], block = [16, 16]>>
+             , index, index -> vector<128x128xf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load_matrix'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: mem_desc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: subgroup_block_io() -> bool
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: LoadMatrixOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load_matrix'
+
+
+
+   .. py:method:: mem_desc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: subgroup_block_io() -> bool
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: load_matrix(res: _ods_ir, mem_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, subgroup_block_io: Optional[bool] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: LoadNdOp(value: _ods_ir, TensorDesc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, packed: Optional[bool] = None, transpose: Optional[Union[Sequence[int], _ods_ir]] = None, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   LoadNdOp essentially mimics the hardware block read instruction to read
+   a block of data from memory to register. It takes a set of optional cache
+   hints for each level of cache, L1, L2 and L3. If hardware does not have a
+   correspoding cache, Corresponding cache hint attribute will be masked.
+
+   The tensor descriptor can be 1D, 2D, 3D, or higher dimensional. When the
+   tensor descriptor has more than 2 dimensions, the leading dimensions are
+   treated as **batch dimensions** that are unrolled to unit dimensions during
+   lowering. At the subgroup level, the load_nd operation executes at 2D
+   granularity to match the 2D block IO hardware support. The result vector
+   has the same shape as the tensor descriptor. The number of offset indices
+   must match the rank of the tensor descriptor.
+
+   On Intel GPUs, hardware-supported packing rearranges data elements during
+   the load of the B operand when the element bit-width is less than 32 bits
+   (for example, fp16). The transpose feature reorders data during the load
+   when the element type is fp32 or fp64. These two features are mutually
+   exclusive and shall not be enabled simultaneously. Both features support only
+   2D blocked tensor_desc.
+
+   At lane level, result vector represents the data to be loaded by each lane.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``TensorDesc``: A tensor descriptor specifying the base nd-region of memory
+   and the tensor tile to be loaded. Can be 1D, 2D, 3D, or higher dimensional
+   where leading dimensions are batch dimensions.
+   * ``offsets``: Index values representing per-dimension offsets from the base position
+   encoded in ``TensorDesc``. They are encoded via ``offsets`` and ``const_offsets``.
+   The number of offsets must match the tensor descriptor rank.
+   * ``packed``: [optional] A unit attribute indicating that packing is applied
+   during the load when supported by the hardware. Only valid at lane level.
+   * ``transpose``: [optional] An attribute describing a hardware-supported transpose
+   to be applied during the load. Only valid at Lane level.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] Cache-hint attributes indicating the
+   desired behavior at the L1, L2, and L3 cache levels.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` operand as well as the result of the load (they are identical). Only valid at workgroup and subgroup levels.
+
+   Example 1 (Workgroup level, 2D):
+
+   .. code:: mlir
+
+         xegpu.load_nd %1 {transpose = [1, 0],
+                           l1_hint = #xegpu.cache_hint<cached>,
+                           l2_hint = #xegpu.cache_hint<uncached>,
+                           l3_hint = #xegpu.cache_hint<streaming>,
+                           layout = #xegpu.layout<sg_layout = [4, 8], sg_data = [8, 32]>}
+                 : !xegpu.tensor_desc<32x256xf32> -> vector<32x256xf32>
+
+   Example 2 (lane level, 2D):
+
+   .. code:: mlir
+
+         xegpu.load_nd %1 {l1_hint = #xegpu.cache_hint<cached>,
+                           l2_hint = #xegpu.cache_hint<uncached>}>
+           : !xegpu.tensor_desc<8x16xf32> -> vector<8xf32>
+
+   Example 3 (3D with batch dimension):
+
+   .. code:: mlir
+
+         // Load 4 independent 8x16 blocks
+         %result = xegpu.load_nd %tdesc[0, 0, 0] <{l1_hint = #xegpu.cache_hint<cached>}>
+           : !xegpu.tensor_desc<4x8x16xf16> -> vector<4x8x16xf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load_nd'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: packed() -> bool
+
+
+   .. py:method:: transpose() -> Optional[_ods_ir]
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: LoadNdOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.load_nd'
+
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: packed() -> bool
+
+
+   .. py:method:: transpose() -> Optional[_ods_ir]
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: load_nd(value: _ods_ir, tensor_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, packed: Optional[bool] = None, transpose: Optional[Union[Sequence[int], _ods_ir]] = None, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: NbarrierArriveOp(nbarrier: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   NbarrierArriveOp signals the hardware (or other threads)
+   that the current thread has produced its data for the consumer threads. When
+   the hardware signalled by ``participant_thread_num`` threads for the named barrier,
+   it will notify the threads waiting for the named barrier to continue their work.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.nbarrier_arrive'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: nbarrier() -> _ods_ir
+
+
+.. py:class:: NbarrierArriveOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.nbarrier_arrive'
+
+
+
+   .. py:method:: nbarrier() -> _ods_ir
+
+
+.. py:function:: nbarrier_arrive(nbarrier: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> NbarrierArriveOp
+
+.. py:class:: NbarrierWaitOp(nbarrier: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   NbarrierWaitOp signals the hardware which named barrier
+   the current thread is waiting for, such that it can get notified when the
+   named barrier is completed.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.nbarrier_wait'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: nbarrier() -> _ods_ir
+
+
+.. py:class:: NbarrierWaitOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.nbarrier_wait'
+
+
+
+   .. py:method:: nbarrier() -> _ods_ir
+
+
+.. py:function:: nbarrier_wait(nbarrier: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> NbarrierWaitOp
+
+.. py:class:: PrefetchNdOp(TensorDesc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   It issues an instruction to prefetch a block of data from continuous
+   memory regions to each level of the cache based on their cache policy.
+
+   The tensor descriptor can be n-dimensional. When the
+   tensor descriptor has more than 2 dimensions, the leading dimensions are
+   treated as **batch dimensions** that are unrolled to unit dimensions during
+   lowering. At the subgroup level, the prefetch_nd operation executes at 2D
+   granularity to match the 2D block IO hardware support. The number of offset
+   indices must match the rank of the tensor descriptor.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``TensorDesc``: A tensor descriptor specifying the base nd-region of
+   memory and tensor tile to be prefetched. Can be 1D, 2D, 3D, or higher
+   dimensional where leading dimensions are batch dimensions.
+   * ``offsets``: index values representing per-dimension offsets from the
+   base position encoded in ``TensorDesc``. It is encoded via "offsets"
+   and "const_offsets". The number of offsets must match the tensor descriptor rank.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] An cache-hint attribute
+   indicating the desired behavior at the L1, L2, and L3 cache levels.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` operand.
+   Only valid at the workgroup and subgroup levels.
+
+   Example 1 (Workgroup level, 2D):
+
+   .. code:: mlir
+
+         %c0 = arith.constant 0 : index
+         %c1 = arith.constant 1 : index
+         xegpu.prefetch_nd %tdesc[%c0, %c1] {l1_hint = #xegpu.cache_hint<cached>,
+                                   l2_hint = #xegpu.cache_hint<cached>,
+                                   l3_hint = #xegpu.cache_hint<cached>,
+                                   layout = #xegpu.layout<sg_layout = [4, 8], sg_data = [8, 32]> }
+           : !xegpu.tensor_desc<32x256xf16>
+
+   Example 2 (3D with batch dimension):
+
+   .. code:: mlir
+
+         // Prefetch 4 independent 8x16 blocks
+         xegpu.prefetch_nd %tdesc[0, 0, 0] <{l1_hint = #xegpu.cache_hint<cached>}>
+           : !xegpu.tensor_desc<4x8x16xf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.prefetch_nd'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:class:: PrefetchNdOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.prefetch_nd'
+
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: prefetch_nd(tensor_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> PrefetchNdOp
+
+.. py:class:: PrefetchOp(source: _ods_ir, offsets: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, offset_align_byte: Optional[Union[int, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   It issues instructions to prefetch a set of scattered data points
+   from memory to each level of the cache based on their cache policy.
+   As compared to prefetch_nd, which works on non-scattered TensorDesc,
+   it works on scattered TensorDesc instead.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``source``: represents the memory region to be loaded from, which can be either a
+   1D memref or pointer (ui64, ui32, i64 or i32).
+   * ``offsets``: represents offsets from source.
+   offsets is a vector of ``index`` type and vector length is either the subgroup size
+   or 1 at lane level. scalar offset is also valid for lane level.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] cache hints for each level of cache.
+   * ``offset_align_byte``: [optional] required if ``source`` is a pointer. If ``source`` is not a pointer,
+   it is not allowed. Represents the alignment in bytes of each offset in offsets.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` or ``offsets``
+   operand. Only valid at workgroup and subgroup levels.
+
+   Example 1 (Workgroup level):
+
+   .. code:: mlir
+
+         %a = memref.alloc() : memref<256xf16>
+         %offsets = arith.constant dense<[0, 1, ..., 255]> : vector<256xindex>
+         xegpu.prefetch %a[%offsets] {l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>,
+                                layout = #xegpu.layout<sg_layout = [8], sg_data = [32]>
+                                }
+           : memref<256xf16>, vector<256xindex>
+
+   Example 2 (lane level):
+   A variant accepts memref or integer (raw pointer) as base and offsets directly.
+   The source operand could be a raw pointer (ui64, ui32, i64, i32).
+
+   .. code:: mlir
+
+         %a = memref.alloc() : memref<1024xf32>
+         %0 = arith.constant dense<[0, 16, 32, 64]> : vector<4xindex>
+         xegpu.prefetch %a[%0] {l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>}
+           : memref<1024xf32>, vector<4xindex>
+
+   Example 3 (lane level):
+   lane level only accepts the offsets variant.
+
+   .. code:: mlir
+
+         xegpu.prefetch %0[%1] {l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>}
+           : memref<256xf32>, vector<1xindex>
+
+   Example 4 (lane level):
+   lane level only accepts the offsets variant.
+
+   .. code:: mlir
+
+         xegpu.prefetch %0[%1] {l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>,
+                                offset_align_byte = 2}
+           : i64, vector<1xindex>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.prefetch'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: offset_align_byte() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:class:: PrefetchOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.prefetch'
+
+
+
+   .. py:method:: source() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: offset_align_byte() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: prefetch(source: _ods_ir, offsets: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, offset_align_byte: Optional[Union[int, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> PrefetchOp
+
+.. py:class:: StoreMatrixOp(data: _ods_ir, mem_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, subgroup_block_io: Optional[bool] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This operation stores a ``data`` fragment into the shared local memory region
+   specified by a ``mem_desc``. Memory descriptors of any rank (1D or higher) are supported.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``mem_desc``: the memory descriptor specifying the SLM region.
+   * ``offsets``: the coordinates within the memory descriptor where the data will be written.
+   * ``data``: the values to be stored.
+   * ``subgroup_block_io``: [optional] An attribute indicating that the operation can be lowered
+   to a subgroup block store. When this attribute is present, the offsets are subgroup-uniform
+   across all lanes. Only used on subgroup and lane level.
+   * ``layout``: [optional] Describes the expected layout of the ``mem_desc`` operand as well as
+   the value to be stored (they are identical). Only valid at workgroup and subgroup levels.
+
+   Example (1D):
+
+   .. code:: mlir
+
+           xegpu.store_matrix %1, %0[%c0] : vector<16xf16>, !xegpu.mem_desc<64xf16>, index
+
+   Example (Workgroup level, 2D):
+
+   .. code:: mlir
+
+           %c0 = arith.constant 0 : index
+           xegpu.store_matrix %1, %0[%c0, %c0] <{
+                   layout = #xegpu.layout<sg_layout = [4, 8], sg_data = [32, 16]> }>
+             : vector<128x128xf16>, !xegpu.mem_desc<128x128xf16>>, index, index
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store_matrix'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: data() -> _ods_ir
+
+
+   .. py:method:: mem_desc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: subgroup_block_io() -> bool
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:class:: StoreMatrixOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store_matrix'
+
+
+
+   .. py:method:: data() -> _ods_ir
+
+
+   .. py:method:: mem_desc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: subgroup_block_io() -> bool
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: store_matrix(data: _ods_ir, mem_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, subgroup_block_io: Optional[bool] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> StoreMatrixOp
+
+.. py:class:: StoreNdOp(value: _ods_ir[_ods_ir], TensorDesc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   StoreNdOp essentially mimics the hardware block write instruction io
+   write a block of data from register into the memory region as described
+   by the TensorDesc. It takes a set of optional cache hints for each level
+   of cache, L1, L2 and L3. If hardware does not have a correspoding cache,
+   Corresponding cache hint attribute will be masked.
+
+   The tensor descriptor can be 1D, 2D, 3D, or higher dimensional. When the
+   tensor descriptor has more than 2 dimensions, the leading dimensions are
+   treated as **batch dimensions** that are unrolled to unit dimensions during
+   lowering. At the subgroup level, the store_nd operation executes at 2D
+   granularity to match the 2D block IO hardware support. The value vector
+   must have the same shape as the tensor descriptor. The number of offset
+   indices must match the rank of the tensor descriptor.
+
+   At lane level, the input vector represents the data to be stored by each lane.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``value``: A vector value representing the tensor tile to be stored. Can be
+   1D, 2D, 3D, or higher dimensional where leading dimensions are batch dimensions.
+   * ``TensorDesc``: A tensor descriptor specifying the base nd-region of memory and
+   the tensor tile to be stored. Can be 1D, 2D, 3D, or higher dimensional
+   where leading dimensions are batch dimensions.
+   * ``offsets``: Index values representing per-dimension offsets from the base position
+   encoded in ``TensorDesc``. They are encoded via ``offsets`` and ``const_offsets``.
+   The number of offsets must match the tensor descriptor rank.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] Cache-hint attributes indicating the
+   desired behavior at the L1, L2, and L3 cache levels.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` operand as well as
+   the value to be stored (they are identical). Only valid at workgroup and subgroup levels.
+
+   Example 1 (Workgroup level, 2D):
+
+   .. code:: mlir
+
+         xegpu.store_nd %3, %2 {l1_hint = #xegpu.cache_hint<uncached>,
+                                l2_hint = #xegpu.cache_hint<write_back>,
+                                l3_hint = #xegpu.cache_hint<write_through>,
+                                layout = #xegpu.layout<sg_layout = [4, 8], sg_data = [8, 32]>}
+                                : vector<32x256xf16>, !xegpu.tensor_desc<32x256xf16>
+
+   Example 2 (lane level, 2D):
+
+   .. code:: mlir
+
+         xegpu.store_nd %3, %2 {l1_hint = #xegpu.cache_hint<uncached>,
+                                l2_hint = #xegpu.cache_hint<write_back>,
+                                l3_hint = #xegpu.cache_hint<write_through>}
+                                : vector<8xf16>, !xegpu.tensor_desc<8x16xf16>
+
+   Example 3 (3D with batch dimension):
+
+   .. code:: mlir
+
+         // Store 4 independent 8x16 blocks
+         xegpu.store_nd %value, %tdesc[0, 0, 0] <{l1_hint = #xegpu.cache_hint<write_back>}>
+           : vector<4x8x16xf16>, !xegpu.tensor_desc<4x8x16xf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store_nd'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:class:: StoreNdOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store_nd'
+
+
+
+   .. py:method:: value() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: TensorDesc() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: const_offsets() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+.. py:function:: store_nd(value: _ods_ir[_ods_ir], tensor_desc: _ods_ir, offsets: Sequence[_ods_ir[_ods_ir]], const_offsets: Union[Sequence[int], _ods_ir], *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> StoreNdOp
+
+.. py:class:: StoreScatterOp(value: _ods_ir, dest: _ods_ir, offsets: _ods_ir, mask: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, contiguity: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   It (aka. store) stores data to scattered memory locations.
+
+   At every level the mask, offsets, and value may be nD vectors, and all three
+   must have the same shape.
+
+   This operation serves as an anchor through which users assign a layout attribute
+   to govern computation distribution.
+
+   Arguments:
+
+   * ``value``: represents the data to be stored.
+   * ``dest``: represents the memory region to be stored to, which can be either a
+   1D memref or pointer (ui64, ui32, i64 or i32).
+   * ``offsets``: represents offsets from dest.
+   offsets is a vector of ``index`` type with the same shape as the value.
+   A scalar offset is also valid: one lane then writes only one element.
+   * ``mask``: is a vector of ``i1`` type, which is used to mask out the memory access.
+   mask has the same shape as the offsets and the value. Each element applies
+   to one lane. A scalar mask is also valid, and gates that one element.
+   * ``l1_hint``, ``l2_hint``, ``l3_hint``: [optional] cache hints for each level of cache.
+   * ``contiguity``: [optional] the number of neighbouring elements in the
+   innermost dimension that are contiguous in memory. It is an upper bound,
+   not the final access width: ``xegpu-propagate-layout`` turns it into
+   ``lane_data``, capped by what one lane can access in one instruction. It
+   must be at least 2 and must divide the innermost offsets dimension.
+   * ``layout``: [optional] Describes the expected layout of the ``tensor_desc`` operand or the value
+   to be stored. Only valid at workgroup and subgroup levels.
+
+   Example 1 (Subgroup level):
+   A variant accepts memref as base pointer and an offset.
+   The dest operand could be a raw pointer (uint64_t).
+
+   .. code:: mlir
+
+         %a = memref.alloc() : memref<1024xf32>
+         %val = arith.constant dense<0.0> : vector<16xf32>
+         %offsets = vector.step : vector<16xindex>
+         %mask = vector.constant_mask [16]: vector<16xi1>
+         xegpu.store %val, %a[%offsets], %mask <{l1_hint = #xegpu.cache_hint<cached>,
+                                l2_hint = #xegpu.cache_hint<cached>,
+                                l3_hint = #xegpu.cache_hint<cached>,
+                                layout = #xegpu.layout<lane_layout = [16], lane_data = [1]>}>
+           : vector<16xf32>, memref<1024xf32>, vector<16xindex>, vector<16xi1>
+
+   Example 2 (Lane level):
+   Lane level IR only accepts the offsets variant. The mask, offsets, and value all
+   have the same shape; here each lane writes 8 elements.
+
+   .. code:: mlir
+
+         xegpu.store %val, %dest[%offsets], %mask <{l1_hint = #xegpu.cache_hint<uncached>,
+                                  l2_hint = #xegpu.cache_hint<write_back>,
+                                  l3_hint = #xegpu.cache_hint<write_through>}>
+               : vector<8xf32>, memref<256xf32>, vector<8xindex>, vector<8xi1>
+
+   Example 3 (Subgroup level, contiguous runs):
+   ``contiguity = 4`` says 4 neighbouring elements in the innermost dimension are
+   contiguous. The shapes stay the same.
+
+   .. code:: mlir
+
+         xegpu.store %val, %dest[%offsets], %mask <{contiguity = 4 : i64}>
+               : vector<16xf32>, i64, vector<16xindex>, vector<16xi1>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: contiguity() -> Optional[_ods_ir]
+
+
+.. py:class:: StoreScatterOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.store'
+
+
+
+   .. py:method:: value() -> _ods_ir
+
+
+   .. py:method:: dest() -> _ods_ir
+
+
+   .. py:method:: offsets() -> _ods_ir
+
+
+   .. py:method:: mask() -> _ods_ir
+
+
+   .. py:method:: l1_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l2_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: l3_hint() -> Optional[_ods_ir]
+
+
+   .. py:method:: layout() -> Optional[_ods_ir]
+
+
+   .. py:method:: contiguity() -> Optional[_ods_ir]
+
+
+.. py:function:: store(value: _ods_ir, dest: _ods_ir, offsets: _ods_ir, mask: _ods_ir, *, l1_hint: Optional[Union[Any, _ods_ir]] = None, l2_hint: Optional[Union[Any, _ods_ir]] = None, l3_hint: Optional[Union[Any, _ods_ir]] = None, layout: Optional[Union[Any, _ods_ir]] = None, contiguity: Optional[Union[int, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> StoreScatterOp
+
+.. py:class:: TruncfOp(result: _ods_ir, source: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``xegpu.truncf`` operation truncates floating point values from a higher
+   precision type to a lower precision type.
+   Converts ``f16`` and ``bf16`` to microscaling float types.
+   Rounding mode defaults to round to nearest even.
+
+   .. code::
+
+       Example:
+       ```mlir
+         %res = xegpu.truncf %src : vector<16xf16> -> vector<16xf8E5M2>
+       ```
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.truncf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: TruncfOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'xegpu.truncf'
+
+
+
+   .. py:method:: source() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: truncf(result: _ods_ir, source: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+

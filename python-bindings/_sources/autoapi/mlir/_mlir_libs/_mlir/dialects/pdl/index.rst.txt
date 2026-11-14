@@ -1,0 +1,112 @@
+mlir._mlir_libs._mlir.dialects.pdl
+==================================
+
+.. py:module:: mlir._mlir_libs._mlir.dialects.pdl
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir._mlir_libs._mlir.dialects.pdl.PDLType
+   mlir._mlir_libs._mlir.dialects.pdl.AttributeType
+   mlir._mlir_libs._mlir.dialects.pdl.OperationType
+   mlir._mlir_libs._mlir.dialects.pdl.RangeType
+   mlir._mlir_libs._mlir.dialects.pdl.TypeType
+   mlir._mlir_libs._mlir.dialects.pdl.ValueType
+
+
+Module Contents
+---------------
+
+.. py:class:: PDLType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+.. py:class:: AttributeType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> AttributeType
+      :staticmethod:
+
+
+
+.. py:class:: OperationType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> OperationType
+      :staticmethod:
+
+
+
+.. py:class:: RangeType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(element_type: mlir.ir.Type) -> RangeType
+      :staticmethod:
+
+
+
+   .. py:property:: element_type
+      :type: mlir.ir.Type
+
+
+
+.. py:class:: TypeType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> TypeType
+      :staticmethod:
+
+
+
+.. py:class:: ValueType
+
+   Bases: :py:obj:`mlir.ir.Type`
+
+
+   .. py:method:: isinstance(type: mlir.ir.Type) -> bool
+      :staticmethod:
+
+
+
+   .. py:method:: get(context: mlir.ir.Context | None = None) -> ValueType
+      :staticmethod:
+
+
+

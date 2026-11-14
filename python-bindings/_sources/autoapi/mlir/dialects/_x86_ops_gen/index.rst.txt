@@ -1,0 +1,1250 @@
+mlir.dialects._x86_ops_gen
+==========================
+
+.. py:module:: mlir.dialects._x86_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_ops_gen._ods_ir
+   mlir.dialects._x86_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_ops_gen._Dialect
+   mlir.dialects._x86_ops_gen.AVX10DotInt8Op
+   mlir.dialects._x86_ops_gen.AVX10DotInt8OpAdaptor
+   mlir.dialects._x86_ops_gen.BcstToPackedF32Op
+   mlir.dialects._x86_ops_gen.BcstToPackedF32OpAdaptor
+   mlir.dialects._x86_ops_gen.CvtPackedEvenIndexedToF32Op
+   mlir.dialects._x86_ops_gen.CvtPackedEvenIndexedToF32OpAdaptor
+   mlir.dialects._x86_ops_gen.CvtPackedF32ToBF16Op
+   mlir.dialects._x86_ops_gen.CvtPackedF32ToBF16OpAdaptor
+   mlir.dialects._x86_ops_gen.CvtPackedOddIndexedToF32Op
+   mlir.dialects._x86_ops_gen.CvtPackedOddIndexedToF32OpAdaptor
+   mlir.dialects._x86_ops_gen.DotBF16Op
+   mlir.dialects._x86_ops_gen.DotBF16OpAdaptor
+   mlir.dialects._x86_ops_gen.DotInt8Op
+   mlir.dialects._x86_ops_gen.DotInt8OpAdaptor
+   mlir.dialects._x86_ops_gen.DotOp
+   mlir.dialects._x86_ops_gen.DotOpAdaptor
+   mlir.dialects._x86_ops_gen.MaskCompressOp
+   mlir.dialects._x86_ops_gen.MaskCompressOpAdaptor
+   mlir.dialects._x86_ops_gen.MaskRndScaleOp
+   mlir.dialects._x86_ops_gen.MaskRndScaleOpAdaptor
+   mlir.dialects._x86_ops_gen.MaskScaleFOp
+   mlir.dialects._x86_ops_gen.MaskScaleFOpAdaptor
+   mlir.dialects._x86_ops_gen.RsqrtOp
+   mlir.dialects._x86_ops_gen.RsqrtOpAdaptor
+   mlir.dialects._x86_ops_gen.TileLoadOp
+   mlir.dialects._x86_ops_gen.TileLoadOpAdaptor
+   mlir.dialects._x86_ops_gen.TileMulFOp
+   mlir.dialects._x86_ops_gen.TileMulFOpAdaptor
+   mlir.dialects._x86_ops_gen.TileMulIOp
+   mlir.dialects._x86_ops_gen.TileMulIOpAdaptor
+   mlir.dialects._x86_ops_gen.TileStoreOp
+   mlir.dialects._x86_ops_gen.TileStoreOpAdaptor
+   mlir.dialects._x86_ops_gen.TileZeroOp
+   mlir.dialects._x86_ops_gen.TileZeroOpAdaptor
+   mlir.dialects._x86_ops_gen.Vp2IntersectOp
+   mlir.dialects._x86_ops_gen.Vp2IntersectOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._x86_ops_gen.avx10_dot_i8
+   mlir.dialects._x86_ops_gen.avx_bcst_to_f32_packed
+   mlir.dialects._x86_ops_gen.avx_cvt_packed_even_indexed_to_f32
+   mlir.dialects._x86_ops_gen.avx512_cvt_packed_f32_to_bf16
+   mlir.dialects._x86_ops_gen.avx_cvt_packed_odd_indexed_to_f32
+   mlir.dialects._x86_ops_gen.avx512_dot
+   mlir.dialects._x86_ops_gen.avx_dot_i8
+   mlir.dialects._x86_ops_gen.avx_intr_dot
+   mlir.dialects._x86_ops_gen.avx512_mask_compress
+   mlir.dialects._x86_ops_gen.avx512_mask_rndscale
+   mlir.dialects._x86_ops_gen.avx512_mask_scalef
+   mlir.dialects._x86_ops_gen.avx_rsqrt
+   mlir.dialects._x86_ops_gen.amx_tile_load
+   mlir.dialects._x86_ops_gen.amx_tile_mulf
+   mlir.dialects._x86_ops_gen.amx_tile_muli
+   mlir.dialects._x86_ops_gen.amx_tile_store
+   mlir.dialects._x86_ops_gen.amx_tile_zero
+   mlir.dialects._x86_ops_gen.avx512_vp2intersect
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: _Dialect
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: DIALECT_NAMESPACE
+      :value: 'x86'
+
+
+
+.. py:class:: AVX10DotInt8Op(w: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``dot`` op is an AVX10-Int8 specific op that can lower to the proper
+   LLVMAVX10-INT8 operation ``llvm.vpdpbssd.512``.
+
+   Multiply groups of 4 adjacent pairs of signed 8-bit integers in ``a`` with
+   corresponding signed 8-bit integers in ``b``, producing 4 intermediate signed 16-bit
+   results. Sum these 4 results with the corresponding 32-bit integer in ``w``, and
+   store the packed 32-bit results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx10.dot.i8 %w, %a, %b : vector<64xi8> -> vector<16xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx10.dot.i8'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: w() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: AVX10DotInt8OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx10.dot.i8'
+
+
+
+   .. py:method:: w() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx10_dot_i8(w: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: BcstToPackedF32Op(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Convert scalar BF16 or F16 (16-bit) floating-point element stored at memory locations
+   starting at location ``__A`` to a single-precision (32-bit) floating-point,
+   broadcast it to packed single-precision (32-bit) floating-point elements,
+   and store the results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx.bcst_to_f32.packed %a : memref<1xbf16> -> vector<8xf32>
+       %dst = x86.avx.bcst_to_f32.packed %a : memref<1xf16> -> vector<8xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.bcst_to_f32.packed'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: BcstToPackedF32OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.bcst_to_f32.packed'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_bcst_to_f32_packed(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: CvtPackedEvenIndexedToF32Op(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Convert packed BF16 or F16 (16-bit) floating-point even-indexed elements stored at
+   memory locations starting at location ``__A`` to packed single-precision
+   (32-bit) floating-point elements, and store the results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx.cvt.packed.even.indexed_to_f32 %a : memref<16xbf16> -> vector<8xf32>
+       %dst = x86.avx.cvt.packed.even.indexed_to_f32 %a : memref<16xf16> -> vector<8xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.cvt.packed.even.indexed_to_f32'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: CvtPackedEvenIndexedToF32OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.cvt.packed.even.indexed_to_f32'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_cvt_packed_even_indexed_to_f32(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: CvtPackedF32ToBF16Op(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``convert_f32_to_bf16`` op is an AVX512-BF16 specific op that can lower
+   to the proper LLVMAVX512BF16 operation ``llvm.cvtneps2bf16`` depending on
+   the width of MLIR vectors it is applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Convert packed single-precision (32-bit) floating-point elements in ``a`` to
+   packed BF16 (16-bit) floating-point elements, and store the results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx512.cvt.packed.f32_to_bf16 %a : vector<8xf32> -> vector<8xbf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.cvt.packed.f32_to_bf16'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: CvtPackedF32ToBF16OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.cvt.packed.f32_to_bf16'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx512_cvt_packed_f32_to_bf16(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: CvtPackedOddIndexedToF32Op(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Convert packed BF16 or F16 (16-bit) floating-point odd-indexed elements stored at
+   memory locations starting at location ``__A`` to packed single-precision
+   (32-bit) floating-point elements, and store the results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx.cvt.packed.odd.indexed_to_f32 %a : memref<16xbf16> -> vector<8xf32>
+       %dst = x86.avx.cvt.packed.odd.indexed_to_f32 %a : memref<16xf16> -> vector<8xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.cvt.packed.odd.indexed_to_f32'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: CvtPackedOddIndexedToF32OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.cvt.packed.odd.indexed_to_f32'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_cvt_packed_odd_indexed_to_f32(dst: _ods_ir, a: _ods_ir[_ods_ir], *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: DotBF16Op(src: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``dot`` op is an AVX512-BF16 specific op that can lower to the proper
+   LLVMAVX512BF16 operation ``llvm.dpbf16ps`` depending on the width of MLIR
+   vectors it is applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Compute dot-product of BF16 (16-bit) floating-point pairs in ``a`` and ``b``,
+   accumulating the intermediate single-precision (32-bit) floating-point
+   elements with elements in ``src``, and store the results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx512.dot %src, %a, %b : vector<32xbf16> -> vector<16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.dot'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DotBF16OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.dot'
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx512_dot(src: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: DotInt8Op(w: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``dot`` op is an AVX2-Int8 specific op that can lower to the proper
+   LLVMAVX2-INT8 operation ``llvm.vpdpbssd`` depending on the width of MLIR
+   vectors it is applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Multiply groups of 4 adjacent pairs of signed 8-bit integers in ``a`` with
+   corresponding signed 8-bit integers in ``b``, producing 4 intermediate signed 16-bit
+   results. Sum these 4 results with the corresponding 32-bit integer in ``w``, and
+   store the packed 32-bit results in ``dst``.
+
+   Example:
+
+   .. code:: mlir
+
+       %dst = x86.avx.dot.i8 %w, %a, %b : vector<32xi8> -> vector<8xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.dot.i8'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: w() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DotInt8OpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.dot.i8'
+
+
+
+   .. py:method:: w() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_dot_i8(w: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: DotOp(a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Computes the 4-way dot products of the lower and higher parts of the source
+   vectors and broadcasts the two results to the lower and higher elements of
+   the destination vector, respectively. Adding one element of the lower part
+   to one element of the higher part in the destination vector yields the full
+   dot product of the two source vectors.
+
+   Example:
+
+   .. code:: mlir
+
+       %0 = x86.avx.intr.dot %a, %b : vector<8xf32>
+       %1 = vector.extract %0[%i0] : f32 from vector<8xf32>
+       %2 = vector.extract %0[%i4] : f32 from vector<8xf32>
+       %d = arith.addf %1, %2 : f32
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.intr.dot'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: res() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: DotOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.intr.dot'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_intr_dot(a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: MaskCompressOp(k: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], *, src: Optional[_ods_ir[_ods_ir]] = None, constant_src: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The mask.compress op is an AVX512 specific op that can lower to the
+   ``llvm.mask.compress`` instruction. Instead of ``src``, a constant vector
+   vector attribute ``constant_src`` may be specified. If neither ``src`` nor
+   ``constant_src`` is specified, the remaining elements in the result vector are
+   set to zero.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Contiguously store the active integer/floating-point elements in ``a`` (those
+   with their respective bit set in writemask ``k``) to ``dst``, and pass through the
+   remaining elements from ``src``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.compress'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: k() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: src() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: constant_src() -> Optional[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: MaskCompressOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.compress'
+
+
+
+   .. py:method:: k() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: src() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: constant_src() -> Optional[_ods_ir]
+
+
+.. py:function:: avx512_mask_compress(k: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], *, src: Optional[_ods_ir[_ods_ir]] = None, constant_src: Optional[Union[Any, _ods_ir]] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: MaskRndScaleOp(src: _ods_ir[_ods_ir], k: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], imm: _ods_ir, rounding: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The mask.rndscale op is an AVX512 specific op that can lower to the proper
+   LLVMAVX512 operation: ``llvm.mask.rndscale.ps.512`` or
+   ``llvm.mask.rndscale.pd.512`` instruction depending on the type of vectors it
+   is applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Round packed floating-point elements in ``a`` to the number of fraction bits
+   specified by ``imm``, and store the results in ``dst`` using writemask ``k``
+   (elements are copied from src when the corresponding mask bit is not set).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.rndscale'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: imm() -> _ods_ir
+
+
+   .. py:method:: rounding() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: MaskRndScaleOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.rndscale'
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: imm() -> _ods_ir
+
+
+   .. py:method:: rounding() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx512_mask_rndscale(src: _ods_ir[_ods_ir], k: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], imm: _ods_ir, rounding: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: MaskScaleFOp(src: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], k: _ods_ir, rounding: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``mask.scalef`` op is an AVX512 specific op that can lower to the proper
+   LLVMAVX512 operation: ``llvm.mask.scalef.ps.512`` or
+   ``llvm.mask.scalef.pd.512`` depending on the type of MLIR vectors it is
+   applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Scale the packed floating-point elements in ``a`` using values from ``b``, and
+   store the results in ``dst`` using writemask ``k`` (elements are copied from src
+   when the corresponding mask bit is not set).
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.scalef'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k() -> _ods_ir
+
+
+   .. py:method:: rounding() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: dst() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: MaskScaleFOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.mask.scalef'
+
+
+
+   .. py:method:: src() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k() -> _ods_ir
+
+
+   .. py:method:: rounding() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx512_mask_scalef(src: _ods_ir[_ods_ir], a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], k: _ods_ir, rounding: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: RsqrtOp(a: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.rsqrt'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: RsqrtOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx.rsqrt'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx_rsqrt(a: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir[_ods_ir]
+
+.. py:class:: TileLoadOp(res: _ods_ir, base: _ods_ir[_ods_ir], indices: Sequence[_ods_ir[_ods_ir]], *, stride: Optional[_ods_ir[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Loads a tile from memory defined by a ``base`` and ``indices``, with the
+   shape defined by the 2-dim vector type of the result.
+   The tile's rows are populated by reading contiguous elements starting
+   at the ``base``. For each tile row, the ``base`` is incremented by ``stride``
+   number of elements.
+
+   The tile is loaded using the following indexing scheme:
+
+   .. code::
+
+       for row in enumerate(tile_rows):
+         mem_row = base[i0, i1, ..., iN + row * stride]
+         for col in enumerate(tile_cols):
+           tile[row, col] = mem_row[col]
+
+   If the ``stride`` is not provided, then the ``base`` buffer must be at least
+   2-dimensional, and the ``stride`` is automatically inferred and corresponds
+   to the stride of the buffer's second innermost dimension.
+
+   The operation is eventually lowered into the "tileloadd" instruction
+   with the corresponding tile configuration.
+
+   With the write memory effect, each ``x86.amx.tile_load`` operation serves as
+   a compilation hint to use a separate tile register.
+
+   Example:
+
+   .. code:: mlir
+
+         // Tile load from a 2-D memref with implicit stride.
+         %0 = x86.amx.tile_load %arg0[%c0, %c0] : memref<?x?xi8> into !x86.amx.tile<16x64xi8>
+       
+         // Tile load from a 1-D memref with explicit stride.
+         %0 = x86.amx.tile_load %arg0[%c0], %stride : memref<?xi8> into !x86.amx.tile<16x64xi8>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_load'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: stride() -> Optional[_ods_ir[_ods_ir]]
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: TileLoadOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_load'
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: stride() -> Optional[_ods_ir[_ods_ir]]
+
+
+.. py:function:: amx_tile_load(res: _ods_ir, base: _ods_ir[_ods_ir], indices: Sequence[_ods_ir[_ods_ir]], *, stride: Optional[_ods_ir[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TileMulFOp(lhs: _ods_ir, rhs: _ods_ir, acc: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Multiplies a "m x k" tile with a "k x n" tile and accumulates the results
+   into a "m x n" destination tile. Supports "f32 <- bf16 x bf16" (with
+   pairs of "bf16") and "f32 <- f8E5M2/f8E4M3FN x f8E5M2/f8E4M3FN".
+
+   The operation is eventually lowered into the "tdpbf16ps/tdpbf8ps/tdpbhf8ps/
+   tdphbf8ps/tdphf8ps" instruction with the corresponding tile configuration.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = x86.amx.tile_mulf %a, %b, %c
+           : !x86.amx.tile<16x32xbf16>, !x86.amx.tile<16x32xbf16>, !x86.amx.tile<16x16xf32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_mulf'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: TileMulFOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_mulf'
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+.. py:function:: amx_tile_mulf(lhs: _ods_ir, rhs: _ods_ir, acc: _ods_ir, *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TileMulIOp(lhs: _ods_ir, rhs: _ods_ir, acc: _ods_ir, *, isZextLhs: Optional[bool] = None, isZextRhs: Optional[bool] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Multiplies a "m x k" tile with a "k x n" tile and accumulates the results
+   into a "m x n" destination tile. Supports all "si32 <- s/ui8 x s/ui8"
+   combinations (4 bytes packed into dwords in the columns of both the
+   source operand tiles; the zero or sign extension is specified with
+   the attributes and default to sign extended).
+
+   The operation is eventually lowered into one of the "tdpbssd",
+   "tdpbsud", "tdpbusd", or "tdpbuud" instructions with the corresponding
+   tile configuration.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = x86.amx.tile_muli %a zext, %b zext, %c
+           : !x86.amx.tile<16x64xi8>, !x86.amx.tile<16x64xi8>, !x86.amx.tile<16x16xi32>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_muli'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+   .. py:method:: isZextLhs() -> bool
+
+
+   .. py:method:: isZextRhs() -> bool
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: TileMulIOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_muli'
+
+
+
+   .. py:method:: lhs() -> _ods_ir
+
+
+   .. py:method:: rhs() -> _ods_ir
+
+
+   .. py:method:: acc() -> _ods_ir
+
+
+   .. py:method:: isZextLhs() -> bool
+
+
+   .. py:method:: isZextRhs() -> bool
+
+
+.. py:function:: amx_tile_muli(lhs: _ods_ir, rhs: _ods_ir, acc: _ods_ir, *, is_zext_lhs: Optional[bool] = None, is_zext_rhs: Optional[bool] = None, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: TileStoreOp(base: _ods_ir[_ods_ir], indices: Sequence[_ods_ir[_ods_ir]], val: _ods_ir, *, stride: Optional[_ods_ir[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Stores a tile to memory defined by a ``base`` and ``indices``, with the
+   shape defined by the 2-dim vector type of the value.
+   The tile's rows are written contiguously to the buffer starting at
+   the ``base``. For each tile row, the ``base`` is incremented by ``stride``
+   number of elements.
+
+   The tile is stored using the following indexing scheme:
+
+   .. code::
+
+       for row in enumerate(tile_rows):
+         mem_row = base[i0, i1, ..., iN + row * stride]
+         for col in enumerate(tile_cols):
+           mem_row[col] = tile[row, col]
+
+   If the ``stride`` is not provided, then the ``base`` buffer must be at least
+   2-dimensional, and the ``stride`` is automatically inferred and corresponds
+   to the stride of the buffer's second innermost dimension.
+
+   The operation is eventually lowered into the "tilestored" instruction
+   with the corresponding tile configuration.
+
+   Example:
+
+   .. code:: mlir
+
+         // Tile store to a 2-D memref with implicit stride.
+         x86.amx.tile_store %arg1[%c0, %c0], %0 : memref<?x?xi8>, !x86.amx.tile<16x64xi8>
+       
+         // Tile store to a 1-D memref with explicit stride.
+         x86.amx.tile_store %arg1[%c0], %0, %stride : memref<?xi8>, !x86.amx.tile<16x64xi8>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_store'
+
+
+
+   .. py:attribute:: _ODS_OPERAND_SEGMENTS
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: val() -> _ods_ir
+
+
+   .. py:method:: stride() -> Optional[_ods_ir[_ods_ir]]
+
+
+.. py:class:: TileStoreOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_store'
+
+
+
+   .. py:method:: base() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: indices() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: val() -> _ods_ir
+
+
+   .. py:method:: stride() -> Optional[_ods_ir[_ods_ir]]
+
+
+.. py:function:: amx_tile_store(base: _ods_ir[_ods_ir], indices: Sequence[_ods_ir[_ods_ir]], val: _ods_ir, *, stride: Optional[_ods_ir[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> TileStoreOp
+
+.. py:class:: TileZeroOp(res: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Zeroes the destination tile, with the shape defined by the 2-dim
+   vector type of the result.
+
+   The operation is eventually lowered into the "tilezero" instruction
+   with the corresponding tile configuration.
+
+   With the write memory effect, each ``x86.amx.tile_zero`` operation serves as
+   a compilation hint to use a separate tile register.
+
+   Example:
+
+   .. code:: mlir
+
+         %0 = x86.amx.tile_zero : !x86.amx.tile<16x16xbf16>
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_zero'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: res() -> _ods_ir
+
+
+.. py:class:: TileZeroOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.amx.tile_zero'
+
+
+
+.. py:function:: amx_tile_zero(res: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
+.. py:class:: Vp2IntersectOp(a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   The ``vp2intersect`` op is an AVX512 specific op that can lower to the proper
+   LLVMAVX512 operation: ``llvm.vp2intersect.d.512`` or
+   ``llvm.vp2intersect.q.512`` depending on the type of MLIR vectors it is
+   applied to.
+
+   From the Intel Intrinsics Guide:
+   --------------------------------
+
+   Compute intersection of packed integer vectors ``a`` and ``b``, and store
+   indication of match in the corresponding bit of two mask registers
+   specified by ``k1`` and ``k2``. A match in corresponding elements of ``a`` and
+   ``b`` is indicated by a set bit in the corresponding bit of the mask
+   registers.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.vp2intersect'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k1() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: k2() -> _ods_ir[_ods_ir]
+
+
+.. py:class:: Vp2IntersectOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'x86.avx512.vp2intersect'
+
+
+
+   .. py:method:: a() -> _ods_ir[_ods_ir]
+
+
+   .. py:method:: b() -> _ods_ir[_ods_ir]
+
+
+.. py:function:: avx512_vp2intersect(a: _ods_ir[_ods_ir], b: _ods_ir[_ods_ir], *, results: Optional[Sequence[_ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+

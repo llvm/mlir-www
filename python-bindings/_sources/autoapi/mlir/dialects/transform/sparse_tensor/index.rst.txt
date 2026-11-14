@@ -1,0 +1,66 @@
+mlir.dialects.transform.sparse_tensor
+=====================================
+
+.. py:module:: mlir.dialects.transform.sparse_tensor
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.sparse_tensor.MatchSparseInOut
+   mlir.dialects.transform.sparse_tensor.MatchSparseInOutAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.sparse_tensor.sparse_tensor_match_sparse_inout
+
+
+Module Contents
+---------------
+
+.. py:class:: MatchSparseInOut(result: _ods_ir, target: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Checks if the payload op has any sparse inputs and/or outputs.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.sparse_tensor.match.sparse_inout'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: MatchSparseInOutAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.sparse_tensor.match.sparse_inout'
+
+
+
+   .. py:method:: target() -> _ods_ir
+
+
+.. py:function:: sparse_tensor_match_sparse_inout(result: _ods_ir, target: _ods_ir, *, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+

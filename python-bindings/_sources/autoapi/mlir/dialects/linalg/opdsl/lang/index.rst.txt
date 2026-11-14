@@ -1,0 +1,1674 @@
+mlir.dialects.linalg.opdsl.lang
+===============================
+
+.. py:module:: mlir.dialects.linalg.opdsl.lang
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/mlir/dialects/linalg/opdsl/lang/affine/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/comprehension/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/config/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/dsl/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/emitter/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/scalar_expr/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/types/index
+   /autoapi/mlir/dialects/linalg/opdsl/lang/yaml_helper/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang._CONTEXT
+   mlir.dialects.linalg.opdsl.lang.StructuredOpOuts
+   mlir.dialects.linalg.opdsl.lang.ContractionOpInterface
+   mlir.dialects.linalg.opdsl.lang.ConvolutionOpInterface
+   mlir.dialects.linalg.opdsl.lang.FillOpInterface
+   mlir.dialects.linalg.opdsl.lang.Canonicalizer
+   mlir.dialects.linalg.opdsl.lang.D
+   mlir.dialects.linalg.opdsl.lang.S
+   mlir.dialects.linalg.opdsl.lang.TV
+   mlir.dialects.linalg.opdsl.lang.I32
+   mlir.dialects.linalg.opdsl.lang.I64
+   mlir.dialects.linalg.opdsl.lang.F32
+   mlir.dialects.linalg.opdsl.lang.F64
+   mlir.dialects.linalg.opdsl.lang.T
+   mlir.dialects.linalg.opdsl.lang.U
+   mlir.dialects.linalg.opdsl.lang.V
+   mlir.dialects.linalg.opdsl.lang.ValueList
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang.DefinedOpCallable
+   mlir.dialects.linalg.opdsl.lang.TensorExpression
+   mlir.dialects.linalg.opdsl.lang.TensorUse
+   mlir.dialects.linalg.opdsl.lang.TensorFn
+   mlir.dialects.linalg.opdsl.lang.TensorReduceFn
+   mlir.dialects.linalg.opdsl.lang.const
+   mlir.dialects.linalg.opdsl.lang.index
+   mlir.dialects.linalg.opdsl.lang.FunctionKind
+   mlir.dialects.linalg.opdsl.lang.UnaryFnType
+   mlir.dialects.linalg.opdsl.lang.UnaryFn
+   mlir.dialects.linalg.opdsl.lang.BinaryFnType
+   mlir.dialects.linalg.opdsl.lang.BinaryFn
+   mlir.dialects.linalg.opdsl.lang.TernaryFnType
+   mlir.dialects.linalg.opdsl.lang.TernaryFn
+   mlir.dialects.linalg.opdsl.lang.TypeFnType
+   mlir.dialects.linalg.opdsl.lang.TypeFn
+   mlir.dialects.linalg.opdsl.lang.ReduceFnUse
+   mlir.dialects.linalg.opdsl.lang.ReduceFnType
+   mlir.dialects.linalg.opdsl.lang.ReduceFn
+   mlir.dialects.linalg.opdsl.lang.OperandKind
+   mlir.dialects.linalg.opdsl.lang.OperandDef
+   mlir.dialects.linalg.opdsl.lang.TensorDef
+   mlir.dialects.linalg.opdsl.lang.ScalarDef
+   mlir.dialects.linalg.opdsl.lang.IndexAttrDef
+   mlir.dialects.linalg.opdsl.lang.UnaryFnAttrDef
+   mlir.dialects.linalg.opdsl.lang.BinaryFnAttrDef
+   mlir.dialects.linalg.opdsl.lang.TernaryFnAttrDef
+   mlir.dialects.linalg.opdsl.lang.TypeFnAttrDef
+   mlir.dialects.linalg.opdsl.lang.Comprehension
+   mlir.dialects.linalg.opdsl.lang.OpInterfaceDef
+   mlir.dialects.linalg.opdsl.lang.OpDefinitionDef
+   mlir.dialects.linalg.opdsl.lang.OpMetadataDef
+   mlir.dialects.linalg.opdsl.lang.LinalgOpDef
+   mlir.dialects.linalg.opdsl.lang.AffineBuildState
+   mlir.dialects.linalg.opdsl.lang.AffineExprDef
+   mlir.dialects.linalg.opdsl.lang.DimDef
+   mlir.dialects.linalg.opdsl.lang.SymbolDef
+   mlir.dialects.linalg.opdsl.lang.ScalarAssign
+   mlir.dialects.linalg.opdsl.lang.ScalarFn
+   mlir.dialects.linalg.opdsl.lang.ScalarArg
+   mlir.dialects.linalg.opdsl.lang.ScalarConst
+   mlir.dialects.linalg.opdsl.lang.ScalarIndex
+   mlir.dialects.linalg.opdsl.lang.ScalarExpression
+   mlir.dialects.linalg.opdsl.lang.TypeVar
+   mlir.dialects.linalg.opdsl.lang.YAMLObject
+   mlir.dialects.linalg.opdsl.lang.LinalgStructuredOpConfig
+   mlir.dialects.linalg.opdsl.lang.LinalgOpConfig
+   mlir.dialects.linalg.opdsl.lang.OperandDefConfig
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.linalg.opdsl.lang._get_op_result_or_value
+   mlir.dialects.linalg.opdsl.lang._get_op_results_or_values
+   mlir.dialects.linalg.opdsl.lang.bind_op_def
+   mlir.dialects.linalg.opdsl.lang.current_op_def
+   mlir.dialects.linalg.opdsl.lang._prepare_structured_op_outs
+   mlir.dialects.linalg.opdsl.lang.linalg_structured_op
+   mlir.dialects.linalg.opdsl.lang.domain
+   mlir.dialects.linalg.opdsl.lang.implements
+   mlir.dialects.linalg.opdsl.lang.defines
+   mlir.dialects.linalg.opdsl.lang.yaml_dump
+   mlir.dialects.linalg.opdsl.lang.yaml_dump_all
+   mlir.dialects.linalg.opdsl.lang.emit_generic_structured_op
+   mlir.dialects.linalg.opdsl.lang.emit_named_structured_op
+
+
+Package Contents
+----------------
+
+.. py:function:: _get_op_result_or_value(arg: Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.Value, mlir._mlir_libs._mlir.ir.OpResultList]) -> mlir._mlir_libs._mlir.ir.Value
+
+   
+   Returns the given value or the single result of the given op.
+
+   This is useful to implement op constructors so that they can take other ops as
+   arguments instead of requiring the caller to extract results for every op.
+   Raises ValueError if provided with an op that doesn't have a single result.
+
+
+.. py:function:: _get_op_results_or_values(arg: Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, Sequence[Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.Value]]]) -> Union[Sequence[Union[mlir._mlir_libs._mlir.ir.OpView, mlir._mlir_libs._mlir.ir.Operation, mlir._mlir_libs._mlir.ir.Value]], mlir._mlir_libs._mlir.ir.OpResultList]
+
+   
+   Returns the given sequence of values or the results of the given op.
+
+   This is useful to implement op constructors so that they can take other ops as
+   lists of arguments instead of requiring the caller to extract results for
+   every op.
+
+
+.. py:data:: _CONTEXT
+
+.. py:data:: StructuredOpOuts
+
+.. py:function:: bind_op_def(op_def: mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef)
+
+.. py:function:: current_op_def() -> mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef
+
+.. py:function:: _prepare_structured_op_outs(outs: StructuredOpOuts) -> mlir.dialects.linalg.opdsl.lang.emitter.ValueList
+
+.. py:class:: DefinedOpCallable(op_name: str, op_def: mlir.dialects.linalg.opdsl.lang.emitter.LinalgOpDef)
+
+   
+   Callable that wraps any defined op function.
+
+
+   .. py:attribute:: op_name
+
+
+   .. py:attribute:: op_def
+
+
+   .. py:method:: __call__(*ins: mlir.dialects.linalg.opdsl.lang.emitter.Union[mlir.ir.Operation, mlir.ir.OpView, mlir.ir.Value], outs: StructuredOpOuts, **kwargs)
+
+      
+      Emits the corresponding op definition as IR.
+
+      Most arguments are passed through to the underlying emitter. The following
+      keyword argument is interpreted here:
+      emit_generic: Emits a generic form as appropriate (default True). If
+      False, a named form is emitted (which must have been built in to the
+      compiler).
+
+
+
+.. py:function:: linalg_structured_op(dsl_func=None, *, op_name=None, op_class_name=None) -> DefinedOpCallable
+
+.. py:function:: domain(*dimensions: mlir.dialects.linalg.opdsl.lang.emitter.DimDef)
+
+.. py:function:: implements(*interfaces: mlir.dialects.linalg.opdsl.lang.emitter.OpInterfaceDef)
+
+.. py:function:: defines(*definitions: mlir.dialects.linalg.opdsl.lang.emitter.OpDefinitionDef)
+
+.. py:class:: TensorExpression
+
+   
+   An expression that can appear on the RHS of a comprehension.
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+      :abstractmethod:
+
+
+
+   .. py:method:: visit_tensor_exprs(callback: mlir.dialects.linalg.opdsl.lang.scalar_expr.Callable[[TensorExpression], None])
+
+      
+      Visits all tensor expression reachable by the expression.
+
+
+
+   .. py:method:: collect_dim_uses(uses: mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef])
+
+      
+      Collects all DimDefs reachable through this expression.
+
+
+
+   .. py:method:: collect_tensor_uses(uses: mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[TensorUse])
+
+      
+      Collects all TensorUses reachable through this expression.
+
+
+
+   .. py:method:: collect_indices(indices: mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[index])
+
+      
+      Collects all index accesses reachable through this expression.
+
+
+
+   .. py:method:: collect_scalar_uses(uses: mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[ScalarDef])
+
+      
+      Collects all ScalarDefs reachable through this expression.
+
+
+
+   .. py:method:: __add__(rhs: TensorExpression) -> TensorExpression
+
+
+   .. py:method:: __mul__(rhs) -> TensorExpression
+
+
+   .. py:method:: __sub__(rhs) -> TensorExpression
+
+
+   .. py:method:: __truediv__(rhs) -> TensorExpression
+
+
+   .. py:method:: __hash__()
+
+
+.. py:class:: TensorUse(operand_def: OperandDef, indices: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineExprDef])
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   A used tensor represented by its (tensor_name, indices).
+
+   Note that forming a comprehension via direct assignment is performed through
+   **setitem** on the TensorDef level. However, performing a reduction with
+   compound ops (+=, *=, etc) is done by doing a:
+   TensorDef.**getitem**
+   TensorUse.**iadd**
+   TensorDef.**setitem**
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:attribute:: indices
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+   .. py:property:: tensor_name
+      :type: str
+
+
+
+   .. py:method:: _compute_reduce_dims(rhs: TensorExpression) -> mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]
+
+
+   .. py:method:: __iadd__(rhs: TensorExpression) -> TensorReduceFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: TensorFn(kind: FunctionKind, name: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str], operand_def: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[OperandDef], type_var: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.types.TypeVar], args: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[TensorExpression])
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   Application of a tensor function.
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: kind
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:attribute:: type_var
+
+
+   .. py:attribute:: args
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+   .. py:method:: visit_tensor_exprs(callback: mlir.dialects.linalg.opdsl.lang.scalar_expr.Callable[[TensorExpression], None])
+
+      
+      Visits all tensor expression reachable by the expression.
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: TensorReduceFn(reduce_use: ReduceFnUse, args: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[TensorExpression])
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   Application of a reduction function.
+
+   This captures the lhs (initial value) separately from the rhs.
+
+
+   .. py:attribute:: reduce_use
+
+
+   .. py:attribute:: lhs
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[TensorUse]
+      :value: None
+
+
+
+   .. py:attribute:: args
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+   .. py:method:: visit_tensor_exprs(callback: mlir.dialects.linalg.opdsl.lang.scalar_expr.Callable[[TensorExpression], None])
+
+      
+      Visits all tensor expression reachable by the expression.
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: const(value: mlir.dialects.linalg.opdsl.lang.scalar_expr.Any)
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   Returns the given constant floating point or integer value.
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: index(dim: mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef)
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   Returns the iteration index for a given dimension name.
+
+   Resolves the given dimension name to obtain its position in the iteration
+   domain of the operation.
+
+
+   .. py:attribute:: dim_def
+
+
+   .. py:attribute:: dim
+      :value: -1
+
+
+
+   .. py:method:: resolve_dimension_name(affine_state: mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineBuildState)
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: FunctionKind
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.types.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: UNARY
+      :value: 0
+
+
+
+   .. py:attribute:: BINARY
+      :value: 1
+
+
+
+   .. py:attribute:: TERNARY
+      :value: 2
+
+
+
+   .. py:attribute:: TYPE
+      :value: 3
+
+
+
+.. py:class:: UnaryFnType(fn_name: str)
+
+   
+   Unary function.
+
+   A unary function takes one tensor expression and returns the
+   function evaluation result.
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:method:: __call__(arg: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: UnaryFn
+
+   
+   Unary function namespace.
+
+
+   .. py:attribute:: exp
+
+
+   .. py:attribute:: log
+
+
+   .. py:attribute:: abs
+
+
+   .. py:attribute:: ceil
+
+
+   .. py:attribute:: floor
+
+
+   .. py:attribute:: negf
+
+
+   .. py:attribute:: reciprocal
+
+
+   .. py:attribute:: round
+
+
+   .. py:attribute:: sqrt
+
+
+   .. py:attribute:: rsqrt
+
+
+   .. py:attribute:: square
+
+
+   .. py:attribute:: tanh
+
+
+   .. py:attribute:: erf
+
+
+.. py:class:: BinaryFnType(fn_name: str)
+
+   
+   Binary function.
+
+   A binary function takes two tensor expressions and returns the
+   function evaluation result.
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:method:: __call__(arg0: TensorExpression, arg1: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: BinaryFn
+
+   
+   Binary function namespace.
+
+   As the integer types are signless, signedness is implement by different
+   functions that treat integers as signed or unsigned values.
+
+   Examples:
+
+   * max -> ``arith.MaxSIOp``
+   * max_unsigned -> ``arith.MaxUIOp``
+
+
+   .. py:attribute:: add
+
+
+   .. py:attribute:: sub
+
+
+   .. py:attribute:: mul
+
+
+   .. py:attribute:: div
+
+
+   .. py:attribute:: div_unsigned
+
+
+   .. py:attribute:: max_signed
+
+
+   .. py:attribute:: min_signed
+
+
+   .. py:attribute:: max_unsigned
+
+
+   .. py:attribute:: min_unsigned
+
+
+   .. py:attribute:: powf
+
+
+.. py:class:: TernaryFnType(fn_name: str)
+
+   
+   Ternary function.
+
+   A ternary function takes three tensor expressions and returns the
+   function evaluation result.
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:method:: __call__(arg0: TensorExpression, arg1: TensorExpression, arg2: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: TernaryFn
+
+   
+   Ternary function namespace.
+
+
+   .. py:attribute:: select
+
+
+.. py:class:: TypeFnType(fn_name: str)
+
+   
+   Type conversion function.
+
+   A type conversion function takes a target type and a tensor expression and
+   returns the casted tensor expression.
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:method:: __call__(type_var: mlir.dialects.linalg.opdsl.lang.types.TypeVar, arg: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: TypeFn
+
+   
+   Type conversion function namespace.
+
+   As the integer types are signless, signedness is implement by different cast
+   functions that treat integers as signed (``cast_signed``) or unsigned
+   (``cast_unsigned``) values.
+
+   Examples:
+
+   * cast_signed(I32 -> I64) -> ``arith.ExtSIOp``
+   * cast_unsigned(I32 -> I64) -> ``arith.ExtUIOp``
+
+
+   .. py:attribute:: cast_signed
+
+
+   .. py:attribute:: cast_unsigned
+
+
+.. py:class:: ReduceFnUse(binary_fn: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[BinaryFnType], binary_attr: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[BinaryFnAttrDef], *reduce_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef)
+
+   
+   Reduction function use.
+
+   A reduction use specifies the reduction function and dimensions.
+
+
+   .. py:attribute:: binary_fn
+
+
+   .. py:attribute:: binary_attr
+
+
+   .. py:attribute:: reduce_dims
+      :value: ()
+
+
+
+   .. py:method:: __call__(*args: TensorExpression) -> TensorReduceFn
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ReduceFnType(binary_fn: BinaryFnType)
+
+   
+   Reduction function.
+
+   A binary function that reduces its RHS into its LHS.
+
+
+   .. py:attribute:: binary_fn
+
+
+   .. py:method:: __getitem__(reduce_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Tuple[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]) -> ReduceFnUse
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ReduceFn
+
+   .. py:attribute:: add
+
+
+   .. py:attribute:: mul
+
+
+   .. py:attribute:: max_signed
+
+
+   .. py:attribute:: min_signed
+
+
+   .. py:attribute:: max_unsigned
+
+
+   .. py:attribute:: min_unsigned
+
+
+.. py:class:: OperandKind
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.types.Enum`
+
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: INPUT_TENSOR
+      :value: 0
+
+
+
+   .. py:attribute:: SCALAR
+      :value: 1
+
+
+
+   .. py:attribute:: OUTPUT_TENSOR
+      :value: 2
+
+
+
+   .. py:attribute:: INDEX_ATTR
+      :value: 3
+
+
+
+   .. py:attribute:: UNARY_FN_ATTR
+      :value: 4
+
+
+
+   .. py:attribute:: BINARY_FN_ATTR
+      :value: 5
+
+
+
+   .. py:attribute:: TERNARY_FN_ATTR
+      :value: 6
+
+
+
+   .. py:attribute:: TYPE_FN_ATTR
+      :value: 7
+
+
+
+.. py:class:: OperandDef(kind: OperandKind, type_var: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.types.TypeVar] = None, size_exprs: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineExprDef]] = None, index_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]] = None, default_indices: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[int]] = None, default_fn: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str] = None)
+
+   
+   Definition of an operand passed to an operation.
+
+   Keep the meta information of Tensor, Scalar, and Attribute operands and
+   provide the shared registration functionality.
+
+
+   .. py:attribute:: owner
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[LinalgOpDef]
+      :value: None
+
+
+
+   .. py:attribute:: type_var
+      :value: None
+
+
+
+   .. py:attribute:: size_exprs
+      :value: None
+
+
+
+   .. py:attribute:: index_dims
+      :value: None
+
+
+
+   .. py:attribute:: default_indices
+      :value: None
+
+
+
+   .. py:attribute:: default_fn
+      :value: None
+
+
+
+   .. py:attribute:: kind
+
+
+   .. py:attribute:: name
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str]
+      :value: None
+
+
+
+   .. py:attribute:: registered_index
+      :type:  int
+      :value: -1
+
+
+
+   .. py:method:: attach(index: int, name: str, owner: LinalgOpDef)
+
+
+   .. py:method:: is_input() -> bool
+
+
+   .. py:method:: is_tensor() -> bool
+
+
+   .. py:method:: is_attribute() -> bool
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: TensorDef(type_var: mlir.dialects.linalg.opdsl.lang.types.TypeVar, *shape: mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineExprDef, index_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]] = None, output: bool = False)
+
+   
+   Tensor operand definition.
+
+   Tensor operands are indexed using the associated indexing_map when forwarded
+   to the body of the structured op. A unique name identifies the tensor operands
+   and an index determines their position in the operation's parameter list. A
+   tensor definition takes type, a shape, and an optional flag to mark output
+   tensors. Additionally, a tuple of index dimensions may be used to map the
+   tensor to the loop dimensions of the operation. This mapping is needed to
+   compute the indexing map of shape-only tensors that have no uses.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:method:: __getitem__(dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineExprDef]) -> TensorUse
+
+
+   .. py:method:: __setitem__(dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[mlir.dialects.linalg.opdsl.lang.scalar_expr.AffineExprDef], value: TensorExpression)
+
+      
+      Creates a new 1:1 comprehension by binding this tensor to an expression.
+
+      Note that due to the way assignment works in Python, we have to capture
+      direct assignment as a setitem on the TensorDef.
+
+
+
+.. py:class:: ScalarDef(type_var: mlir.dialects.linalg.opdsl.lang.types.TypeVar)
+
+   Bases: :py:obj:`TensorExpression`
+
+
+   
+   Scalar operand definition.
+
+   Scalar operands are forwarded to the body of the structured op as they are.
+   A unique name identifies the scalars and an index determines their position in
+   the operation's parameter list.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:property:: scalar_name
+      :type: str
+
+
+
+   .. py:method:: to_scalar_expression() -> mlir.dialects.linalg.opdsl.lang.scalar_expr.ScalarExpression
+
+
+.. py:class:: IndexAttrDef(*sizes: mlir.dialects.linalg.opdsl.lang.scalar_expr.SymbolDef, default: mlir.dialects.linalg.opdsl.lang.scalar_expr.Sequence[int])
+
+   
+   Index attribute definition.
+
+   Index attributes provide a way to define and set symbols that can be used in
+   indexing expressions. Every attribute specifies a tuple of symbols that at
+   compile-time are replaced by integer values as well as their default values.
+
+
+   .. py:attribute:: operand_def
+
+
+.. py:class:: UnaryFnAttrDef(default: UnaryFnType)
+
+   
+   Unary function attribute definition.
+
+   Unary function attributes provide a way to make the arithmetic computation
+   parametrizable. Every attribute specifies a default unary function
+   that may be overwritten at operation instantiation time.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:method:: __call__(arg: TensorExpression) -> TensorFn
+
+
+.. py:class:: BinaryFnAttrDef(default: BinaryFnType)
+
+   
+   Binary function attribute definition.
+
+   Binary function attributes provide a way to make the arithmetic computation
+   parametrizable. Every attribute specifies a default binary function
+   that may be overwritten at operation instantiation time.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:method:: __call__(arg0: TensorExpression, arg1: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __getitem__(reduce_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Tuple[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]) -> ReduceFnUse
+
+
+.. py:class:: TernaryFnAttrDef(default: TernaryFnType)
+
+   
+   Ternary function attribute definition.
+
+   Ternary function attributes provide a way to make the arithmetic computation
+   parametrizable. Every attribute specifies a default Ternary function
+   that may be overwritten at operation instantiation time.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:method:: __call__(arg0: TensorExpression, arg1: TensorExpression) -> TensorFn
+
+
+   .. py:method:: __getitem__(reduce_dims: mlir.dialects.linalg.opdsl.lang.scalar_expr.Tuple[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]) -> ReduceFnUse
+
+
+.. py:class:: TypeFnAttrDef(default: TypeFnType)
+
+   
+   Type conversion function attribute definition.
+
+   Type conversion function attributes provide a way to make type conversions
+   parameterizable. Every attribute specifies a default type conversion function
+   that may be overwritten at operation instantiation time.
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:method:: __call__(type_var: mlir.dialects.linalg.opdsl.lang.types.TypeVar, arg: TensorExpression) -> TensorFn
+
+
+.. py:class:: Comprehension(*bindings: mlir.dialects.linalg.opdsl.lang.scalar_expr.Tuple[TensorUse, TensorExpression])
+
+   
+   Represents a single comprehension.
+
+
+   .. py:attribute:: definitions
+      :value: []
+
+
+
+   .. py:attribute:: values
+      :value: []
+
+
+
+   .. py:property:: all_reduction_dims
+      :type: mlir.dialects.linalg.opdsl.lang.scalar_expr.Set[mlir.dialects.linalg.opdsl.lang.scalar_expr.Tuple[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef, Ellipsis]]
+
+
+      
+      Gets the reduction dims for the comprehension or None.
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: OpInterfaceDef(cpp_name: str)
+
+   
+   An interface that an op implements.
+
+
+   .. py:attribute:: cpp_name
+
+
+.. py:data:: ContractionOpInterface
+
+.. py:data:: ConvolutionOpInterface
+
+.. py:data:: FillOpInterface
+
+.. py:class:: OpDefinitionDef(def_name: str)
+
+   
+   A method that an op implements.
+
+
+   .. py:attribute:: def_name
+
+
+.. py:data:: Canonicalizer
+
+.. py:class:: OpMetadataDef(name: str, cpp_class_name: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str], doc: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str])
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Metadata about the op (generally not behavior impacting).
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgOpMetadata'
+
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: cpp_class_name
+
+
+   .. py:attribute:: doc
+
+
+   .. py:attribute:: implements
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.List[OpInterfaceDef]
+      :value: []
+
+
+
+   .. py:attribute:: defines
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.List[OpDefinitionsDef]
+      :value: []
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+.. py:class:: LinalgOpDef(name: str, cpp_class_name: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str] = None, doc: mlir.dialects.linalg.opdsl.lang.scalar_expr.Optional[str] = None)
+
+   
+   Definition of a linalg op.
+
+
+   .. py:attribute:: metadata
+
+
+   .. py:attribute:: registered_operands
+      :type:  mlir.dialects.linalg.opdsl.lang.types.Dict[str, OperandDef]
+
+
+   .. py:attribute:: domain
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.List[mlir.dialects.linalg.opdsl.lang.scalar_expr.DimDef]
+      :value: []
+
+
+
+   .. py:attribute:: comprehensions
+      :type:  mlir.dialects.linalg.opdsl.lang.scalar_expr.List[Comprehension]
+      :value: []
+
+
+
+   .. py:attribute:: _affine_state
+
+
+   .. py:method:: add_operand(name: str, operand: OperandDef)
+
+      
+      Registers an operand.
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: AffineBuildState(*, global_state: AffineBuildState = None, allow_new_symbols: bool = True, allow_new_dims: bool = True)
+
+   
+   Internal state for the AffineExprDef._create impls.
+
+   Note that a "local" AffineBuildState can be created relative to a "global"
+   AffineBuildState. In that case, any affine expressions built will inherit
+   symbol and dim bindings from the global state and will update both as new
+   ones are discovered. This allows for building expressions across contexts
+   which share a common symbol and dim space.
+
+
+   .. py:attribute:: local_symbols
+      :type:  Dict[str, int]
+
+
+   .. py:attribute:: local_dims
+      :type:  Dict[str, int]
+
+
+   .. py:attribute:: allow_new_symbols
+      :value: True
+
+
+
+   .. py:attribute:: allow_new_dims
+      :value: True
+
+
+
+   .. py:method:: get_dim(dimname: str) -> int
+
+      
+      Gets the dim position given a name.
+
+
+
+   .. py:method:: get_symbol(symname: str) -> int
+
+      
+      Geta a symbol position given a name.
+
+
+
+   .. py:property:: local_dim_count
+      :type: int
+
+
+
+   .. py:property:: local_symbol_count
+      :type: int
+
+
+
+   .. py:property:: dim_count
+      :type: int
+
+
+
+   .. py:property:: symbol_count
+      :type: int
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: AffineExprDef
+
+   
+   Base class for an affine expression being defined.
+
+
+   .. py:method:: build(state: Optional[AffineBuildState] = None) -> mlir.ir.AffineExpr
+
+      
+      Builds the corresponding _ir.AffineExpr from the definitions.
+
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+      :abstractmethod:
+
+
+
+   .. py:method:: coerce_from(py_value)
+      :staticmethod:
+
+
+
+   .. py:method:: visit_affine_exprs(callback)
+
+      
+      Visits all AffineExprDefs including self.
+
+
+
+   .. py:method:: __add__(rhs)
+
+
+   .. py:method:: __mul__(rhs)
+
+
+   .. py:method:: __mod__(rhs)
+
+
+   .. py:method:: __floordiv__(rhs)
+
+
+   .. py:method:: __truediv__(rhs)
+
+
+.. py:data:: D
+
+.. py:class:: DimDef
+
+   Bases: :py:obj:`AffineExprDef`
+
+
+   
+   Represents a named dimension.
+
+
+   .. py:attribute:: ALL_DIMS
+      :type:  Dict[str, DimDef]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique symbols based on attr access.
+
+
+
+.. py:data:: S
+
+.. py:class:: SymbolDef
+
+   Bases: :py:obj:`AffineExprDef`
+
+
+   
+   Represents a named symbol.
+
+               s1 = SymbolDef("s1")
+               s1
+               Symbol(s1)
+               s2 = SymbolDef("s2")
+               s1 is s2
+               False
+               s1 is SymbolDef("s1")
+               True
+
+
+   .. py:attribute:: ALL_SYMBOLS
+      :type:  Dict[str, SymbolDef]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: _create(state: AffineBuildState) -> mlir.ir.AffineExpr
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique symbols based on attr access.
+
+
+
+.. py:class:: ScalarAssign(arg: str, value: ScalarExpression)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   An assignment to a named argument (LHS of a comprehension).
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!ScalarAssign'
+
+
+
+   .. py:attribute:: arg
+
+
+   .. py:attribute:: value
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarFn(kind: mlir.dialects.linalg.opdsl.lang.comprehension.FunctionKind, fn_name: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[str], attr_name: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[str], type_var: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.dialects.linalg.opdsl.lang.types.TypeVar], operands: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[ScalarExpression])
+
+   
+   A type of ScalarExpression that applies a function.
+
+
+   .. py:attribute:: kind
+
+
+   .. py:attribute:: fn_name
+
+
+   .. py:attribute:: attr_name
+
+
+   .. py:attribute:: type_var
+
+
+   .. py:attribute:: operands
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarArg(arg: str)
+
+   
+   A type of ScalarExpression that references a named argument.
+
+
+   .. py:attribute:: arg
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarConst(value: str)
+
+   
+   A type of ScalarExpression representing a constant.
+
+
+   .. py:attribute:: value
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarIndex(dim: int)
+
+   
+   A type of ScalarExpression accessing an iteration index.
+
+
+   .. py:attribute:: dim
+
+
+   .. py:method:: expr() -> ScalarExpression
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: ScalarExpression(scalar_fn: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarFn] = None, scalar_arg: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarArg] = None, scalar_const: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarConst] = None, scalar_index: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[ScalarIndex] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   An expression on scalar values.
+
+   Can be one of:
+
+   * ScalarFn
+   * ScalarArg
+   * ScalarConst
+   * ScalarIndex
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!ScalarExpression'
+
+
+
+   .. py:attribute:: scalar_fn
+      :value: None
+
+
+
+   .. py:attribute:: scalar_arg
+      :value: None
+
+
+
+   .. py:attribute:: scalar_const
+      :value: None
+
+
+
+   .. py:attribute:: scalar_index
+      :value: None
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+.. py:class:: TypeVar
+
+   
+   A replaceable type variable.
+
+   Type variables are uniqued by name.
+
+
+   .. py:attribute:: ALL_TYPEVARS
+      :type:  Dict[str, TypeVar]
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: create_expando()
+      :classmethod:
+
+
+      
+      Create an expando class that creates unique type vars on attr access.
+
+
+
+.. py:data:: TV
+
+.. py:data:: I32
+
+.. py:data:: I64
+
+.. py:data:: F32
+
+.. py:data:: F64
+
+.. py:data:: T
+
+.. py:data:: U
+
+.. py:data:: V
+
+.. py:function:: yaml_dump(data, sort_keys=False, **kwargs)
+
+.. py:function:: yaml_dump_all(data, sort_keys=False, explicit_start=True, **kwargs)
+
+.. py:class:: YAMLObject
+
+   Bases: :py:obj:`yaml.YAMLObject`
+
+
+   
+   An object that can dump itself to a YAML stream
+   and load itself from a YAML stream.
+
+
+   .. py:method:: to_yaml(dumper, self)
+      :classmethod:
+
+
+      
+      Default to a custom dictionary mapping.
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+      :abstractmethod:
+
+
+
+   .. py:method:: as_linalg_yaml()
+
+
+.. py:class:: LinalgStructuredOpConfig(comprehension: mlir.dialects.linalg.opdsl.lang.comprehension.Comprehension, domain: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.DimDef], registered_operands: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef], context: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.Context] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Configuration for metadata sufficient to construct a linalg named op.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgStructuredOpConfig'
+
+
+
+   .. py:attribute:: context
+      :value: None
+
+
+
+   .. py:attribute:: affine_state
+
+
+   .. py:attribute:: writes
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.List[mlir.dialects.linalg.opdsl.lang.comprehension.Tuple[mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse, mlir.dialects.linalg.opdsl.lang.comprehension.TensorExpression]]
+      :value: []
+
+
+
+   .. py:attribute:: operands
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Dict[mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef, OperandDefConfig]
+
+
+   .. py:attribute:: uses
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Dict[mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse, TensorUseConfig]
+
+
+   .. py:attribute:: reduction_dims
+
+
+   .. py:attribute:: assignments
+
+
+   .. py:property:: ordered_operands
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[OperandDefConfig]
+
+
+
+   .. py:property:: ordered_dims
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.dialects.linalg.opdsl.lang.comprehension.Tuple[str, int]]
+
+
+      
+      Gets the ordered list of dim bindings (symbolic name, position).
+
+      TODO: The original parser relies on parse ordering to arrive at the
+      iterator types, but that ordering is not defined on the Python side, so
+      this may be ambiguous.
+
+
+
+   .. py:property:: indexing_maps
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[mlir.ir.AffineMap]
+
+
+
+   .. py:property:: iterator_types
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[str]
+
+
+
+   .. py:method:: add_operand(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef)
+
+
+   .. py:method:: add_indexed_operand(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef)
+
+
+   .. py:method:: add_tensor_use(tensor_use: mlir.dialects.linalg.opdsl.lang.comprehension.TensorUse)
+
+
+   .. py:method:: _get_scalar_map() -> mlir.ir.AffineMap
+
+      
+      Create an empty affine map used to index a scalar.
+
+
+
+   .. py:method:: _normalize_affine_map(affine_map: mlir.ir.AffineMap, with_dims: bool = True) -> mlir.ir.AffineMap
+
+      
+      Normalizes an indexing map to have the max known symbols and dims.
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: LinalgOpConfig(metadata: mlir.dialects.linalg.opdsl.lang.comprehension.OpMetadataDef, *, structured_op: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[LinalgStructuredOpConfig] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Container for any supported linalg op type.
+
+   This includes the concrete type by name for ease of parsing by systems
+   that ignore tags.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgOpConfig'
+
+
+
+   .. py:attribute:: metadata
+
+
+   .. py:attribute:: structured_op
+      :value: None
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: from_linalg_op_def(op_def: mlir.dialects.linalg.opdsl.lang.comprehension.LinalgOpDef, context: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.Context] = None) -> mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[LinalgOpConfig]
+      :staticmethod:
+
+
+      
+      Expands a LinalgOpDef into corresponding Linalg configured ops.
+
+
+
+   .. py:method:: __repr__()
+
+
+.. py:class:: OperandDefConfig(operand_def: mlir.dialects.linalg.opdsl.lang.comprehension.OperandDef, shape_map: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap] = None, index_attr_map: mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap] = None)
+
+   Bases: :py:obj:`mlir.dialects.linalg.opdsl.lang.yaml_helper.YAMLObject`
+
+
+   
+   Wrapper containing an operand definition with additional state.
+
+
+   .. py:attribute:: yaml_tag
+      :value: '!LinalgOperandDefConfig'
+
+
+
+   .. py:attribute:: operand_def
+
+
+   .. py:attribute:: shape_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:attribute:: index_attr_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:attribute:: indexing_map
+      :type:  mlir.dialects.linalg.opdsl.lang.comprehension.Optional[mlir.ir.AffineMap]
+      :value: None
+
+
+
+   .. py:property:: name
+      :type: str
+
+
+
+   .. py:property:: kind
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.OperandKind
+
+
+
+   .. py:property:: type_var
+      :type: mlir.dialects.linalg.opdsl.lang.comprehension.TypeVar
+
+
+
+   .. py:method:: to_yaml_custom_dict()
+
+
+   .. py:method:: __repr__()
+
+
+.. py:function:: emit_generic_structured_op(op_config: mlir.dialects.linalg.opdsl.lang.config.LinalgStructuredOpConfig, *ins: Value, outs: ValueList, **attrs: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[int])
+
+.. py:function:: emit_named_structured_op(op_config: mlir.dialects.linalg.opdsl.lang.config.LinalgStructuredOpConfig, op_name: str, op_class_name: str, *ins: Value, outs: ValueList, **attrs: mlir.dialects.linalg.opdsl.lang.comprehension.Sequence[int])
+
+.. py:data:: ValueList
+

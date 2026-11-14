@@ -1,0 +1,173 @@
+mlir.dialects._transform_tune_extension_ops_gen
+===============================================
+
+.. py:module:: mlir.dialects._transform_tune_extension_ops_gen
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_tune_extension_ops_gen._ods_ir
+   mlir.dialects._transform_tune_extension_ops_gen._Buffer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_tune_extension_ops_gen.AlternativesOp
+   mlir.dialects._transform_tune_extension_ops_gen.AlternativesOpAdaptor
+   mlir.dialects._transform_tune_extension_ops_gen.KnobOp
+   mlir.dialects._transform_tune_extension_ops_gen.KnobOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects._transform_tune_extension_ops_gen.tune_alternatives
+   mlir.dialects._transform_tune_extension_ops_gen.tune_knob
+
+
+Module Contents
+---------------
+
+.. py:data:: _ods_ir
+
+.. py:data:: _Buffer
+
+.. py:class:: AlternativesOp(results_: Sequence[_ods_ir], name: Union[Any, _ods_ir], num_alternatives: int, *, selected_region_attr: Optional[Union[Any, _ods_ir]] = None, selected_region_param: Optional[_ods_ir] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   This op represents a choice over which of its regions is to be used.
+
+   When ``selected_region`` is provided, the semantics are that this op is to be
+   substituted for by the selected region, meaning the region's results become
+   the results of this op. Without a provided ``selected_region``, the semantics
+   are that this non-deterministic choice is yet to be resolved -- which in
+   terms of the op's interpreted semantics is a failure.
+
+   The ``selected_region`` argument is either an ``IntegerAttr`` or a param holding
+   an ``IntegerAttr``, which should provide a valid zero-based index with respect
+   to the number of alternatives, i.e. regions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.alternatives'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, False)
+
+
+
+   .. py:method:: selected_region_param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: selected_region_attr() -> Optional[_ods_ir]
+
+
+   .. py:method:: results_() -> _ods_ir
+
+
+   .. py:method:: alternatives() -> _ods_ir
+
+
+.. py:class:: AlternativesOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.alternatives'
+
+
+
+   .. py:method:: selected_region_param() -> Optional[_ods_ir]
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: selected_region_attr() -> Optional[_ods_ir]
+
+
+.. py:function:: tune_alternatives(results_: Sequence[_ods_ir], name: Union[Any, _ods_ir], num_alternatives: int, *, selected_region_attr: Optional[Union[Any, _ods_ir]] = None, selected_region_param: Optional[_ods_ir] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> Union[_ods_ir, _ods_ir, AlternativesOp]
+
+.. py:class:: KnobOp(result: _ods_ir, name: Union[Any, _ods_ir], options: Union[Any, _ods_ir], *, selected: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Provides a representation for "tunables" within schedules.
+
+   Each op represents a single tunable, which has a ``name`` and a set
+   of valid ``options`` described by an attribute. Without a specified
+   ``selected`` option, this op represents a non-deterministic choice
+   that has yet to be resolved -- as such, the interpreter runtime
+   semantics is to raise a failure.
+
+   The non-deterministic choice is resolved through providing a
+   ``selected`` attribute. When provided, the interpreter runtime
+   semantics are to return the ``selected`` attribute as a param through
+   the op's result.
+
+   In case the ``options`` attribute is an ``ArrayAttr``, the verifier
+   checks that the provided ``selected`` attribute occurs in ``options``.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.knob'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: selected() -> Optional[_ods_ir]
+
+
+   .. py:method:: result() -> _ods_ir
+
+
+.. py:class:: KnobOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.tune.knob'
+
+
+
+   .. py:method:: name() -> _ods_ir
+
+
+   .. py:method:: options() -> _ods_ir
+
+
+   .. py:method:: selected() -> Optional[_ods_ir]
+
+
+.. py:function:: tune_knob(result: _ods_ir, name: Union[Any, _ods_ir], options: Union[Any, _ods_ir], *, selected: Optional[Union[Any, _ods_ir]] = None, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> _ods_ir
+
