@@ -1,0 +1,92 @@
+mlir.dialects.transform.math
+============================
+
+.. py:module:: mlir.dialects.transform.math
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.math.ApplyF32ExpansionPatternsOp
+   mlir.dialects.transform.math.ApplyF32ExpansionPatternsOpAdaptor
+   mlir.dialects.transform.math.ApplyPolynomialApproximationPatternsOp
+   mlir.dialects.transform.math.ApplyPolynomialApproximationPatternsOpAdaptor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   mlir.dialects.transform.math.apply_patterns_math_f32_expansion
+   mlir.dialects.transform.math.apply_patterns_math_polynomial_approximation
+
+
+Module Contents
+---------------
+
+.. py:class:: ApplyF32ExpansionPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Converts math functions to f32: operands are extended and the result is
+   truncated back.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.f32_expansion'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyF32ExpansionPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.f32_expansion'
+
+
+
+.. py:function:: apply_patterns_math_f32_expansion(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyF32ExpansionPatternsOp
+
+.. py:class:: ApplyPolynomialApproximationPatternsOp(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None)
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   
+   Enables polynomial approximations for math functions.
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.polynomial_approximation'
+
+
+
+   .. py:attribute:: _ODS_REGIONS
+      :value: (0, True)
+
+
+
+.. py:class:: ApplyPolynomialApproximationPatternsOpAdaptor
+
+   Bases: :py:obj:`_ods_ir`
+
+
+   .. py:attribute:: OPERATION_NAME
+      :value: 'transform.apply_patterns.math.polynomial_approximation'
+
+
+
+.. py:function:: apply_patterns_math_polynomial_approximation(*, loc: Optional[_ods_ir] = None, ip: Optional[_ods_ir] = None) -> ApplyPolynomialApproximationPatternsOp
+

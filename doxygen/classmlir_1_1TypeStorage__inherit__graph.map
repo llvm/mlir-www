@@ -1,0 +1,53 @@
+<map id="mlir::TypeStorage" name="mlir::TypeStorage">
+<area shape="rect" id="Node000001" title="Base storage class appearing in a Type." alt="" coords="211,561,347,586"/>
+<area shape="rect" id="Node000003" href="$structmlir_1_1LLVM_1_1detail_1_1LLVMStructTypeStorage.html" title="Type storage for LLVM structure types." alt="" coords="425,5,607,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="280,546,291,440,313,293,329,218,347,150,368,94,393,55,423,35,426,40,397,59,373,96,352,152,334,219,319,294,297,440,285,547"/>
+<area shape="rect" id="Node000004" href="$structmlir_1_1LLVM_1_1detail_1_1LLVMTypeAndSizeStorage.html" title="Common storage used for LLVM dialect types that need an element type and a number: arrays,..." alt="" coords="418,69,614,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="281,547,294,452,317,324,333,260,350,201,370,153,393,119,416,103,419,107,397,123,375,155,355,203,338,261,323,325,299,453,286,548"/>
+<area shape="rect" id="Node000005" href="$structmlir_1_1detail_1_1DynamicTypeStorage.html" title="Storage of DynamicType." alt="" coords="421,133,611,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="277,547,280,475,296,377,310,325,330,273,358,226,393,183,420,166,422,170,396,187,362,229,335,276,315,327,301,378,286,475,282,547"/>
+<area shape="rect" id="Node000006" href="$structmlir_1_1detail_1_1FunctionTypeStorage.html" title="Function Type Storage and Uniquing." alt="" coords="423,197,609,237"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="279,547,286,486,304,405,319,362,338,320,362,281,393,247,421,229,424,234,396,251,367,285,343,323,324,364,309,406,291,486,284,547"/>
+<area shape="rect" id="Node000007" href="$structmlir_1_1detail_1_1IntegerTypeStorage.html" title="Integer Type Storage and Uniquing." alt="" coords="427,261,605,301"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="281,547,293,497,313,434,346,369,367,339,393,313,425,294,428,298,396,317,372,342,350,371,318,436,298,498,287,548"/>
+<area shape="rect" id="Node000008" href="$structmlir_1_1detail_1_1TupleTypeStorage.html" title="A type representing a collection of other types." alt="" coords="409,326,623,351"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="284,546,298,505,320,455,351,404,371,382,393,362,416,349,418,354,396,366,374,385,355,408,324,457,303,507,289,548"/>
+<area shape="rect" id="Node000009" href="$structmlir_1_1gpu_1_1MMAMatrixStorageType.html" title="MMAMatrixType storage and uniquing." alt="" coords="395,375,637,401"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="288,547,304,515,327,478,357,442,393,411,419,398,421,403,396,416,361,445,332,482,309,518,293,550"/>
+<area shape="rect" id="Node000010" href="$structmlir_1_1quant_1_1detail_1_1QuantileTypeStorage.html" title=" " alt="" coords="433,425,599,465"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="300,548,341,511,393,475,432,460,434,464,396,480,344,515,303,552"/>
+<area shape="rect" id="Node000011" href="$structmlir_1_1quant_1_1detail_1_1QuantizedTypeStorage.html" title=" " alt="" coords="428,489,604,529"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="338,554,394,539,438,527,440,532,395,544,339,559"/>
+<area shape="rect" id="Node000017" href="$structspirv_1_1detail_1_1ArrayTypeStorage.html" title=" " alt="" coords="443,553,589,593"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="361,571,443,571,443,576,361,576"/>
+<area shape="rect" id="Node000018" href="$structspirv_1_1detail_1_1CooperativeMatrixTypeStorage.html" title=" " alt="" coords="401,617,631,657"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="339,587,395,603,440,615,438,620,394,608,338,592"/>
+<area shape="rect" id="Node000019" href="$structspirv_1_1detail_1_1ImageTypeStorage.html" title=" " alt="" coords="441,681,591,721"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="303,594,344,632,396,667,441,684,439,689,393,672,341,636,300,598"/>
+<area shape="rect" id="Node000020" href="$structspirv_1_1detail_1_1MatrixTypeStorage.html" title=" " alt="" coords="440,745,592,785"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="293,597,333,665,362,701,396,731,417,743,440,751,439,756,415,748,393,736,358,704,328,668,289,600"/>
+<area shape="rect" id="Node000021" href="$structspirv_1_1detail_1_1PointerTypeStorage.html" title=" " alt="" coords="438,809,594,849"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="289,599,301,642,323,695,354,750,374,774,396,795,416,808,439,817,437,821,414,813,393,799,370,778,350,753,318,698,296,644,283,600"/>
+<area shape="rect" id="Node000022" href="$structspirv_1_1detail_1_1RuntimeArrayTypeStorage.html" title=" " alt="" coords="416,873,616,913"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="285,599,295,654,314,724,329,761,347,797,369,830,396,859,417,873,414,878,393,863,365,834,342,800,324,764,309,726,289,655,280,600"/>
+<area shape="rect" id="Node000023" href="$structspirv_1_1detail_1_1SampledImageTypeStorage.html" title=" " alt="" coords="412,937,620,977"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="283,599,289,665,305,753,320,799,339,844,365,887,396,923,413,936,410,940,393,927,360,890,335,847,315,801,300,754,283,666,278,600"/>
+<area shape="rect" id="Node000024" href="$structspirv_1_1detail_1_1StructTypeStorage.html" title="Type storage for SPIR&#45;V structure types:" alt="" coords="442,1001,590,1041"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="282,599,283,675,288,725,297,780,311,836,332,891,360,942,396,987,418,1003,443,1012,441,1017,415,1007,393,991,356,945,327,893,306,838,292,781,283,726,278,676,276,600"/>
+<area shape="rect" id="Node000025" href="$structspirv_1_1detail_1_1TensorArmTypeStorage.html" title=" " alt="" coords="427,1065,605,1105"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="285,600,298,699,321,835,336,904,354,966,374,1017,397,1052,411,1063,428,1071,425,1076,408,1067,393,1055,369,1020,349,968,331,905,316,836,293,700,280,600"/>
+<area shape="rect" id="Node000026" href="$structspirv_1_1detail_1_1UntypedPointerTypeStorage.html" title=" " alt="" coords="411,1129,621,1169"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="285,599,295,711,317,866,332,945,350,1017,372,1076,397,1116,412,1128,409,1132,393,1119,367,1078,345,1019,327,946,311,867,290,711,279,600"/>
+<area shape="rect" id="Node000002" href="$classmlir_1_1StorageUniquer_1_1BaseStorage.html" title="This class acts as the base storage that all storage classes must derived from." alt="" coords="5,553,163,593"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,571,211,571,211,576,176,576"/>
+<area shape="rect" id="Node000012" href="$structmlir_1_1quant_1_1detail_1_1AnyQuantizedTypeStorage.html" title=" " alt="" coords="706,353,907,393"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="615,487,636,475,651,458,659,440,667,421,684,403,704,391,707,396,687,407,671,424,664,442,656,461,639,479,618,492"/>
+<area shape="rect" id="Node000013" href="$structmlir_1_1quant_1_1detail_1_1CalibratedQuantizedTypeStorage.html" title=" " alt="" coords="685,417,928,457"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="610,483,724,455,726,460,612,489"/>
+<area shape="rect" id="Node000014" href="$structmlir_1_1quant_1_1detail_1_1UniformQuantizedPerAxisTypeStorage.html" title=" " alt="" coords="693,482,921,537"/>
+<area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="618,507,693,507,693,512,618,512"/>
+<area shape="rect" id="Node000015" href="$structmlir_1_1quant_1_1detail_1_1UniformQuantizedSubChannelTypeStorage.html" title=" " alt="" coords="693,561,920,615"/>
+<area shape="poly" id="edge14_Node000011_Node000015" title=" " alt="" coords="606,530,638,539,708,558,707,563,637,544,605,535"/>
+<area shape="rect" id="Node000016" href="$structmlir_1_1quant_1_1detail_1_1UniformQuantizedTypeStorage.html" title=" " alt="" coords="692,640,921,680"/>
+<area shape="poly" id="edge15_Node000011_Node000016" title=" " alt="" coords="618,527,639,539,657,561,664,584,670,606,687,626,706,637,703,642,684,630,666,608,659,585,652,564,636,543,616,531"/>
+</map>
